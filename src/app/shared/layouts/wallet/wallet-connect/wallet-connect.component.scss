@@ -1,0 +1,26 @@
+#solana-wallet-connect {
+    display: flex;
+    justify-content: center;
+}
+
+ion-button {
+    width: 100%;
+    letter-spacing: 1.5px;
+
+    span {
+        margin-inline-start: 4px;
+    }
+
+    ion-img {
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+        width: 15px;
+    }
+}
+
+ion-fab-button {
+
+    ion-img {
+        max-width: 50%;
+    }
+}

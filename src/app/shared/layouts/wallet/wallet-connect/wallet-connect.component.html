@@ -1,0 +1,20 @@
+<!-- <div id="solana-wallet-connect">
+  <ng-container *ngIf=" (isReady$ | async) === false; else elseTemplate">
+    <ion-button class="ion-hide-lg-down" (click)="showWalletAdapters()" expand="block">
+       connect wallet
+    </ion-button>
+    <ion-fab-button class="ion-hide-lg-up ion-margin-horizontal" (click)="showWalletAdapters()">
+      <ion-icon name="wallet"></ion-icon>
+    </ion-fab-button>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <ion-button class="ion-hide-lg-down" (click)="showConnectWalletActions($event)" fill="outline" expand="block">
+      <ion-img [src]="(wallet$ | async)?.adapter?.icon"></ion-img>
+      <span> {{walletPublicKey | async}} </span>
+    </ion-button>
+    <ion-fab-button class="ion-hide-lg-up ion-margin-horizontal" (click)="showConnectWalletActions($event)" fill="outline">
+      <ion-img [src]="(wallet$ | async)?.adapter?.icon"></ion-img>
+    </ion-fab-button>
+  </ng-template>
+
+</div> -->

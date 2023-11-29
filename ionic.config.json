@@ -1,0 +1,7 @@
+{
+  "name": "SolanaHub-v2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
