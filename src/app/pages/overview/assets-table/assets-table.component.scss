@@ -1,0 +1,153 @@
+#assets-title {
+    color: var(--colors-text-text-primary-900, #101828);
+    // font-family: Plus Jakarta Sans;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+    text-transform: capitalize;
+    /* 175% */
+    letter-spacing: 0.16px;
+}
+
+#assets-sub {
+    overflow: hidden;
+    color: var(--gray-modern-500, #697586);
+    text-overflow: ellipsis;
+    // font-family: Inter;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    /* 13px */
+}
+
+
+// :host ::ng-deep #pagination-controls > pagination-template  {
+//     .ngx-pagination li{
+
+//         display: flex;
+//         width: 40px;
+//         height: 40px;
+//         justify-content: center;
+//         align-items: center;
+//         border-radius: var(--radius-md, 8px);
+//     }
+//   }
+:host ::ng-deep #pagination-controls  {
+       .ngx-pagination li{
+        a:hover{
+            background-color: transparent;
+        }
+                background-color: white;
+
+                width: 40px;
+                height: 40px;
+                color: var(--gray-modern-500, #697586);
+                text-align: center;
+                font-family: Inter;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 34px;
+                border-radius: var(--radius-md, 8px);
+                border: 0;
+            }
+            .ngx-pagination li.current{
+                background: var(--colors-background-bg-primary-hover, #F9FAFB);
+            }
+  }
+  :host ::ng-deep #pagination-controls > pagination-template > ul > li > a > span {
+    color: hotpink;
+  }
+:host ::ng-deep #table {
+    .ngx-table__header-title {
+
+        color: var(--gray-modern-500, #697586);
+        font-family: Inter;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 18px;
+        /* 150% */
+    }
+    .ngx-table__header-cell{
+        height: 44px;
+        &:first-child{
+            padding-inline-start: 32px;
+        }
+        &:not(:first-child){
+            text-align: center;
+        }
+    }
+    .light-text {
+        text-align: center;
+        color: var(--gray-modern-600, #4B5565);
+        font-family: Inter;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
+        /* 166.667% */
+    }
+
+    .bold-text {
+        text-align: center;
+        color: var(--gray-modern-900, #121926);
+        font-family: Inter;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        /* 166.667% */
+    }
+
+    width: 100%;
+
+    tbody>tr>td {
+        height: 77px;
+        padding: 0;
+        .token {
+            display: flex;
+            align-items: center;
+            padding-inline-start: 32px;
+        }
+
+        .token-img-wrapper {
+            margin-inline-end: 12px;
+
+            ion-img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+        }
+
+        .token-info {
+            display: flex;
+            flex-direction: column;
+
+            .token-symbol {
+                color: var(--colors-text-text-primary-900, #101828);
+                /* Text sm/Medium */
+                font-family: Inter;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 20px;
+                /* 142.857% */
+            }
+
+            .token-name {
+                color: var(--gray-modern-600, #4B5565);
+                font-family: Inter;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 20px;
+                /* 166.667% */
+            }
+        }
+    }
+}

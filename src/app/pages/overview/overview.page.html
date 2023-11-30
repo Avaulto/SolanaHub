@@ -7,9 +7,26 @@
 
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">overview</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid style="padding:20px">
+
+
+<ion-row class="ion-justify-content-between">
+  <ion-col class="overview-gap data-set" size="12" sizeMd="4.5">
+    <app-net-worth/>
+  </ion-col>
+  <ion-col class="overview-gap data-set" size="12" sizeMd="7">
+    <app-portfolio-breakdown/>
+  </ion-col>
+</ion-row>
+<ion-row style="margin-top:20px">
+  <ion-col class=" data-set" size="12">
+    <app-assets-table/>
+  </ion-col>
+</ion-row>
+<ion-row style="margin-top:20px">
+  <ion-col class="overview-gap data-set" size="12">
+    <app-transactions-history-table/>
+  </ion-col>
+</ion-row>
+</ion-grid>
 </ion-content>

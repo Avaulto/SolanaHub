@@ -31,7 +31,7 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
+            "styles": ["src/theme/variables.scss", "src/global.scss","node_modules/ngx-easy-table/style.css"],
             "scripts": []
           },
           "configurations": {

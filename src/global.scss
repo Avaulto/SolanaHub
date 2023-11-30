@@ -8,7 +8,8 @@
  * For more information on global stylesheets, visit the documentation:
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
-
+ 
+@import 'inter-font.scss';
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
 
@@ -25,7 +26,18 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-@import 'inter-font.scss';
-*{
-    font-family: 'Inter', sans-serif;
+
+
+ion-content {
+    --background: #f3f4f6;
+}
+
+.data-set {
+    border-radius: var(--radius-xl, 12px);
+    background: #FFF;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+}
+
+.overview-gap{
+    padding:20px 32px;
 }

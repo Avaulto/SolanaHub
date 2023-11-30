@@ -15,6 +15,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^17.0.2",
+    "@angular/cdk": "^17.0.1",
     "@angular/common": "^17.0.2",
     "@angular/compiler": "^17.0.2",
     "@angular/core": "^17.0.2",
@@ -28,16 +29,18 @@
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/status-bar": "5.0.6",
     "@ionic/angular": "^7.5.0",
-    "ionicons": "^7.2.1",
-    "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.14.2",
     "@marinade.finance/marinade-ts-sdk": "^5.0.5",
     "@solana/spl-stake-pool": "^0.6.5",
     "@solana/spl-token": "0.3.4",
     "@solana/wallet-adapter-wallets": "0.19.23",
     "@solana/web3.js": "1.78.3",
-    "@vercel/analytics": "^1.1.1"
+    "@vercel/analytics": "^1.1.1",
+    "chart.js": "^4.4.0",
+    "ionicons": "^7.2.1",
+    "ngx-easy-table": "^15.5.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.2"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^17.0.0",

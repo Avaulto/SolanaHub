@@ -1,0 +1,27 @@
+<div style="padding: 20px 32px;">
+
+  <div id="assets-title">
+    your assets
+  </div>
+  <div id="assets-sub">
+    Obtain a comprehensive and detailed overview of your assets
+  </div>
+</div>
+
+<app-table-menu [menu]="tableMenuOptions" [currentTab]="'Tokens'"></app-table-menu>
+<div>
+  <ngx-table [configuration]="configuration" [data]="data" [columns]="columns"> </ngx-table>
+  <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+    <div class="token">
+
+      <div class="token-img-wrapper">
+        <ion-img [src]="row.imgUrl" loading="lazy" alt="image" />
+      </div>
+      <div class="token-info">
+        <div class="token-symbol">{{row.symbol}}</div>
+        <div class="token-name">{{row.name}}</div>
+      </div>
+      
+    </div>
+  </ng-template>
+</div>
