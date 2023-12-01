@@ -41,3 +41,8 @@ ion-content {
 .overview-gap{
     padding:20px 32px;
 }
+#asset-modal{
+    --width: 100vw;
+    --height: 90vh;
+    align-items: flex-end;
+}

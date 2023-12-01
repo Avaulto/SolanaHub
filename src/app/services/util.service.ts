@@ -1,10 +1,10 @@
-import { DecimalPipe} from "@angular/common";
-import {  Injectable } from "@angular/core";
+import { CurrencyPipe, DecimalPipe } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { BehaviorSubject, filter, Observable } from "rxjs";
 import { LocalStorageService } from "./local-storage.service";
 import { PublicKey } from "@solana/web3.js";
+import { Token } from "../models/jup-token.model";
 // import { PriorityFee } from "../models/priorityFee.model";
-// import { LocalStorageService } from "./local-storage.servic";
 // import * as moment from "moment";
 // import { v4 as uuidv4 } from "uuid";
 
@@ -18,8 +18,9 @@ export enum PriorityFee {
   providedIn: "root",
 })
 export class UtilService {
+  public currencyPipe: CurrencyPipe = new CurrencyPipe('en-US');
+  public decimalPipe: DecimalPipe = new DecimalPipe('en-US');
   constructor(
-    private _decimalPipe: DecimalPipe,
     private localStore: LocalStorageService) {
   }
   public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://api.SolanaHub.app'
@@ -43,8 +44,8 @@ export class UtilService {
     this._PriorityFee = v;
   }
 
-  public formatBigNumbers = (n:number) => {
-    if (n < 1e3) return this._decimalPipe.transform(n, '1.2-2');
+  public formatBigNumbers = (n: number) => {
+    if (n < 1e3) return this.decimalPipe.transform(n, '1.2-2');
     if (n >= 1e3 && n < 1e6) return +(n / 1e3).toFixed(1) + "K";
     if (n >= 1e6 && n < 1e9) return +(n / 1e6).toFixed(1) + "M";
     if (n >= 1e9 && n < 1e12) return +(n / 1e9).toFixed(1) + "B";
@@ -64,6 +65,35 @@ export class UtilService {
   public isNotUndefined = <T>(source: Observable<T | null>) => source.pipe(filter((item: T | null): item is T => item !== undefined));
   public isNotNullOrUndefined = <T>(source: Observable<T | null>) => source.pipe(filter((item: T | null): item is T => item !== null && item !== undefined));
   public validateAddress = (address: string): boolean => {
-   return PublicKey.isOnCurve(address);
+    return PublicKey.isOnCurve(address);
+  }
+
+  public async getJupTokens(): Promise<Token[]> {
+    //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
+    let tokensData = []
+    try {
+      tokensData = await (await fetch('https://token.jup.ag/all')).json()
+    } catch (error) {
+      console.error();
+    }
+    return tokensData
+  }
+  public addTokenData(assets: any,  tokensInfo: Token[]): any[] {
+    return assets.map((res: any) => {
+      res.data.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
+      // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
+      const token = tokensInfo.find(token => token.address === res.data.address)
+      res.name = token?.name ? token.name  : '';
+      res.name === 'Wrapped SOL' ?  res.name = 'Solana' :  res.name 
+      res.symbol = token?.symbol ? token.symbol  : '';
+      res.imgUrl = token?.logoURI ? token.logoURI  : '';;
+      res.decimals = token?.decimals ? token.decimals  : '';;
+      return res
+    }).map((item: any) => {
+      Object.assign(item, item.data)
+      delete item.data;
+
+      return item
+    })
   }
 }

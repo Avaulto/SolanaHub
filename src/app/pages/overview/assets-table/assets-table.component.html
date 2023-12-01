@@ -9,19 +9,34 @@
 </div>
 
 <app-table-menu [menu]="tableMenuOptions" [currentTab]="'Tokens'"></app-table-menu>
-<div>
-  <ngx-table [configuration]="configuration" [data]="data" [columns]="columns"> </ngx-table>
-  <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
-    <div class="token">
-
-      <div class="token-img-wrapper">
-        <ion-img [src]="row.imgUrl" loading="lazy" alt="image" />
-      </div>
-      <div class="token-info">
-        <div class="token-symbol">{{row.symbol}}</div>
-        <div class="token-name">{{row.name}}</div>
-      </div>
-      
-    </div>
-  </ng-template>
+<div id="table-wrapper">
+  <ngx-table #table (event)="eventEmitted($event)" [configuration]="configuration" [data]="data()" [columns]="columns">
+  </ngx-table>
+  @if (configuration.paginationEnabled) {
+  <div id="table-controls">
+    <ion-button mode="md" fill="clear" (click)="previousPage()">
+      <ion-icon name="arrow-back"></ion-icon>
+      previous
+    </ion-button>
+    <ion-button mode="md" fill="clear" (click)="nextPage()">
+      next
+      <ion-icon name="arrow-forward"></ion-icon>
+    </ion-button>
+  </div>
+  }
 </div>
+
+
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="asset">
+
+    <div class="asset-img-wrapper">
+      <ion-img [src]="row.imgUrl" loading="lazy" alt="image" />
+    </div>
+    <div class="asset-info">
+      <div class="asset-symbol">{{row.symbol}}</div>
+      <div class="asset-name">{{row.name}}</div>
+    </div>
+
+  </div>
+</ng-template>

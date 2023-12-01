@@ -34,6 +34,7 @@
     "@solana/spl-token": "0.3.4",
     "@solana/wallet-adapter-wallets": "0.19.23",
     "@solana/web3.js": "1.78.3",
+    "@sonarwatch/portfolio-core": "^0.8.115",
     "@vercel/analytics": "^1.1.1",
     "chart.js": "^4.4.0",
     "ionicons": "^7.2.1",

@@ -1,0 +1,187 @@
+
+div#table-wrapper {
+    position: relative;
+    #table-controls {
+        position: absolute;
+        bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 24px;
+    }
+
+ion-button {
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--gray-modern-200, #E3E8EF);
+    --color: var(--gray-modern-500, #697586);
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    text-transform: capitalize;
+    ion-icon {
+        margin-inline: 6px;
+        width: 16px;
+        height: 16px;
+    }
+}
+}
+
+:host ::ng-deep {
+    #table {
+        .ngx-table__header-title {
+
+            color: var(--gray-modern-500, #697586);
+            font-family: Inter;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 18px;
+            /* 150% */
+        }
+
+        .ngx-table__header-cell {
+            height: 44px;
+
+            &:first-child {
+                padding-inline-start: 32px;
+            }
+
+            &:not(:first-child) {
+                text-align: center;
+            }
+        }
+
+        .light-text {
+            text-align: center;
+            color: var(--gray-modern-600, #4B5565);
+            font-family: Inter;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 20px;
+            /* 166.667% */
+        }
+
+        .bold-text {
+            text-align: center;
+            color: var(--gray-modern-900, #121926);
+            font-family: Inter;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 20px;
+            /* 166.667% */
+        }
+
+        tbody>tr>td {
+            cursor: pointer;
+            height: 77px;
+            padding: 0;
+
+            .asset {
+                display: flex;
+                align-items: center;
+                padding-inline-start: 32px;
+            }
+
+            .asset-img-wrapper {
+                margin-inline-end: 12px;
+
+                ion-img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                }
+            }
+
+            .asset-info {
+                display: flex;
+                flex-direction: column;
+
+                .asset-symbol {
+                    color: var(--colors-text-text-primary-900, #101828);
+                    /* Text sm/Medium */
+                    font-family: Inter;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 20px;
+                    /* 142.857% */
+                }
+
+                .asset-name {
+                    color: var(--gray-modern-600, #4B5565);
+                    font-family: Inter;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 20px;
+                    /* 166.667% */
+                }
+            }
+        }
+    }
+
+    #paginationtable {
+        display: flex;
+        justify-content: center;
+    }
+
+    #pagination-controls {
+        .pagination-previous, .pagination-next{
+            visibility: hidden;
+        }
+        // }
+        // .pagination-previous{
+        //     left: 32px;
+        // }
+        // .pagination-next{
+        //     right: 32px;
+        // }
+        // .pagination-next::before{
+        //     content: "Next";
+        //     position: absolute;
+        //     // left: 32px;
+        // }
+        // .pagination-previous::before{
+        //     content: "Previous";
+        //     position: absolute;
+        //     // right: 32px;
+        // }
+        // .pagination-previous, .pagination-next {
+        //     content: "dawd";
+        //     position: absolute;
+        //     border-radius: var(--radius-md, 8px);
+        //     border: 1px solid var(--gray-modern-200, #E3E8EF);
+        //     background: #FFF;
+        //     padding: 3px 12px;
+        // }
+
+        .ngx-pagination li {
+            a:hover {
+                background-color: transparent;
+            }
+
+            background-color: white;
+
+            width: 40px;
+            height: 40px;
+            color: var(--gray-modern-500, #697586);
+            text-align: center;
+            font-family: Inter;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 34px;
+            border-radius: var(--radius-md, 8px);
+            border: 0;
+        }
+
+        .ngx-pagination li.current {
+            background: var(--colors-background-bg-primary-hover, #F9FAFB);
+        }
+    }
+}
