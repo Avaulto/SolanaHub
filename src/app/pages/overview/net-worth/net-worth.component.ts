@@ -1,5 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { UtilService } from 'src/app/services';
 
 @Component({
   selector: 'app-net-worth',
@@ -9,8 +10,7 @@ import { Component, OnInit } from '@angular/core';
   imports:[CurrencyPipe]
 })
 export class NetWorthComponent implements OnInit {
-
-  constructor() { }
+  public portfolioTotalValue = 4562623;
 
   ngOnInit() {}
 

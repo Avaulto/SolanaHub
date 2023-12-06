@@ -1,9 +1,14 @@
 <ion-grid id="chart-breakdown">
+  @if (portfolio.length) {
   <ion-row style="width: 100%" class="ion-justify-content-between ion-align-items-center">
-    <ion-col >
-      <div style="height: 140px; width: 140px;">
-        <canvas #breakdownChart></canvas>
-      </div>
+    
+    <ion-col>
+
+        <div style="height: 140px; width: 140px;">
+          <canvas #breakdownChart></canvas>
+          
+        </div>
+ 
     </ion-col>
     <ion-col sizeMd="8" id="legend">
       <div id="title" class="ion-margin-bottom">
@@ -30,4 +35,7 @@
      
     </ion-col>
   </ion-row>
+}@else{
+  <ion-spinner style="margin: 0 auto;" color="primary" name="crescent"></ion-spinner>
+}
 </ion-grid>
