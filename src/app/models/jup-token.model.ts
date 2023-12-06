@@ -1,5 +1,5 @@
 
-export interface Token {
+export interface JupToken {
     chainId: number; // 101,
     address: string; // 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     symbol: string; // 'USDC',

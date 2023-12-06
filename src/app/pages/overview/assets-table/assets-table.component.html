@@ -7,10 +7,29 @@
     Obtain a comprehensive and detailed overview of your assets
   </div>
 </div>
-
-<app-table-menu [menu]="tableMenuOptions" [currentTab]="'Tokens'"></app-table-menu>
+<app-mft 
+[tableMenuOptions]="tableMenuOptions"
+  (onTabSelected)="selectedTab.set($event)" 
+  (onRowClicked)="eventEmitted($event)"
+  [tableColumns]="columns"
+  [tableData]="tableData"
+   ></app-mft>
+   <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+    <div class="asset">
+  
+      <div class="asset-img-wrapper">
+        <ion-img [src]="row.imgUrl" alt="image" />
+      </div>
+      <div class="asset-info">
+        <div class="asset-symbol">{{row.symbol}}</div>
+        <div class="asset-name">{{row.name}}</div>
+      </div>
+  
+    </div>
+  </ng-template>
+<!-- <app-table-menu [menu]="tableMenuOptions" [currentTab]="'Tokens'" (onSelectTab)="tab.set($event)"></app-table-menu>
 <div id="table-wrapper">
-  <ngx-table #table (event)="eventEmitted($event)" [configuration]="configuration" [data]="data()" [columns]="columns">
+  <ngx-table #table (event)="eventEmitted($event)" [configuration]="configuration" [data]="tableData()" [columns]="columns">
   </ngx-table>
   @if (configuration.paginationEnabled) {
   <div id="table-controls">
@@ -31,7 +50,7 @@
   <div class="asset">
 
     <div class="asset-img-wrapper">
-      <ion-img [src]="row.imgUrl" loading="lazy" alt="image" />
+      <ion-img [src]="row.imgUrl" alt="image" />
     </div>
     <div class="asset-info">
       <div class="asset-symbol">{{row.symbol}}</div>
@@ -39,4 +58,4 @@
     </div>
 
   </div>
-</ng-template>
+</ng-template> -->

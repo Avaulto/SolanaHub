@@ -1,0 +1,58 @@
+@if(tableMenuOptions.length){
+<app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"></app-table-menu>
+}
+@if(searchBoxEnable){
+<div id="search-box-wrapper">
+  <ion-searchbar 
+    mode="ios" 
+    placeholder="Search" 
+    show-clear-button="focus"
+    (ionInput)="handleInput($event)"
+    >
+</ion-searchbar>
+</div>
+}
+<div id="table-wrapper">
+  <ngx-table 
+  #table
+   (event)="onRowClicked.emit($event)"
+    [configuration]="configuration" 
+    [data]="tableData()"
+    [columns]="tableColumns()"
+    [loadingTemplate]="loadingTemplate"
+    >
+  </ngx-table>
+  @if (configuration.paginationEnabled) {
+  <div id="table-controls">
+    <ion-button mode="md" fill="clear" (click)="previousPage()">
+      <ion-icon name="arrow-back"></ion-icon>
+      previous
+    </ion-button>
+    <ion-button mode="md" fill="clear" (click)="nextPage()">
+      next
+      <ion-icon name="arrow-forward"></ion-icon>
+    </ion-button>
+  </div>
+  }
+</div>
+
+
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="asset">
+
+    <div class="asset-img-wrapper">
+      <ion-img [src]="row.imgUrl" alt="image" />
+    </div>
+    <div class="asset-info">
+      <div class="asset-symbol">{{row.symbol}}</div>
+      <div class="asset-name">{{row.name}}</div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #loadingTemplate>
+  <td [attr.colspan]="tableColumns().length">
+    <div class="loader">Loading...</div>
+  </td>
+</ng-template>

@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
+import { WalletComponent } from './wallet/wallet.component';
+import { PortfolioService } from './services/portfolio.service';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +13,7 @@ import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevr
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
+    WalletComponent,
     RouterLink,
     RouterLinkActive,
     CommonModule,
@@ -26,13 +29,16 @@ import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevr
     IonIcon,
     IonLabel,
     IonRouterOutlet,
-    IonImg
+    IonImg,
   ],
 })
-export class AppComponent {
-  constructor() {
+export class AppComponent implements OnInit {
+  constructor(private _portfolioService:PortfolioService) {
     
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
+  }
+  ngOnInit(): void {
+    this._portfolioService.getPortfolioAssets('CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP')
   }
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
 

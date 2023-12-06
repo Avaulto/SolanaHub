@@ -1,0 +1,11 @@
+@import './table.scss';
+
+#search-box-wrapper{
+    display: flex;
+    justify-content: end;
+}
+ion-searchbar{
+    width: 300px;
+    max-width: 100%;
+  
+}

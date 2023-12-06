@@ -4,8 +4,6 @@ import { IonButton } from '@ionic/angular/standalone';
   selector: 'app-table-menu',
   templateUrl: './table-menu.component.html',
   styleUrls: ['./table-menu.component.scss'],
-  standalone: true,
-  imports: [IonButton]
 })
 export class TableMenuComponent  implements OnInit {
   @Input() menu: string[] = [];

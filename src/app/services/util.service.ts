@@ -1,9 +1,9 @@
-import { CurrencyPipe, DecimalPipe } from "@angular/common";
+import { CurrencyPipe, DecimalPipe, DatePipe, PercentPipe } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, filter, Observable } from "rxjs";
 import { LocalStorageService } from "./local-storage.service";
 import { PublicKey } from "@solana/web3.js";
-import { Token } from "../models/jup-token.model";
+import { JupToken } from "../models/jup-token.model";
 // import { PriorityFee } from "../models/priorityFee.model";
 // import * as moment from "moment";
 // import { v4 as uuidv4 } from "uuid";
@@ -20,10 +20,12 @@ export enum PriorityFee {
 export class UtilService {
   public currencyPipe: CurrencyPipe = new CurrencyPipe('en-US');
   public decimalPipe: DecimalPipe = new DecimalPipe('en-US');
+  public percentPipe: PercentPipe = new PercentPipe('en-US');
+  public datePipe: DatePipe = new DatePipe('en-US');
   constructor(
     private localStore: LocalStorageService) {
   }
-  public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://api.SolanaHub.app'
+  public serverlessAPI = 'https://api.SolanaHub.app' // location.hostname === "localhost" ? 'http://localhost:3000' : 'https://api.SolanaHub.app'
 
   private _systemExplorer = new BehaviorSubject<string>(this.localStore.getData('explorer') || 'https://solana.fm' as string);
   public explorer$ = this._systemExplorer.asObservable();
@@ -68,7 +70,7 @@ export class UtilService {
     return PublicKey.isOnCurve(address);
   }
 
-  public async getJupTokens(): Promise<Token[]> {
+  public async getJupTokens(): Promise<JupToken[]> {
     //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
     let tokensData = []
     try {
@@ -78,7 +80,7 @@ export class UtilService {
     }
     return tokensData
   }
-  public addTokenData(assets: any,  tokensInfo: Token[]): any[] {
+  public addTokenData(assets: any,  tokensInfo: JupToken[]): any[] {
     return assets.map((res: any) => {
       res.data.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
@@ -95,5 +97,13 @@ export class UtilService {
 
       return item
     })
+  }
+
+  public getSolPrice(){
+    try {
+      const soldata = fetch('https://api.coingecko.com/api/v3')
+    } catch (error) {
+      
+    }
   }
 }

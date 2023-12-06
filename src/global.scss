@@ -8,7 +8,7 @@
  * For more information on global stylesheets, visit the documentation:
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
- 
+
 @import 'inter-font.scss';
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
@@ -38,11 +38,38 @@ ion-content {
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
 
-.overview-gap{
-    padding:20px 32px;
+.overview-gap {
+    padding: 20px 32px;
 }
-#asset-modal{
+
+#asset-modal {
     --width: 100vw;
     --height: 90vh;
     align-items: flex-end;
+}
+
+.searchbar-input.sc-ion-searchbar-ios {
+    padding-inline-start: 35px !important;
+}
+ion-searchbar.ios,
+ion-input {
+    .searchbar-input.sc-ion-searchbar-ios {
+        padding-inline-start: 38px !important;
+    }
+    overflow: hidden;
+    color: var(--colors-text-text-placeholder, #697586);
+    text-overflow: ellipsis;
+    font-weight: 400;
+    line-height: 18px;
+    font-size: 13px;
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--colors-border-border-primary, #CDD5DF);
+    background: var(--colors-background-bg-primary, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    --background: transparent;
+    padding-inline: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    min-height: 0;
+    height: 40px;
 }

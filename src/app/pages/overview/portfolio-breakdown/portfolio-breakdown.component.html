@@ -1,3 +1,33 @@
-<p>
-  portfolio-breakdown works!
-</p>
+<ion-grid id="chart-breakdown">
+  <ion-row style="width: 100%" class="ion-justify-content-between ion-align-items-center">
+    <ion-col >
+      <div style="height: 140px; width: 140px;">
+        <canvas #breakdownChart></canvas>
+      </div>
+    </ion-col>
+    <ion-col sizeMd="8" id="legend">
+      <div id="title" class="ion-margin-bottom">
+        Assets breakdown
+      </div>
+      @for (item of portfolio; track $index) {
+      <div class="asset-group">
+        <div class="asset-type">
+          <div class="group-color">
+            <span [ngStyle]="{'background': item.color}"></span>
+          </div>
+          <div class="group-name">
+            {{item.group}}
+          </div>
+        </div>
+        <div class="asset-share">
+          {{ utilService.percentPipe.transform(item.value / portfolioTotalValue, '1.0-2')}}
+        </div>
+        <div class="asset-usd-value">
+          {{utilService.currencyPipe.transform(item.value)}}
+        </div>
+      </div>
+      }
+     
+    </ion-col>
+  </ion-row>
+</ion-grid>

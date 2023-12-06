@@ -30,6 +30,9 @@ ion-button {
 
 :host ::ng-deep {
     #table {
+        // th.ngx-table__header-cell{
+        //     padding: 0 !important;
+        // }
         .ngx-table__header-title {
 
             color: var(--gray-modern-500, #697586);
@@ -50,6 +53,7 @@ ion-button {
 
             &:not(:first-child) {
                 text-align: center;
+                padding: 0;
             }
         }
 
