@@ -1,17 +1,14 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation, WritableSignal, computed, effect, signal } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, computed,  signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon } from '@ionic/angular/standalone';
 
-import { TableMenuComponent } from '../../../shared/layouts/mft/table-menu/table-menu.component';
 import { addIcons } from 'ionicons';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
 import { AssetModalComponent } from './asset-modal/asset-modal.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { Token } from 'src/app/models/portfolio.model';
-import { Columns } from 'ngx-easy-table';
-import { TableData } from 'src/app/services/table.interface';
+
 
 @Component({
   selector: 'app-assets-table',
@@ -29,13 +26,15 @@ export class AssetsTableComponent implements OnInit {
 
   constructor(
     private _portfolioService: PortfolioService,
-    private _modalCtrl: ModalController
+    private _modalCtrl: ModalController,
   ) {
     addIcons({ arrowBack, arrowForward });
   }
   selectedTab = signal('tokens');
-  //@ts-ignore
-  columns = computed(() => { console.log(this.selectedTab().toLowerCase(), this._columnsOptions[this.selectedTab().toLowerCase()]); return this._columnsOptions[this.selectedTab().toLowerCase()] })
+  columns = computed(() => {  
+    //@ts-ignore
+    return this._columnsOptions[this.selectedTab().toLowerCase()] 
+  })
   tableData = computed(() => {
     let tableType: string = this.selectedTab();
     tableType = (tableType.toLowerCase() === 'liquidity pools' ? tableType = 'lp' : tableType).toLowerCase();

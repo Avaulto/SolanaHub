@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, signal } from '@angular/core';
+import { Component, OnInit,Input, TemplateRef, ViewChild, signal } from '@angular/core';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { IonImg, IonChip } from '@ionic/angular/standalone';
@@ -34,64 +34,6 @@ export class TransactionsHistoryTableComponent implements OnInit {
     ])
   }
   public columns = signal([] as Columns[])
-  tableData = signal([
-    {
-      date: {
-        date: this._utilService.datePipe.transform('10/10/10', 'shortDate'),
-        time: this._utilService.datePipe.transform('10/10/10', 'shortTime')
-      },
-      from: 'asd2...345a',
-      to: '345s...8gfh',
-      operation: {
-        in: {
-          amount: '100', token: 'SOL'
-        },
-        out: {
-          amount: '523', token: 'USDC'
-        },
-        icon:'assets/icon/switch-horizontal.svg'
-      },
-      type: { color: 'primary', event: 'Swap' },
-      txUrl: 'https://solscan.io/account/BFMufPp4wW276nFzB7FVHgtY8FTahzn53kxxJaNpPGu6#stakeAccounts'
-    },
-    {
-      date: {
-        date: this._utilService.datePipe.transform('10/10/10', 'shortDate'),
-        time: this._utilService.datePipe.transform('10/10/10', 'shortTime')
-      },
-      from: 'asd2...345a',
-      to: '345s...8gfh',
-      operation: {
-        in: {
-          amount: '100', token: 'SOL'
-        },
-        out: {
-          amount: '523', token: 'USDC'
-        },
-        icon:'assets/icon/switch-horizontal.svg'
-      },
-      type: { color: 'primary', event: 'Swap' },
-      txUrl: 'https://solscan.io/account/BFMufPp4wW276nFzB7FVHgtY8FTahzn53kxxJaNpPGu6#stakeAccounts'
-    },
-    {
-      date: {
-        date: this._utilService.datePipe.transform('10/2/10', 'shortDate'),
-        time: this._utilService.datePipe.transform('10/2/10', 'shortTime')
-      },
-      from: '98fs...zzde',
-      to: 'nhg8...uh3s',
-      operation: {
-        in: {
-          amount: '', token: ''
-        },
-        out: {
-          amount: '523', token: 'USDC'
-        },
-        icon:'assets/icon/arrow-narrow-up.svg'
-      },
-      type: { color: 'secondary', event: 'transfer' },
-      txUrl: 'https://solscan.io/account/BFMufPp4wW276nFzB7FVHgtY8FTahzn53kxxJaNpPGu6#stakeAccounts'
-    }
-  ])
+  @Input() tableData = signal([])
   eventEmitted(ev: any) { }
 }

@@ -1,0 +1,49 @@
+:host{
+    padding-block-start: 40px;
+}
+#token-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#token-info {
+    display: flex;
+    align-items: center;
+}
+
+#token-img {
+    margin-inline-end: 12px;
+
+    ion-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+}
+
+#price {
+    color: var(--gray-900, #101828);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px;
+}
+
+#name {
+    color: var(--gray-modern-500, #697586);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+
+    /* 13px */
+}
+
+#token-price-movement {
+    color: var(--colors-text-text-brand-primary-900, #692B53);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+
+    /* 16px */
+}

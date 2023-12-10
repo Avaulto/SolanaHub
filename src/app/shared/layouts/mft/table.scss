@@ -132,6 +132,10 @@ ion-button {
     #paginationtable {
         display: flex;
         justify-content: center;
+        z-index: 2;
+        position: relative;
+        width: 30%;
+        margin: 0 auto;
     }
 
     #pagination-controls {

@@ -63,17 +63,17 @@ export class MftComponent {
     let lastPage = this.table.apiEvent({
       type: API.getPaginationTotalItems,
     });
-    // const currentPage = this.table.apiEvent({
-    //   type: API.getPaginationCurrentPage,
-    // });
+    const currentPage = this.table.apiEvent({
+      type: API.getPaginationCurrentPage,
+    });
     console.log( lastPage, this.tableColumns());
     
-    // if (lastPage > currentPage) {
-    //   this.table.apiEvent({
-    //     type: API.setPaginationCurrentPage,
-    //     value: currentPage + 1,
-    //   });
-    // }
+    if (lastPage > currentPage) {
+      this.table.apiEvent({
+        type: API.setPaginationCurrentPage,
+        value: currentPage + 1,
+      });
+    }
 
 
   }

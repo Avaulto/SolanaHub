@@ -1,8 +1,11 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
+import { ApiService } from './api.service';
+import { Observable, catchError, map, of, shareReplay } from 'rxjs';
+import { PriceHistoryService } from './price-history.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +17,11 @@ export class PortfolioService {
   public lp: WritableSignal<LiquidityProviding[]> = signal([]);
   public staking: WritableSignal<StakeAccount[]> = signal([]);
   readonly restAPI = this._utilService.serverlessAPI
-  constructor(private _utilService: UtilService) { }
+  constructor(
+    private _utilService: UtilService,
+    //  private _apiService:ApiService
+    private _priceHistoryService:PriceHistoryService
+     ) { }
 
 
   public async getPortfolioAssets(walletAddress: string) {
@@ -25,8 +32,10 @@ export class PortfolioService {
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens);
-
-
+      
+      this.tokens().map(token =>{
+        
+      })
       // const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
@@ -68,7 +77,15 @@ export class PortfolioService {
     }
     
   }
-  public walletHistory(){
-    
-  }
+  // public walletHistory(filter: string): Observable<TransactionHistory[] | Error> {
+  //   return this._apiService.get(`${this.restAPI}/get-next-airdrop`).pipe(
+  //     this._utilService.isNotNull,
+  //     map((history: TransactionHistory[]) => {
+
+  //       return history
+  //     }),
+  //     shareReplay(),
+  //     catchError((err) =>  of(new Error(err)))
+  //   )
+  // }
 }

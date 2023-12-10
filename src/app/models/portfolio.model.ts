@@ -33,3 +33,40 @@ export interface LendingOrBorrow{
 export interface StakeAccount {
 
 }
+
+
+export interface TransactionHistory{
+    txHash: string
+    blockNumber: number
+    blockTime: string
+    status: boolean
+    from: string
+    to: string
+    fee: number
+    mainAction: string
+    balanceChange: BalanceChange[]
+    contractLabel?: ContractLabel
+  }
+  
+  export interface BalanceChange {
+    amount: number
+    symbol?: string
+    name?: string
+    decimals: number
+    address: string
+    logoURI?: string
+    tokenAccount?: string
+    owner?: string
+    programId?: string
+  }
+  
+  export interface ContractLabel {
+    address: string
+    name: string
+    metadata: Metadata
+  }
+  
+  export interface Metadata {
+    icon: string
+  }
+  

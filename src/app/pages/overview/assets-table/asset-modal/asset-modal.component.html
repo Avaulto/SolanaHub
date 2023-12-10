@@ -1,3 +1,12 @@
-<p>
-  asset-modal works!
-</p>
+<ion-grid>
+  <ion-row class="ion-justify-content-between">
+    <ion-col size="12" sizeMd="7.6">
+      <app-price-data/>
+      <app-transactions-history-table [tableData]="mockTableHistory"/>
+    </ion-col>
+    <ion-col size="12" sizeMd="4">
+      <app-action-box/>
+    </ion-col>
+  </ion-row>
+
+</ion-grid>
