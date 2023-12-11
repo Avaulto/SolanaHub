@@ -80,6 +80,9 @@ ion-button {
         }
 
         tbody>tr>td {
+            &:first-child {
+                padding-inline-start: 32px;
+            }
             cursor: pointer;
             height: 77px;
             padding: 0;
@@ -87,9 +90,9 @@ ion-button {
             .asset {
                 display: flex;
                 align-items: center;
-                padding-inline-start: 32px;
+   
             }
-
+      
             .asset-img-wrapper {
                 margin-inline-end: 12px;
 

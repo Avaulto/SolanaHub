@@ -15,7 +15,6 @@ import { TransactionsHistoryTableComponent } from 'src/app/shared/components/tra
   standalone: true,
   imports: [
     IonicModule,
-    CommonModule,
     NetWorthComponent,
     PortfolioBreakdownComponent,
     AssetsTableComponent,
@@ -30,6 +29,7 @@ export class OverviewPage implements OnInit {
   ngOnInit() {
   }
   public mockTableHistory = signal([
+    
     {
       date: {
         date: this._utilService.datePipe.transform('10/10/10', 'shortDate'),

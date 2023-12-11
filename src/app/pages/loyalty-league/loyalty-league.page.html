@@ -1,13 +1,88 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>loyalty-league</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-header mode="md" [translucent]="true">
 
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+
+
+</ion-header>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">loyalty-league</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid>
+    <ion-row id="promo">
+      <ion-col id="promo-text">
+        <div id="title">Loyalty League</div>
+        <div id="slogen">
+          Stake with SolanaHub and gain <span>extra</span> rewards
+        </div>
+        <div id="intro">Earn points for holding, staking, and using JitoSOL in DeFi. Boost your earnings and unlock
+          exclusive
+          rewards.</div>
+        <ion-button>Start Stake with SolanaHub</ion-button>
+      </ion-col>
+      <ion-col id="promo-media">
+        <ion-img src="assets/images/ll-top-img.svg"></ion-img>
+      </ion-col>
+    </ion-row>
+    <div id="loyalty-league-info">
+      <ion-row class="ion-justify-content-between ion-margin-bottom">
+        <ion-col id="global-league-stats" size="5.9">
+
+          @for (s of poolStats; track $index) {
+          <div>
+            <div class="gap data-set stat">
+              <div class="key ion-text-capitalize">{{s.key}}</div>
+              <div class="value">{{s.value}}</div>
+            </div>
+          </div>
+          }
+
+        </ion-col>
+
+        <ion-col id="points-multiplier" size="5.9" class="gap data-set">
+          <div id="pm-title">points multiplier</div>
+          @for (p of pointsMultiplier; track $index) {
+          <div class="m">
+            <div class="key ion-text-capitalize">{{p.key}}</div>
+            <div class="value">x{{p.value}}</div>
+          </div>
+          }
+          <div class="m">
+            <div id="referrals" class="key ion-text-capitalize">Referrals</div>
+            <div class="value">10%</div>
+          </div>
+          <div class="m">
+            <div id="referrals" class="key ion-text-capitalize">Hub domain holder</div>
+            <div class="value">5%</div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" class="data-set">
+          <div style="padding: 20px 32px;">
+
+            <div class="table-title">
+              Leader board
+            </div>
+            <div class="table-sub">
+              Obtain a comprehensive and detailed overview of your assets
+            </div>
+          </div>
+          <app-mft [tableColumns]="columns" [tableData]="leaderBoard" />
+          <ng-template #scoreRevTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="score-breakdown">
+              <div class="asset-symbol">mSOL: {{row.liquidStake.mSOL}}</div>
+              <div class="asset-name">bSOL: {{row.liquidStake.bSOL}}</div>
+            </div>
+          </ng-template>
+          <ng-template #scoreTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="score" (mouseenter)="showBreakDown.set(true)" (mouseleave)="showBreakDown.set(false)">
+              {{row.liquidStake.pts}}
+            </div>
+          </ng-template>
+
+        </ion-col>
+      </ion-row>
+    </div>
+  </ion-grid>
+
 </ion-content>

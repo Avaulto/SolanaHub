@@ -30,6 +30,7 @@ export interface PointsBreakDown {
     mSOLpts:        number;
     veMNDEpts:      number;
     referralPts:    number;
+    hubDomainPts:   number;
 }
 
 

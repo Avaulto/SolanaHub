@@ -1,0 +1,141 @@
+#promo {
+    background-color: #E9E9E6;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+
+    ion-img {
+        width: 400px;
+        height: 400px;
+        max-width: 100%;
+    }
+
+    #promo-text {
+        max-width: 566px;
+    }
+
+    #title {
+        color: var(--brand-500, #CB62AF);
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        margin-block-end: 12px;
+    }
+
+    #slogen {
+        color: var(--gray-modern-950, var(--colors-gray-modern-950, #0D121C));
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 48px;
+        /* 100% */
+        letter-spacing: -0.96px;
+        margin-block-end: 24px;
+
+        span {
+            color: var(--brand-600, #B84794);
+            font-size: 48px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 48px;
+            letter-spacing: -0.96px;
+        }
+    }
+
+    #intro {
+        color: var(--colors-gray-modern-700, #364152);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        margin-block-end: 48px;
+        /* 150% */
+    }
+
+    ion-button {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 28px;
+        text-transform: capitalize;
+        height: 60px;
+        width: 324px;
+        border-radius: 8px;
+        border: 1px;
+        background: var(--component-colors-components-buttons-primary-button-primary-bg, #9B3678);
+        --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    }
+
+
+    #promo-media {
+        align-items: center;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+
+// loyalty league content section
+#loyalty-league-info {
+    padding: 40px;
+}
+
+#global-league-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.stat {
+    height: 100%;
+    .key {
+        color: var(--colors-text-text-tertiary-600, #4B5565);
+        font-family: Inter;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+        margin-bottom: 8px;
+    }
+
+    .value {
+        color: var(--colors-text-text-primary-900, #121926);
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
+    }
+}
+
+#points-multiplier {
+
+    #pm-title {
+        color: var(--gray-modern-950, var(--colors-gray-modern-950, #0D121C));
+        font-size: 14px;
+        font-weight: 600;
+        margin-block-end: 11px;
+        text-transform: capitalize;
+    }
+
+    .m {
+        display: flex;
+        justify-content: space-between;
+        margin-block-end: 8px;
+        .key {
+            color: var(--colors-gray-modern-500, #697586);
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .value {
+            color: var(--colors-gray-modern-800, #202939);
+            text-align: right;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 14px;
+            /* 116.667% */
+        }
+        #referrals{
+            color: var(--brand-600, #B84794);
+        }
+    }
+}

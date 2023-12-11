@@ -81,6 +81,8 @@ export class MftComponent {
     effect(() =>{
       console.log('mft loaded', this.tableData());
       if(this.tableData().length > 5){
+        console.log('load pagination');
+        
         this.configuration.paginationEnabled = true
       }
     })
