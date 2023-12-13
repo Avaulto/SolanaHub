@@ -18,7 +18,8 @@ import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
   styleUrls: ['./mft.component.scss'],
 })
 // multi functional table
-export class MftComponent {
+export class MftComponent implements OnInit {
+  @Input('tableRows') tableRows = 5;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   @Input('tableMenuOptions') tableMenuOptions: string[] = []
     //@ts-ignore
@@ -44,11 +45,13 @@ export class MftComponent {
     orderEnabled: true,
     threeWaySort: true,
     showDetailsArrow: true,
-    rows: 5,
     paginationRangeEnabled: false,
-    paginationEnabled: false
+    paginationEnabled: true,
+    // horizontalScroll: true
   };
-  
+  ngOnInit(): void {
+    this.configuration.rows = this.tableRows;
+  }
   previousPage() {
     const res = this.table.apiEvent({
       type: API.getPaginationCurrentPage,
@@ -79,10 +82,10 @@ export class MftComponent {
   }
   constructor() { 
     effect(() =>{
-      console.log('mft loaded', this.tableData());
-      if(this.tableData().length > 5){
-        console.log('load pagination');
-        
+      console.log('mft loaded', this.tableData(), this.tableRows);
+      if(this.tableData().length < this.tableRows){
+        this.configuration.paginationEnabled = false
+      }else{
         this.configuration.paginationEnabled = true
       }
     })

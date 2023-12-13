@@ -1,0 +1,34 @@
+
+:host {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.stat {
+    height: 100%;
+
+    .key {
+        color: var(--colors-text-text-tertiary-600, #4B5565);
+        font-family: Inter;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+        margin-bottom: 8px;
+    }
+
+    .value {
+        color: var(--colors-text-text-primary-900, #121926);
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 32px;
+    }
+}
+
+ion-skeleton-text{
+    width: 100%;
+    height: 30px;
+    border-radius: 4px;
+}

@@ -1,0 +1,59 @@
+<div id="pm-title">points multiplier</div>
+
+
+ <div class="m">
+  <div class="key ">Native stake</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.nativeStake}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>
+<div class="m">
+  <div class="key ">mSOL direct stake</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.mSOL_DirectStakeBoost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>
+<div class="m">
+  <div class="key ">bSOL direct stake</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.bSOL_DirectStakeBoost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>
+<div class="m">
+  <div class="key ">veMNDE votes</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.veMNDE_Boost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>
+<div class="m">
+  <div class="key ">veBLZE votes</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.veBLZE_Boost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>
+<div class="m">
+  <div class="key bonus ">Referrals</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.referral_Boost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>
+<div class="m">
+  <div class="key bonus ">Hub domain holder</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.hubDomain_Boost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" style="width: 15%;"/>
+  }
+</div>

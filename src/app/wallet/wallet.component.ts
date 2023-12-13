@@ -1,5 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonImg,
   IonIcon,
@@ -17,7 +18,8 @@ import { chevronDownOutline } from 'ionicons/icons';
     IonIcon,
     DecimalPipe,
     IonImg,
-    IonLabel
+    IonLabel,
+    RouterLink
   ]
 })
 export class WalletComponent implements OnInit {

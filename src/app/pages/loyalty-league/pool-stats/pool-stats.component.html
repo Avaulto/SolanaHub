@@ -1,0 +1,46 @@
+
+
+
+
+    <div class="gap data-set stat">
+      <div class="key ion-text-capitalize">Prize Pool</div>
+      @if(prizePool$ | async; as prizePool){
+        <div class="value">{{prizePool.rebates | number:'1.0-2' }} SOL</div>
+      }@else{
+        <ion-skeleton-text [animated]="true" style="width: 40%;"/>
+      }
+
+    </div>
+
+    <div class="gap data-set stat">
+      <div class="key ion-text-capitalize">Stake Boost</div>
+      @if(prizePool$ | async; as prizePool){
+        <div class="value">{{prizePool.APR_boost  | percent:'1.0-2' }}</div>
+      }@else{
+        <ion-skeleton-text [animated]="true" style="width: 40%;"/>
+      }
+
+    
+    </div>
+  
+    <div class="gap data-set stat">
+      <div class="key ion-text-capitalize">Total Points</div>
+      @if(totalPts){
+        <div class="value">{{totalPts | number:'1.1' }}</div>
+      }@else{
+        <ion-skeleton-text [animated]="true" style="width: 50%;"/>
+      }
+
+
+    </div>
+
+    <div class="gap data-set stat">
+      <div class="key ion-text-capitalize">Next Airdrop</div>
+      @if(nextAirdrop$ | async; as nextAirdrop){
+        <div class="value">ETA in {{nextAirdrop.days}} days</div>
+      }@else{
+        <ion-skeleton-text [animated]="true"/>
+      }
+    </div>
+
+

@@ -1,10 +1,7 @@
 <ion-header mode="md" [translucent]="true">
-
   <ion-buttons slot="start">
     <ion-menu-button></ion-menu-button>
   </ion-buttons>
-
-
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-grid>
@@ -14,46 +11,28 @@
         <div id="slogen">
           Stake with SolanaHub and gain <span>extra</span> rewards
         </div>
-        <div id="intro">Earn points for holding, staking, and using JitoSOL in DeFi. Boost your earnings and unlock
-          exclusive
-          rewards.</div>
-        <ion-button>Start Stake with SolanaHub</ion-button>
+        <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
+          Boost your score to unlock weekly SOL rewards.</div>
+        @if(loyalMember){
+        <app-member-stats />
+        }@else {
+        <ion-button id="stake-redirect">Start Stake with SolanaHub</ion-button>
+        }
       </ion-col>
-      <ion-col id="promo-media">
+      <ion-col class="ion-hide-sm-down" id="promo-media">
         <ion-img src="assets/images/ll-top-img.svg"></ion-img>
       </ion-col>
     </ion-row>
     <div id="loyalty-league-info">
       <ion-row class="ion-justify-content-between ion-margin-bottom">
-        <ion-col id="global-league-stats" size="5.9">
+        <ion-col sizeMd="5.9" size="12">
 
-          @for (s of poolStats; track $index) {
-          <div>
-            <div class="gap data-set stat">
-              <div class="key ion-text-capitalize">{{s.key}}</div>
-              <div class="value">{{s.value}}</div>
-            </div>
-          </div>
-          }
+        <app-pool-stats [totalPts]="leaderBoard()?.totalPoints"/>
 
         </ion-col>
-
-        <ion-col id="points-multiplier" size="5.9" class="gap data-set">
-          <div id="pm-title">points multiplier</div>
-          @for (p of pointsMultiplier; track $index) {
-          <div class="m">
-            <div class="key ion-text-capitalize">{{p.key}}</div>
-            <div class="value">x{{p.value}}</div>
-          </div>
-          }
-          <div class="m">
-            <div id="referrals" class="key ion-text-capitalize">Referrals</div>
-            <div class="value">10%</div>
-          </div>
-          <div class="m">
-            <div id="referrals" class="key ion-text-capitalize">Hub domain holder</div>
-            <div class="value">5%</div>
-          </div>
+        <div style="    display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div>
+        <ion-col id="points-multiplier" sizeMd="5.9" size="12" class="gap data-set">
+          <app-points-stats/>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -67,17 +46,14 @@
               Obtain a comprehensive and detailed overview of your assets
             </div>
           </div>
-          <app-mft [tableColumns]="columns" [tableData]="leaderBoard" />
-          <ng-template #scoreRevTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="score-breakdown">
-              <div class="asset-symbol">mSOL: {{row.liquidStake.mSOL}}</div>
-              <div class="asset-name">bSOL: {{row.liquidStake.bSOL}}</div>
-            </div>
-          </ng-template>
-          <ng-template #scoreTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="score" (mouseenter)="showBreakDown.set(true)" (mouseleave)="showBreakDown.set(false)">
+          <app-mft [tableRows]="10" [tableColumns]="columns" [tableData]="leaderBoardTable" />
+
+          <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="score">
               {{row.liquidStake.pts}}
+              <!-- @if(row.liquidStake.msol) -->
             </div>
+
           </ng-template>
 
         </ion-col>

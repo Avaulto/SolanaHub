@@ -25,12 +25,13 @@
   @if (configuration.paginationEnabled) {
   <div id="table-controls">
     <ion-button mode="md" fill="clear" (click)="previousPage()">
-      <ion-icon name="arrow-back"></ion-icon>
+      <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);"/>
       previous
     </ion-button>
     <ion-button mode="md" fill="clear" (click)="nextPage()">
       next
-      <ion-icon name="arrow-forward"></ion-icon>
+      <ion-img src="/assets/icon/arrow-right.svg"/>
+
     </ion-button>
   </div>
   }

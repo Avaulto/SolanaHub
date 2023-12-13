@@ -27,9 +27,6 @@ export class LoyaltyLeagueService {
   public getNextAirdrop(): Observable<NextAirdrop> {
     return this._apiService.get(`${this.api}/get-next-airdrop`).pipe(
       this._utilService.isNotNull,
-      map((nextAirdrop: NextAirdrop) => {
-        return nextAirdrop
-      }),
       shareReplay(),
       // catchError((err) => this._formatErrors(err))
     )
