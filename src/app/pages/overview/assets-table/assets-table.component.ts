@@ -49,43 +49,43 @@ export class AssetsTableComponent implements OnInit {
     this._columnsOptions = {
       tokens: [
         { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '45%' },
-        { key: 'amount', title: 'Amount', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'price', title: 'Price', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'value', title: 'Value', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
+        { key: 'amount', title: 'Amount', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'price', title: 'Price', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'value', title: 'Value', width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
         { key: 'last-seven-days', title: 'Last 7 Days', width: '15%' }
       ],
       nfts: [
         { key: 'collection', title: 'Collection', cellTemplate: this.tokenTpl, width: '25%' },
-        { key: 'nft', title: 'NFT', width: '30%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'floor', title: 'Floor(SOL)', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
+        { key: 'nft', title: 'NFT', width: '30%' },
+        { key: 'floor', title: 'Floor(SOL)', width: '10%' },
         { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
         { key: 'total-value', title: 'Total Value', width: '15%' }
       ],
       'staking': [
         { key: 'collection', title: 'Collection', cellTemplate: this.tokenTpl, width: '25%' },
-        { key: 'nft', title: 'NFT', width: '30%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'floor', title: 'Floor(SOL)', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
+        { key: 'nft', title: 'NFT', width: '30%' },
+        { key: 'floor', title: 'Floor(SOL)', width: '10%' },
         { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
         { key: 'total-value', title: 'Total Value', width: '15%' }
       ],
       'liquidity pools': [
         { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
-        { key: 'dex', title: 'DEX', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'your-liquidity', title: 'Your liquidity', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
+        { key: 'dex', title: 'DEX', width: '10%' },
+        { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
         { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
         { key: 'total-value', title: 'Total Value', width: '15%' }
       ],
       'lendings': [
         { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
-        { key: 'dex', title: 'DEX', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'your-liquidity', title: 'Your liquidity', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
+        { key: 'dex', title: 'DEX', width: '10%' },
+        { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
         { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
         { key: 'total-value', title: 'Total Value', width: '15%' }
       ],
       'vaults': [
         { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
-        { key: 'dex', title: 'DEX', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
-        { key: 'your-liquidity', title: 'Your liquidity', width: '10%', cssClass: { name: 'light-text', includeHeader: false } },
+        { key: 'dex', title: 'DEX', width: '10%' },
+        { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
         { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
         { key: 'total-value', title: 'Total Value', width: '15%' }
       ]

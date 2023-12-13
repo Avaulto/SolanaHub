@@ -31,12 +31,12 @@ export class PointsStatsComponent implements OnInit {
           case 'veMNDE_Boost':
           case 'veBLZE_Boost':
             //@ts-ignore
-            scoreExtended[m] = this.utilService.decimalPipe.transform(score[m], '1.5')
+            scoreExtended[m] = this.utilService.decimalPipe.transform(score[m], '1.4')
             break;
           case 'referral_Boost':
           case 'hubDomain_Boost':
             //@ts-ignore
-            scoreExtended[m] = this.utilService.percentPipe.transform(score[m] -1)
+            scoreExtended[m] = this.utilService.percentPipe.transform(score[m])
             break;
         }
 

@@ -9,7 +9,7 @@
 .m {
     display: flex;
     justify-content: space-between;
-    margin-block-end: 8px;
+    margin-block-end: 6px;
 
     .key {
         color: var(--colors-gray-modern-500, #697586);
@@ -35,7 +35,7 @@
 
 ion-skeleton-text{
     margin: 0;
-    width: 100%;
+    width: 15%;
     height: 14px;
     border-radius: 4px;
 }

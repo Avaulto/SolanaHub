@@ -1,6 +1,6 @@
 ion-menu {
   border: 0;
-
+  width: 14vw;
   ion-content {
     --background: var(--ion-item-background, var(--ion-background-color, #fff));
     --padding-start: 8px;
@@ -80,13 +80,9 @@ ion-menu {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
+@media only screen and (max-width: 1000px) {
+  ion-menu{
+    width: auto;
+  }
+  
+}

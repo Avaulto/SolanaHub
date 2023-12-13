@@ -13,8 +13,8 @@
         </div>
         <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
           Boost your score to unlock weekly SOL rewards.</div>
-        @if(loyalMember){
-        <app-member-stats />
+        @if(loyalMember()){
+        <app-member-stats [loyalMember]="loyalMember" />
         }@else {
         <ion-button id="stake-redirect">Start Stake with SolanaHub</ion-button>
         }
@@ -27,12 +27,12 @@
       <ion-row class="ion-justify-content-between ion-margin-bottom">
         <ion-col sizeMd="5.9" size="12">
 
-        <app-pool-stats [totalPts]="leaderBoard()?.totalPoints"/>
+          <app-pool-stats [prizePool$]="prizePool$" [totalPts]="totalPts" />
 
         </ion-col>
-        <div style="    display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div>
+        <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div>
         <ion-col id="points-multiplier" sizeMd="5.9" size="12" class="gap data-set">
-          <app-points-stats/>
+          <app-points-stats />
         </ion-col>
       </ion-row>
       <ion-row>
@@ -43,14 +43,70 @@
               Leader board
             </div>
             <div class="table-sub">
-              Obtain a comprehensive and detailed overview of your assets
+              Obtain a comprehensive overview for your loyalty points from each source
             </div>
           </div>
-          <app-mft [tableRows]="10" [tableColumns]="columns" [tableData]="leaderBoardTable" />
+          <app-mft [tableRows]="10" [tableColumns]="columns" [tableData]="leaderBoard" />
 
+          <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="addr-item">
+              <span>
+                {{row.walletOwner.addrShort}}
+              </span>
+              <ion-icon appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
+              <!-- @if(row.liquidStake.msol) -->
+            </div>
+
+          </ng-template>
           <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="score">
-              {{row.liquidStake.pts}}
+            <div class="token-pts">
+              <div>
+                <ion-img src="assets/images/msol-small.webp" />
+                <span>
+                  {{row.liquidStake.mSOL}}
+                </span>
+              </div>
+              +
+              <div class="token-pts">
+                <ion-img src="assets/images/bsol-small.webp" />
+                <span>
+                  {{row.liquidStake.bSOL}}
+                </span>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="token-pts">
+              <div>
+                <ion-img src="assets/images/mnde-small.webp" />
+                <span>
+                  {{row.dao.veMNDE}}
+                </span>
+              </div>
+              +
+              <div>
+                <ion-img src="assets/images/blze-small.webp" />
+                <span>
+                  {{row.dao.veBLZE}}
+                </span>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #hubDomainHolderTpl let-row let-rowIndex="rowIndex" let-column="column">
+
+            @if(row.hubDomainHolder){
+            <ion-icon style="font-size:20px;color:#079455;" name="checkmark-circle-outline"></ion-icon>
+            } @else{
+            <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
+            }
+
+
+          </ng-template>
+
+          <ng-template #airdropTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="airdrop">
+              {{row.weeklyAirdrop}}
+              <ion-img src="assets/images/sol.svg" />
               <!-- @if(row.liquidStake.msol) -->
             </div>
 

@@ -4,6 +4,8 @@ import { UtilService } from 'src/app/services';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 
 import { IonSkeletonText } from '@ionic/angular/standalone';
+import { PrizePool } from 'src/app/models';
+import { of } from 'rxjs';
 @Component({
   selector: 'app-pool-stats',
   templateUrl: './pool-stats.component.html',
@@ -15,7 +17,7 @@ export class PoolStatsComponent {
 
   public lls = inject(LoyaltyLeagueService);
   public nextAirdrop$ = this.lls.getNextAirdrop();
-  public prizePool$ = this.lls.getPrizePool()
+  @Input() prizePool$ = of({} as PrizePool) 
   @Input() totalPts = 0
  
 

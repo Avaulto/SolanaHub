@@ -1,6 +1,7 @@
 import { Directive, HostBinding, HostListener, Input } from '@angular/core';
 @Directive({
-  selector: '[appCopyText]'
+  selector: '[appCopyText]',
+  standalone: true
 })
 export class CopyTextDirective {
     @Input() copyText: string;

@@ -82,3 +82,36 @@
 }
 
 
+
+.addr-item {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+    ion-icon {
+        margin-inline-start: 8px;
+        font-size: 12px;
+    }
+}
+
+.token-pts, .airdrop, .bonuses {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    div {
+        display: flex;
+        align-items: center;
+        margin-inline: 4px;
+    }
+    ion-img{
+        width: 12px;
+        height: 12px;
+        margin-inline: 4px;
+    }
+    ion-icon{
+        margin-inline: 4px;
+        font-size: 14px;
+    }
+
+}
+

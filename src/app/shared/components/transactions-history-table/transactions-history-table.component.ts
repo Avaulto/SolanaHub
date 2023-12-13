@@ -25,11 +25,11 @@ export class TransactionsHistoryTableComponent implements OnInit {
 
   ngOnInit() {
     this.columns.set([
-      { key: 'date', title: 'Date/Time', width: '15%', cellTemplate: this.dateTpl, cssClass: { name: 'ion-text-left light-text', includeHeader: true } },
+      { key: 'date', title: 'Date/Time', width: '15%', cellTemplate: this.dateTpl, cssClass: { name: 'ion-text-left ', includeHeader: true } },
       { key: 'from', title: 'From', width: '15%', cssClass: { name: 'ion-text-left bold-text', includeHeader: true } },
       { key: 'to', title: 'To', width: '15%', cssClass: { name: 'ion-text-left bold-text', includeHeader: true } },
-      { key: 'operation', title: 'Operation', width: '25%', cellTemplate: this.opr1Tpl, cssClass: { name: 'ion-text-left light-text', includeHeader: true } },
-      { key: 'type', title: 'Type', width: '15%', cellTemplate: this.typeTpl, cssClass: { name: 'light-text', includeHeader: false } },
+      { key: 'operation', title: 'Operation', width: '25%', cellTemplate: this.opr1Tpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'type', title: 'Type', width: '15%', cssClass: { name: 'ion-text-center ', includeHeader: true }, cellTemplate: this.typeTpl },
       { key: 'transaction', title: 'Transaction', width: '15%', cellTemplate: this.redirectTpl }
     ])
   }
