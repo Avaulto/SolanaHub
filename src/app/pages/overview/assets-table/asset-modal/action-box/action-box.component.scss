@@ -26,11 +26,37 @@
     letter-spacing: -0.36px;
 }
 
+form {
+    .control-group{
+        margin-block-end:12px;
+    }
+    ion-label {
+        display: block;
+        text-transform: capitalize;
+        color: var(--colors-text-text-secondary-700, #364152);
+        font-family: Inter;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+        margin-block-end: 6px;
+    }
+    
+}
+
 ion-segment {
+    margin-block-end:24px ;
     // border-bottom: 1px solid #697586;
     // border-radius: 0;
 }
-
+.private-tx {
+    display: flex;
+    align-items: center;
+    margin-block-end:16px ;
+    ion-label {
+        margin: 0;
+    }
+}
 ion-segment-button {
     text-transform: capitalize;
     --border-color: #B84794;
@@ -40,4 +66,8 @@ ion-segment-button {
     border-bottom: 1px solid #e3e8ef;
     font-size: 14px;
     font-weight: 600;
+}
+
+ion-button{
+    --border-radius: 8px;
 }

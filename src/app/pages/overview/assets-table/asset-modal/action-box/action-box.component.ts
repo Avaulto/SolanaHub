@@ -1,17 +1,32 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { IonSegmentButton ,IonSegment, IonLabel} from '@ionic/angular/standalone';
+import { FormsModule } from '@angular/forms';
+import { helpCircleOutline } from 'ionicons/icons';
+import { IonSegmentButton, IonSegment, IonLabel,IonInput,IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
 @Component({
   selector: 'app-action-box',
   templateUrl: './action-box.component.html',
   styleUrls: ['./action-box.component.scss'],
   standalone: true,
-  imports:[DecimalPipe,IonSegmentButton, IonSegment, IonLabel]
+  imports: [
+    FormsModule,
+    DecimalPipe,
+    IonSegmentButton,
+    IonSegment,
+    IonLabel,
+    IonInput,
+    IonIcon,
+    IonButton,
+    IonToggle,
+  ]
 })
-export class ActionBoxComponent  implements OnInit {
+export class ActionBoxComponent implements OnInit {
 
-  constructor() { }
+  constructor() { 
+    addIcons({helpCircleOutline})
+  }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
 }

@@ -31,7 +31,7 @@ import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive
   ]
 })
 export class LoyaltyLeaguePage implements AfterViewInit {
-  public connectedWallet = 'CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP'
+  public connectedWallet = 'CdoFMmSgkhKGKwunc7Tusg2sMZjxML6kpsvEmqpVYPjyP'
   public loyalMember = signal(null)
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
   @ViewChild('LSTpl', { static: true }) LSTpl: TemplateRef<any> | any;
@@ -51,8 +51,10 @@ export class LoyaltyLeaguePage implements AfterViewInit {
     const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
     this.prizePool$.next(prizePool)
     let findMember = ll.loyaltyPoints.find(staker => staker.walletOwner === this.connectedWallet)
-    //@ts-ignore
-    findMember.weeklyAirdrop  = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
+    if(findMember){
+      //@ts-ignore
+      findMember.weeklyAirdrop  = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
+    }
     const loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
       return {
         rank: i + 1,
