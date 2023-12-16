@@ -26,3 +26,15 @@
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>
+
+<!-- <div *ngFor="let wallet of wallets$ | async; let i = index">
+  <input
+    [id]="'select-wallet-' + i"
+    [value]="wallet.adapter.name"
+    type="radio"
+    name="walletName"
+  />
+  <label [for]="'select-wallet-' + i">
+    {{ wallet.adapter.name }}
+  </label>
+</div> -->

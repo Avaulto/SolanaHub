@@ -9,3 +9,12 @@ ion-col{
 ion-row{
     height: 100vh;
 }
+#divider{
+    border-right: 1px solid var(--colors-gray-light-mode-200, #E3E8EF);
+    // padding-right: 40px;
+}
+::ng-deep .ngx-container{
+
+    border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
+    border-radius: 8px;
+}

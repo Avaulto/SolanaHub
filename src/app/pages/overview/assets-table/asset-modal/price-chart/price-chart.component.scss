@@ -1,0 +1,12 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 207px;
+    margin-block-end: 20px;
+}
+
+#price-chart{
+    border-radius: var(--radius-2xl, 16px);
+border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
+background: var(--Colors-Gray-modern-25, #FCFCFD);
+}

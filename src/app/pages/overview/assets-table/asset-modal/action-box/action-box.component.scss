@@ -27,9 +27,10 @@
 }
 
 form {
-    .control-group{
-        margin-block-end:12px;
+    .control-group {
+        margin-block-end: 12px;
     }
+
     ion-label {
         display: block;
         text-transform: capitalize;
@@ -41,22 +42,57 @@ form {
         line-height: 18px;
         margin-block-end: 6px;
     }
-    
+
 }
 
 ion-segment {
-    margin-block-end:24px ;
+    margin-block-end: 24px;
     // border-bottom: 1px solid #697586;
     // border-radius: 0;
 }
+
 .private-tx {
     display: flex;
     align-items: center;
-    margin-block-end:16px ;
+    margin-block-end: 16px;
+
     ion-label {
-        margin: 0;
+        margin-inline-start: 4px;
+        margin-inline-end: 8px;
+        margin-block-end: 0;
     }
+
+    ion-toggle {
+        
+        --track-background: #EEF2F6;
+        --track-background-checked: #EEF2F6;
+
+        --handle-background: #FFF;
+        --handle-background-checked: var(--ion-color-primary);
+
+        --handle-width: 16px;
+        --handle-height: 16px;
+        --handle-max-height: auto;
+        // --handle-spacing: 6px;
+
+        --handle-border-radius: 50%;
+        --handle-box-shadow: none;
+        --handle-box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06), 0px 1px 3px 0px rgba(16, 24, 40, 0.10);
+    }
+
+    ion-toggle::part(track) {
+        width: 36px;
+        height: 20px;
+        padding: var(--spacing-xxs, 2px);
+        /* Required for iOS handle to overflow the height of the track */
+        overflow: visible;
+        border-radius: var(--radius-full, 1000px);
+        background: var(--Colors-Background-bg-tertiary, #EEF2F6);
+    }
+
+
 }
+
 ion-segment-button {
     text-transform: capitalize;
     --border-color: #B84794;
@@ -68,6 +104,6 @@ ion-segment-button {
     font-weight: 600;
 }
 
-ion-button{
+ion-button {
     --border-radius: 8px;
 }

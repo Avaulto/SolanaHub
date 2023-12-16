@@ -1,0 +1,8 @@
+import { WalletError } from '@solana/wallet-adapter-base';
+export class WalletNotSelectedError extends WalletError {
+    constructor() {
+        super(...arguments);
+        this.name = 'WalletNotSelectedError';
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZXJyb3JzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vcGFja2FnZXMvZGF0YS1hY2Nlc3Mvc3JjL2xpYi9pbnRlcm5hbHMvZXJyb3JzLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxXQUFXLEVBQUUsTUFBTSw2QkFBNkIsQ0FBQztBQUUxRCxNQUFNLE9BQU8sc0JBQXVCLFNBQVEsV0FBVztJQUF2RDs7UUFDVyxTQUFJLEdBQUcsd0JBQXdCLENBQUM7SUFDM0MsQ0FBQztDQUFBIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgV2FsbGV0RXJyb3IgfSBmcm9tICdAc29sYW5hL3dhbGxldC1hZGFwdGVyLWJhc2UnO1xuXG5leHBvcnQgY2xhc3MgV2FsbGV0Tm90U2VsZWN0ZWRFcnJvciBleHRlbmRzIFdhbGxldEVycm9yIHtcbiAgb3ZlcnJpZGUgbmFtZSA9ICdXYWxsZXROb3RTZWxlY3RlZEVycm9yJztcbn1cbiJdfQ==

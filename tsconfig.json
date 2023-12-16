@@ -5,9 +5,10 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
     "strictNullChecks": false,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -21,10 +22,19 @@
     "target": "es2022",
     "module": "es2020",
     "lib": ["es2018", "dom"],
+    "paths": {
+      "crypto": [
+        "node_modules/crypto-browserify"
+      ],
+      "stream": [
+        "node_modules/stream-browserify"
+      ]
+    },
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
+    "allowSyntheticDefaultImports": true,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
