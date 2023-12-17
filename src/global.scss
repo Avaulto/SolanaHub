@@ -25,6 +25,7 @@
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -36,9 +37,10 @@ input[type=number]::-webkit-outer-spin-button {
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
-  }
+}
 
-ion-grid, ion-col{
+ion-grid,
+ion-col {
     margin: 0;
     padding: 0;
 }
@@ -66,11 +68,13 @@ ion-content {
 .searchbar-input.sc-ion-searchbar-ios {
     padding-inline-start: 35px !important;
 }
+
 ion-searchbar.ios,
 ion-input {
     .searchbar-input.sc-ion-searchbar-ios {
         padding-inline-start: 38px !important;
     }
+
     overflow: hidden;
     --color: #697586 !important;
     text-overflow: ellipsis;
@@ -110,4 +114,11 @@ ion-input {
     font-weight: 400;
     line-height: 100%;
     /* 13px */
+}
+
+ion-button {
+    --border-radius: var(--radius-md, 8px);
+    // background: var(--Component-colors-Components-Buttons-Primary-button-primary-bg, #9B3678);
+    /* Shadows/shadow-xs */
+    --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }

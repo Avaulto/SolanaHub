@@ -35,7 +35,7 @@
     "@solana/spl-stake-pool": "^0.6.5",
     "@solana/spl-token": "0.3.4",
     "@solana/wallet-adapter-base": "^0.9.23",
-    "@solana/wallet-adapter-wallets": "0.19.23",
+    "@solana/wallet-adapter-wallets": "0.19.24",
     "@solana/web3.js": "1.87.6",
     "@sonarwatch/portfolio-core": "^0.8.115",
     "@vercel/analytics": "^1.1.1",
