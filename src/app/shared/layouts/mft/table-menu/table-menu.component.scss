@@ -1,9 +1,9 @@
-:host{
+:host {
     padding: 12px 32px;
     border-top: 1px solid var(--gray-modern-100, #EEF2F6);
-border-bottom: 1px solid var(--gray-modern-100, #EEF2F6);
-display: block;
+    display: block;
 }
+
 ion-button {
     height: 36px;
     --background: white;
@@ -17,8 +17,9 @@ ion-button {
     margin-inline-end: 8px;
     /* 153.846% */
 }
+
 .active {
     border-radius: var(--radius-sm, 6px);
     --background: #FFF3FB;
-    color:var(--ion-color-primary)
+    color: var(--ion-color-primary)
 }

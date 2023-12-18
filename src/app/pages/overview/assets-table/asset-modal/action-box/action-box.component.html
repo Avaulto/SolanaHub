@@ -14,17 +14,17 @@
   <form id="send-asset">
     <div class="control-group">
       <ion-label>Recipient’s  address</ion-label>
-      <ion-input></ion-input>
+      <ion-input formControlName="targetAddress"></ion-input>
     </div>
     <div class="control-group">
       <ion-label>amount</ion-label>
-      <ion-input type="number"></ion-input>
+      <ion-input type="number" formControlName="amount"></ion-input>
     </div>
     <div class="private-tx">
       <ion-toggle></ion-toggle>
       <ion-label>private transaction</ion-label>
       <ion-icon name="help-circle-outline"></ion-icon>
     </div>
-    <ion-button expand="block">send</ion-button>
+    <ion-button expand="block" [disabled]="formSubmitted || sendTokenForm.invalid">send</ion-button>
   </form>
 </div>

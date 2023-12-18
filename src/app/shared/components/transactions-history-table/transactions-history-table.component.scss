@@ -1,24 +1,64 @@
 
-
-.date {
-    text-align: left;
-}
-ion-img {
-    width: 16px;
-    height: 16px;
-}
-.divider {
-    margin-inline: 6px;
+.date{
+    width: 67px;
+    text-align: center;
+    div:nth-child(1) {
+        font-weight: 600;
+    }
 }
 .operation {
     display: flex;
-    span {
-        margin-inline: 1px;
+    flex-direction: column;
+
+    .balance-change {
+        display: flex;
+        align-items: center;
+    }
+
+    ion-img {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .asset-value {
+        font-weight: 500;
+        margin-inline: 8px 4px;
+        color: var(--ion-color-success);
+
+        &.negative {
+            color: var(--ion-color-danger);
+        }
     }
 }
-ion-chip{
+
+ion-chip {
     font-weight: 500;
+    border-radius: var(--radius-full, 1000px);
+    border: 1px solid #D5D9EB;
+    background: #F8F9FC;
+
+    &.defi {
+        border: 1px solid #FDD1EE;
+        background: #FFF3FB;
+        color: var(--ion-color-primary);
+    }
+
+
+    &.send {
+        border: 1px solid #F9DBAF;
+        background: #FEF6EE;
+        color:rgba(185, 56, 21, 1);
+    }
+
+    &.received {
+        border: 1px solid #B2DDFF;
+        background: #EFF8FF;
+        color: rgba(23, 92, 211, 1);
+    }
 }
+
 .tx-out {
     display: flex;
     justify-content: center;

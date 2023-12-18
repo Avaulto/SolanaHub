@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
     console.log(new UnsafeBurnerWalletAdapter());
     
 
-    this._portfolioService.getPortfolioAssets('CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP')
+    this._portfolioService.getPortfolioAssets('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
   }
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
 

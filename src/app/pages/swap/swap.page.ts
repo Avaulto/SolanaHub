@@ -35,15 +35,7 @@ export class SwapPage implements OnInit {
   columns = signal([])
 
   ngOnInit() {
-    //@ts-ignore
-    window.Jupiter.init({
-      displayMode: "integrated",
-      integratedTargetId: "integrated-terminal",
-      endpoint: environment.solanaCluster,
-      defaultExplorer: "SolanaFM",
-     
-    });
-    
+
   }
 
 }

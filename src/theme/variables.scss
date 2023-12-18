@@ -3,6 +3,8 @@
 
 /** Ionic CSS Variables **/
 :root {
+	--ion-font-family: 'Inter', sans-serif;
+
   --ion-color-primary: #9B3678;
 	--ion-color-primary-rgb: 155,54,120;
 	--ion-color-primary-contrast: #ffffff;
@@ -231,7 +233,5 @@ html {
    * For more information on dynamic font scaling, visit the documentation:
    * https://ionicframework.com/docs/layout/dynamic-font-scaling
    */
-  --ion-dynamic-font: var(--ion-default-dynamic-font);
-  --ion-font-family: 'Inter', sans-serif;
-  font-family: Inter;
+
 }

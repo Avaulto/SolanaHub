@@ -20,21 +20,21 @@ export class PortfolioService {
   constructor(
     private _utilService: UtilService,
     //  private _apiService:ApiService
-    private _priceHistoryService:PriceHistoryService
-     ) { }
+    private _priceHistoryService: PriceHistoryService
+  ) { }
 
 
   public async getPortfolioAssets(walletAddress: string) {
 
     try {
       const jupTokens = await this._utilService.getJupTokens()
-      const portfolio = await (await fetch(`${this.restAPI}/api/portfolio?address=${walletAddress}`)).json()
+      const portfolio = await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens);
-      
-      this.tokens().map(token =>{
-        
+
+      this.tokens().map(token => {
+
       })
       // const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
       // this._portfolioNft(extendNftData)
@@ -43,7 +43,7 @@ export class PortfolioService {
 
       return extendTokenData.data.assets
     } catch (error) {
-
+      console.error(error);
     }
   }
 
@@ -60,32 +60,63 @@ export class PortfolioService {
       this.tokens.set(tokensAggregated)
     }
   }
-  private async _portfolioNft(nfts: any){
+  private async _portfolioNft(nfts: any) {
     try {
       // console.log(nfts);
-      const magicEdenNft =  await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
+      const magicEdenNft = await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
       console.log(magicEdenNft);
-      
+
       // const nftExtended = await (await fetch(`https://api.blockchainapi.com/v1/solana/nft/solana/GqUDRFJ8wb38fx3o7tzefZY483pZgjDVKxkdgsDNhBiG/owner_advanced`)).json()
 
-      const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`,{method:'POST', body:JSON.stringify({nfts: magicEdenNft})})).json()
+      const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`, { method: 'POST', body: JSON.stringify({ nfts: magicEdenNft }) })).json()
       console.log(nftExtended);
-      
+
     } catch (error) {
       console.error(error);
-      
-    }
-    
-  }
-  // public walletHistory(filter: string): Observable<TransactionHistory[] | Error> {
-  //   return this._apiService.get(`${this.restAPI}/get-next-airdrop`).pipe(
-  //     this._utilService.isNotNull,
-  //     map((history: TransactionHistory[]) => {
 
-  //       return history
-  //     }),
-  //     shareReplay(),
-  //     catchError((err) =>  of(new Error(err)))
-  //   )
-  // }
+    }
+
+  }
+  public async getWalletHistory(walletAddress: string, filter?: string): Promise<TransactionHistory[]> {
+    try {
+      const walletTxHistory = await (await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)).json()
+      const purifiedTxHistory = walletTxHistory.map((tx: TransactionHistory) => {
+        if (tx.contractLabel?.name === 'Jupiter V6') {
+          tx.mainAction = 'swap'
+        }
+        if (tx.mainAction === 'createAssociatedAccount') {
+          tx.mainAction = 'create account'
+        }
+        if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
+          tx.mainAction = 'farm'
+        }
+        tx.fromShort = this._utilService.addrUtil(tx.from).addrShort
+        tx.toShort = this._utilService.addrUtil(tx.to).addrShort
+        tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
+        // switch (tx.mainAction) {
+        //   case 'createAssociatedAccount':
+        //     tx.mainAction = 'Create Account'
+        //     tx.mainActionColor = 'red'
+        //     break;
+        //   case 'send':
+
+        //     break;
+        //   case 'received':
+
+        //     break;
+        //   default:
+        //     break;
+        // }
+        return { ...tx }
+      })
+      // .filter(tx => tx.mainAction)
+      // const purifiedTxHistory = walletTxHistory.filter(tx => tx.mainAction)
+      // console.log(purifiedTxHistory);
+      return purifiedTxHistory
+    } catch (error) {
+      console.error(error);
+      return []
+    }
+
+  }
 }

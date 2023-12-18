@@ -41,9 +41,12 @@ export interface TransactionHistory{
     blockTime: string
     status: boolean
     from: string
+    fromShort?: string
     to: string
+    toShort?: string
     fee: number
     mainAction: string
+    mainActionColor?: string
     balanceChange: BalanceChange[]
     contractLabel?: ContractLabel
   }

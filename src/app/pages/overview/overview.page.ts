@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, WritableSignal, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { NetWorthComponent } from './net-worth/net-worth.component';
@@ -6,6 +6,8 @@ import { AssetsTableComponent } from './assets-table/assets-table.component';
 import { PortfolioBreakdownComponent } from './portfolio-breakdown/portfolio-breakdown.component';
 import { UtilService } from 'src/app/services';
 import { TransactionsHistoryTableComponent } from 'src/app/shared/components/transactions-history-table/transactions-history-table.component';
+import { PortfolioService } from 'src/app/services/portfolio.service';
+import { TransactionHistory } from 'src/app/models';
 
 
 @Component({
@@ -23,69 +25,14 @@ import { TransactionsHistoryTableComponent } from 'src/app/shared/components/tra
 
 })
 export class OverviewPage implements OnInit {
-  private _utilService = inject(UtilService)
+  private _utilService = inject(UtilService);
+  private _portfolioService = inject(PortfolioService)
   constructor() { }
 
-  ngOnInit() {
-  }
-  public mockTableHistory = signal([
+  async ngOnInit() {
+    const res: TransactionHistory[] = await this._portfolioService.getWalletHistory('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
+    this.mockTableHistory.set(res);
     
-    {
-      date: {
-        date: this._utilService.datePipe.transform('10/10/10', 'shortDate'),
-        time: this._utilService.datePipe.transform('10/10/10', 'shortTime')
-      },
-      from: 'asd2...345a',
-      to: '345s...8gfh',
-      operation: {
-        in: {
-          amount: '100', token: 'SOL'
-        },
-        out: {
-          amount: '523', token: 'USDC'
-        },
-        icon: 'assets/icon/switch-horizontal.svg'
-      },
-      type: { color: 'primary', event: 'Swap' },
-      txUrl: 'https://solscan.io/account/BFMufPp4wW276nFzB7FVHgtY8FTahzn53kxxJaNpPGu6#stakeAccounts'
-    },
-    {
-      date: {
-        date: this._utilService.datePipe.transform('10/10/10', 'shortDate'),
-        time: this._utilService.datePipe.transform('10/10/10', 'shortTime')
-      },
-      from: 'asd2...345a',
-      to: '345s...8gfh',
-      operation: {
-        in: {
-          amount: '100', token: 'SOL'
-        },
-        out: {
-          amount: '523', token: 'USDC'
-        },
-        icon: 'assets/icon/switch-horizontal.svg'
-      },
-      type: { color: 'primary', event: 'Swap' },
-      txUrl: 'https://solscan.io/account/BFMufPp4wW276nFzB7FVHgtY8FTahzn53kxxJaNpPGu6#stakeAccounts'
-    },
-    {
-      date: {
-        date: this._utilService.datePipe.transform('10/2/10', 'shortDate'),
-        time: this._utilService.datePipe.transform('10/2/10', 'shortTime')
-      },
-      from: '98fs...zzde',
-      to: 'nhg8...uh3s',
-      operation: {
-        in: {
-          amount: '', token: ''
-        },
-        out: {
-          amount: '523', token: 'USDC'
-        },
-        icon: 'assets/icon/arrow-narrow-up.svg'
-      },
-      type: { color: 'secondary', event: 'transfer' },
-      txUrl: 'https://solscan.io/account/BFMufPp4wW276nFzB7FVHgtY8FTahzn53kxxJaNpPGu6#stakeAccounts'
-    }
-  ])
+  }
+  public mockTableHistory: WritableSignal<TransactionHistory[]> = signal([])
 }

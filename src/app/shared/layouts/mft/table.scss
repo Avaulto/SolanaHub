@@ -29,6 +29,12 @@ ion-button {
 }
 
 :host ::ng-deep {
+    .ngx-table{
+        font-family: var(--ion-font-family);
+    }
+    thead{
+        border-top: 1px solid var(--gray-modern-100, #EEF2F6);
+    }
     #table {
         // th.ngx-table__header-cell{
         //     padding: 0 !important;
@@ -36,9 +42,9 @@ ion-button {
         .ngx-table__header-title {
 
             color: var(--gray-modern-500, #697586);
-            font-family: Inter;
+
             font-size: 12px;
-            font-style: normal;
+
             font-weight: 600;
             line-height: 18px;
             /* 150% */
@@ -57,33 +63,21 @@ ion-button {
             }
         }
 
-        .light-text {
-            text-align: center;
-            color: var(--gray-modern-600, #4B5565);
-            font-family: Inter;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 20px;
-            /* 166.667% */
-        }
+
 
         .bold-text {
             text-align: center;
             color: var(--gray-modern-900, #121926);
-            font-family: Inter;
+
             font-size: 12px;
-            font-style: normal;
-            font-weight: 600;
+            font-weight: 500;
             line-height: 20px;
             /* 166.667% */
         }
 
         tbody>tr>td {
             color: var(--gray-modern-600, #4B5565);
-            font-family: Inter;
             font-size: 12px;
-            font-style: normal;
             font-weight: 400;
             line-height: 20px;
             &:first-child {
@@ -117,9 +111,9 @@ ion-button {
                 .asset-symbol {
                     color: var(--colors-text-text-primary-900, #101828);
                     /* Text sm/Medium */
-                    font-family: Inter;
+        
                     font-size: 14px;
-                    font-style: normal;
+        
                     font-weight: 500;
                     line-height: 20px;
                     /* 142.857% */
@@ -127,9 +121,9 @@ ion-button {
 
                 .asset-name {
                     color: var(--gray-modern-600, #4B5565);
-                    font-family: Inter;
+        
                     font-size: 12px;
-                    font-style: normal;
+        
                     font-weight: 400;
                     line-height: 20px;
                     /* 166.667% */
@@ -188,9 +182,9 @@ ion-button {
             height: 40px;
             color: var(--gray-modern-500, #697586);
             text-align: center;
-            font-family: Inter;
+
             font-size: 12px;
-            font-style: normal;
+
             font-weight: 500;
             line-height: 34px;
             border-radius: var(--radius-md, 8px);

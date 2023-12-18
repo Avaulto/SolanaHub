@@ -8,40 +8,39 @@
   </div>
 </div>
 <app-mft 
-  [searchBoxEnable]="false"
+  [searchBoxEnable]="true"
   (onRowClicked)="eventEmitted($event)"
   [tableColumns]="columns"
   [tableData]="tableData"
    ></app-mft>
    <ng-template #dateTpl let-row let-rowIndex="rowIndex" let-column="column">
     <div class="date">
-      <div>{{row.date.date}}</div>
-      <div>{{row.date.time}}</div>
+      <div class="">{{row.blockTime | date: 'dd/MM/yyyy'}}</div>
+      <div>{{row.blockTime | date: 'HH:mm'}}</div>
     </div>
   </ng-template>
 
   <ng-template #opr1Tpl let-row let-rowIndex="rowIndex" let-column="column">
     <div class="operation">
-      <div class="in">
-        <span style="color: var(--ion-color-success);">{{row.operation.in.amount}}</span> <span>{{row.operation.in.token}}</span>
-      </div>
-      @if(row.operation.in.amount){
-        <div class="divider">
-          <ion-img [src]="row.operation.icon"></ion-img>
+      @for (token of row.balanceChange; track $index) {
+        <div class="balance-change">
+          
+          <ion-img [src]="token.logoURI || 'assets/images/unknown.svg'"/>
+          <span  class="asset-value" [class.negative]="token.amount < 0" >{{token.amount | number: '1.1-5'}}</span>
+          <span>{{token.symbol || 'unknown'}}</span>
+          
         </div>
       }
 
-      <span style="color: var(--ion-color-danger);">{{row.operation.out.amount}}</span> <span>{{row.operation.out.token}}</span>
-      @if(!row.operation.in.amount){
-        <div class="divider">
-          <ion-img [src]="row.operation.icon"></ion-img>
-        </div>
-      }
     </div>
   </ng-template>
 
   <ng-template #typeTpl let-row let-rowIndex="rowIndex" let-column="column">
-    <ion-chip [color]="row.type.color">{{row.type.event}}</ion-chip>
+    <ion-chip class="ion-text-capitalize" [ngClass]="{
+      'defi': row.mainAction.toLowerCase() !== 'unknown',
+      'send': row.mainAction.toLowerCase() === 'send',
+      'received': row.mainAction.toLowerCase() === 'received',
+  }">{{row.mainAction}}</ion-chip>
   </ng-template>
   <ng-template #redirectTpl let-row let-rowIndex="rowIndex" let-column="column">
     <div class="tx-out">
