@@ -13,9 +13,8 @@ export class PortfolioService {
   // todo - refactor to signal
   public tokens = signal<Token[]>([]);
   public nfts: WritableSignal<NFT[]> = signal([]);
-  public lendings: WritableSignal<LendingOrBorrow[]> = signal([]);
-  public lp: WritableSignal<LiquidityProviding[]> = signal([]);
   public staking: WritableSignal<StakeAccount[]> = signal([]);
+  public defi: WritableSignal<LiquidityProviding[]> = signal([]);
   public walletHistory: WritableSignal<TransactionHistory[]> = signal([]);
   readonly restAPI = this._utilService.serverlessAPI
   constructor(

@@ -9,7 +9,48 @@
 </div>
 <app-mft [tableMenuOptions]="tableMenuOptions" (onTabSelected)="selectedTab.set($event)"
   (onRowClicked)="eventEmitted($event)" [tableColumns]="columns" [tableData]="tableData"></app-mft>
-<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+
+  <ng-template #collectionInfoTpl let-row let-rowIndex="rowIndex" let-column="column">
+    <div class="collection-info">
+      <div class="collection-img">
+        @if (false) {
+          <ion-img [src]="'awdaw'" />
+        } @else {
+          <ion-skeleton-text animated/>
+        }
+      </div>
+      <div class="collection-name">
+        dummy
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #nftListTpl let-row let-rowIndex="rowIndex" let-column="column">
+    <div class="nft-list">
+      
+      @for (nft of row.nfts; track $index) {
+        @if($index < 5){
+
+          <div>
+            @if (false) {
+              <ion-img [src]="nft.imgUrl" />
+            } @else {
+              <ion-skeleton-text animated/>
+            }
+          </div>
+        }
+      }   
+    @if(row.nfts.length > 5) {
+        <div class="nft-remaining">
+          +{{row.nfts.length - 5}}
+        </div>
+      }   
+    </div>
+  </ng-template>
+  <ng-template #nftOffersTpl let-row let-rowIndex="rowIndex" let-column="column">
+    <ion-chip>{{row.offers}}</ion-chip>
+  </ng-template>
+  <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="asset">
     <div class="asset-img-wrapper">
       <ion-img [src]="row.imgUrl" alt="image" />

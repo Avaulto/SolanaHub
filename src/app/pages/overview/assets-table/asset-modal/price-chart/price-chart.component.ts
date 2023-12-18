@@ -62,15 +62,17 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
                 },
                 scales: {
                     y: {
-                        // ticks: {
-                        //     callback: (value, index, values) => {
-                        //         if(Number(value) < 0){
-                        //             return this._utilService.decimalPipe.transform(value, '1.5' );
-                        //         }else{
-                        //             return value
-                        //         }
-                        //     }
-                        // },
+                        ticks: {
+                            callback: (value, index, values) => {
+                                if(Number(value) < 0.01){
+                                    console.log('here');
+                                    
+                                    return this._utilService.decimalPipe.transform(value, '1.5' );
+                                }else{
+                                    return this._utilService.decimalPipe.transform(value, '1.2' );
+                                }
+                            }
+                        },
                         border: {
                             display: false,
                         },

@@ -44,6 +44,6 @@
   </ng-template>
   <ng-template #redirectTpl let-row let-rowIndex="rowIndex" let-column="column">
     <div class="tx-out">
-      <a target="_blank" [href]="row.txUrl"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
+      <a target="_blank" [href]="'https://solscan.io/tx/'+row.txHash"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
     </div>
   </ng-template>

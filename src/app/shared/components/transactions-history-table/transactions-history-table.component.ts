@@ -1,4 +1,4 @@
-import { Component, OnInit,Input, TemplateRef, ViewChild, signal } from '@angular/core';
+import { Component, OnInit,Input, TemplateRef, ViewChild, signal, computed } from '@angular/core';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { IonImg, IonChip } from '@ionic/angular/standalone';
@@ -36,5 +36,6 @@ export class TransactionsHistoryTableComponent implements OnInit {
   }
   public columns = signal([] as Columns[])
   @Input() tableData = signal([])
+  t = computed(() => console.log(this.tableData()))
   eventEmitted(ev: any) { }
 }
