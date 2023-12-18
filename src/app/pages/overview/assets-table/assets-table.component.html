@@ -7,23 +7,23 @@
     Obtain a comprehensive and detailed overview of your assets
   </div>
 </div>
-<app-mft 
-[tableMenuOptions]="tableMenuOptions"
-  (onTabSelected)="selectedTab.set($event)" 
-  (onRowClicked)="eventEmitted($event)"
-  [tableColumns]="columns"
-  [tableData]="tableData"
-   ></app-mft>
-   <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
-    <div class="asset">
-  
-      <div class="asset-img-wrapper">
-        <ion-img [src]="row.imgUrl" alt="image" />
-      </div>
-      <div class="asset-info">
-        <div class="asset-symbol">{{row.symbol}}</div>
-        <div class="asset-name">{{row.name}}</div>
-      </div>
-  
+<app-mft [tableMenuOptions]="tableMenuOptions" (onTabSelected)="selectedTab.set($event)"
+  (onRowClicked)="eventEmitted($event)" [tableColumns]="columns" [tableData]="tableData"></app-mft>
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="asset">
+    <div class="asset-img-wrapper">
+      <ion-img [src]="row.imgUrl" alt="image" />
     </div>
-  </ng-template>
+    <div class="asset-info">
+      <div class="asset-symbol">{{row.symbol}}</div>
+      <div class="asset-name">{{row.name}}</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="balance">
+    {{row.amount | number:  '1.2'}} {{row.symbol}}
+    
+  </div>
+</ng-template>

@@ -16,6 +16,7 @@ export class PortfolioService {
   public lendings: WritableSignal<LendingOrBorrow[]> = signal([]);
   public lp: WritableSignal<LiquidityProviding[]> = signal([]);
   public staking: WritableSignal<StakeAccount[]> = signal([]);
+  public walletHistory: WritableSignal<TransactionHistory[]> = signal([]);
   readonly restAPI = this._utilService.serverlessAPI
   constructor(
     private _utilService: UtilService,
@@ -52,8 +53,8 @@ export class PortfolioService {
       this._utilService.addTokenData(tokens?.data.assets, jupTokens)
       // add pipes
       const tokensAggregated: Token[] = tokens.data.assets.map((item: Token) => {
-        item.amount = this._utilService.decimalPipe.transform(item.amount) + ' ' + item.symbol || '0' + ' ' + item.symbol
-        item.price = this._utilService.currencyPipe.transform(item.price) || '0'
+        // item.amount = this._utilService.decimalPipe.transform(item.amount, '1.2') || '0'
+        item.price = this._utilService.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
         item.value = this._utilService.currencyPipe.transform(item.value) || '0'
         return item
       })
@@ -77,10 +78,10 @@ export class PortfolioService {
     }
 
   }
-  public async getWalletHistory(walletAddress: string, filter?: string): Promise<TransactionHistory[]> {
+  public async getWalletHistory(walletAddress: string): Promise<TransactionHistory[]> {
     try {
       const walletTxHistory = await (await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)).json()
-      const purifiedTxHistory = walletTxHistory.map((tx: TransactionHistory) => {
+      let txHistory = walletTxHistory.map((tx: TransactionHistory) => {
         if (tx.contractLabel?.name === 'Jupiter V6') {
           tx.mainAction = 'swap'
         }
@@ -93,30 +94,22 @@ export class PortfolioService {
         tx.fromShort = this._utilService.addrUtil(tx.from).addrShort
         tx.toShort = this._utilService.addrUtil(tx.to).addrShort
         tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
-        // switch (tx.mainAction) {
-        //   case 'createAssociatedAccount':
-        //     tx.mainAction = 'Create Account'
-        //     tx.mainActionColor = 'red'
-        //     break;
-        //   case 'send':
-
-        //     break;
-        //   case 'received':
-
-        //     break;
-        //   default:
-        //     break;
-        // }
         return { ...tx }
       })
-      // .filter(tx => tx.mainAction)
-      // const purifiedTxHistory = walletTxHistory.filter(tx => tx.mainAction)
-      // console.log(purifiedTxHistory);
-      return purifiedTxHistory
+
+      
+      this.walletHistory.set(txHistory)
+      return txHistory
     } catch (error) {
       console.error(error);
       return []
     }
 
+  }
+
+
+  public filteredTxHistory = (filterByAddress: string) =>{
+     return this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress))
+  
   }
 }

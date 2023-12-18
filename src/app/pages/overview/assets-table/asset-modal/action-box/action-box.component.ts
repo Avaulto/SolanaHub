@@ -1,10 +1,11 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, NgControl, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { helpCircleOutline } from 'ionicons/icons';
 import { IonSegmentButton, IonSegment, IonLabel,IonInput,IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { PublicKey } from '@solana/web3.js';
+import { Token } from 'src/app/models';
 @Component({
   selector: 'app-action-box',
   templateUrl: './action-box.component.html',
@@ -12,6 +13,7 @@ import { PublicKey } from '@solana/web3.js';
   standalone: true,
   imports: [
     FormsModule,
+    ReactiveFormsModule,
     DecimalPipe,
     IonSegmentButton,
     IonSegment,
@@ -24,7 +26,7 @@ import { PublicKey } from '@solana/web3.js';
 })
 export class ActionBoxComponent implements OnInit {
   public sendTokenForm: FormGroup;
-  @Input() token: any // Asset;
+  @Input() token: Token // Asset;
   public formSubmitted: boolean = false;
   constructor(private _fb: FormBuilder) { 
     addIcons({helpCircleOutline})

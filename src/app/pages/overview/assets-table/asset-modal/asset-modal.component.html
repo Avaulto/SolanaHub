@@ -1,12 +1,12 @@
 <ion-grid>
   <ion-row class="ion-justify-content-between">
-    <ion-col size="12" sizeMd="7.4">
-      <app-price-data/>
+    <ion-col size="12" sizeMd="7.5">
+      <app-price-data [token]="token"/>
       <app-transactions-history-table [tableData]="mockTableHistory"/>
     </ion-col>
     <div class="ion-hide-md-down" sizeMd="0.1" id="divider"></div>
     <ion-col size="12" sizeMd="3.9">
-      <app-action-box/>
+      <app-action-box [token]="token"/>
     </ion-col>
   </ion-row>
 

@@ -1,17 +1,17 @@
 <div id="token-wrapper">
   <div id="token-info">
     <div id="token-img">
-      <ion-img src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"></ion-img>
+      <ion-img [src]="token.imgUrl"></ion-img>
     </div>
     <div id="token-name-and-price">
-      <div id="price">{{66 | currency}}</div>
-      <div id="name">Solana</div>
+      <div id="price">{{token.price}}</div>
+      <div id="name">{{token.name}}</div>
     </div>
   </div>
   <div id="token-price-movement">
-    +24.76%
+    {{price_change_24h | number: '1.2'}}%
   </div>
 </div>
 <div id="token-chart">
-  <app-price-chart/>
+  <app-price-chart (onPriceChangePercentage)="price_change_24h = $event" [token]="token"/>
 </div>

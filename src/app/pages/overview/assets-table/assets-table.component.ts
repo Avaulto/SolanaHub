@@ -8,6 +8,7 @@ import { ModalController } from '@ionic/angular';
 import { AssetModalComponent } from './asset-modal/asset-modal.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
+import { Token } from 'src/app/models';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
   imports: [MftModule, IonImg, CurrencyPipe, DecimalPipe, IonButton, IonIcon]
 })
 export class AssetsTableComponent implements OnInit {
+  @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   //@ts-ignore
 
@@ -44,12 +46,11 @@ export class AssetsTableComponent implements OnInit {
 
   private _columnsOptions = {}
   async ngOnInit() {
-    console.log(this.selectedTab().toLowerCase());
 
     this._columnsOptions = {
       tokens: [
         { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '45%' },
-        { key: 'amount', title: 'Amount', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'amount', title: 'Amount', cellTemplate: this.balanceTpl,  width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value', width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
         { key: 'last-seven-days', title: 'Last 7 Days', width: '15%' }
@@ -93,14 +94,19 @@ export class AssetsTableComponent implements OnInit {
 
   }
   eventEmitted($event: { event: string; value: any }): void {
+    console.log($event);
+    const token: Token = $event.value.row
+    console.log(token);
+    
     if ($event.event === 'onClick') {
-      this.openModal()
+      this.openModal(token)
     }
   }
 
-  async openModal() {
+  async openModal(token: Token) {
     const modal = await this._modalCtrl.create({
       component: AssetModalComponent,
+      componentProps: {token},
       mode: 'ios',
       id: 'asset-modal',
     });

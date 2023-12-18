@@ -1,6 +1,6 @@
 <div id="action-box">
   <div id="title">Wallet Balance</div>
-  <div id="token-balance">{{4500.23 | number: '1.2'}} SOL</div>
+  <div id="token-balance">{{token.amount| number: '1.2'}} {{token.symbol}}</div>
 
   <ion-segment value="default" mode="md">
     <ion-segment-button value="default">
@@ -11,7 +11,7 @@
     </ion-segment-button>
   </ion-segment>
   
-  <form id="send-asset">
+  <form id="send-asset" [formGroup]="sendTokenForm" >
     <div class="control-group">
       <ion-label>Recipient’s  address</ion-label>
       <ion-input formControlName="targetAddress"></ion-input>

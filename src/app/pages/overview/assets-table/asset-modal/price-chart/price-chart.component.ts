@@ -1,39 +1,52 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
 import { LineElement } from 'chart.js/dist/helpers/helpers.segment';
+import { Token } from 'src/app/models';
+import { UtilService } from 'src/app/services';
+import { PriceHistoryService } from 'src/app/services/price-history.service';
 
 @Component({
     selector: 'app-price-chart',
     templateUrl: './price-chart.component.html',
     styleUrls: ['./price-chart.component.scss'],
     standalone: true,
+    
 })
-export class PriceChartComponent implements AfterViewInit {
+export class PriceChartComponent implements OnInit, AfterViewInit {
+    private _utilService = inject(UtilService)
+    @Input() token: Token
     @ViewChild('breakdownChart', { static: false }) breakdownChart: ElementRef<any>;
+    @Output() onPriceChangePercentage = new EventEmitter();
     chartData: any;
-    constructor() { }
+    public priceDataService = inject(PriceHistoryService)
+    async ngOnInit() {
+        console.log(this.token);
 
-    ngAfterViewInit() {
-        console.log('price chart loaded');
-
-        this.createGroupCategory()
+        const tokenChartData = await this.priceDataService.getCoinChartHistory(this.token.address, 'USD', 7)
+        this.createGroupCategory(tokenChartData.chartData)
+        console.log(tokenChartData);
+        
+        this.onPriceChangePercentage.emit(tokenChartData.market_data.price_change_percentage_24h)
     }
-    private createGroupCategory() {
+    ngAfterViewInit() {
+
+    }
+    private createGroupCategory(priceDataHistory) {
 
         this.chartData ? this.chartData.destroy() : null
         const ctx = this.breakdownChart.nativeElement
         console.log(ctx);
-        
+
         var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, 'rgba(203,98,175,0.2)');   
+        gradient.addColorStop(0, 'rgba(203,98,175,0.2)');
         gradient.addColorStop(0.4, 'rgba(0,0,0,0)');
         const config2: ChartConfiguration = {
             type: 'line',
             data: {
-                labels: ['3 Dec', '4 Dec', '5 Dec', '6 Dec', '7 Dec', '8 Dec', '9 Dec', '10 Dec'], // X-axis labels
+                labels: priceDataHistory[0], // X-axis labels
                 datasets: [{
-                    label: 'Dataset 1',
-                    data: [45, 60, 55, 35, 65, 40, 70, 60], // Y-axis data points
+                    label: 'price',
+                    data: priceDataHistory[1], // Y-axis data points
                     backgroundColor: gradient,
                     borderColor: '#B84794',
                     borderWidth: 2,
@@ -42,33 +55,54 @@ export class PriceChartComponent implements AfterViewInit {
                 }]
             },
             options: {
-                responsive: true , maintainAspectRatio: false,
+
+                responsive: true, maintainAspectRatio: false,
                 layout: {
-                    padding: {left: 24,top:24, bottom:24}
+                    padding: { left: 24, top: 24, bottom: 24 }
                 },
                 scales: {
                     y: {
-                        
+                        // ticks: {
+                        //     callback: (value, index, values) => {
+                        //         if(Number(value) < 0){
+                        //             return this._utilService.decimalPipe.transform(value, '1.5' );
+                        //         }else{
+                        //             return value
+                        //         }
+                        //     }
+                        // },
                         border: {
                             display: false,
-                          },
+                        },
                         grid: {
-                            
+
                             display: false
-                          },
+                        },
                         beginAtZero: false // Set this to true if you want the Y-axis to start at 0
                     },
                     x: {
+
                         ticks: {
-                            align: 'inner'
-                          },
+                            align: 'inner',
+                            callback: function (val: any, index, dates) {
+                                const currentDate = priceDataHistory[0][index];
+                                const nextDate = priceDataHistory[0][index + 1]
+                                const arrLength = priceDataHistory[0][priceDataHistory[0].length - 1];
+                                // console.log(currentDate, nextDate, val,);
+
+                                if (!nextDate || currentDate === nextDate) {
+                                    return null;
+                                }
+                                return this.getLabelForValue(val + 3);
+                            },
+                        },
                         border: {
                             display: false,
-                          },
+                        },
                         grid: {
                             display: false,
-                            
-                          },
+
+                        },
                     }
                 },
                 elements: {
