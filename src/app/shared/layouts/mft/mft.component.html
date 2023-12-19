@@ -1,17 +1,33 @@
-@if(tableMenuOptions.length){
-<app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"></app-table-menu>
-}
-@if(searchBoxEnable){
-<div id="search-box-wrapper">
-  <ion-searchbar 
-    mode="ios" 
-    placeholder="Search" 
-    show-clear-button="focus"
-    (ionInput)="handleInput($event)"
-    >
-</ion-searchbar>
+
+<div class="table-info">
+<div>
+
+  <div class="table-title">
+    {{label}}
+  </div>
+  <div class="table-sub">
+    {{desc}}
+  </div>
 </div>
-}
+  @if(searchBoxEnable){
+    <div id="search-box-wrapper">
+      <ion-searchbar 
+        mode="ios" 
+        placeholder="Search" 
+        show-clear-button="focus"
+        (ionInput)="handleInput($event)"
+        >
+    </ion-searchbar>
+    </div>
+    }
+</div>
+
+
+
+@if(tableMenuOptions.length){
+  <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"></app-table-menu>
+  }
+  
 <div id="table-wrapper">
   <ngx-table 
   #table

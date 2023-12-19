@@ -1,13 +1,5 @@
-<div style="padding: 20px 32px;">
 
-  <div class="table-title">
-    your assets
-  </div>
-  <div class="table-sub">
-    Obtain a comprehensive and detailed overview of your assets
-  </div>
-</div>
-<app-mft [tableMenuOptions]="tableMenuOptions" (onTabSelected)="selectedTab.set($event)"
+<app-mft [label]="'your assets'" [desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions" (onTabSelected)="selectedTab.set($event)"
   (onRowClicked)="eventEmitted($event)" [tableColumns]="columns" [tableData]="tableData"></app-mft>
 
   <ng-template #collectionInfoTpl let-row let-rowIndex="rowIndex" let-column="column">

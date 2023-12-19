@@ -4,13 +4,14 @@ import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiple
 import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 import { ApiService } from './api.service';
-import { Observable, catchError, map, of, shareReplay } from 'rxjs';
+import { Observable, catchError, map, of, shareReplay, single } from 'rxjs';
 import { PriceHistoryService } from './price-history.service';
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
   // todo - refactor to signal
+  public walletAssets = single();
   public tokens = signal<Token[]>([]);
   public nfts: WritableSignal<NFT[]> = signal([]);
   public staking: WritableSignal<StakeAccount[]> = signal([]);
@@ -33,15 +34,11 @@ export class PortfolioService {
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens);
 
-      this.tokens().map(token => {
-
-      })
+      console.log(editedData);
+      
       // const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
-
-
-      return extendTokenData.data.assets
     } catch (error) {
       console.error(error);
     }

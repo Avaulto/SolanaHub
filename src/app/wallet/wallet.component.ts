@@ -1,10 +1,11 @@
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, NgStyle } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
   IonImg,
   IonIcon,
-  IonLabel
+  IonLabel,
+  IonSkeletonText
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { chevronDownOutline } from 'ionicons/icons';
@@ -15,20 +16,25 @@ import { chevronDownOutline } from 'ionicons/icons';
   styleUrls: ['./wallet.component.scss'],
   standalone: true,
   imports: [
+    NgStyle,
     IonIcon,
     DecimalPipe,
     IonImg,
     IonLabel,
-    RouterLink
+    RouterLink,
+    IonSkeletonText
   ]
 })
 export class WalletComponent implements OnInit {
-
+  showSkeleton = true
   constructor() {
     
     addIcons({ chevronDownOutline });
   }
-
+  loadImg(ev){
+    console.log('heherhehehreh', ev);
+    
+  }
   ngOnInit() { }
 
 }

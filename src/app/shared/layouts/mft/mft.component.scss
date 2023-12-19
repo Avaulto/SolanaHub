@@ -2,10 +2,14 @@
 :host{
     width: 100%;
 }
+.table-info{
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+}
 #search-box-wrapper{
     display: flex;
     justify-content: flex-end;
-    margin: 0 12px 12px 12px;
 }
 ion-searchbar{
     width: 300px;

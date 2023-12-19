@@ -19,6 +19,8 @@ import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
 })
 // multi functional table
 export class MftComponent implements OnInit {
+  @Input() label:string;
+  @Input() desc:string;
   @Input('tableRows') tableRows = 5;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   @Input('tableMenuOptions') tableMenuOptions: string[] = []

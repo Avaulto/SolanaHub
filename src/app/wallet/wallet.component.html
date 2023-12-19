@@ -1,11 +1,22 @@
 <div id="wallet">
-  <div>
-    <ion-img src="https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/SolanaSpaceman.png"></ion-img>
+  <div style="position: relative;">
+    <ion-img 
+    loading="lazy"
+    src="https://shdw-drive.genesysgo.net/52zh6ZjiUQ5UKCwLBwob2k1BC3KF2qhvsE7V4e8g2pmD/SolanaSpaceman.png"
+    [ngStyle]="{'viability': showSkeleton ? 'hidden' :'visible'}" 
+    (ionImgDidLoad)="showSkeleton = false" 
+    (ionError)="showSkeleton = false"
+    />
+
+    @if (showSkeleton) {
+    <ion-skeleton-text animated />
+    }
+
   </div>
   <div>
     <ion-label id="wallet-domain">izuddinhelmi.sol</ion-label>
     <div id="wallet-address">AKos...93dN</div>
-    <div id="loyalty-league" routerLink="/loyalty-league" >
+    <div id="loyalty-league" routerLink="/loyalty-league">
       {{1000 | number}} Loyalty Points
     </div>
   </div>
