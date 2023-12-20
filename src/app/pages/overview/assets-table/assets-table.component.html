@@ -54,6 +54,19 @@
   </div>
 </ng-template>
 
+<ng-template #tokenPoolTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="pools">
+    
+    <div class="asset-img-wrapper">
+      <ion-img [src]="row.imgUrl" alt="image" />
+    </div>
+    <div class="asset-info">
+      <div class="asset-symbol">{{row.symbol}}</div>
+      <div class="asset-name">{{row.name}}</div>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="balance">
     {{row.amount | number:  '1.2'}} {{row.symbol}}

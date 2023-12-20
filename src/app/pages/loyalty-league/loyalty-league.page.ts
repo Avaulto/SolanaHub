@@ -5,7 +5,7 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
 import { UtilService } from 'src/app/services';
 import { addIcons } from 'ionicons';
-import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline } from 'ionicons/icons';
+import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline } from 'ionicons/icons';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NgStyle } from '@angular/common';
 import { PoolStatsComponent } from './pool-stats/pool-stats.component';
@@ -40,7 +40,7 @@ export class LoyaltyLeaguePage implements AfterViewInit {
   @ViewChild('airdropTpl', { static: true }) airdropTpl: TemplateRef<any> | any;
 
   constructor(private _loyaltyLeagueService: LoyaltyLeagueService, public _utilService: UtilService) {
-    addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline });
+    addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline });
 
     effect(() =>console.log(this.loyalMember()))
   }
@@ -52,6 +52,8 @@ export class LoyaltyLeaguePage implements AfterViewInit {
     this.prizePool$.next(prizePool)
     let findMember = ll.loyaltyPoints.find(staker => staker.walletOwner === this.connectedWallet)
     if(findMember){
+      console.log(findMember);
+      
       //@ts-ignore
       findMember.weeklyAirdrop  = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
     }

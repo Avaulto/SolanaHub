@@ -25,7 +25,7 @@ export class UtilService {
   constructor(
     private localStore: LocalStorageService) {
   }
-  public serverlessAPI =  location.hostname === "localhost" ? 'http://localhost:3000' : 'https://api.SolanaHub.app'
+  public serverlessAPI =  location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
   private _systemExplorer = new BehaviorSubject<string>(this.localStore.getData('explorer') || 'https://solana.fm' as string);
   public explorer$ = this._systemExplorer.asObservable();

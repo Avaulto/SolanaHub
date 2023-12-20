@@ -1,6 +1,6 @@
 import { CurrencyPipe, DecimalPipe, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
-import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip} from '@ionic/angular/standalone';
+import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
 import { arrowBack, arrowForward } from 'ionicons/icons';
@@ -29,6 +29,7 @@ import { Token } from 'src/app/models';
   ]
 })
 export class AssetsTableComponent implements OnInit {
+  // token tps
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   // nft tpls
@@ -36,6 +37,8 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('nftListTpl', { static: true }) nftListTpl: TemplateRef<any> | any;
   @ViewChild('nftOffersTpl', { static: true }) nftOffersTpl: TemplateRef<any> | any;
 
+  // defi tpls
+  @ViewChild('tokenPoolTpl', { static: true }) tokenPoolTpl: TemplateRef<any> | any;
   //@ts-ignore
 
   tableMenuOptions: string[] = ['Tokens', 'NFTs', 'Staking', 'DeFi'];
@@ -54,7 +57,7 @@ export class AssetsTableComponent implements OnInit {
   })
   tableData = computed(() => {
     let tableType: string = this.selectedTab().toLowerCase();
-   
+
     if (tableType === 'nfts') {
       return [
         {
@@ -64,47 +67,47 @@ export class AssetsTableComponent implements OnInit {
           offers: 24,
           nfts: [
             {
-            imgUrl: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },   {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-        ],
+              imgUrl: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            }, {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+            {
+              imgURL: '',
+            },
+          ],
           totalValue: 110332
         },
         {
@@ -136,7 +139,62 @@ export class AssetsTableComponent implements OnInit {
         }
       ]
     }
+    if (tableType === 'defi') {
+      return [
+        {
+          poolTokens: [
+            {
+            imgURL: 'assets/images/usdc.svg',
+            symbol:'USDC'
+          },
+          {
+            imgURL: 'assets/images/sol.svg',
+            symbol:'SOL'
+          },
+        ],
+          dex: 'orca',
+          type:'farm',
+          yourLiquidity: 2342,
+          apy: 11,
+          supported: false,
+        },
+        {
+          poolTokens: [
 
+          {
+            imgURL: 'assets/images/sol.svg',
+            symbol:'SOL'
+          },
+        ],
+          dex: 'meteora',
+          type:'farm',
+          yourLiquidity: 2342,
+          apy: 11,
+          supported: false,
+        },
+        {
+          poolTokens: [
+            {
+            imgURL: 'assets/images/usdc.svg',
+            symbol:'USDC'
+          },
+          {
+            imgURL: 'assets/images/usdc.svg',
+            symbol:'USDC'
+          },
+          {
+            imgURL: 'assets/images/sol.svg',
+            symbol:'SOL'
+          },
+        ],
+          dex: 'kamino',
+          type:'providing liquidity',
+          yourLiquidity: 2342,
+          apy: 11,
+          supported: false,
+        },
+      ]
+    }
     return this._portfolioService[tableType]()
   })
 
@@ -153,47 +211,27 @@ export class AssetsTableComponent implements OnInit {
       ],
       staking: [
         { key: 'collection', title: 'Collection', cellTemplate: this.tokenTpl, width: '25%' },
-        { key: 'nft', title: 'NFT',  width: '30%' },
+        { key: 'nft', title: 'NFT', width: '30%' },
         { key: 'floor', title: 'Floor(SOL)', width: '10%' },
         { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
         { key: 'totalValue', title: 'Total Value', width: '15%' }
       ],
       nfts: [
         { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
-        { key: 'nfts', title: 'NFT', cellTemplate: this.nftListTpl,  cssClass: { name: 'ion-text-left', includeHeader: true }, width: '30%' },
-        { key: 'floor', title: 'Floor(SOL)', width: '10%' , cssClass: { name: 'ion-text-center', includeHeader: true }},
+        { key: 'nfts', title: 'NFT', cellTemplate: this.nftListTpl, cssClass: { name: 'ion-text-left', includeHeader: true }, width: '30%' },
+        { key: 'floor', title: 'Floor(SOL)', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
         { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'offers', title: 'Offers',cellTemplate: this.nftOffersTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'offers', title: 'Offers', cellTemplate: this.nftOffersTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
         { key: 'totalValue', title: 'Total Value', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } }
       ],
-      DeFi: [
-        { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
+      defi: [
+        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '45%' },
         { key: 'dex', title: 'DEX', width: '10%' },
         { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
+        { key: 'type', title: 'Type', width: '15%' },
         { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
-        { key: 'total-value', title: 'Total Value', width: '15%' }
       ]
-      // 'liquidity pools': [
-      //   { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
-      //   { key: 'dex', title: 'DEX', width: '10%' },
-      //   { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
-      //   { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
-      //   { key: 'total-value', title: 'Total Value', width: '15%' }
-      // ],
-      // 'lendings': [
-      //   { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
-      //   { key: 'dex', title: 'DEX', width: '10%' },
-      //   { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
-      //   { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
-      //   { key: 'total-value', title: 'Total Value', width: '15%' }
-      // ],
-      // 'vaults': [
-      //   { key: 'pool', title: 'Pool', cellTemplate: this.tokenTpl, width: '45%' },
-      //   { key: 'dex', title: 'DEX', width: '10%' },
-      //   { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
-      //   { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
-      //   { key: 'total-value', title: 'Total Value', width: '15%' }
-      // ]
+
     }
 
   }
