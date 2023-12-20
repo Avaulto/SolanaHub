@@ -50,7 +50,9 @@
             Obtain a comprehensive and detailed overview of your latest trades
           </div>
         </div>
-        <app-mft [tableRows]="10" [tableColumns]="columns" [tableData]="tradeHistoryTable" />
+        <app-mft 
+        [tableId]="'swap'"
+        [tableRows]="10" [tableColumns]="columns" [tableData]="tradeHistoryTable" />
 
         <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
           <div class="score">

@@ -31,6 +31,7 @@
 <div id="table-wrapper">
   <ngx-table 
   #table
+  [id]="tableId"
    (event)="onRowClicked.emit($event)"
     [configuration]="configuration" 
     [data]="tableData()"

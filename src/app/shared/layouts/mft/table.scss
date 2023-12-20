@@ -35,7 +35,7 @@ ion-button {
     thead{
         border-top: 1px solid var(--gray-modern-100, #EEF2F6);
     }
-    #table {
+    table {
         // th.ngx-table__header-cell{
         //     padding: 0 !important;
         // }
@@ -132,7 +132,7 @@ ion-button {
         }
     }
 
-    #paginationtable {
+    pagination {
         display: flex;
         justify-content: center;
         z-index: 2;

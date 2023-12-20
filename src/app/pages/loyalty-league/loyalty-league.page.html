@@ -37,7 +37,9 @@
       </ion-row>
       <ion-row>
         <ion-col size="12" class="data-set">
-          <app-mft [label]="'Leader Board'" desc="Obtain a comprehensive overview for your loyalty points from each source" [tableRows]="10" [tableColumns]="columns" [tableData]="leaderBoard" />
+          <app-mft 
+          [tableId]="'loyalty-league'"
+          [label]="'Leader Board'" desc="Obtain a comprehensive overview for your loyalty points from each source" [tableRows]="10" [tableColumns]="columns" [tableData]="leaderBoard" />
 
           <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="addr-item">
