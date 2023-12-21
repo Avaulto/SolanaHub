@@ -30,9 +30,8 @@ export class OverviewPage implements OnInit {
   constructor() { }
 
   async ngOnInit() {
-    const res: TransactionHistory[] = await this._portfolioService.getWalletHistory('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
-    this.mockTableHistory.set(res);
+    await this._portfolioService.getWalletHistory('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
     
   }
-  public mockTableHistory: WritableSignal<TransactionHistory[]> = signal([])
+  public walletHistory: WritableSignal<TransactionHistory[]> = this._portfolioService.walletHistory
 }

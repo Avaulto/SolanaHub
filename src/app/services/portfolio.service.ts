@@ -74,38 +74,42 @@ export class PortfolioService {
     }
 
   }
-  public async getWalletHistory(walletAddress: string): Promise<TransactionHistory[]> {
-    try {
-      const walletTxHistory = await (await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)).json()
-      let txHistory = walletTxHistory.map((tx: TransactionHistory) => {
-        if (tx.contractLabel?.name === 'Jupiter V6') {
-          tx.mainAction = 'swap'
-        }
-        if (tx.mainAction === 'createAssociatedAccount') {
-          tx.mainAction = 'create account'
-        }
-        if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
-          tx.mainAction = 'farm'
-        }
-        tx.fromShort = this._utilService.addrUtil(tx.from).addrShort
-        tx.toShort = this._utilService.addrUtil(tx.to).addrShort
-        tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
-        return { ...tx }
-      })
+  public async getWalletHistory(walletAddress: string): Promise<WritableSignal<TransactionHistory[]>> {
 
-      
-      this.walletHistory.set(txHistory)
-      return txHistory
-    } catch (error) {
-      console.error(error);
-      return []
-    }
-
+      try {
+        const walletTxHistory = await (await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)).json()
+        let txHistory = walletTxHistory.map((tx: TransactionHistory) => {
+          if (tx.contractLabel?.name === 'Jupiter V6') {
+            tx.mainAction = 'swap'
+          }
+          if (tx.mainAction === 'createAssociatedAccount') {
+            tx.mainAction = 'create account'
+          }
+          if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
+            tx.mainAction = 'farm'
+          }
+          tx.fromShort = this._utilService.addrUtil(tx.from).addrShort
+          tx.toShort = this._utilService.addrUtil(tx.to).addrShort
+          tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
+          return { ...tx }
+        })
+        
+        
+        this.walletHistory.set(txHistory)
+        return this.walletHistory
+      } catch (error) {
+        console.error(error);
+      }
+      return this.walletHistory
+    
   }
 
 
-  public filteredTxHistory = (filterByAddress: string) =>{
-     return this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress))
-  
+  public filteredTxHistory = (filterByAddress: string, filterByAction?:string) =>{
+    console.log(this.walletHistory());
+    const filterResults = this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress) || tx.mainAction === filterByAction)
+    console.log(filterResults);
+     
+     return filterResults
   }
 }

@@ -41,26 +41,16 @@
 
     <ion-row>
       <ion-col size="12" class="data-set">
-        <div style="padding: 20px 32px;">
-
-          <div class="table-title">
-            Swap History
-          </div>
-          <div class="table-sub">
-            Obtain a comprehensive and detailed overview of your latest trades
-          </div>
-        </div>
+      
         <app-mft 
+        label=" Swap History"
+        desc="Obtain a comprehensive and detailed overview of your latest trades"
         [tableId]="'swap'"
-        [tableRows]="10" [tableColumns]="columns" [tableData]="tradeHistoryTable" />
+        [tableRows]="10" 
+        [tableColumns]="columns" 
+        [tableData]="tradeHistoryTable" />
 
-        <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
-          <div class="score">
-            {{row.liquidStake.pts}}
-            <!-- @if(row.liquidStake.msol) -->
-          </div>
-
-        </ng-template>
+ 
       </ion-col>
     </ion-row>
   </ion-grid>

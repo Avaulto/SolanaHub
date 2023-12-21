@@ -1,53 +1,41 @@
-
 <div class="table-info">
-<div>
+  <div>
 
-  <div class="table-title">
-    {{label}}
-  </div>
-  <div class="table-sub">
-    {{desc}}
-  </div>
-</div>
-  @if(searchBoxEnable){
-    <div id="search-box-wrapper">
-      <ion-searchbar 
-        mode="ios" 
-        placeholder="Search" 
-        show-clear-button="focus"
-        (ionInput)="handleInput($event)"
-        >
-    </ion-searchbar>
+    <div class="table-title">
+      {{label}}
     </div>
-    }
+    <div class="table-sub">
+      {{desc}}
+    </div>
+  </div>
+  @if(searchBoxEnable){
+  <div id="search-box-wrapper">
+    <ion-searchbar mode="ios" placeholder="Search" show-clear-button="focus" (ionInput)="handleInput($event)">
+    </ion-searchbar>
+  </div>
+  }
 </div>
 
 
 
 @if(tableMenuOptions.length){
-  <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"></app-table-menu>
-  }
-  
+<app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]"
+  (onSelectTab)="tabSelected($event)"></app-table-menu>
+}
+
 <div id="table-wrapper">
-  <ngx-table 
-  #table
-  [id]="tableId"
-   (event)="onRowClicked.emit($event)"
-    [configuration]="configuration" 
-    [data]="tableData()"
-    [columns]="tableColumns()"
-    [loadingTemplate]="loadingTemplate"
-    >
+  <ngx-table #table [id]="tableId" (event)="onRowClicked.emit($event)" [configuration]="configuration"
+    [data]="tableData()" [columns]="tableColumns()" [loadingTemplate]="loadingTemplate">
   </ngx-table>
   @if (configuration.paginationEnabled) {
   <div id="table-controls">
     <ion-button mode="md" fill="clear" (click)="previousPage()">
-      <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);"/>
+      <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" />
       previous
     </ion-button>
     <ion-button mode="md" fill="clear" (click)="nextPage()">
       next
-      <ion-img src="/assets/icon/arrow-right.svg"/>
+      <ion-img src="/assets/icon/arrow-right.svg" />
 
     </ion-button>
   </div>
@@ -55,22 +43,10 @@
 </div>
 
 
-<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="asset">
 
-    <div class="asset-img-wrapper">
-      <ion-img [src]="row.imgUrl" alt="image" />
-    </div>
-    <div class="asset-info">
-      <div class="asset-symbol">{{row.symbol}}</div>
-      <div class="asset-name">{{row.name}}</div>
-    </div>
-
-  </div>
-</ng-template>
 
 <ng-template #loadingTemplate>
-  <!-- <td [attr.colspan]="tableColumns().length"> -->
-    <div class="loader">Loading...</div>
-  <!-- </td> -->
+  <div>
+    <ion-spinner color="primary" name="crescent"></ion-spinner>
+  </div>
 </ng-template>

@@ -1,65 +1,93 @@
+<app-mft [tableId]="'assets'" [label]="'your assets'"
+  [desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions"
+  (onTabSelected)="selectedTab.set($event)" (onRowClicked)="eventEmitted($event)" [tableColumns]="columns"
+  [tableData]="tableData">
+</app-mft>
 
-<app-mft 
-[tableId]="'assets'"
-[label]="'your assets'" 
-[desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions" (onTabSelected)="selectedTab.set($event)"
-  (onRowClicked)="eventEmitted($event)" [tableColumns]="columns" [tableData]="tableData"></app-mft>
-
-  <ng-template #collectionInfoTpl let-row let-rowIndex="rowIndex" let-column="column">
-    <div class="collection-info">
-      <div class="collection-img">
-        @if (false) {
-          <ion-img [src]="'awdaw'" />
-        } @else {
-          <ion-skeleton-text animated/>
-        }
-      </div>
-      <div class="collection-name">
-        dummy
-      </div>
+<!-- nft table templates -->
+<ng-template #collectionInfoTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="collection-info">
+    <div class="collection-img">
+      @if (false) {
+      <ion-img [src]="'awdaw'" />
+      } @else {
+      <ion-skeleton-text animated class="img-ph" />
+      }
     </div>
-  </ng-template>
-
-  <ng-template #nftListTpl let-row let-rowIndex="rowIndex" let-column="column">
-    <div class="nft-list">
-      
-      @for (nft of row.nfts; track $index) {
-        @if($index < 5){
-
-          <div>
-            @if (false) {
-              <ion-img [src]="nft.imgUrl" />
-            } @else {
-              <ion-skeleton-text animated/>
-            }
-          </div>
-        }
-      }   
-    @if(row.nfts.length > 5) {
-        <div class="nft-remaining">
-          +{{row.nfts.length - 5}}
-        </div>
-      }   
-    </div>
-  </ng-template>
-  <ng-template #nftOffersTpl let-row let-rowIndex="rowIndex" let-column="column">
-    <ion-chip>{{row.offers}}</ion-chip>
-  </ng-template>
-  <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="asset">
-    <div class="asset-img-wrapper">
-      <ion-img [src]="row.imgUrl" alt="image" />
-    </div>
-    <div class="asset-info">
-      <div class="asset-symbol">{{row.symbol}}</div>
-      <div class="asset-name">{{row.name}}</div>
+    <div class="collection-name">
+      @if (false) {
+      {{row.collection}}
+      } @else {
+      <ion-skeleton-text animated />
+      }
     </div>
   </div>
 </ng-template>
 
+<ng-template #nftListTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="nft-list">
+    @for (nft of row.nfts; track $index) {
+    @if($index < 5){ <div>
+      @if (false) {
+      <ion-img [src]="'awdaw'" />
+      } @else {
+      <ion-skeleton-text animated class="img-ph border-ph" />
+      }
+  </div>
+  }
+  }
+  @if(row.nfts.length > 5) {
+  <div class="nft-remaining">
+    +{{row.nfts.length - 5}}
+  </div>
+  }
+  </div>
+</ng-template>
+<ng-template #nftOffersTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <ion-chip>{{row.offers}}</ion-chip>
+</ng-template>
+<!-- tokens table templates -->
+<ng-template #tokenOrValidatorTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item">
+    <div class="item-img-wrapper">
+      <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
+    </div>
+    <div class="item-info">
+      @if (!row.status) {
+      <div class="item-bold">{{row.symbol}}</div>
+      <div class="item-light">{{row.name}}</div>
+      } @else {
+      <div class="item-bold">{{row.name}}</div>
+      }
+    </div>
+  </div>
+</ng-template>
+<ng-template #validatorBalanceTpl let-row let-rowIndex="rowIndex" let-column="column">
+
+    <div class="item-balance">
+      <div class="item-bold">{{row.balance.sol | number}} SOL</div>
+      <div class="item-light">{{row.balance.usd | currency}}</div>
+    </div>
+
+</ng-template>
+<ng-template #redirectTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="tx-out">
+    <a target="_blank" [href]="row.link"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
+  </div>
+</ng-template>
+<ng-template #statusTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <ion-chip class="ion-text-capitalize" [ngClass]="{
+    'green': row.status.toLowerCase() === 'active',
+    'primary': row.status.toLowerCase() === 'deactive',
+    'blue': row.status.toLowerCase() === 'activated',
+}">{{row.status}}</ion-chip>
+</ng-template>
+
+
+<!-- defi table templates -->
 <ng-template #tokenPoolTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="pools">
-    
+
     <div class="asset-img-wrapper">
       <ion-img [src]="row.imgUrl" alt="image" />
     </div>
@@ -72,7 +100,7 @@
 
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="balance">
-    {{row.amount | number:  '1.2'}} {{row.symbol}}
-    
+    {{row.amount | number: '1.2'}} {{row.symbol}}
+
   </div>
 </ng-template>

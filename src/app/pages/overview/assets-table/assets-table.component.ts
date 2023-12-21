@@ -1,4 +1,4 @@
-import { CurrencyPipe, DecimalPipe, SlicePipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe, NgClass, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
@@ -9,7 +9,8 @@ import { AssetModalComponent } from './asset-modal/asset-modal.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { Token } from 'src/app/models';
-
+import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
+import {tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder} from './table-options-helper'
 
 @Component({
   selector: 'app-assets-table',
@@ -17,6 +18,7 @@ import { Token } from 'src/app/models';
   styleUrls: ['./assets-table.component.scss'],
   standalone: true,
   imports: [
+    SkeletonPhDirective,
     MftModule,
     IonImg,
     IonSkeletonText,
@@ -25,13 +27,18 @@ import { Token } from 'src/app/models';
     SlicePipe,
     IonButton,
     IonIcon,
-    IonChip
+    IonChip,
+    NgClass
   ]
 })
 export class AssetsTableComponent implements OnInit {
   // token tps
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
-  @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
+  @ViewChild('tokenOrValidatorTpl', { static: true }) tokenOrValidatorTpl: TemplateRef<any> | any;
+  @ViewChild('statusTpl', { static: true }) statusTpl: TemplateRef<any> | any;
+  @ViewChild('redirectTpl', { static: true }) redirectTpl: TemplateRef<any> | any;
+  @ViewChild('validatorBalanceTpl', { static: true }) validatorBalanceTpl: TemplateRef<any> | any;
+
   // nft tpls
   @ViewChild('collectionInfoTpl', { static: true }) collectionInfoTpl: TemplateRef<any> | any;
   @ViewChild('nftListTpl', { static: true }) nftListTpl: TemplateRef<any> | any;
@@ -58,144 +65,22 @@ export class AssetsTableComponent implements OnInit {
   tableData = computed(() => {
     let tableType: string = this.selectedTab().toLowerCase();
 
+    // if(tableType === 'tokens'){
+    //   return tokenDummyPlaceholder
+    // }
     if (tableType === 'nfts') {
-      return [
-        {
-          collection: 'mad lads',
-          floor: 142,
-          listed: 1,
-          offers: 24,
-          nfts: [
-            {
-              imgUrl: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            }, {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-            {
-              imgURL: '',
-            },
-          ],
-          totalValue: 110332
-        },
-        {
-          collection: 'mad lads',
-          floor: 142,
-          listed: 1,
-          offers: 24,
-          nfts: [{
-            imgURL: '',
-          }],
-          totalValue: 110332
-        },
-        {
-          collection: 'famous fox federation',
-          floor: 57,
-          listed: 7,
-          offers: 14,
-          nfts: [{
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          },
-          {
-            imgURL: '',
-          }
-          ],
-          totalValue: 43514
-        }
-      ]
+      return nftDummyPlaceholder
+
+    }
+    if (tableType === 'staking') {
+      console.log(tableType);
+      return stakingDummyPlaceholder
     }
     if (tableType === 'defi') {
-      return [
-        {
-          poolTokens: [
-            {
-            imgURL: 'assets/images/usdc.svg',
-            symbol:'USDC'
-          },
-          {
-            imgURL: 'assets/images/sol.svg',
-            symbol:'SOL'
-          },
-        ],
-          dex: 'orca',
-          type:'farm',
-          yourLiquidity: 2342,
-          apy: 11,
-          supported: false,
-        },
-        {
-          poolTokens: [
-
-          {
-            imgURL: 'assets/images/sol.svg',
-            symbol:'SOL'
-          },
-        ],
-          dex: 'meteora',
-          type:'farm',
-          yourLiquidity: 2342,
-          apy: 11,
-          supported: false,
-        },
-        {
-          poolTokens: [
-            {
-            imgURL: 'assets/images/usdc.svg',
-            symbol:'USDC'
-          },
-          {
-            imgURL: 'assets/images/usdc.svg',
-            symbol:'USDC'
-          },
-          {
-            imgURL: 'assets/images/sol.svg',
-            symbol:'SOL'
-          },
-        ],
-          dex: 'kamino',
-          type:'providing liquidity',
-          yourLiquidity: 2342,
-          apy: 11,
-          supported: false,
-        },
-      ]
+      
+      return defiDummyPlaceholder
     }
-    return this._portfolioService[tableType]()
+    return  this._portfolioService[tableType]()
   })
 
   private _columnsOptions = {}
@@ -203,18 +88,19 @@ export class AssetsTableComponent implements OnInit {
 
     this._columnsOptions = {
       tokens: [
-        { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '45%' },
+        { key: 'token', title: 'Token', cellTemplate: this.tokenOrValidatorTpl, width: '40%' },
         { key: 'amount', title: 'Amount', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value', width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
         { key: 'last-seven-days', title: 'Last 7 Days', width: '15%' }
       ],
-      staking: [
-        { key: 'collection', title: 'Collection', cellTemplate: this.tokenTpl, width: '25%' },
-        { key: 'nft', title: 'NFT', width: '30%' },
-        { key: 'floor', title: 'Floor(SOL)', width: '10%' },
-        { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
-        { key: 'totalValue', title: 'Total Value', width: '15%' }
+      staking:  [
+        { key: 'validator', title: 'Validator', cellTemplate: this.tokenOrValidatorTpl, width: '40%' },
+        { key: 'apy', title: 'APY', width: '7%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl,width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'accumulatedRewards', title: 'Accumulated Rewards', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'status', title: 'Account Status',cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
+        { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl}
       ],
       nfts: [
         { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
@@ -235,6 +121,7 @@ export class AssetsTableComponent implements OnInit {
     }
 
   }
+
   eventEmitted($event: { event: string; value: any }): void {
     const token: Token = $event.value.row
     if ($event.event === 'onClick') {

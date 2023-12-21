@@ -54,9 +54,6 @@ export class AppComponent implements OnInit {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
   }
   ngOnInit(): void {
-    
-    console.log(new UnsafeBurnerWalletAdapter());
-    
 
     this._portfolioService.getPortfolioAssets('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
   }

@@ -27,3 +27,217 @@
 //         { key: 'total-value', title: 'Total Value', width: '15%' }
 //       ]
 // }
+
+
+export const tokenDummyPlaceholder = [
+    {
+        "type": "",
+        "networkId": "",
+        "value": "",
+        "attributes": {},
+        "name": "",
+        "symbol": "",
+        "imgUrl": "",
+        "decimals": "",
+        "address": "",
+        "amount": "",
+        "price": ""
+    },
+    {
+        "type": "",
+        "networkId": "",
+        "value": "",
+        "attributes": {},
+        "name": "",
+        "symbol": "",
+        "imgUrl": "",
+        "decimals": "",
+        "address": "",
+        "amount": "",
+        "price": ""
+    },
+
+]
+
+export const nftDummyPlaceholder = [
+    {
+        collectionName: 'mad lads',
+        floor: 142,
+        listed: 1,
+        offers: 24,
+        nfts: [
+            {
+                imgUrl: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            }, {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+            {
+                imgURL: '',
+            },
+        ],
+        totalValue: 110332
+    },
+    {
+        collection: 'mad lads',
+        floor: 142,
+        listed: 1,
+        offers: 24,
+        nfts: [{
+            imgURL: '',
+        }],
+        totalValue: 110332
+    },
+    {
+        collection: 'famous fox federation',
+        floor: 57,
+        listed: 7,
+        offers: 14,
+        nfts: [{
+            imgURL: '',
+        },
+        {
+            imgURL: '',
+        },
+        {
+            imgURL: '',
+        }
+        ],
+        totalValue: 43514
+    }
+]
+
+export const defiDummyPlaceholder = [
+    {
+        poolTokens: [
+            {
+                imgURL: 'assets/images/usdc.svg',
+                symbol: 'USDC'
+            },
+            {
+                imgURL: 'assets/images/sol.svg',
+                symbol: 'SOL'
+            },
+        ],
+        dex: 'orca',
+        type: 'farm',
+        yourLiquidity: 2342,
+        apy: 11,
+        supported: false,
+    },
+    {
+        poolTokens: [
+
+            {
+                imgURL: 'assets/images/sol.svg',
+                symbol: 'SOL'
+            },
+        ],
+        dex: 'meteora',
+        type: 'farm',
+        yourLiquidity: 2342,
+        apy: 11,
+        supported: false,
+    },
+    {
+        poolTokens: [
+            {
+                imgURL: 'assets/images/usdc.svg',
+                symbol: 'USDC'
+            },
+            {
+                imgURL: 'assets/images/usdc.svg',
+                symbol: 'USDC'
+            },
+            {
+                imgURL: 'assets/images/sol.svg',
+                symbol: 'SOL'
+            },
+        ],
+        dex: 'kamino',
+        type: 'providing liquidity',
+        yourLiquidity: 2342,
+        apy: 11,
+        supported: false,
+    },
+]
+
+export const stakingDummyPlaceholder = [
+    {
+        name: 'SolanaHub',
+        imgUrl: 'assets/images/solanahub-logo.png',
+        apy: 7+'%',
+        balance: { sol: 1545, usd: 3452 },
+        accumulatedRewards: 1+ ' SOL',
+        status: 'active',
+        link: 'https://solscan.io/address/7p47fDAPGkXj3xct9mR38oNtxXf1g6pkbid35yZf6izC'
+    },
+    {
+        name: 'Solana Compass',
+        imgUrl: 'assets/images/solana-compass.webp',
+        apy: 7.5+'%',
+        balance: { sol: 234, usd: 65756 },
+        accumulatedRewards: 56+ ' SOL',
+        status: 'activated',
+        link: 'https://solscan.io/address/7p47fDAPGkXj3xct9mR38oNtxXf1g6pkbid35yZf6izC'
+    },
+    {
+        name: 'Solana Compass',
+        imgUrl: 'assets/images/solana-compass.webp',
+        apy: 7.5+'%',
+        balance: { sol: 3256, usd: 5675834 },
+        accumulatedRewards: 234 + ' SOL',
+        status: 'deactive',
+        link: 'https://solscan.io/address/7p47fDAPGkXj3xct9mR38oNtxXf1g6pkbid35yZf6izC'
+    },
+    {
+        name: 'SolanaHub',
+        imgUrl: 'assets/images/solanahub-logo.png',
+        apy: 7+'%',
+        balance: { sol: 1545, usd: 3452 },
+        accumulatedRewards: 1+ ' SOL',
+        status: 'active',
+        link: 'https://solscan.io/address/7p47fDAPGkXj3xct9mR38oNtxXf1g6pkbid35yZf6izC'
+    },
+    {
+        name: 'Solana Compass',
+        imgUrl: 'assets/images/solana-compass.webp',
+        apy: 7.5+'%',
+        balance: { sol: 8799, usd: 3456346 },
+        accumulatedRewards: 56+ ' SOL',
+        status: 'deactivated',
+        link: 'https://solscan.io/address/7p47fDAPGkXj3xct9mR38oNtxXf1g6pkbid35yZf6izC'
+    },
+]

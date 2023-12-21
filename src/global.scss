@@ -122,3 +122,16 @@ ion-button {
     /* Shadows/shadow-xs */
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
+
+ion-spinner{
+    transform: scale(1.5);
+    &::before {
+    border: 3px solid rgba(238, 242, 246, 1);
+    content: "";
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+}}

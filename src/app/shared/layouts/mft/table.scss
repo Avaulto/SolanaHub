@@ -32,10 +32,26 @@ ion-button {
     .ngx-table{
         font-family: var(--ion-font-family);
     }
+    .ngx-table__body-loading{
+        height: 200px;
+        div {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            width: 100%;
+        }
+    }
+
     thead{
         border-top: 1px solid var(--gray-modern-100, #EEF2F6);
     }
+    
     table {
+        // &#assets tr {
+        //     cursor: pointer;
+        // }
         // th.ngx-table__header-cell{
         //     padding: 0 !important;
         // }
@@ -74,7 +90,7 @@ ion-button {
             line-height: 20px;
             /* 166.667% */
         }
-
+     
         tbody>tr>td {
             color: var(--gray-modern-600, #4B5565);
             font-size: 12px;
@@ -83,52 +99,13 @@ ion-button {
             &:first-child {
                 padding-inline-start: 32px;
             }
-            cursor: pointer;
+            
             height: 77px;
             padding: 0;
 
-            .asset {
-                display: flex;
-                align-items: center;
-   
-            }
       
-            .asset-img-wrapper {
-                margin-inline-end: 12px;
 
-                ion-img {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    overflow: hidden;
-                }
-            }
-
-            .asset-info {
-                display: flex;
-                flex-direction: column;
-
-                .asset-symbol {
-                    color: var(--colors-text-text-primary-900, #101828);
-                    /* Text sm/Medium */
-        
-                    font-size: 14px;
-        
-                    font-weight: 500;
-                    line-height: 20px;
-                    /* 142.857% */
-                }
-
-                .asset-name {
-                    color: var(--gray-modern-600, #4B5565);
-        
-                    font-size: 12px;
-        
-                    font-weight: 400;
-                    line-height: 20px;
-                    /* 166.667% */
-                }
-            }
+      
         }
     }
 

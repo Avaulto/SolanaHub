@@ -1,28 +1,82 @@
+// tokens & validator style
+.item {
+    display: flex;
+    align-items: center;
+
+}
+
+.item-img-wrapper {
+    margin-inline-end: 12px;
+
+    ion-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+}
+.item-info {
+ 
+    display: flex;
+    flex-direction: column;
+
+}
+.item-bold {
+    color: var(--colors-text-text-primary-900, #101828);
+    /* Text sm/Medium */
+
+    font-size: 14px;
+
+    font-weight: 500;
+    line-height: 20px;
+    /* 142.857% */
+}
+
+.item-light {
+    color: var(--gray-modern-600, #4B5565);
+
+    font-size: 12px;
+
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+}
+.tx-out {
+    display: flex;
+    justify-content: center;
+}
+
 .collection-info {
     display: flex;
     align-items: center;
 }
-
-ion-img,
-ion-skeleton-text {
+.img-ph{
     width: 40px;
     height: 40px;
-    border-radius: 4px;
+    border-radius: 50%;
     margin-inline-end: 4px;
     overflow: hidden;
     background-color: #CDD5DF;
-}
-
-.collection-img {
-
-    ion-img,
-    ion-skeleton-text {
-        margin-inline-end: 12px;
+    ion-img{
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
+        margin-inline-end: 4px;
+        overflow: hidden;
+        background-color: #CDD5DF;
     }
+    &.border-ph {
+            margin-inline-end: 4px;
+            border-radius: 4px;
+        }
+    
+    
 }
+
+
 
 .collection-name {
+    width: 30%;
     text-transform: capitalize;
     color: #101828;
     font-size: 14px;
@@ -48,15 +102,29 @@ ion-skeleton-text {
     }
 }
 
+
 ion-chip {
-    border-radius: var(--radius-full, 9999px);
-    border: 1px solid #ABEFC6;
-    background: #ECFDF3;
-    color: #067647;
-    text-align: center;
     font-size: 11px;
-    font-weight: 600;
-    padding: 0;
-    width: 31px;
-    justify-content: center;
+    font-weight: 500;
+    border-radius: var(--radius-full, 1000px);
+    border: 1px solid #D5D9EB;
+    background: #F8F9FC;
+    &.primary {
+        border: 1px solid #FDD1EE;
+        background: #FFF3FB;
+        color: var(--ion-color-primary);
+    }
+
+
+    &.green {
+        border: 1px solid  #ABEFC6;
+        background:  #ECFDF3;
+        color: var(--ion-color-success);
+    }
+
+    &.blue {
+        border: 1px solid #B2DDFF;
+        background: #EFF8FF;
+        color: rgba(23, 92, 211, 1);
+    }
 }
