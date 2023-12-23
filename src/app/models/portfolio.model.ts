@@ -1,3 +1,11 @@
+import { PublicKey, Transaction } from "@solana/web3.js"
+
+export interface WalletExtended {
+  balance?: number,
+  publicKey: PublicKey,
+  signTransaction: (transaction: Transaction) => Promise<Transaction>,
+  signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
+}
 export interface Token{
     type: string,
     networkId: string,

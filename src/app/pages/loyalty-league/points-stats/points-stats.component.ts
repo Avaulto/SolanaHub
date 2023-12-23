@@ -1,6 +1,6 @@
 import { AsyncPipe, JsonPipe, NgClass } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { Observable, map, switchMap } from 'rxjs';
+import { Observable, map, shareReplay, switchMap } from 'rxjs';
 import { UtilService } from 'src/app/services';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -16,7 +16,8 @@ import { LoyaltyScore } from 'src/app/models';
 export class PointsStatsComponent implements OnInit {
   public utilService = inject(UtilService)
   public ptsScore$: Observable<LoyaltyScore> = inject(LoyaltyLeagueService).getLoyaltyScore()
-  .pipe(map((score: LoyaltyScore) => {
+  .pipe(
+    map((score: LoyaltyScore) => {
       let scoreExtended = {} as LoyaltyScore
       for (const m in score) {
         //@ts-ignore
@@ -41,10 +42,11 @@ export class PointsStatsComponent implements OnInit {
         }
 
       }
-      console.log(scoreExtended);
       return scoreExtended
 
-    }))
+    },
+    shareReplay(),
+    ))
   constructor() { }
 
   ngOnInit() { }

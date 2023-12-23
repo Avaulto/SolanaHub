@@ -10,20 +10,20 @@ import { Observable, shareReplay } from 'rxjs';
   styleUrls: ['./wallet-adapter-options.component.scss'],
 })
 export class WalletAdapterOptionsComponent implements OnInit {
-  @ViewChild('modal', {static:true}) selectAdapter:IonModal;
-  public walletsOptions$: Observable<Wallet[]> = this._walletStore.wallets$.pipe(shareReplay(1));
-  constructor(private _walletStore: WalletStore,public popoverController: PopoverController) { }
+  @ViewChild('modal', { static: true }) selectAdapter: IonModal;
+  public walletsOptions$: Observable<Wallet[]> = this._walletStore.wallets$.pipe(shareReplay(1))
+  constructor(private _walletStore: WalletStore, public popoverController: PopoverController) { }
 
   ngOnInit() {
   }
 
   async onSelectWallet(walletName: WalletName | any) {
-		this._walletStore.selectWallet(walletName);
+    this._walletStore.selectWallet(walletName);
     try {
-       await this.popoverController.dismiss();
+      await this.popoverController.dismiss();
     } catch (error) {
       console.error(error)
     }
-	}
+  }
 
 }

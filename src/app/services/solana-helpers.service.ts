@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
+import { Connection, LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js';
 // import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
 // import { AccountInfo, clusterApiUrl, ConfirmedSignatureInfo, Connection, GetProgramAccountsFilter, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, StakeActivationData, Transaction } from '@solana/web3.js';
 // import { BehaviorSubject, firstValueFrom, Observable, Subject, throwError } from 'rxjs';
@@ -14,7 +15,11 @@ import {
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
   TokenOwnerOffCurveError
-} from 'node_modules/@solana/spl-token';;
+} from 'node_modules/@solana/spl-token';
+import { BehaviorSubject, shareReplay, switchMap } from 'rxjs';
+import { WalletExtended } from '../models';
+import { environment } from 'src/environments/environment';
+;
 
 // interface StakeWizEpochInfo {
 //   epoch: number,
@@ -34,49 +39,52 @@ import {
 export class SolanaHelpersService {
 //   private _currentSolPrice$ = new BehaviorSubject(0 as number);
 //   public solPrice$ = this._currentSolPrice$.asObservable()
-//   public connection: Connection;
+  public connection: Connection;
 //   public accountChange$ = new BehaviorSubject({});
 //   private validatorss: Validator[];
 //   // private _stakeAccounts$: BehaviorSubject<StakeAccountExtended[]> = new BehaviorSubject(null as StakeAccountExtended[]);
 //   public stakeAccounts$ = this._stakeAccounts$.asObservable();
 
 //   // create a single source of trute for wallet adapter
-//   private _walletExtended$: BehaviorSubject<WalletExtended> = new BehaviorSubject(null as WalletExtended);
+  private _walletExtended$: BehaviorSubject<WalletExtended> = new BehaviorSubject(null as WalletExtended);
 
 //   // add balance utility
-//   public walletExtended$ = this._walletExtended$.asObservable().pipe(
+  public walletExtended$ = this._walletExtended$.asObservable().pipe(
 
-//     combineLatestWith(this.accountChange$),
-//     // accountStateChange used as trigger for re-render wallet related context
-//     switchMap(async ([wallet, accountStateChange]: any) => {
-//       if (wallet) {
-//         wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
-//       }
-//       return wallet;
-//     }),
-//     shareReplay(1),
-//   )
+    // combineLatestWith(this.accountChange$),
+    // accountStateChange used as trigger for re-render wallet related context
+    switchMap(async (wallet: any) => {
+      console.log(wallet);
+      
+      if (wallet) {
+        wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
+      }
+      return wallet;
+    }),
+    shareReplay(1),
+  )
 
-//   constructor(
-//     private _apiService: ApiService,
-//     // private _toasterService: ToasterService,
-//     private _connectionStore: ConnectionStore,
-//     private _utilService: UtilsService,
-//     public popoverController: PopoverController,
-//     private _walletStore: WalletStore
-//   ) {
-//     this._connectionStore.connection$.subscribe(conection => this.connection = conection);
-//     this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
-//   }
+  constructor(
+    // private _apiService: ApiService,
+    // private _toasterService: ToasterService,
+    private _connectionStore: ConnectionStore,
+    // private _utilService: UtilsService,
+    // public popoverController: PopoverController,
+    private _walletStore: WalletStore
+  ) {
+    this._connectionStore.setEndpoint(environment.solanaCluster)
+    this._connectionStore.connection$.subscribe(conection => this.connection = conection);
+    this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
+  }
 //   public setSolPrice(price: number) {
 //     this._currentSolPrice$.next(price)
 //   }
 //   public lastSolPrice() {
 //     return this._currentSolPrice$.value;
 //   }
-//   public getCurrentWallet(): WalletExtended {
-//     return this._walletExtended$.value
-//   }
+  public getCurrentWallet(): WalletExtended {
+    return this._walletExtended$.value
+  }
 //   public onAccountChangeCB(walletOwnerPk: PublicKey): void {
 //     this.connection.onAccountChange(walletOwnerPk, async (ev) => {
 //       this.accountChange$.next(ev);

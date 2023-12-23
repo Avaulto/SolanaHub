@@ -1,20 +1,26 @@
-import { Injectable } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import { Observable, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay } from 'rxjs';
 import { LoyaltyLeaderBoard, LoyaltyScore, NextAirdrop, PrizePool } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoyaltyLeagueService {
-
+  public _loyaltyLeagueLeaderBoard$ = new BehaviorSubject(null as LoyaltyLeaderBoard);
+  public llb$ = this._loyaltyLeagueLeaderBoard$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
   protected api = this._utilService.serverlessAPI + '/api/loyalty-points'
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService,
     // private _toasterService:ToasterService
-  ) { }
+  ) { 
+    if(!this._loyaltyLeagueLeaderBoard$.value){
+      firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
+
+    }
+  }
 
   // private _formatErrors(error: any) {
   //   console.warn('my err', error)
@@ -36,6 +42,7 @@ export class LoyaltyLeagueService {
       shareReplay(),
       this._utilService.isNotNull,
       map((loyaltyScore: LoyaltyScore) => {
+  
         return loyaltyScore
       }),
       // catchError((err) => this._formatErrors(err))

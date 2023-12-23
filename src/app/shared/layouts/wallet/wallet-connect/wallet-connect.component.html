@@ -1,20 +1,41 @@
-<!-- <div id="solana-wallet-connect">
-  <ng-container *ngIf=" (isReady$ | async) === false; else elseTemplate">
-    <ion-button class="ion-hide-lg-down" (click)="showWalletAdapters()" expand="block">
-       connect wallet
-    </ion-button>
-    <ion-fab-button class="ion-hide-lg-up ion-margin-horizontal" (click)="showWalletAdapters()">
-      <ion-icon name="wallet"></ion-icon>
-    </ion-fab-button>
-  </ng-container>
-  <ng-template #elseTemplate>
-    <ion-button class="ion-hide-lg-down" (click)="showConnectWalletActions($event)" fill="outline" expand="block">
-      <ion-img [src]="(wallet$ | async)?.adapter?.icon"></ion-img>
-      <span> {{walletPublicKey | async}} </span>
-    </ion-button>
-    <ion-fab-button class="ion-hide-lg-up ion-margin-horizontal" (click)="showConnectWalletActions($event)" fill="outline">
-      <ion-img [src]="(wallet$ | async)?.adapter?.icon"></ion-img>
-    </ion-fab-button>
-  </ng-template>
 
-</div> -->
+@if((isReady$ | async) === false){
+  <ion-button class="ion-hide-lg-down" (click)="showWalletAdapters()" expand="block">
+    connect wallet
+ </ion-button>
+}@else {
+<div id="wallet">
+  <div id="wallet-profile" style="position: relative;">
+    <ion-img 
+    loading="lazy"
+    [src]="profilePic"
+    [ngStyle]="{'viability': showSkeleton ? 'hidden' :'visible'}" 
+    (ionImgDidLoad)="showSkeleton = false" 
+    (ionError)="showSkeleton = false"
+    />
+
+    @if (showSkeleton) {
+    <ion-skeleton-text animated />
+    }
+
+  </div>
+  <div>
+    @if((llScore$ | async)?.pointsBreakDown?.hubDomainHolder; as hubDomainHolder){
+      <ion-label id="wallet-domain">{{hubDomainHolder}}</ion-label>
+    }
+    <div id="wallet-address"> {{ (walletPublicKey$ | async) }}</div>
+    <div id="loyalty-league" routerLink="/loyalty-league">
+
+      @if((llScore$ | async) != null; as llscore){
+        {{(llScore$ | async )?.loyaltyPoints || 0 | number: '1.0-0'}} 
+      }@else{
+        <ion-skeleton-text animated /> 
+      } Loyalty Points
+    </div>
+  </div>
+  <ion-icon name="chevron-down-outline"></ion-icon>
+  <div>
+
+  </div>
+</div>
+}

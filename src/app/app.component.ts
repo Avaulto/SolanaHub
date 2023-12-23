@@ -7,15 +7,19 @@ import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevr
 import { WalletComponent } from './wallet/wallet.component';
 import { PortfolioService } from './services/portfolio.service';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { provideWalletAdapter, WalletStore } from './wallet-adapter'
-import { WalletName } from '@solana/wallet-adapter-base';
+
+import { WalletStore, provideWalletAdapter } from '@heavy-duty/wallet-adapter';
+import { WalletModule } from './shared/layouts/wallet/wallet.module';
+import { UtilService } from './services';
+import { distinctUntilChanged } from 'rxjs';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
-    WalletComponent,
+    WalletModule,
     RouterLink,
     RouterLinkActive,
     CommonModule,
@@ -31,31 +35,28 @@ import { WalletName } from '@solana/wallet-adapter-base';
     IonIcon,
     IonLabel,
     IonRouterOutlet,
-    IonImg,
-
+    IonImg
   ],
-  providers:[
-    provideWalletAdapter({
-      autoConnect: false,
-      adapters: [new UnsafeBurnerWalletAdapter()],
-    }),
-  ]
+
 })
 export class AppComponent implements OnInit {
   private readonly _walletStore = inject(WalletStore);
-
-  readonly connected$ = this._walletStore.connected$;
-  readonly publicKey$ = this._walletStore.publicKey$;
-  readonly wallets$ = this._walletStore.wallets$;
-  readonly wallet$ = this._walletStore.wallet$;
-
+  private _utilsService = inject(UtilService)
   
   constructor(private _portfolioService:PortfolioService) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
   }
   ngOnInit(): void {
-
-    this._portfolioService.getPortfolioAssets('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
+    this._walletStore.anchorWallet$.pipe(
+      this._utilsService.isNotNull,
+      this._utilsService.isNotUndefined,
+      distinctUntilChanged(),
+    ).subscribe(wallet => {
+      // console.log(wallet);
+      
+      // this._solanaUtilsService.onAccountChangeCB(wallet.publicKey)
+      this._portfolioService.getPortfolioAssets(wallet.publicKey.toBase58())
+    })
   }
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
 

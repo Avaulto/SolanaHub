@@ -88,7 +88,7 @@ export class MftComponent implements OnInit {
   }
   constructor() { 
     effect(() =>{
-      console.log('mft loaded', this.tableData(), this.tableRows);
+      // console.log('mft loaded', this.tableData(), this.tableRows);
       if(this.tableData().length < this.tableRows){
         this.configuration.paginationEnabled = false
       }else{
@@ -98,7 +98,6 @@ export class MftComponent implements OnInit {
         
         this.configuration.isLoading = false;
       }
-      console.log(this.configuration);
     })
   }
   handleInput(event: any) {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-// import { WalletStore } from '@heavy-duty/wallet-adapter';
+import { WalletStore } from '@heavy-duty/wallet-adapter';
 
 @Component({
   selector: 'app-wallet-not-connected-state',
@@ -10,9 +10,9 @@ export class WalletNotConnectedStateComponent implements OnInit {
   @Input() showBtn: boolean = false;
   @Input() showText: boolean = false;
   @Input() content: any;
-  readonly isReady$ = null//this._walletStore.connected$;
+  readonly isReady$ = this._walletStore.connected$;
   constructor(
-    // private _walletStore:WalletStore
+    private _walletStore:WalletStore
     ) { }
 
   ngOnInit() {

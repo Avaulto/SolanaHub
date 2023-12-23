@@ -36,7 +36,9 @@ export class PortfolioService {
 
       console.log(editedData);
       
-      // const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
+      const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
+      console.log(extendNftData);
+      this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
     } catch (error) {

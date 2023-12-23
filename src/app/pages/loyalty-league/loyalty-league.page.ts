@@ -3,15 +3,15 @@ import { IonicModule } from '@ionic/angular';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
-import { UtilService } from 'src/app/services';
+import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { addIcons } from 'ionicons';
 import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline } from 'ionicons/icons';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { PoolStatsComponent } from './pool-stats/pool-stats.component';
 import { MemberStatsComponent } from './member-stats/member-stats.component';
 import { PointsStatsComponent } from './points-stats/points-stats.component';
-import { Subject, firstValueFrom, map, switchMap } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatestWith, firstValueFrom, map, switchMap } from 'rxjs';
 import { PrizePool } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 
@@ -27,10 +27,11 @@ import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive
     PoolStatsComponent,
     MemberStatsComponent,
     PointsStatsComponent,
-    CopyTextDirective
+    CopyTextDirective,
+    AsyncPipe
   ]
 })
-export class LoyaltyLeaguePage implements AfterViewInit {
+export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
   public connectedWallet = 'CdoFMmSgkhKGKwunc7Tusg2sMZjxML6kpsvEmqpVYPjyP'
   public loyalMember = signal(null)
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
@@ -38,25 +39,50 @@ export class LoyaltyLeaguePage implements AfterViewInit {
   @ViewChild('daoTpl', { static: true }) daoTpl: TemplateRef<any> | any;
   @ViewChild('hubDomainHolderTpl', { static: true }) hubDomainHolderTpl: TemplateRef<any> | any;
   @ViewChild('airdropTpl', { static: true }) airdropTpl: TemplateRef<any> | any;
-
-  constructor(private _loyaltyLeagueService: LoyaltyLeagueService, public _utilService: UtilService) {
-    addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline });
-
-    effect(() =>console.log(this.loyalMember()))
-  }
-  public prizePool$: Subject<PrizePool> = new Subject()
-  public totalPts: number = null
-  public ll = this._loyaltyLeagueService.getLoyaltyLeaderBoard().pipe(switchMap(async (ll) => {
-    this.totalPts = ll.totalPoints
+  async ngOnInit() {
     const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
     this.prizePool$.next(prizePool)
-    let findMember = ll.loyaltyPoints.find(staker => staker.walletOwner === this.connectedWallet)
-    if(findMember){
-      console.log(findMember);
-      
-      //@ts-ignore
-      findMember.weeklyAirdrop  = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
+  }
+  constructor(
+    private _loyaltyLeagueService: LoyaltyLeagueService,
+    public _utilService: UtilService,
+    private _shs: SolanaHelpersService
+  ) {
+    addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline });
+
+    effect(() => console.log(this.loyalMember()))
+  }
+  public prizePool$: BehaviorSubject<PrizePool> = new BehaviorSubject(null as PrizePool)
+
+  public llScore$ = this._shs.walletExtended$.pipe(
+    combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),
+    this._utilService.isNotNullOrUndefined,
+    map(([wallet, lllb, prizePool]) => {
+      console.log(wallet,);
+
+
+      const findMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+      console.log('find member', findMember);
+      if(findMember){
+        //@ts-ignore
+        findMember.weeklyAirdrop = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
+      }
+
+      this.loyalMember.set(findMember)
+
+      return this.loyalMember()
+
+    }))
+  public totalPts: number = null
+  public ll = this._loyaltyLeagueService.llb$.pipe(switchMap(async (ll) => {
+
+    this.totalPts = ll.totalPoints
+    if(this.prizePool$.value === null){
+      const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
+      this.prizePool$.next(prizePool)
     }
+
+
     const loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
       return {
         rank: i + 1,
@@ -67,11 +93,9 @@ export class LoyaltyLeaguePage implements AfterViewInit {
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
         hubDomainHolder: staker.pointsBreakDown.hubDomainHolder,
         totalPoints: this._utilService.formatBigNumbers(staker.loyaltyPoints),
-        weeklyAirdrop: this._utilService.formatBigNumbers(prizePool.rebates * staker?.prizePoolShare)
+        weeklyAirdrop: this._utilService.formatBigNumbers(this.prizePool$.value.rebates * staker?.prizePoolShare)
       }
     })
-    this.loyalMember.set(findMember);
-    console.log(loyaltyLeagueExtended,this.loyalMember());
     return loyaltyLeagueExtended
   }))
   public leaderBoard = toSignal(this.ll)
@@ -85,13 +109,13 @@ export class LoyaltyLeaguePage implements AfterViewInit {
     return [
       { key: 'rank', width: '5%', title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'walletOwner', title: 'Wallet address', cellTemplate: this.addressTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'nativeStake',width: '10%', title: 'Native Stake', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'liquidStake',width: '15%', title: 'Liquid Stake', cellTemplate: this.LSTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'nativeStake', width: '10%', title: 'Native Stake', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'liquidStake', width: '15%', title: 'Liquid Stake', cellTemplate: this.LSTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'dao', width: '15%', title: 'DAO votes', cellTemplate: this.daoTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'referrals', title: 'Referrals', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'hubDomainHolder', title: 'HUB Domain Holder', cellTemplate: this.hubDomainHolderTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'totalPoints', title: 'Total Points', width: '10%', cssClass: { name: 'bold-text', includeHeader: true } },
-      { key: 'weeklyAirdrop',title: 'Airdrop', width: '10%', cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'weeklyAirdrop', title: 'Airdrop', width: '10%', cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
     ]
   }
   public copyAddress(address: string) {

@@ -13,7 +13,7 @@
         </div>
         <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
           Boost your score to unlock weekly SOL rewards.</div>
-        @if(loyalMember()){
+        @if(llScore$ | async){
         <app-member-stats [loyalMember]="loyalMember" />
         }@else {
         <ion-button id="stake-redirect">Start Stake with SolanaHub</ion-button>
