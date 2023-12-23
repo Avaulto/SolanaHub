@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { NetWorthComponent } from './net-worth/net-worth.component';
 import { AssetsTableComponent } from './assets-table/assets-table.component';
 import { PortfolioBreakdownComponent } from './portfolio-breakdown/portfolio-breakdown.component';
-import { UtilService } from 'src/app/services';
+import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { TransactionsHistoryTableComponent } from 'src/app/shared/components/transactions-history-table/transactions-history-table.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { TransactionHistory } from 'src/app/models';
@@ -27,10 +27,14 @@ import { TransactionHistory } from 'src/app/models';
 export class OverviewPage implements OnInit {
   private _utilService = inject(UtilService);
   private _portfolioService = inject(PortfolioService)
+  private _shs = inject(SolanaHelpersService)
   constructor() { }
 
   async ngOnInit() {
-    await this._portfolioService.getWalletHistory('JPQmr9p2RF3X5TuBXxn6AGcEfcsHp4ehcmzE5Ys7pZD')
+    this._shs.walletExtended$.pipe(this._utilService.isNotNullOrUndefined).subscribe(wallet =>{
+
+       this._portfolioService.getWalletHistory(wallet.publicKey.toBase58())
+    })
     
   }
   public walletHistory: WritableSignal<TransactionHistory[]> = this._portfolioService.walletHistory
