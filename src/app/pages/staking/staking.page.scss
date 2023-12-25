@@ -1,0 +1,83 @@
+header {
+    background-color: #E9E9E6;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 5vw;
+    height: 295px;
+
+    #title {
+        color: var(--gray-modern-950, var(--colors-gray-modern-950, #0D121C));
+        font-size: 48px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 48px;
+        text-transform: capitalize;
+        letter-spacing: -0.96px;
+        margin-block-end: 24px;
+        width: 100%;
+    }
+
+    #intro {
+        max-width: 600px;
+        color: var(--colors-gray-modern-700, #364152);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        /* 150% */
+    }
+
+    #stat-wrapper {
+        transform: translateY(50px);
+    
+    
+        .staking-stat {
+            padding: 24px;
+            border-radius: var(--radius-xl, 12px);
+            background: var(--Colors-Background-bg-primary, #FFF);
+            box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+            width: 23%;
+    
+            .icon-wrapper {
+                width: 48px;
+                height: 48px;
+                border-radius: var(--radius-lg, 10px);
+                border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
+                box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-block-end: 20px;
+            }
+    
+            .stat-title {
+                color: #4B5565;
+                font-size: 13px;
+                font-weight: 500;
+                line-height: 18px;
+                margin-block-end: 4px;
+            }
+    
+            .stat-desc {
+                color: var(--colors-text-text-primary-900, #121926);
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 30px;
+                /* 150% */
+            }
+    
+            ion-img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
+
+#stake-box {
+    margin-block-start: 120px;
+   
+    border-radius:  12px;
+    border: 1px solid #E3E8EF;
+    background-color: rgba(255, 255, 255, 1);
+}

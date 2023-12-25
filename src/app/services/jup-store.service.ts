@@ -10,7 +10,7 @@ import { TxInterceptorService } from './tx-interceptor.service';
 export class JupStoreService {
   // private _wallet = this._shs.getCurrentWallet();
   private _txIntercept = inject(TxInterceptorService)
-  constructor(private _shs: SolanaHelpersService){}
+  constructor(private _shs: SolanaHelpersService) { }
   public async fetchPriceFeed(mintAddress: string, vsAmount: number = 1): Promise<JupiterPriceFeed> {
     let data: JupiterPriceFeed = null
     try {
@@ -21,7 +21,7 @@ export class JupStoreService {
     }
     return data
   }
-  public async computeBestRoute(inputAmount: number, inputToken: JupToken,outputToken: JupToken,slippage: number): Promise<JupRoute> {
+  public async computeBestRoute(inputAmount: number, inputToken: JupToken, outputToken: JupToken, slippage: number): Promise<JupRoute> {
     let bestRoute: JupRoute = null;
     const inputAmountInSmallestUnits = inputToken
       ? Math.round(Number(inputAmount) * 10 ** inputToken.decimals)
@@ -43,7 +43,7 @@ export class JupStoreService {
     // const arrayOfTx: Transaction[] = []
     try {
       const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
-      
+
       const { swapTransaction } = await (
         await fetch('https://quote-api.jup.ag/v6/swap', {
           method: 'POST',
@@ -66,7 +66,7 @@ export class JupStoreService {
 
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
-        const record = {message:'jupiter', data:{ type: `simple swap` }}
+      const record = { message: 'jupiter', data: { type: `simple swap` } }
       await this._txIntercept.sendTxV2(transaction, record);
 
     } catch (error) {

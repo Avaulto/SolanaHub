@@ -1,16 +1,10 @@
-import { Component, OnInit, WritableSignal, effect, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit,  effect, signal } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { TokenListComponent } from './token-list/token-list.component';
-import { addIcons } from 'ionicons';
-import { chevronDownSharp } from 'ionicons/icons';
+
 import { PortfolioService } from 'src/app/services/portfolio.service';
-import { JupStoreService } from 'src/app/services/jup-store.service';
-import { JupRoute, JupToken } from 'src/app/models';
-import { UtilService } from 'src/app/services';
+
 import { FormComponent } from './form/form.component';
 @Component({
   selector: 'app-swap',

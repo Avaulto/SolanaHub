@@ -8,7 +8,8 @@
     </ion-button>
     <!-- Other options -->
 
-    <ion-input type="number" [debounce]="800" formControlName="inputAmount" placeholder="0.00" class="currency-amount" />
+    <ion-input type="number" [debounce]="800" formControlName="inputAmount" placeholder="0.00"
+      class="currency-amount" />
   </div>
   <div class="token-input">
 
@@ -17,14 +18,16 @@
       {{tokenSwapForm.controls['outputToken']?.value.symbol}}
       <ion-icon name="chevron-down-outline" />
     </ion-button>
-    <!-- Other options -->
-
-    <ion-input style="background-color: white;" [value]="toReceive()" readonly class="currency-amount" />
+    <ion-input style="background-color: white;"
+      [value]="bestRoute()?.outAmount" readonly
+      class="currency-amount" />
     @if(waitForBestRoute()){
-      <ion-skeleton-text animated/>
+    <ion-skeleton-text animated />
     }
   </div>
-  <ion-button id="swap-button" (click)="submitSwap()" [disabled]="tokenSwapForm.invalid || !toReceive()">
+  <ion-button id="swap-button" (click)="submitSwap()" [disabled]="tokenSwapForm.invalid || !bestRoute()">
     Swap
   </ion-button>
+
+  {{bestRoute()?.slippageBps}}
 </form>

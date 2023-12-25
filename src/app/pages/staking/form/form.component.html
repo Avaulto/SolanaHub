@@ -1,0 +1,80 @@
+<div class="ion-padding" id="stake-wrapper">
+  <div id="stake-intro">
+    <div id="title">stake your SOL</div>
+    <div id="desc">choose between native and liquid staking and enjoy a variety of features</div>
+  </div>
+
+  <div id="stake-head">
+    <div class="light-title">stake amount</div>
+
+    <div id="wallet-info">
+      <ion-img src="assets/images/wallet-icon.svg" />
+      <span>4,500.00</span>
+      <div id="size-btns">
+        <ion-button size="small" class="space" fill="clear">half</ion-button>
+        <ion-button size="small" fill="clear">max</ion-button>
+      </div>
+    </div>
+
+  </div>
+  <form>
+    <div id="input-control">
+      <span>
+        <label>SOL</label>
+        <ion-input mode="ios" placeholder="0" inputmode="decimal" />
+      </span>
+      <div>{{33 | currency}}</div>
+    </div>
+
+    <div id="stake-path">
+      <div class="light-title">Select Staking path</div>
+      <div id="stake-options">
+        <div class="stake-type" [class.selectedPath]="nativePath.checked" (click)="selectStakePath('native')">
+          <div class="inliner">
+            <div class="icon-wrapper">
+              <ion-img src="assets/images/lock-icon.svg" />
+            </div>
+            <ion-checkbox #nativePath checked />
+          </div>
+          <div class="type-title">Native staking</div>
+          <div class="type-desc">pure staking,lock asset, no smart contract risk</div>
+        </div>
+        <div class="stake-type" [class.selectedPath]="liquidPath.checked"  (click)="selectStakePath('liquid')">
+          <div class="inliner">
+            <div class="icon-wrapper">
+              <ion-img src="assets/images/droplets-icon.svg" />
+            </div>
+            <ion-checkbox #liquidPath />
+          </div>
+          <div class="type-title">Liquid staking</div>
+          <div class="type-desc">liquid asset, free to join defi, have smart contract risk</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="validator-selection">
+      <div class="light-title">Select Validator</div>
+      <ion-button slot="start" fill="clear" expand="block" >
+        <span style="margin-right: auto">Select your preferred validator</span>
+        <ion-icon slot="end" name="chevron-down-outline" />
+      </ion-button>
+    </div>
+
+    @if(true){
+      <div id="lock-up">
+        <div id="lock-selection">
+          <div>
+            <div class="light-title">stake your SOL</div>
+            <div class="type-desc">Locking will create a stake account that is locked for the duration of time you specify</div>
+          </div>
+          <ion-toggle/>
+        </div>
+        @if (true) {
+          <ion-range/>
+        }
+      </div>
+    }
+
+    <ion-button class="ion-text-capitalize" disabled expand="block">enter stake amount</ion-button>
+  </form>
+</div>

@@ -44,8 +44,7 @@ export class FormComponent implements OnInit {
   public waitForBestRoute = signal(false);
   public jupTokens = signal([] as JupToken[])
   public slippage = signal(0.5);
-  public bestRoute: JupRoute = null
-  public toReceive: WritableSignal<number> = signal(null)
+  public bestRoute: WritableSignal<JupRoute> = signal(null)
   public tokenSwapForm: FormGroup;
   constructor(
     private _modalCtrl: ModalController,
@@ -66,18 +65,18 @@ export class FormComponent implements OnInit {
     
     this.tokenSwapForm.valueChanges.subscribe(async (values: {inputToken,outputToken,inputAmount,slippage}) => {
       if(this.tokenSwapForm.valid){
-       this.toReceive.set(null)
+       this.bestRoute.set(null)
        this.waitForBestRoute.set(true)
        const route = await this._jupStore.computeBestRoute(values.inputAmount,values.inputToken,values.outputToken, values.slippage)
-       this.bestRoute = route
-       const minimumReceived = Number(route.outAmount) / 10 **  values.outputToken.decimals
-       this.toReceive.set(minimumReceived)
-       console.log(minimumReceived);
-       
+       this.bestRoute.set(route)
+      //  const minimumReceived = Number(route.outAmount) / 10 **  values.outputToken.decimals
+      //  this.toReceive.set(minimumReceived)
        this.waitForBestRoute.set(false)
+       console.log(this.bestRoute());
+       
       }
       if(!values.inputAmount){
-        this.toReceive.set(null)
+        this.bestRoute.set(null)
       }
     })
     const tokensList = await this._util.getJupTokens();
@@ -102,6 +101,6 @@ export class FormComponent implements OnInit {
 
   }
   public async submitSwap(): Promise<void> {
-    await this._jupStore.swapTx(this.bestRoute);
+    await this._jupStore.swapTx(this.bestRoute());
   }
 }
