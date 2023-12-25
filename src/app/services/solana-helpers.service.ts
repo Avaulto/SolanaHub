@@ -54,11 +54,11 @@ export class SolanaHelpersService {
     // combineLatestWith(this.accountChange$),
     // accountStateChange used as trigger for re-render wallet related context
     switchMap(async (wallet: any) => {
-      console.log(wallet);
       
       if (wallet) {
         wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
       }
+      console.log(wallet);
       return wallet;
     }),
     shareReplay(1),
@@ -83,6 +83,8 @@ export class SolanaHelpersService {
 //     return this._currentSolPrice$.value;
 //   }
   public getCurrentWallet(): WalletExtended {
+    console.log(this._walletExtended$);
+    
     return this._walletExtended$.value
   }
 //   public onAccountChangeCB(walletOwnerPk: PublicKey): void {

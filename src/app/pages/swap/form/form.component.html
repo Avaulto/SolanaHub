@@ -1,0 +1,30 @@
+<form [formGroup]="tokenSwapForm" class="token-exchange">
+  <div class="token-input">
+
+    <ion-button fill="clear" class="token-select" (click)="openTokensModal('in')">
+      <ion-img [src]="tokenSwapForm.controls['inputToken']?.value.logoURI" />
+      {{tokenSwapForm.controls['inputToken']?.value.symbol}}
+      <ion-icon name="chevron-down-outline" />
+    </ion-button>
+    <!-- Other options -->
+
+    <ion-input type="number" [debounce]="800" formControlName="inputAmount" placeholder="0.00" class="currency-amount" />
+  </div>
+  <div class="token-input">
+
+    <ion-button style="border: 1px solid #EFF0F0;" fill="clear" class="token-select" (click)="openTokensModal('out')">
+      <ion-img [src]="tokenSwapForm.controls['outputToken']?.value.logoURI" />
+      {{tokenSwapForm.controls['outputToken']?.value.symbol}}
+      <ion-icon name="chevron-down-outline" />
+    </ion-button>
+    <!-- Other options -->
+
+    <ion-input style="background-color: white;" [value]="toReceive()" readonly class="currency-amount" />
+    @if(waitForBestRoute()){
+      <ion-skeleton-text animated/>
+    }
+  </div>
+  <ion-button id="swap-button" (click)="submitSwap()" [disabled]="tokenSwapForm.invalid || !toReceive()">
+    Swap
+  </ion-button>
+</form>

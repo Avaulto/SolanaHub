@@ -54,7 +54,7 @@ export class MftComponent implements OnInit {
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
-    this.configuration.isLoading = true;
+    // this.configuration.isLoading = true;
   }
   previousPage() {
     console.log('trigger');
@@ -96,7 +96,7 @@ export class MftComponent implements OnInit {
       }
       if(this.tableData()){
         
-        this.configuration.isLoading = false;
+        // this.configuration.isLoading = false;
       }
     })
   }

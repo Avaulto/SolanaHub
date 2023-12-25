@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild, computed, effect } from '@angular/core';
+import { Component, OnInit, ViewChild, computed, effect, signal } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
-import { combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observable, of, shareReplay, single, switchMap } from 'rxjs';
 import { WalletAdapterOptionsComponent } from '../wallet-adapter-options/wallet-adapter-options.component';
 
 import va from '@vercel/analytics';
@@ -37,16 +37,23 @@ export class WalletConnectComponent implements OnInit {
     addIcons({ chevronDownOutline });
     effect(() => {
     //@ts-ignore
-   this.profilePic = this._portfolioService.nfts().data.assets[0].data.imageUri
+   this.profilePic = this._portfolioService.nfts()?.data?.assets[0]?.data.imageUri
     })
   }
   public profilePic;
   // loyalty league member score
+  public loyaltyLeagueMemberScore = signal(null);
   public llScore$ = this._shs.walletExtended$.pipe(
     this._utilsService.isNotNullOrUndefined,
     combineLatestWith(this._loyaltyLeagueService.llb$),
     map(([wallet, lllb]) => {
         const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+        console.log(loyalMember);
+        if(loyalMember){
+          this.loyaltyLeagueMemberScore.set(loyalMember.loyaltyPoints)
+        }else{
+          this.loyaltyLeagueMemberScore.set(0)
+        }
         return loyalMember
   })) 
 
@@ -54,9 +61,7 @@ export class WalletConnectComponent implements OnInit {
   readonly wallets$ =this._walletStore.wallets$.pipe(shareReplay(1));
   readonly isReady$ =  this._walletStore.connected$.pipe(switchMap(async isReady => {
     if (isReady) {
-      // this one not triggered
-      console.log('wallet connect',  this._portfolioService.nfts);
-      
+  
       //trackEvent('wallet connected')
       // this._toasterService.msg.next({
         //   message: `Wallet connected`,

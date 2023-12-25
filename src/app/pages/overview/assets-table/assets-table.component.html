@@ -50,7 +50,7 @@
 <ng-template #tokenOrValidatorTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
+      <ion-img [src]="row.imgUrl" alt="image" />
     </div>
     <div class="item-info">
       @if (!row.status) {

@@ -9,33 +9,7 @@
 <ion-content [fullscreen]="true">
   <ion-grid>
     <ion-row class="ion-justify-content-center">
-      <div class="token-exchange">
-        <div class="token-input">
-
-          <ion-button fill="clear" class="token-select" (click)="openModal()">
-            <ion-img src="assets/images/usdc.svg" />
-            USDC
-            <ion-icon name="chevron-down-outline" />
-          </ion-button>
-          <!-- Other options -->
-
-          <ion-input type="number" placeholder="0.00" class="currency-amount" />
-        </div>
-        <div class="token-input">
-
-          <ion-button style="border: 1px solid #EFF0F0;" fill="clear" class="token-select" (click)="openModal()">
-            <ion-img src="assets/images/sol.svg" />
-            SOL
-            <ion-icon name="chevron-down-outline" />
-          </ion-button>
-          <!-- Other options -->
-
-          <ion-input style="background-color: white;" readonly class="currency-amount" />
-        </div>
-
-        <ion-button id="swap-button">Swap</ion-button>
-
-      </div>
+      <swap-form/>
     </ion-row>
 
 

@@ -72,13 +72,14 @@ export class UtilService {
 
   public async getJupTokens(): Promise<JupToken[]> {
     //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
-    let tokensData = []
+    let tokensList:JupToken[] = []
     try {
-      tokensData = await (await fetch('https://token.jup.ag/all')).json()
+       tokensList = await (await fetch('https://token.jup.ag/all')).json();
+       tokensList.forEach(t => t.logoURI = t.logoURI ?  t.logoURI : 'assets/images/unknown.svg');
     } catch (error) {
       console.error();
     }
-    return tokensData
+    return tokensList
   }
   public addTokenData(assets: any,  tokensInfo: JupToken[]): any[] {
     return assets.map((res: any) => {
@@ -88,7 +89,7 @@ export class UtilService {
       res.name = token?.name ? token.name  : '';
       res.name === 'Wrapped SOL' ?  res.name = 'Solana' :  res.name 
       res.symbol = token?.symbol ? token.symbol  : '';
-      res.imgUrl = token?.logoURI ? token.logoURI  : '';;
+      res.imgUrl = token?.logoURI ? token.logoURI  : 'assets/images/unknown.svg';
       res.decimals = token?.decimals ? token.decimals  : '';;
       return res
     }).map((item: any) => {

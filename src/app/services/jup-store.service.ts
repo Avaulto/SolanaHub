@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { JupRoute, JupToken, JupiterPriceFeed } from '../models/jup-token.model';
 import { VersionedTransaction } from '@solana/web3.js';
+import { SolanaHelpersService } from './solana-helpers.service';
+import { TxInterceptorService } from './tx-interceptor.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JupStoreService {
-
-  constructor() { }
+  // private _wallet = this._shs.getCurrentWallet();
+  private _txIntercept = inject(TxInterceptorService)
+  constructor(private _shs: SolanaHelpersService){}
   public async fetchPriceFeed(mintAddress: string, vsAmount: number = 1): Promise<JupiterPriceFeed> {
     let data: JupiterPriceFeed = null
     try {
@@ -39,7 +42,8 @@ export class JupStoreService {
   public async swapTx(routeInfo: JupRoute): Promise<void> {
     // const arrayOfTx: Transaction[] = []
     try {
-      const walletOwner = ''//this._solanaUtilsService.getCurrentWallet().publicKey
+      const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
+      
       const { swapTransaction } = await (
         await fetch('https://quote-api.jup.ag/v6/swap', {
           method: 'POST',
@@ -51,7 +55,7 @@ export class JupStoreService {
             // quoteResponse from /quote api
             quoteResponse: routeInfo,
             // user public key to be used for the swap
-            userPublicKey: walletOwner.toString(),
+            userPublicKey: walletOwner,
             // auto wrap and unwrap SOL. default is true
             wrapUnwrapSOL: true,
             // feeAccount is optional. Use if you want to charge a fee.  feeBps must have been passed in /quote API.
@@ -59,10 +63,11 @@ export class JupStoreService {
           })
         })
       ).json();
+
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
         const record = {message:'jupiter', data:{ type: `simple swap` }}
-      // await this._txInterceptService.sendTxV2(transaction, record);
+      await this._txIntercept.sendTxV2(transaction, record);
 
     } catch (error) {
       console.warn(error)

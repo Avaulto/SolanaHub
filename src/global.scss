@@ -38,6 +38,10 @@ input[type=number]::-webkit-outer-spin-button {
 ::-webkit-scrollbar {
     width: 10px;
 }
+::selection {
+    background: var(--ion-color-primary);
+    color: white;
+  }
 
 ion-grid,
 ion-col {

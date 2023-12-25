@@ -26,8 +26,8 @@
     <div id="wallet-address"> {{ (walletPublicKey$ | async) }}</div>
     <div id="loyalty-league" routerLink="/loyalty-league">
 
-      @if((llScore$ | async) != null; as llscore){
-        {{(llScore$ | async )?.loyaltyPoints || 0 | number: '1.0-0'}} 
+      @if(loyaltyLeagueMemberScore() != null){
+        {{loyaltyLeagueMemberScore() | number: '1.0-0'}} 
       }@else{
         <ion-skeleton-text animated /> 
       } Loyalty Points

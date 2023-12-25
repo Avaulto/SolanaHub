@@ -1,19 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UtilService,SolanaHelpersService } from './';
 
-import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, Transaction, TransactionBlockhashCtor, TransactionInstruction } from '@solana/web3.js';
+import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
 import { PriorityFee } from '../models';
 import va from '@vercel/analytics';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TxInterceptorService {
-
-  // constructor(
-  //   private _solanaHelpersService: SolanaHelpersService,
-  //   private _utilService:UtilService
-  //   ) { }
+  // private _shs = inject(SolanaHelpersService);
+  // private _wallet = this._shs.getCurrentWallet()
+  constructor(
+    private _shs: SolanaHelpersService,
+    private _utilService:UtilService
+    ) { }
   //   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
   //     if (priorityFee != '0') {
   //       const units = Number(priorityFee) * 1000000;
@@ -80,43 +82,42 @@ export class TxInterceptorService {
   //     // onMsg('transaction failed', 'error')
   //   }
   // }
-  // public async sendTxV2(txParam: VersionedTransaction, record?:{message:string, data:{}}) {
-  //   try {
-  //     const { lastValidBlockHeight, blockhash } = await this._solanaHelpersService.connection.getLatestBlockhash();
+  public async sendTxV2(txParam: VersionedTransaction, record?:{message:string, data:{}}) {
+    try {
+      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+      let signedTx = await this._shs.getCurrentWallet().signTransaction(txParam);
 
-  //     let signedTx = await firstValueFrom(this._walletStore.signTransaction(txParam));
+      const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
+      const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
+      // const url = `${this._utilService.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
+      // const txSend: toastData = {
+      //   message: `Transaction Submitted`,
+      //   btnText: `view on explorer`,
+      //   segmentClass: "toastInfo",
+      //   duration: 5000,
+      //   cb: () => window.open(url)
+      // }
+      // this.toasterService.msg.next(txSend)
+      const config: BlockheightBasedTransactionConfirmationStrategy = {
+        signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
+      }
+      await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
+      // const txCompleted: toastData = {
+      //   message: 'Transaction Completed',
+      //   segmentClass: "toastInfo"
+      // }
 
-  //     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
-  //     const signature = await this._solanaHelpersService.connection.sendRawTransaction(rawTransaction);
-  //     const url = `${this._utilService.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
-  //     // const txSend: toastData = {
-  //     //   message: `Transaction Submitted`,
-  //     //   btnText: `view on explorer`,
-  //     //   segmentClass: "toastInfo",
-  //     //   duration: 5000,
-  //     //   cb: () => window.open(url)
-  //     // }
-  //     this.toasterService.msg.next(txSend)
-  //     const config: BlockheightBasedTransactionConfirmationStrategy = {
-  //       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
-  //     }
-  //     await this._solanaHelpersService.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
-  //     const txCompleted: toastData = {
-  //       message: 'Transaction Completed',
-  //       segmentClass: "toastInfo"
-  //     }
+      // if(record){
+      //   va.track(record.message, record.data)
+      // }
+      // this.toasterService.msg.next(txCompleted)
 
-  //     if(record){
-  //       va.track(record.message, record.data)
-  //     }
-  //     this.toasterService.msg.next(txCompleted)
+      return signature
 
-  //     return signature
-
-  //   } catch (error) {
-  //     console.warn(error)
-  //     return null
-  //     // onMsg('transaction failed', 'error')
-  //   }
-  // }
+    } catch (error) {
+      console.warn(error)
+      return null
+      // onMsg('transaction failed', 'error')
+    }
+  }
 }

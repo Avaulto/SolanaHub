@@ -1,3 +1,22 @@
-<p>
-  token-list works!
-</p>
+<app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search by token'"/>
+<!-- <ion-searchbar inputmode="search" (ionInput)="searchItem($event)" [value]="searchTerm()" [debounce]="time" type="search"
+ id="search-bar" /> -->
+
+
+<!-- @for (token of filteredTokens(); track $index) { -->
+  <!-- <ion-content> -->
+<cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900"  maxBufferPx="1350">
+  <ion-list>
+    <ion-item (click)="selectToken(token)" *cdkVirtualFor="let token of filteredTokens()">
+      <ion-avatar slot="start">
+        <img [src]="token.logoURI" />
+      </ion-avatar>
+      <ion-label> {{token.symbol}}</ion-label>
+    </ion-item>
+  </ion-list>
+</cdk-virtual-scroll-viewport>
+<!-- </ion-content> -->
+<!-- <br/>
+}@empty {
+  no tokens found
+} -->

@@ -6,7 +6,7 @@ export interface JupToken {
     name: string; // 'Wrapped USDC',
     decimals: number; // 6,
     logoURI: string; // 'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BXXkv6z8ykpG1yuvUDPgh732wzVHB69RnB9YgSYh3itW/logo.png',
-    tags: string[]; // [ 'stablecoin' ]
+    tags?: string[]; // [ 'stablecoin' ]
     extraData?: {balance?: string}
     balance?: number;
   }
@@ -29,7 +29,7 @@ export interface JupRoute{
     inputMint:            string;
     inAmount:             string;
     outputMint:           string;
-    outAmount:            string;
+    outAmount:            number;
     otherAmountThreshold: string;
     swapMode:             string;
     slippageBps:          number;
