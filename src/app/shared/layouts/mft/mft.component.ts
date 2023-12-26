@@ -19,7 +19,6 @@ import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
 })
 // multi functional table
 export class MftComponent implements OnInit {
-
   @Input() label:string;
   @Input() desc:string;
   @Input() tableId: string;
@@ -100,11 +99,12 @@ export class MftComponent implements OnInit {
       }
     })
   }
-  handleInput(event: any) {
-    // const query = event.target.value.toLowerCase();
+  public searchTerm = signal('')
+  searchItem(term: any) {
+    this.searchTerm.set(term);
     this.table.apiEvent({
       type: API.onGlobalSearch,
-      value: (event.target as HTMLInputElement).value,
+      value: this.searchTerm(),
     });
   }
 }

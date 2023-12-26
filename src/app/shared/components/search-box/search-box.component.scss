@@ -1,0 +1,19 @@
+ion-searchbar{
+    .searchbar-input.sc-ion-searchbar-ios {
+        padding-inline-start: 38px !important;
+    }
+    overflow: hidden;
+    --color: #697586 !important;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    line-height: 18px;
+    font-size: 13px;
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--colors-border-border-primary, #CDD5DF);
+    background: var(--colors-background-bg-primary, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    --background: transparent;
+    --padding-start: 12px !important;
+    min-height: 0;
+    height: 40px;
+}

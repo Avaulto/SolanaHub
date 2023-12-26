@@ -32,6 +32,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .light-title {
         margin-block-end: 0;
     }
@@ -152,6 +153,7 @@
     width: 49%;
     transition: 0.3s ease all;
     cursor: pointer;
+
     &.selectedPath {
         border-color: var(--ion-color-primary);
     }
@@ -189,6 +191,7 @@
 
 
 }
+
 .type-desc {
     color: #697586;
     font-size: 12px;
@@ -199,6 +202,45 @@
 
 #validator-selection {
     margin-block-end: 20px;
+
+    .validator-profile {
+        align-items: center;
+        flex: 3.5;
+        margin-right: auto;
+        display: flex;
+        width: 100%;
+        padding-block: 6px;
+
+        div {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        ion-img {
+            width: 36px;
+            height: 36px;
+            overflow: hidden;
+            border-radius: 50%;
+            margin-inline-end: 12px;
+        }
+
+        ion-label {
+            color: var(--colors-text-text-primary-900, #121926);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18px;
+        }
+
+        ion-text {
+            color: var(--colors-text-text-tertiary-600, #4B5565);
+            font-size: 11px;
+            line-height: 16px;
+            /* 145.455% */
+        }
+
+    }
+
     ion-button {
         margin: 0;
         text-align: right;
@@ -215,16 +257,53 @@
         font-weight: 400;
     }
 
-
+    ion-chip {
+        font-size: 12px;
+        border: 1px solid #F1D5EB !important;
+        background: #FAF0F8 !important;
+        color: #9B3678 !important;
+        font-weight: 600;
+        margin-inline-end: 8px;
+    }
 
 }
 
 
-#lock-selection{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .light-title{
-        margin-block-end: 4px;
+#lock-up {
+
+    #lock-selection {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        #lock-text-wrapper {
+         margin-block-end: 4px;
+            width: 85%;
+        }
+   
+
+        .light-title {
+            margin-block-end: 4px;
+        }
+
     }
+
+    ion-toggle{
+        --track-background: #EEF2F6;
+        --handle-border-radius: 1000px;
+        --border-radius: 1000px;
+        zoom: 0.8;
+    }
+
+    ion-range {
+        --bar-height: 8px;
+        --bar-background: #E3E8EF;
+        --bar-border-radius: 1000px;
+        --knob-size: 24px;
+        --knob-background: white;
+        --knob-box-shadow: 0px 0px 0px 2px var(--ion-color-primary);
+    }
+}
+
+#stake-btn {
+    margin-block-start: 20px;
 }

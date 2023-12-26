@@ -39,7 +39,7 @@
           <div class="type-title">Native staking</div>
           <div class="type-desc">pure staking,lock asset, no smart contract risk</div>
         </div>
-        <div class="stake-type" [class.selectedPath]="liquidPath.checked"  (click)="selectStakePath('liquid')">
+        <div class="stake-type" [class.selectedPath]="liquidPath.checked" (click)="selectStakePath('liquid')">
           <div class="inliner">
             <div class="icon-wrapper">
               <ion-img src="assets/images/droplets-icon.svg" />
@@ -52,29 +52,45 @@
       </div>
     </div>
 
-    <div id="validator-selection">
+    <div id="validator-selection" >
       <div class="light-title">Select Validator</div>
-      <ion-button slot="start" fill="clear" expand="block" >
+      <ion-button slot="start" fill="clear" (click)="openTokensModal()" [disabled]="validatorsList().length === 0" expand="block">
+        @if(selectedValidator()){
+          <div class="validator-profile">
+            <ion-img [src]="selectedValidator().image" />
+            <div>
+              <ion-label> {{selectedValidator().name}}</ion-label>
+              <ion-text>{{selectedValidator().activated_stake | number:'1.0-2'}}</ion-text>
+            </div>
+          </div>
+          <div class="validator-stats">
+            <div>
+              <ion-chip color="primary">{{selectedValidator().apy_estimate}}%</ion-chip>
+            </div>
+          </div>
+        }@else {
         <span style="margin-right: auto">Select your preferred validator</span>
+        }
         <ion-icon slot="end" name="chevron-down-outline" />
       </ion-button>
     </div>
 
     @if(true){
-      <div id="lock-up">
-        <div id="lock-selection">
-          <div>
-            <div class="light-title">stake your SOL</div>
-            <div class="type-desc">Locking will create a stake account that is locked for the duration of time you specify</div>
+    <div id="lock-up">
+      <div id="lock-selection">
+        <div id="lock-text-wrapper">
+          <div class="light-title">Lock your stake</div>
+          <div class="type-desc">Locking will create a stake account that is locked for the duration of time you specify
           </div>
-          <ion-toggle/>
         </div>
-        @if (true) {
-          <ion-range/>
-        }
+        <ion-toggle mode="ios" #addLock />
       </div>
+      @if (addLock.checked) {
+      <ion-range mode="md" />
+      }
+    </div>
     }
 
-    <ion-button class="ion-text-capitalize" disabled expand="block">enter stake amount</ion-button>
+    <ion-button id="stake-btn" class="ion-text-capitalize" disabled expand="block">enter stake amount</ion-button>
   </form>
 </div>

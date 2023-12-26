@@ -9,10 +9,7 @@
     </div>
   </div>
   @if(searchBoxEnable){
-  <div id="search-box-wrapper">
-    <ion-searchbar mode="ios" placeholder="Search" show-clear-button="focus" (ionInput)="handleInput($event)">
-    </ion-searchbar>
-  </div>
+  <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
   }
 </div>
 

@@ -81,11 +81,9 @@ ion-content {
     padding-inline-start: 35px !important;
 }
 
-ion-searchbar.ios,
+
 ion-input {
-    .searchbar-input.sc-ion-searchbar-ios {
-        padding-inline-start: 38px !important;
-    }
+
 
     overflow: hidden;
     --color: #697586 !important;
@@ -141,3 +139,10 @@ ion-spinner{
     left: 1px;
 }}
 
+
+
+.modal-style{
+    --width: 540px;
+    --max-width: 100%;
+    --border-radius: 12px;
+}

@@ -5,10 +5,11 @@ import { TableModule } from 'ngx-easy-table';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { TableMenuComponent } from './table-menu/table-menu.component';
 import { MftComponent } from './mft.component';
+import { SearchBoxComponent } from '../../components/search-box/search-box.component';
 
 @NgModule({
   declarations: [MftComponent, TableMenuComponent],
-  imports: [TableModule, IonImg,IonSearchbar, CurrencyPipe, DecimalPipe, IonButton, IonSpinner],
+  imports: [TableModule,SearchBoxComponent, IonImg,IonSearchbar, CurrencyPipe, DecimalPipe, IonButton, IonSpinner],
   exports: [MftComponent]
 })
 export class MftModule { }
