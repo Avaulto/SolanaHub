@@ -1,6 +1,6 @@
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonImg,
   IonInput, 
   IonButton,
@@ -16,14 +16,17 @@ import { addIcons } from 'ionicons';
 import { chevronDownSharp } from 'ionicons/icons';
 import {  ModalController } from '@ionic/angular';
 import { ValidatorsModalComponent } from './validators-modal/validators-modal.component';
-import { Validator } from 'src/app/models';
-import { SolanaHelpersService } from 'src/app/services';
+import { Validator, WalletExtended } from 'src/app/models';
+import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { Observable } from 'rxjs';
+import { ApyCalcComponent } from './apy-calc/apy-calc.component';
 @Component({
   selector: 'stake-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   standalone: true,
   imports:[
+    ApyCalcComponent,
     IonImg,
     IonInput,
     IonButton,
@@ -35,7 +38,9 @@ import { SolanaHelpersService } from 'src/app/services';
     IonText,
     IonChip,
     DecimalPipe,
-    CurrencyPipe
+    CurrencyPipe,
+    ReactiveFormsModule,
+    AsyncPipe
   ]
 })
 export class FormComponent  implements OnInit {
@@ -45,9 +50,12 @@ export class FormComponent  implements OnInit {
   public stakePath = signal('native');
   public selectedValidator: WritableSignal<Validator> = signal(null)
   public stakeForm: FormGroup;
+  public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   constructor(
     private _modalCtrl: ModalController,
-    private _shs: SolanaHelpersService
+    private _shs: SolanaHelpersService,
+    private _fb: FormBuilder,
+    private _util:UtilService
     ){
     addIcons({chevronDownSharp})
 
@@ -66,18 +74,22 @@ export class FormComponent  implements OnInit {
     return `${value} months`;
   }
   ngOnInit() {
+    this.stakeForm = this._fb.group({
+      amount: [0, [Validators.required]],
+      voteAccount: ['', [Validators.required]],
+      monthLockup: [0]
+    })
+
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
   }
-  // selectStakePath(path: 'native' | 'liquid'){
-  //   if(path === 'native'){
-  //     this.liquidPath.checked = false;
-  //     this.nativePath.checked = true;
-  //   }
-  //   if(path === 'liquid'){
-  //     this.liquidPath.checked = true;
-  //     this.nativePath.checked = false;
-  //   }
-  // }
+  setStakeSize(size: 'half' | 'max'){
+    let {balance} = this._shs.getCurrentWallet()
+    if(size === 'half'){
+      balance = balance / 2
+    }
+    balance = Number(this._util.decimalPipe.transform(balance, '1.4'))
+    this.stakeForm.controls['amount'].setValue(balance)
+  }
   async openTokensModal() {
     const modal = await this._modalCtrl.create({
       component: ValidatorsModalComponent,
@@ -88,5 +100,7 @@ export class FormComponent  implements OnInit {
     const { data, role } = await modal.onWillDismiss();
     let validator: Validator = data
     this.selectedValidator.set(validator);
+
+    this.stakeForm.controls['voteAccount'].setValue(this.selectedValidator().vote_identity)
   }
 }

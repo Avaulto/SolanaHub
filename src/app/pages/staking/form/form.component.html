@@ -9,19 +9,19 @@
 
     <div id="wallet-info">
       <ion-img src="assets/images/wallet-icon.svg" />
-      <span>4,500.00</span>
+      <span>{{(wallet$ | async)?.balance | number: '1.4'}}</span>
       <div id="size-btns">
-        <ion-button size="small" class="space" fill="clear">half</ion-button>
-        <ion-button size="small" fill="clear">max</ion-button>
+        <ion-button size="small" class="space" fill="clear" (click)="setStakeSize('half')">half</ion-button>
+        <ion-button size="small" fill="clear" (click)="setStakeSize('max')">max</ion-button>
       </div>
     </div>
 
   </div>
-  <form>
+  <form [formGroup]="stakeForm">
     <div id="input-control">
       <span>
         <label>SOL</label>
-        <ion-input mode="ios" placeholder="0" inputmode="decimal" />
+        <ion-input formControlName="amount" mode="ios" placeholder="0" inputmode="decimal" />
       </span>
       <div>{{33 | currency}}</div>
     </div>
@@ -84,7 +84,7 @@
           <div class="type-desc">Locking will create a stake account that is locked for the duration of time you specify
           </div>
         </div>
-        <ion-toggle class="Awesome" mode="ios" #addLock />
+        <ion-toggle mode="ios" #addLock />
       </div>
       @if (addLock.checked) {
       <ion-range mode="md" min="1" max="12" [pin]="true" [pinFormatter]="pinFormatter" />
@@ -92,6 +92,12 @@
     </div>
     }
 
-    <ion-button id="stake-btn" class="ion-text-capitalize" disabled expand="block">enter stake amount</ion-button>
+    <ion-button id="stake-btn" class="ion-text-capitalize" [disabled]="stakeForm.invalid" expand="block">
+      enter stake amount
+    </ion-button>
   </form>
+
+  @if (stakeForm.valid) {
+    <apy-calc [apy]="selectedValidator()?.apy_estimate" [amount]="stakeForm.controls['amount'].value"/>
+  }
 </div>

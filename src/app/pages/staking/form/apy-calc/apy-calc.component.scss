@@ -1,0 +1,31 @@
+#summary {
+    color: #344054;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-block-end: 8px;
+}
+
+#apy-wrapper {
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
+    background: var(--Colors-Gray-modern-50, #F8FAFC);
+    padding: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 20px;
+    text-transform: capitalize;
+
+    .apy-calc {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    div {
+        color: var(--colors-text-text-primary-900, #101828);
+    }
+
+    span {
+        color: var(--colors-text-text-tertiary-600, #475467);
+    }
+}
