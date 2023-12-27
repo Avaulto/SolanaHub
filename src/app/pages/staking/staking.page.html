@@ -18,34 +18,29 @@
 
       </ion-row>
       <ion-row id="stat-wrapper" class="ion-justify-content-between">
+        @for (stat of validatorsData; track $index) {
         <div class="staking-stat">
           <div class="icon-wrapper">
-            <ion-img src="assets/images/validators-icon.svg" />
+            <ion-img [src]="stat.imgURL" />
           </div>
-          <div class="stat-title">validators</div>
-          <div class="stat-desc">2700</div>
-        </div>
-        <div class="staking-stat">
-          <div class="icon-wrapper">
-            <ion-img src="assets/images/coins-icon.svg" />
+          <div class="stat-title">{{stat.title}}</div>
+          <div class="stat-desc">
+
+            @if(stat.extraData){
+              {{stat.extraData.epochInfo?.timepassInPercentgae}}
+              <ion-progress-bar [buffer]="stat.extraData?.timepassInPercentgae"></ion-progress-bar>
+              <span style="font-size: 13px;">{{stat.extraData?.ETA}}</span>
+            }@else {
+              {{stat.desc}}
+            }
+            @if (stat.desc === '') {
+            <ion-skeleton-text [animated]="true" />
+            }
           </div>
-          <div class="stat-title">cluster APY</div>
-          <div class="stat-desc">21.94%</div>
+
         </div>
-        <div class="staking-stat">
-          <div class="icon-wrapper">
-            <ion-img src="assets/images/hourglass-icon.svg" />
-          </div>
-          <div class="stat-title">epoch 530</div>
-          <div class="stat-desc">ETA 2H</div>
-        </div>
-        <div class="staking-stat">
-          <div class="icon-wrapper">
-            <ion-img src="assets/images/stake-icon.svg" />
-          </div>
-          <div class="stat-title">stake</div>
-          <div class="stat-desc">2700</div>
-        </div>
+        }
+
       </ion-row>
     </header>
 
@@ -53,13 +48,13 @@
 
       <ion-row id="stake-box">
         <ion-col size="12" sizeMd="8">
-          <stake-form/>
+          <stake-form [validatorsList]="validatorsList" />
         </ion-col>
         <ion-col size="4" sizeMd="4">
-          
+
         </ion-col>
       </ion-row>
-      
+
     </div>
   </ion-grid>
 </ion-content>

@@ -16,9 +16,11 @@ import {
   createAssociatedTokenAccountInstruction,
   TokenOwnerOffCurveError
 } from 'node_modules/@solana/spl-token';
-import { BehaviorSubject, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended } from '../models';
+import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
+import { Validator, WalletExtended, StakeWizEpochInfo } from '../models';
 import { environment } from 'src/environments/environment';
+import { ApiService } from './api.service';
+import { UtilService } from './util.service';
 ;
 
 // interface StakeWizEpochInfo {
@@ -67,10 +69,10 @@ export class SolanaHelpersService {
   )
 
   constructor(
-    // private _apiService: ApiService,
+    private _apiService: ApiService,
     // private _toasterService: ToasterService,
     private _connectionStore: ConnectionStore,
-    // private _utilService: UtilsService,
+    private _utils: UtilService,
     // public popoverController: PopoverController,
     private _walletStore: WalletStore
   ) {
@@ -127,16 +129,16 @@ export class SolanaHelpersService {
   //       catchError(this._formatErrors)
   //     );
   //   }
-  //   public getAvgApy() {
-  //     return this._apiService.get(`https://api.stakewiz.com/cluster_stats`).pipe(
-  //       map((clusterInfo) => {
-  //         const { avg_apy } = clusterInfo;
+    public getAvgApy() {
+      return this._apiService.get(`https://api.stakewiz.com/cluster_stats`).pipe(
+        map((clusterInfo) => {
+          const { avg_apy } = clusterInfo;
 
-  //         return avg_apy
-  //       }),
-  //       catchError(this._formatErrors)
-  //     );
-  //   }
+          return avg_apy
+        }),
+        // catchError(this._formatErrors)
+      );
+    }
 
 
 
@@ -250,37 +252,37 @@ export class SolanaHelpersService {
   //     const noneCirculating = this._utilService.numFormater(supply.value.nonCirculating / LAMPORTS_PER_SOL)
   //     return { circulating, noneCirculating }
   //   }
-  //   public async getStake(): Promise<{ activeStake, delinquentStake }> {
-  //     const stakeInfo = await this.connection.getVoteAccounts()
-  //     const activeStake = this._utilService.numFormater(stakeInfo.current.reduce(
-  //       (previousValue, currentValue) => previousValue + currentValue.activatedStake,
-  //       0
-  //     ) / LAMPORTS_PER_SOL)
-  //     const delinquentStake = this._utilService.numFormater(stakeInfo.delinquent.reduce(
-  //       (previousValue, currentValue) => previousValue + currentValue.activatedStake,
-  //       0
-  //     ) / LAMPORTS_PER_SOL)
-  //     return { activeStake, delinquentStake }
-  //   }
+    public async getClusterStake(): Promise<{ activeStake, delinquentStake }> {
+      const stakeInfo = await this.connection.getVoteAccounts()
+      const activeStake = stakeInfo.current.reduce(
+        (previousValue, currentValue) => previousValue + currentValue.activatedStake,
+        0
+      ) / LAMPORTS_PER_SOL
+      const delinquentStake = stakeInfo.delinquent.reduce(
+        (previousValue, currentValue) => previousValue + currentValue.activatedStake,
+        0
+      ) / LAMPORTS_PER_SOL
+      return { activeStake, delinquentStake }
+    }
   //   public async getTPS(): Promise<any> {
   //     const performaceRes = (await this.connection.getRecentPerformanceSamples())[0];
   //     const tps = performaceRes.numTransactions / performaceRes.samplePeriodSecs
 
   //     return tps
   //   }
-  //   public getEpochInfo(): Observable<StakeWizEpochInfo> {
-  //     return this._apiService.get(`https://api.stakewiz.com/epoch_info`).pipe(
-  //       map((data: StakeWizEpochInfo) => {
-  //         const { remaining_seconds, elapsed_seconds, duration_seconds } = data
-  //         const days = Math.floor(remaining_seconds / 86400);
-  //         const hours = Math.floor(remaining_seconds / 3600) - (days * 24);
-  //         data.ETA = `ETA ${days} Days and ${hours} Hours`
-  //         data.timepassInPercentgae = elapsed_seconds / duration_seconds
-  //         return data
-  //       }),
-  //       catchError(this._formatErrors)
-  //     );
-  //   }
+    public getEpochInfo(): Observable<StakeWizEpochInfo> {
+      return this._apiService.get(`https://api.stakewiz.com/epoch_info`).pipe(
+        map((data: StakeWizEpochInfo) => {
+          const { remaining_seconds, elapsed_seconds, duration_seconds } = data
+          const days = Math.floor(remaining_seconds / 86400);
+          const hours = Math.floor(remaining_seconds / 3600) - (days * 24);
+          data.ETA = `ETA ${days} Days and ${hours} Hours`
+          data.timepassInPercentgae = elapsed_seconds / duration_seconds
+          return data
+        }),
+        // catchError(this._formatErrors)
+      );
+    }
 
   //   public async getTokenAccountsBalance(wallet: string, getType?: 'token' | 'nft'): Promise<TokenBalance[]> {
   //     const filters: GetProgramAccountsFilter[] = [

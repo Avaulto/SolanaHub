@@ -68,13 +68,16 @@ export interface Cluster {
   avg_apy: number
 }
 
-export interface Epoch{
-  epoch: number
-  start_slot: number
-  start_time: string
-  slot_height: number
-  duration_seconds: number
-  elapsed_seconds: number
-  remaining_seconds: number
-  epochs_per_year: number
+
+export interface StakeWizEpochInfo {
+  epoch: number,
+  start_slot: number,
+  start_time: Date,
+  slot_height: number,
+  duration_seconds: number,
+  elapsed_seconds: number,
+  remaining_seconds: number,
+  epochs_per_year: number,
+  timepassInPercentgae?: number,
+  ETA?: string;
 }

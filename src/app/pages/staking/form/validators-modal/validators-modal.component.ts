@@ -1,4 +1,4 @@
-import { Component,  Input, OnInit,  computed,  effect,  inject, signal } from '@angular/core';
+import { Component,  Input, OnInit,  Signal,  computed,  effect,  inject, signal } from '@angular/core';
 
 import { UtilService } from 'src/app/services';
 import { SearchBoxComponent } from 'src/app/shared/components/search-box/search-box.component';
@@ -41,7 +41,7 @@ export class ValidatorsModalComponent  implements OnInit {
 
     })
   }
-  public filteredValidators = computed(() => this.validatorsList.filter(t => t?.name?.toLowerCase().startsWith(this.searchTerm().toLowerCase())))
+  public filteredValidators: Signal<Validator[]> = computed(() => this.validatorsList.filter(t => t?.name?.toLowerCase().startsWith(this.searchTerm().toLowerCase())))
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term)

@@ -1,5 +1,5 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, OnInit, ViewChild, WritableSignal, signal } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { IonImg,
   IonInput, 
@@ -39,31 +39,45 @@ import { SolanaHelpersService } from 'src/app/services';
   ]
 })
 export class FormComponent  implements OnInit {
+  @Input() validatorsList = signal([] as Validator[])
   @ViewChild('nativePath') nativePath: IonCheckbox;
   @ViewChild('liquidPath') liquidPath: IonCheckbox;
+  public stakePath = signal('native');
   public selectedValidator: WritableSignal<Validator> = signal(null)
   public stakeForm: FormGroup;
-  public validatorsList = signal([] as Validator[])
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService
     ){
     addIcons({chevronDownSharp})
-  }
 
+    effect(() =>{
+      if(this.stakePath() === 'native'){
+        this.liquidPath.checked = false;
+        this.nativePath.checked = true;
+      }
+      if(this.stakePath() === 'liquid'){
+        this.liquidPath.checked = true;
+        this.nativePath.checked = false;
+      }
+    })
+  }
+  pinFormatter(value: number) {
+    return `${value} months`;
+  }
   ngOnInit() {
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
   }
-  selectStakePath(path: 'native' | 'liquid'){
-    if(path === 'native'){
-      this.liquidPath.checked = false;
-      this.nativePath.checked = true;
-    }
-    if(path === 'liquid'){
-      this.liquidPath.checked = true;
-      this.nativePath.checked = false;
-    }
-  }
+  // selectStakePath(path: 'native' | 'liquid'){
+  //   if(path === 'native'){
+  //     this.liquidPath.checked = false;
+  //     this.nativePath.checked = true;
+  //   }
+  //   if(path === 'liquid'){
+  //     this.liquidPath.checked = true;
+  //     this.nativePath.checked = false;
+  //   }
+  // }
   async openTokensModal() {
     const modal = await this._modalCtrl.create({
       component: ValidatorsModalComponent,

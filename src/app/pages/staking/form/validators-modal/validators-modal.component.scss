@@ -84,7 +84,7 @@ cdk-virtual-scroll-viewport {
   .validator-profile {
     display: flex;
     align-items: center;
-    flex: 3.5;
+    flex: 3.3;
 
     div {
       display: flex;
@@ -100,14 +100,14 @@ cdk-virtual-scroll-viewport {
     }
 
     ion-label {
-      color: var(--colors-text-text-primary-900, #121926);
+      color:  #121926;
       font-size: 13px;
       font-weight: 500;
       line-height: 18px;
     }
 
     ion-text {
-      color: var(--colors-text-text-tertiary-600, #4B5565);
+      color:  #4B5565;
       font-size: 11px;
       line-height: 16px;
       /* 145.455% */
@@ -164,19 +164,15 @@ cdk-virtual-scroll-viewport {
 
   ion-button {
     width: 49%;
-    border-radius: 8px;
-    --border-radius: 8px;
-    border: 1px solid #CDD5DF;
-    background: #FFF;
-    --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    color: #364152;
     font-size: 16px;
     font-weight: 600;
     height: 44px;
-    padding: 0;
-    margin: 0;
+    
     text-transform: capitalize;
-
+    &.button-clear{
+      color: #364152;
+      border: 1px solid #CDD5DF;
+    }
     &.ion-color-primary {
       border: 1px solid #9B3678;
     }
