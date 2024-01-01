@@ -124,8 +124,10 @@ export class AssetsTableComponent implements OnInit {
 
   eventEmitted($event: { event: string; value: any }): void {
     const token: Token = $event.value.row
-    if ($event.event === 'onClick') {
-      this.openModal(token)
+    if(this.selectedTab() === 'tokens'){
+      if ($event.event === 'onClick') {
+        this.openModal(token)
+      }
     }
   }
 

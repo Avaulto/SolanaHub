@@ -85,20 +85,25 @@ cdk-virtual-scroll-viewport {
     display: flex;
     align-items: center;
     flex: 3.3;
-
+    position: relative;
     div {
       display: flex;
       flex-direction: column;
     }
 
-    ion-img {
+    ion-img,ion-skeleton-text {
       width: 40px;
       height: 40px;
       overflow: hidden;
       border-radius: 50%;
       margin-inline-end: 12px;
     }
-
+    ion-skeleton-text{
+      position: absolute;
+      top: 0;
+      padding: 0;
+      margin: 0;
+  }
     ion-label {
       color:  #121926;
       font-size: 13px;

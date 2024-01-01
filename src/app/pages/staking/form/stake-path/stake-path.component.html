@@ -1,0 +1,42 @@
+    <div id="stake-path">
+      <div class="light-title">Select Staking path</div>
+ 
+        <ion-radio-group id="stake-options" value="native" (ionChange)="selectPath($event)">
+         
+        <ion-radio mode="md" class="stake-type wrapping-list"  value="native">
+          <div class="inliner">
+            <div class="icon-wrapper">
+              <ion-img src="assets/images/lock-icon.svg" />
+            </div>
+        
+          </div>
+          <div>
+
+            <div class="type-title">Native staking</div>
+            <ion-label class="ion-text-wrap type-desc">
+              Maximize security and returns with pure staking: Lock in assets, free from smart contract risks.
+            </ion-label>
+          </div>
+        </ion-radio>
+        <ion-radio mode="md" class="stake-type wrapping-list"  value="liquid">
+          <div class="inliner">
+            <div class="icon-wrapper">
+              <ion-img src="assets/images/droplets-icon.svg" />
+            </div>
+          </div>
+          <div>
+
+            <div class="type-title">Liquid staking</div>
+         
+                <ion-label class="ion-text-wrap type-desc">
+                  An Automated Stake Pool Platform for Effortlessly Delegating to the Highest Performing Validators
+                </ion-label>
+       
+
+              
+           
+          </div>
+        </ion-radio>
+      </ion-radio-group>
+      
+    </div>

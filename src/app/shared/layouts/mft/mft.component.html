@@ -16,13 +16,21 @@
 
 
 @if(tableMenuOptions.length){
-<app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]"
-  (onSelectTab)="tabSelected($event)"></app-table-menu>
+<app-table-menu 
+[menu]="tableMenuOptions" 
+[currentTab]="tableMenuOptions[0]"
+(onSelectTab)="tabSelected($event)">
+</app-table-menu>
 }
 
 <div id="table-wrapper">
-  <ngx-table #table [id]="tableId" (event)="onRowClicked.emit($event)" [configuration]="configuration"
-    [data]="tableData()" [columns]="tableColumns()" [loadingTemplate]="loadingTemplate">
+  <ngx-table #table
+   [id]="tableId" 
+    (event)="onRowClicked.emit($event)"
+    [configuration]="configuration"
+    [data]="tableData()" 
+    [columns]="tableColumns()" 
+    [loadingTemplate]="loadingTemplate">
   </ngx-table>
   @if (configuration.paginationEnabled) {
   <div id="table-controls">

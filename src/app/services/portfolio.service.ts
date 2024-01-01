@@ -6,6 +6,7 @@ import { JupToken } from '../models/jup-token.model'
 import { ApiService } from './api.service';
 import { Observable, catchError, map, of, shareReplay, single } from 'rxjs';
 import { PriceHistoryService } from './price-history.service';
+import { SolanaHelpersService } from './solana-helpers.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +20,7 @@ export class PortfolioService {
   public walletHistory: WritableSignal<TransactionHistory[]> = signal([]);
   readonly restAPI = this._utilService.serverlessAPI
   constructor(
+    private _hsh: SolanaHelpersService,
     private _utilService: UtilService,
     //  private _apiService:ApiService
     private _priceHistoryService: PriceHistoryService
@@ -33,11 +35,11 @@ export class PortfolioService {
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens);
-
+      this._portfolioStaking(walletAddress)
       console.log(editedData);
       
       const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
-      console.log(extendNftData);
+      // console.log(extendNftData);
       this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
@@ -106,6 +108,11 @@ export class PortfolioService {
     
   }
 
+  public async _portfolioStaking(walletAddress){
+   const stakeAccounts = await this._hsh.getOwnerNativeStake(walletAddress);
+  //  console.log(stakeAccounts);
+   
+  }
 
   public filteredTxHistory = (filterByAddress: string, filterByAction?:string) =>{
     console.log(this.walletHistory());

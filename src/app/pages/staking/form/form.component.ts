@@ -1,6 +1,6 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonImg,
   IonInput, 
   IonButton,
@@ -10,16 +10,28 @@ import { IonImg,
   IonLabel,
   IonText,
   IonChip,
+  IonSelect,
+  IonSegment,
+  IonSegmentButton,
+  IonSelectOption,
    IonRange
   } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import { chevronDownSharp } from 'ionicons/icons';
+
 import {  ModalController } from '@ionic/angular';
 import { ValidatorsModalComponent } from './validators-modal/validators-modal.component';
 import { Validator, WalletExtended } from 'src/app/models';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { SolanaHelpersService, UtilService, TxInterceptorService,PriceHistoryService, NativeStakeService } from 'src/app/services';
 import { Observable } from 'rxjs';
 import { ApyCalcComponent } from './apy-calc/apy-calc.component';
+import { IonicModule } from '@ionic/angular';
+import { BN } from '@marinade.finance/marinade-ts-sdk';
+import { Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js';
+import { StakePathComponent } from './stake-path/stake-path.component';
+import { SelectValidatorComponent } from './select-validator/select-validator.component';
+import { LockStakeComponent } from './lock-stake/lock-stake.component';
+import { SelectStakePoolComponent } from './select-stake-pool/select-stake-pool.component';
+import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+import { CustomValidatorComponent } from './custom-validator/custom-validator.component';
 @Component({
   selector: 'stake-form',
   templateUrl: './form.component.html',
@@ -27,16 +39,12 @@ import { ApyCalcComponent } from './apy-calc/apy-calc.component';
   standalone: true,
   imports:[
     ApyCalcComponent,
-    IonImg,
-    IonInput,
-    IonButton,
-    IonCheckbox,
-    IonIcon,
-    IonToggle,
-    IonRange,
-    IonLabel,
-    IonText,
-    IonChip,
+    StakePathComponent,
+    SelectValidatorComponent,
+    LockStakeComponent,
+    SelectStakePoolComponent,
+    CustomValidatorComponent,
+    IonicModule,
     DecimalPipe,
     CurrencyPipe,
     ReactiveFormsModule,
@@ -44,44 +52,42 @@ import { ApyCalcComponent } from './apy-calc/apy-calc.component';
   ]
 })
 export class FormComponent  implements OnInit {
+  public stakeAPY = signal(null);
   @Input() validatorsList = signal([] as Validator[])
-  @ViewChild('nativePath') nativePath: IonCheckbox;
-  @ViewChild('liquidPath') liquidPath: IonCheckbox;
   public stakePath = signal('native');
-  public selectedValidator: WritableSignal<Validator> = signal(null)
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
+  public solPrice = 0
+  public stakePools = []
   constructor(
-    private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
-    private _util:UtilService
+    private _util:UtilService,
+    private _phs:PriceHistoryService,
+    private _lss:LiquidStakeService,
+    private _nss:NativeStakeService,
+    private _tis: TxInterceptorService,
     ){
-    addIcons({chevronDownSharp})
+ 
+  }
 
-    effect(() =>{
-      if(this.stakePath() === 'native'){
-        this.liquidPath.checked = false;
-        this.nativePath.checked = true;
-      }
-      if(this.stakePath() === 'liquid'){
-        this.liquidPath.checked = true;
-        this.nativePath.checked = false;
-      }
-    })
-  }
-  pinFormatter(value: number) {
-    return `${value} months`;
-  }
   ngOnInit() {
+    
     this.stakeForm = this._fb.group({
-      amount: [0, [Validators.required]],
-      voteAccount: ['', [Validators.required]],
-      monthLockup: [0]
+      amount: [null, [Validators.required]],
+      validatorVoteIdentity: [null, [Validators.required]],
+      stakingPath: ['native',Validators.required],
+      lockupDuration: [0],
     })
-
+    console.log('loaded');
+    
+    this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
+    this._lss.getStakePoolList().then(pl => this.stakePools = pl);
+    this._phs.getTokenDataByAddress("So11111111111111111111111111111111111111112").then(r => this.solPrice = r.market_data.current_price.usd)
   }
+
+
   setStakeSize(size: 'half' | 'max'){
     let {balance} = this._shs.getCurrentWallet()
     if(size === 'half'){
@@ -90,17 +96,60 @@ export class FormComponent  implements OnInit {
     balance = Number(this._util.decimalPipe.transform(balance, '1.4'))
     this.stakeForm.controls['amount'].setValue(balance)
   }
-  async openTokensModal() {
-    const modal = await this._modalCtrl.create({
-      component: ValidatorsModalComponent,
-      componentProps: {validatorsList: this.validatorsList()},
-      cssClass: 'modal-style'
-    });
-    modal.present();
-    const { data, role } = await modal.onWillDismiss();
-    let validator: Validator = data
-    this.selectedValidator.set(validator);
 
-    this.stakeForm.controls['voteAccount'].setValue(this.selectedValidator().vote_identity)
+
+  selectStakePath(stakePath: 'native' | 'liquid'){
+    console.log(stakePath);
+    this.stakePath.set(stakePath)
+    this.stakeForm.controls['validatorVoteIdentity'].reset()
+    this.stakeForm.controls['stakingPath'].setValue(stakePath)
+    if(stakePath === 'native'){
+      this.stakeForm.controls['validatorVoteIdentity'].addValidators(Validators.required)
+      this._removeStakePoolControl()
+    }
+    if(stakePath === 'liquid'){
+      this.stakeForm.controls['validatorVoteIdentity'].removeValidators(Validators.required);
+      this._addStakePoolControl()
+    }
   }
+
+
+  private _addStakePoolControl() {
+    const stakePoolControl = new FormControl('', Validators.required)
+    this.stakeForm.addControl('pool', stakePoolControl)
+  }
+  private _removeStakePoolControl() {
+    this.stakeForm.removeControl('pool')
+  }
+
+  // private async _liquidStake(poolName: string, amount: number, validatorVoteAccount:string) {
+  //   const sol = new BN(amount * LAMPORTS_PER_SOL);
+  //   return await this._stakePoolStore.stakeSOL(poolName.toLowerCase(), sol, validatorVoteAccount)
+  // }
+  public async submitNewStake(): Promise<void> {
+    let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
+    const lamportsToDelegate = amount * LAMPORTS_PER_SOL
+    const walletOwner = this._shs.getCurrentWallet();
+
+    if (stakingPath === 'native') {
+
+      const stake = await this._nss.stake(lamportsToDelegate,walletOwner,validatorVoteIdentity,lockupDuration);
+      // const sendTx = await this._tis.sendTx(txIns.stakeIx, walletOwner,[txIns.stakeAcc])
+      console.log(stake);
+      
+    } else if (stakingPath === 'liquid'){
+      this._lss.stake(pool,lamportsToDelegate,walletOwner,validatorVoteIdentity)
+    }
+  }
+setValidator(validator:Validator){
+  this.stakeForm.controls['validatorVoteIdentity'].setValue(validator.vote_identity);
+  if(this.stakePath() === 'native'){
+    this.stakeAPY.set(validator.apy_estimate)
+  }
+}
+setPool(pool){
+  this.stakeForm.controls['pool'].setValue(pool)
+  this.stakeAPY.set(pool.apy)
+}
+
 }

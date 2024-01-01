@@ -1,0 +1,23 @@
+<div id="validator-selection">
+  <div class="light-title">Select Validator</div>
+  <ion-button slot="start" fill="clear" (click)="openTokensModal()" [disabled]="validatorsList().length === 0"
+    expand="block">
+    @if(selectedValidator()){
+    <div class="validator-profile">
+      <ion-img [src]="selectedValidator().image" />
+      <div>
+        <ion-label> {{selectedValidator().name}}</ion-label>
+        <ion-text>{{selectedValidator().activated_stake | number:'1.0-2'}}</ion-text>
+      </div>
+    </div>
+    <div class="validator-stats">
+      <div>
+        <ion-chip color="primary">{{selectedValidator().apy_estimate}}%</ion-chip>
+      </div>
+    </div>
+    }@else {
+    <span style="margin-right: auto">Select your preferred validator</span>
+    }
+    <ion-icon slot="end" name="chevron-down-outline" />
+  </ion-button>
+</div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
-import { Connection, LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { AccountInfo, Connection, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, StakeActivationData, TransactionInstruction } from '@solana/web3.js';
 // import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
 // import { AccountInfo, clusterApiUrl, ConfirmedSignatureInfo, Connection, GetProgramAccountsFilter, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, StakeActivationData, Transaction } from '@solana/web3.js';
 // import { BehaviorSubject, firstValueFrom, Observable, Subject, throwError } from 'rxjs';
@@ -87,7 +87,7 @@ export class SolanaHelpersService {
   //     return this._currentSolPrice$.value;
   //   }
   public getCurrentWallet(): WalletExtended {
-    console.log(this._walletExtended$);
+    // console.log(this._walletExtended$);
 
     return this._walletExtended$.value
   }
@@ -115,7 +115,7 @@ export class SolanaHelpersService {
     try {
       const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
-      validatorsList = result.sort( (x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
+      validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
     } catch (error) {
       console.error(error);
     }
@@ -129,40 +129,49 @@ export class SolanaHelpersService {
   //       catchError(this._formatErrors)
   //     );
   //   }
-    public getAvgApy() {
-      return this._apiService.get(`https://api.stakewiz.com/cluster_stats`).pipe(
-        map((clusterInfo) => {
-          const { avg_apy } = clusterInfo;
+  public getAvgApy() {
+    return this._apiService.get(`https://api.stakewiz.com/cluster_stats`).pipe(
+      map((clusterInfo) => {
+        const { avg_apy } = clusterInfo;
 
-          return avg_apy
-        }),
-        // catchError(this._formatErrors)
-      );
+        return avg_apy
+      }),
+      // catchError(this._formatErrors)
+    );
+  }
+
+
+
+  public async getStakeAccountsByOwner(walletAddress: string): Promise<Array<{
+    pubkey: PublicKey;
+    account: AccountInfo<Buffer | ParsedAccountData | any>;
+  }> | any> {
+    try {
+
+      // get stake account
+      const stakeAccounts: Array<{
+        pubkey: PublicKey;
+        account: AccountInfo<Buffer | ParsedAccountData | any>;
+      }> = await this.connection.getParsedProgramAccounts(new PublicKey("Stake11111111111111111111111111111111111111"), {
+
+        "filters": [
+          {
+            "memcmp": {
+              "offset": 44, // Adjust this offset based on your account data structure
+              "bytes": walletAddress,
+            }
+          }
+        ]
+      })
+
+
+      return stakeAccounts;
+    } catch (error) {
+      return new Error(error)
     }
+    // return [];
+  }
 
-
-
-  //   public async getStakeAccountsByOwner(publicKey: PublicKey): Promise<Array<{
-  //     pubkey: PublicKey;
-  //     account: AccountInfo<Buffer | ParsedAccountData | any>;
-  //   }> | any> {
-  //     try {
-
-  //       // get stake account
-  //       const stakeAccounts: Array<{
-  //         pubkey: PublicKey;
-  //         account: AccountInfo<Buffer | ParsedAccountData | any>;
-  //       }> = await this.connection.getParsedProgramAccounts(new PublicKey("Stake11111111111111111111111111111111111111"), {
-
-  //         "filters": [
-  //           {
-  //             "memcmp": {
-  //               "offset": 44, // Adjust this offset based on your account data structure
-  //               "bytes": publicKey.toBase58(),
-  //             }
-  //           }
-  //         ]
-  //       })
 
 
   //       return stakeAccounts;
@@ -187,62 +196,50 @@ export class SolanaHelpersService {
   //   //     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
   //   //   ))[0];
   //   // }
-  //   public async extendStakeAccount(account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> }): Promise<any> {
-  //     const pk = account.pubkey;
-  //     const addr = pk.toBase58()
+  public async extendStakeAccount(account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> }, validators: Validator[]): Promise<any> {
+    const pk = account.pubkey;
+    const addr = pk.toBase58()
+    const parsedData = account.account.data.parsed.info || null//.delegation.stake
+    const validatorVoteKey = parsedData.stake?.delegation?.voter
+    const stake = Number(parsedData.stake?.delegation?.stake) || 0;
+    const startEpoch = parsedData.stake.delegation.activationEpoch;
+    const rentReserve = Number(account.account.data.parsed.info.meta.rentExemptReserve);
+    const accountLamport = Number(account.account.lamports);
+    const excessLamport = accountLamport - stake - rentReserve
+    const { active, state }: StakeActivationData = await this.connection.getStakeActivation(pk);
+    const validator = validators.find(v => v.vote_identity === validatorVoteKey)
 
-  //     const parsedData = account.account.data.parsed.info || null//.delegation.stake
-  //     const validatorVoteKey = parsedData.stake?.delegation?.voter
-  //     const stake = Number(parsedData.stake?.delegation?.stake) || 0;
-  //     const startEpoch = parsedData.stake.delegation.activationEpoch;
-  //     const rentReserve = Number(account.account.data.parsed.info.meta.rentExemptReserve);
-  //     const accountLamport = Number(account.account.lamports);
-  //     const excessLamport = accountLamport - stake - rentReserve
-  //     const { active, state }: StakeActivationData = await this.connection.getStakeActivation(pk);
-  //     let validatorData: ValidatorData | any = null;
-  //     if (this.validatorsData) {
-  //       validatorData = this.validatorsData.filter(validator => validator.vote_identity == validatorVoteKey)[0];
-  //     } else {
-  //       try {
-  //         validatorData = (await firstValueFrom(this.getValidatorData(validatorVoteKey)))
-  //       } catch (error) {
-  //         console.warn(error)
-  //       }
-  //     }
-
-
-  //     const stakeAccountInfo: StakeAccountExtended = {
-  //       lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
-  //       locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false ,
-  //       addr,
-  //       shortAddr: this._utilService.addrUtil(addr).addrShort,
-  //       balance: Number((stake / LAMPORTS_PER_SOL)),
-  //       state,
-  //       validatorData,
-  //       validatorVoteKey,
-  //       excessLamport,
-  //       checkedForMerge: false,
-  //       startEpoch,
-  //       stakeAuth: parsedData.meta.authorized.staker,
-  //       canMerge: true
-  //     }
+    const stakeAccountInfo = {
+      lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
+      locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
+      addr,
+      shortAddr: this._utils.addrUtil(addr).addrShort,
+      balance: Number((stake / LAMPORTS_PER_SOL)),
+      state,
+      validator,
+      excessLamport,
+      startEpoch,
+      stakeAuth: parsedData.meta.authorized.staker,
+    }
 
 
-  //     return stakeAccountInfo
-  //   }
-
-  //   public async fetchAndUpdateStakeAccount(publicKey: PublicKey) {
-
-
-  //       const stakeAccounts = await this.getStakeAccountsByOwner(publicKey);
-  //       const extendStakeAccount = await stakeAccounts.map(async (acc) => {
-  //         return await this.extendStakeAccount(acc)
-  //       })
-  //       const extendStakeAccountRes = await Promise.all(extendStakeAccount);
-  //       this._stakeAccounts$.next(extendStakeAccountRes);
-
-
-  //   }
+    return stakeAccountInfo
+  }
+  public async getOwnerNativeStake(walletAddress: string) {
+    try {
+      const validators: Validator[] = await this.getValidatorsList()
+      const stakeAccounts = await this.getStakeAccountsByOwner(walletAddress);
+      const extendStakeAccount = await stakeAccounts.map(async (acc) => {
+        return await this.extendStakeAccount(acc, validators)
+      })
+      const extendStakeAccountRes = await Promise.all(extendStakeAccount);
+      // this._stakeAccounts$.next(extendStakeAccountRes);
+      return extendStakeAccountRes
+    } catch (error) {
+      console.log(error);
+    }
+    return null
+  }
 
 
 
@@ -252,37 +249,37 @@ export class SolanaHelpersService {
   //     const noneCirculating = this._utilService.numFormater(supply.value.nonCirculating / LAMPORTS_PER_SOL)
   //     return { circulating, noneCirculating }
   //   }
-    public async getClusterStake(): Promise<{ activeStake, delinquentStake }> {
-      const stakeInfo = await this.connection.getVoteAccounts()
-      const activeStake = stakeInfo.current.reduce(
-        (previousValue, currentValue) => previousValue + currentValue.activatedStake,
-        0
-      ) / LAMPORTS_PER_SOL
-      const delinquentStake = stakeInfo.delinquent.reduce(
-        (previousValue, currentValue) => previousValue + currentValue.activatedStake,
-        0
-      ) / LAMPORTS_PER_SOL
-      return { activeStake, delinquentStake }
-    }
+  public async getClusterStake(): Promise<{ activeStake, delinquentStake }> {
+    const stakeInfo = await this.connection.getVoteAccounts()
+    const activeStake = stakeInfo.current.reduce(
+      (previousValue, currentValue) => previousValue + currentValue.activatedStake,
+      0
+    ) / LAMPORTS_PER_SOL
+    const delinquentStake = stakeInfo.delinquent.reduce(
+      (previousValue, currentValue) => previousValue + currentValue.activatedStake,
+      0
+    ) / LAMPORTS_PER_SOL
+    return { activeStake, delinquentStake }
+  }
   //   public async getTPS(): Promise<any> {
   //     const performaceRes = (await this.connection.getRecentPerformanceSamples())[0];
   //     const tps = performaceRes.numTransactions / performaceRes.samplePeriodSecs
 
   //     return tps
   //   }
-    public getEpochInfo(): Observable<StakeWizEpochInfo> {
-      return this._apiService.get(`https://api.stakewiz.com/epoch_info`).pipe(
-        map((data: StakeWizEpochInfo) => {
-          const { remaining_seconds, elapsed_seconds, duration_seconds } = data
-          const days = Math.floor(remaining_seconds / 86400);
-          const hours = Math.floor(remaining_seconds / 3600) - (days * 24);
-          data.ETA = `ETA ${days} Days and ${hours} Hours`
-          data.timepassInPercentgae = elapsed_seconds / duration_seconds
-          return data
-        }),
-        // catchError(this._formatErrors)
-      );
-    }
+  public getEpochInfo(): Observable<StakeWizEpochInfo> {
+    return this._apiService.get(`https://api.stakewiz.com/epoch_info`).pipe(
+      map((data: StakeWizEpochInfo) => {
+        const { remaining_seconds, elapsed_seconds, duration_seconds } = data
+        const days = Math.floor(remaining_seconds / 86400);
+        const hours = Math.floor(remaining_seconds / 3600) - (days * 24);
+        data.ETA = `ETA ${days} Days and ${hours} Hours`
+        data.timepassInPercentgae = elapsed_seconds / duration_seconds
+        return data
+      }),
+      // catchError(this._formatErrors)
+    );
+  }
 
   //   public async getTokenAccountsBalance(wallet: string, getType?: 'token' | 'nft'): Promise<TokenBalance[]> {
   //     const filters: GetProgramAccountsFilter[] = [

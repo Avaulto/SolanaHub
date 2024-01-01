@@ -1,6 +1,8 @@
 <app-mft [tableId]="'assets'" [label]="'your assets'"
   [desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions"
-  (onTabSelected)="selectedTab.set($event)" (onRowClicked)="eventEmitted($event)" [tableColumns]="columns"
+  (onTabSelected)="selectedTab.set($event)" 
+  (onRowClicked)="eventEmitted($event)"
+  [tableColumns]="columns"
   [tableData]="tableData">
 </app-mft>
 
@@ -23,7 +25,7 @@
     </div>
   </div>
 </ng-template>
-
+<!-- nft table templates -->
 <ng-template #nftListTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="nft-list">
     @for (nft of row.nfts; track $index) {

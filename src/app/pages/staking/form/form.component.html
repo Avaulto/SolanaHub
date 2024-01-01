@@ -6,98 +6,55 @@
 
   <div id="stake-head">
     <div class="light-title">stake amount</div>
+    @if ((wallet$ | async); as wallet) {
 
-    <div id="wallet-info">
-      <ion-img src="assets/images/wallet-icon.svg" />
-      <span>{{(wallet$ | async)?.balance | number: '1.4'}}</span>
-      <div id="size-btns">
-        <ion-button size="small" class="space" fill="clear" (click)="setStakeSize('half')">half</ion-button>
-        <ion-button size="small" fill="clear" (click)="setStakeSize('max')">max</ion-button>
+      <div id="wallet-info">
+        <ion-img src="assets/images/wallet-icon.svg" />
+        <span>{{wallet.balance | number: '1.4'}}</span>
+        <div id="size-btns">
+          <ion-button size="small" class="space" fill="clear" (click)="setStakeSize('half')">half</ion-button>
+          <ion-button size="small" fill="clear" (click)="setStakeSize('max')">max</ion-button>
+        </div>
       </div>
-    </div>
+    }
 
   </div>
   <form [formGroup]="stakeForm">
-    <div id="input-control">
+    <div id="input-control" class="ion-margin-bottom">
       <span>
         <label>SOL</label>
         <ion-input formControlName="amount" mode="ios" placeholder="0" inputmode="decimal" />
       </span>
-      <div>{{33 | currency}}</div>
+      <div>{{solPrice * stakeForm.controls['amount'].value | currency}}</div>
     </div>
 
-    <div id="stake-path">
-      <div class="light-title">Select Staking path</div>
-      <div id="stake-options">
-        <div class="stake-type" [class.selectedPath]="nativePath.checked" (click)="stakePath.set('native')">
-          <div class="inliner">
-            <div class="icon-wrapper">
-              <ion-img src="assets/images/lock-icon.svg" />
-            </div>
-            <ion-checkbox #nativePath checked />
-          </div>
-          <div class="type-title">Native staking</div>
-          <div class="type-desc">pure staking,lock asset, no smart contract risk</div>
-        </div>
-        <div class="stake-type" [class.selectedPath]="liquidPath.checked" (click)="stakePath.set('liquid')">
-          <div class="inliner">
-            <div class="icon-wrapper">
-              <ion-img src="assets/images/droplets-icon.svg" />
-            </div>
-            <ion-checkbox #liquidPath />
-          </div>
-          <div class="type-title">Liquid staking</div>
-          <div class="type-desc">liquid asset, free to join defi, have smart contract risk</div>
-        </div>
-      </div>
-    </div>
+    <stake-path style="display: block;" class="ion-margin-bottom" (onSelectPath)="selectStakePath($event)"/>
     @if(stakePath() === 'native'){
-    <div id="validator-selection">
-      <div class="light-title">Select Validator</div>
-      <ion-button slot="start" fill="clear" (click)="openTokensModal()" [disabled]="validatorsList().length === 0"
-        expand="block">
-        @if(selectedValidator()){
-        <div class="validator-profile">
-          <ion-img [src]="selectedValidator().image" />
-          <div>
-            <ion-label> {{selectedValidator().name}}</ion-label>
-            <ion-text>{{selectedValidator().activated_stake | number:'1.0-2'}}</ion-text>
-          </div>
-        </div>
-        <div class="validator-stats">
-          <div>
-            <ion-chip color="primary">{{selectedValidator().apy_estimate}}%</ion-chip>
-          </div>
-        </div>
-        }@else {
-        <span style="margin-right: auto">Select your preferred validator</span>
-        }
-        <ion-icon slot="end" name="chevron-down-outline" />
-      </ion-button>
-    </div>
+      <select-validator [validatorsList]="validatorsList" (onSelectValidator)="setValidator($event)"/>
     }
     @if(stakePath() === 'native'){
-    <div id="lock-up">
-      <div id="lock-selection">
-        <div id="lock-text-wrapper">
-          <div class="light-title">Lock your stake</div>
-          <div class="type-desc">Locking will create a stake account that is locked for the duration of time you specify
-          </div>
-        </div>
-        <ion-toggle mode="ios" #addLock />
-      </div>
-      @if (addLock.checked) {
-      <ion-range mode="md" min="1" max="12" [pin]="true" [pinFormatter]="pinFormatter" />
-      }
-    </div>
+      <lock-stake (onLockUpSelected)="stakeForm.controls['lockupDuration'].setValue($event)" />
     }
-
-    <ion-button id="stake-btn" class="ion-text-capitalize" [disabled]="stakeForm.invalid" expand="block">
-      enter stake amount
+    @if(stakePath() === 'liquid'){
+      <select-stake-pool style="display: block;" class="ion-margin-bottom" [stakePools]="stakePools" (onSelectPool)="setPool($event);"/>
+    }
+    @if(stakePath() === 'liquid' && stakeForm.controls['pool'].value.poolName != 'Jito'){
+      <custom-validator>
+        <select-validator [validatorsList]="validatorsList" (onSelectValidator)="setValidator($event)"/>
+      </custom-validator>
+    }
+    <ion-button id="stake-btn" (click)="submitNewStake()" class="ion-text-capitalize" [disabled]="stakeForm.invalid" expand="block">
+     @if (!stakeForm.controls['amount'].value) {
+       enter stake amount
+     } @else if ((!stakeForm.controls['validatorVoteIdentity'].value && stakePath() === 'native') || (!stakeForm.controls['pool']?.value  && stakePath() === 'liquid')) {
+      select {{stakePath() === 'native' ? 'validator' : 'pool'}}
+     } @else {
+      stake
+     }
     </ion-button>
   </form>
 
   @if (stakeForm.valid) {
-    <apy-calc [apy]="selectedValidator()?.apy_estimate" [amount]="stakeForm.controls['amount'].value"/>
+    <apy-calc [apy]="stakeAPY()" [amount]="stakeForm.controls['amount'].value"/>
   }
 </div>

@@ -56,18 +56,23 @@ export class StakingPage implements OnInit {
     totalStake: this._shs.getClusterStake()
   }).pipe(map(data => {
     this.validatorsList.set(data.validatorsList)
-    console.log( data.epochInfo);
-    
     this.validatorsData = [
-      {
-        imgURL: 'assets/images/validators-icon.svg',
-        title: 'Validators',
-        desc: this._util.decimalPipe.transform(data.validatorsList.length),
-      },
+   
       {
         imgURL: 'assets/images/coins-icon.svg',
         title: 'Cluster APY',
         desc: data.avgAPY + '%',
+      },
+      {
+        imgURL: 'assets/images/stake-icon.svg',
+        title: 'Total SOL staked',
+        //@ts-ignore
+        desc: this._util.formatBigNumbers(data.totalStake.activeStake),
+      },
+      {
+        imgURL: 'assets/images/validators-icon.svg',
+        title: 'Validators',
+        desc: this._util.decimalPipe.transform(data.validatorsList.length),
       },
       {
         imgURL: 'assets/images/hourglass-icon.svg',
@@ -75,12 +80,6 @@ export class StakingPage implements OnInit {
         desc: data.epochInfo.ETA,
         extraData: data.epochInfo
       },
-      {
-        imgURL: 'assets/images/stake-icon.svg',
-        title: 'Total SOL staked',
-        //@ts-ignore
-        desc: this._util.formatBigNumbers(data.totalStake.activeStake),
-      }
     ]
   }
   ))

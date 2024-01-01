@@ -3,7 +3,7 @@ import { Component,  Input, OnInit,  Signal,  computed,  effect,  inject, signal
 import { UtilService } from 'src/app/services';
 import { SearchBoxComponent } from 'src/app/shared/components/search-box/search-box.component';
 import { FilterPipe } from 'src/app/shared/pipes';
-import { IonSearchbar, IonContent,IonImg, IonItem, IonList, IonAvatar,IonButton,IonChip, IonLabel,IonText } from '@ionic/angular/standalone';
+import { IonSearchbar, IonContent,IonImg, IonItem, IonList, IonAvatar,IonButton,IonChip,IonSkeletonText, IonLabel,IonText } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ModalController } from '@ionic/angular';
 import { Validator } from 'src/app/models';
@@ -27,6 +27,7 @@ import { DecimalPipe } from '@angular/common';
     IonButton,
     IonChip,
     IonContent,
+    IonSkeletonText,
     DecimalPipe
   ]
 })
@@ -47,7 +48,7 @@ export class ValidatorsModalComponent  implements OnInit {
     this.searchTerm.set(term)
   }
   async ngOnInit() {
-    console.log(this.validatorsList);
+    // console.log(this.validatorsList);
     
   }
   selectValidator(validator: Validator){
@@ -55,7 +56,11 @@ export class ValidatorsModalComponent  implements OnInit {
     this.selectedValidator = validator;
 
   }
-
+  imagesLoaded = {};
+  loadImage(uniqueId) {    
+    this.imagesLoaded[uniqueId] = true;
+  }
+  
   closeModal(){
     this.modalCtrl.dismiss(this.selectedValidator)
   }
