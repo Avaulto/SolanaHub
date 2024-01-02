@@ -25,7 +25,7 @@
         <label>SOL</label>
         <ion-input formControlName="amount" mode="ios" placeholder="0" inputmode="decimal" />
       </span>
-      <div>{{solPrice * stakeForm.controls['amount'].value | currency}}</div>
+      <div>{{solPrice() * stakeForm.controls['amount'].value | currency}}</div>
     </div>
 
     <stake-path style="display: block;" class="ion-margin-bottom" (onSelectPath)="selectStakePath($event)"/>

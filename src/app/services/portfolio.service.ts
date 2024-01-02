@@ -110,7 +110,8 @@ export class PortfolioService {
 
   public async _portfolioStaking(walletAddress){
    const stakeAccounts = await this._hsh.getOwnerNativeStake(walletAddress);
-  //  console.log(stakeAccounts);
+   this.staking.set(stakeAccounts)
+   console.log(stakeAccounts);
    
   }
 

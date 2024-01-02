@@ -10,7 +10,7 @@ import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 import { WalletStore, provideWalletAdapter } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { UtilService } from './services';
+import { PriceHistoryService, UtilService } from './services';
 import { distinctUntilChanged } from 'rxjs';
 
 @Component({
@@ -43,7 +43,9 @@ export class AppComponent implements OnInit {
   private readonly _walletStore = inject(WalletStore);
   private _utilsService = inject(UtilService)
   
-  constructor(private _portfolioService:PortfolioService) {
+  constructor(
+    private _portfolioService:PortfolioService
+    ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
   }
   ngOnInit(): void {
@@ -58,6 +60,7 @@ export class AppComponent implements OnInit {
       this._portfolioService.getPortfolioAssets(wallet.publicKey.toBase58())
     })
   }
+ 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
 
   public appPages = [

@@ -1,0 +1,45 @@
+:host {
+    display: block;
+    height: 100%;
+    border-radius: 0px 12px 12px 0px;
+    background: #F8FAFC;
+    border-left: 1px solid #E3E8EF;
+}
+
+#title {
+    color: #101828;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: 0.16px;
+    text-transform: capitalize;
+}
+
+#sub {
+
+    color: #697586;
+    font-size: 13px;
+    text-transform: capitalize;
+    margin-block-end: 20px;
+}
+
+#stake-group{
+    margin-block-end: 12px;
+    ion-button{
+        text-transform: capitalize;
+        --box-shadow: 0 0 0;
+        --color:#364152;
+        margin-inline-end:6px;
+        &.button-solid{
+            --color:var(--ion-color-primary);
+            --background:  #FAF0F8;
+    
+        }
+    }
+}
+
+#positions-container{
+    max-height: 500px;
+    overflow-y: scroll;
+}
+

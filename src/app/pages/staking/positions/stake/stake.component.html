@@ -1,0 +1,29 @@
+<div class="stake-card">
+  <div class="stake-info">
+    <div class="validator-profile">
+      @if(false){
+        <ion-img src=""/>
+      }@else{
+        <ion-skeleton-text animated/>
+      }
+      <span class="account-status"></span>
+    </div>
+    <span>
+      <div class="validator-name">SolanaHub</div>
+      <div class="account-address">FPxb...zVqN <ion-icon name="copy-outline"/> </div>
+      <div class="account-value">
+        <div class="sol-amount">{{0.253 | number}} SOL</div>
+        <div class="usd-value">({{0.81 * solPrice() | currency}})</div>
+      </div>
+    </span>
+  </div>
+  <div class="stake-details">
+    <div>
+
+      <ion-chip class="stake-apy">6.99%</ion-chip>
+      
+      <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"></ion-icon>
+    </div>
+    
+  </div>
+</div>

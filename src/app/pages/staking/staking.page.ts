@@ -15,9 +15,10 @@ import {
   IonContent
 } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { Validator } from 'src/app/models';
 import { forkJoin, map, take } from 'rxjs';
+import { PositionsComponent } from './positions/positions.component';
 interface ValidatorsStats {
   numberOfValidators: number,
   clusterAPY: number,
@@ -40,7 +41,7 @@ interface ValidatorsStats {
     IonButtons,
     IonProgressBar,
     IonMenuButton,
-
+    PositionsComponent,
     AsyncPipe,
     IonSkeletonText,
     FormComponent
@@ -106,10 +107,15 @@ export class StakingPage implements OnInit {
       desc: ''
     }
   ]
-  constructor(private _shs: SolanaHelpersService, private _util: UtilService) { }
-
+  constructor(
+    private _phs: PriceHistoryService,
+    private _shs: SolanaHelpersService, 
+    private _util: UtilService
+    ) { }
+  public solPrice = this._phs.solPrice;
   ngOnInit() {
     this._validatorsData$.pipe(take(1)).subscribe()
+
   }
 
 }

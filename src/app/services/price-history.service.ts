@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable, map } from 'rxjs';
 import { UtilService } from './util.service';
@@ -11,11 +11,14 @@ export class PriceHistoryService {
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService
-    ) { }
+    ) { 
+      this.getTokenDataByAddress("So11111111111111111111111111111111111111112").then(r => this.solPrice.set(r.market_data.current_price.usd))
+
+    }
 
 
   protected _coingeckoAPI = 'https://api.coingecko.com/api/v3';
-
+  public solPrice = signal(0);
 
   public async getTokenDataByAddress(mintAddress: string){
     let data = null

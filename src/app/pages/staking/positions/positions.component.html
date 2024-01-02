@@ -1,0 +1,33 @@
+<div id="stake-positions" class="ion-padding">
+  <div id="title">active positions</div>
+  <div id="sub">sub sub subsubsubsubsubsubsubsub</div>
+
+  <div id="stake-group">
+    <ion-button 
+    [fill]="positionGroup() !== 'native' ? 'clear' :'solid'"
+    (click)="positionGroup.set('native')" 
+    >native staking
+  </ion-button>
+
+    <ion-button 
+    [fill]="positionGroup() !== 'liquid' ? 'clear' :'solid'"
+    (click)="positionGroup.set('liquid')"
+    >liquid staking
+    </ion-button>
+  </div>
+  <div id="positions-container">
+    @if(positionGroup() === 'native'){
+
+    <stake-position />
+    <stake-position />
+    <stake-position />
+    <stake-position />
+    <stake-position />    
+    <stake-position />
+    <stake-position />
+    }@else {
+    liquid positions
+    }
+  </div>
+  <!-- {{stakePosition() | json}} -->
+</div>

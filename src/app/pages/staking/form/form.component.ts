@@ -57,7 +57,7 @@ export class FormComponent  implements OnInit {
   public stakePath = signal('native');
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
-  public solPrice = 0
+  public solPrice = this._phs.solPrice
   public stakePools = []
   constructor(
     private _shs: SolanaHelpersService,
@@ -84,7 +84,6 @@ export class FormComponent  implements OnInit {
     this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
     this._lss.getStakePoolList().then(pl => this.stakePools = pl);
-    this._phs.getTokenDataByAddress("So11111111111111111111111111111111111111112").then(r => this.solPrice = r.market_data.current_price.usd)
   }
 
 
