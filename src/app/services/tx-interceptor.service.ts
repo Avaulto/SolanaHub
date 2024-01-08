@@ -31,7 +31,7 @@ export class TxInterceptorService {
       }
       return null
     }
-  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?:{message:string, data?:{}}) {
+  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?:{message:string, data?:{}}): Promise<string> {
 
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
@@ -62,6 +62,8 @@ export class TxInterceptorService {
       const config: BlockheightBasedTransactionConfirmationStrategy = {
         signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
       }
+      console.log(url);
+      
       await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
       // const txCompleted: toastData = {
       //   message: 'Transaction Completed',

@@ -24,8 +24,10 @@
 }
 
 #stake-group{
+    display: flex;
     margin-block-end: 12px;
     ion-button{
+
         text-transform: capitalize;
         --box-shadow: 0 0 0;
         --color:#364152;

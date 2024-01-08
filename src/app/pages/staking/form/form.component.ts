@@ -98,7 +98,6 @@ export class FormComponent  implements OnInit {
 
 
   selectStakePath(stakePath: 'native' | 'liquid'){
-    console.log(stakePath);
     this.stakePath.set(stakePath)
     this.stakeForm.controls['validatorVoteIdentity'].reset()
     this.stakeForm.controls['stakingPath'].setValue(stakePath)

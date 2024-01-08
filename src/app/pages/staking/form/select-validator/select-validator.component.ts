@@ -14,6 +14,7 @@ import{
  import {  ModalController } from '@ionic/angular';
 import { Validator } from 'src/app/models';
 import { ValidatorsModalComponent } from '../validators-modal/validators-modal.component';
+import { ModalComponent } from '../../modal/modal.component';
 @Component({
   selector: 'select-validator',
   templateUrl: './select-validator.component.html',
@@ -27,7 +28,8 @@ import { ValidatorsModalComponent } from '../validators-modal/validators-modal.c
     IonText,
     IonButton,
     IonIcon,
-    DecimalPipe
+    DecimalPipe,
+    ModalComponent
   ]
 })
 export class SelectValidatorComponent  implements OnInit {
@@ -40,10 +42,24 @@ export class SelectValidatorComponent  implements OnInit {
   }
 
   ngOnInit() {}
-  async openTokensModal() {
+  async openValidatorModal() {
+    let componentLink =  ValidatorsModalComponent
+    // componentLink.validatorsList = this.validatorsList()
+    // // componentLink.call(null,{validatorsList: this.validatorsList})
+    // console.log(componentLink);
+    let config = {
+      imgUrl:'assets/images/validators-icon.svg',
+      title :'Select Validator',
+      desc : 'Pick the right validator for you',
+      btnText: 'select validator'
+    }
     const modal = await this._modalCtrl.create({
-      component: ValidatorsModalComponent,
-      componentProps: {validatorsList: this.validatorsList()},
+      component: ModalComponent,
+      componentProps: {
+        componentName:'validators-modal',
+        config,
+        data: this.validatorsList
+      },
       cssClass: 'modal-style'
     });
     modal.present();

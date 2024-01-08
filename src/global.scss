@@ -148,9 +148,20 @@ ion-spinner{
 
 
 .modal-style{
-    --width: 540px;
-    --max-width: 100%;
-    --border-radius: 12px;
+    --min-width: 540px;
+    // --min-height: 700px;
+    // --max-width: 100%;
+    // --border-radius: 12px;
+    --width: auto;
+    --height: auto;
+    --max-width: 90%;
+    --max-height: 90%;
+    --overflow: auto;
+  
+    > .ion-page {
+      position: static;
+      contain: initial;
+    }
 }
 
 .stake-positions-actions-popover{
@@ -158,3 +169,4 @@ ion-spinner{
     --box-shadow: 0 0 0;
     --background: transparent;
 }
+

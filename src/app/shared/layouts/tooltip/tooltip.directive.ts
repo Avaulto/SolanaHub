@@ -18,9 +18,10 @@ import {TooltipPosition, TooltipTheme} from "./tooltip.enums";
 })
 export class TooltipDirective {
 
-  @Input() tooltip = '';
+  @Input() tooltip: any = '';
+  @Input() context: any = '';
   @Input() position: TooltipPosition = TooltipPosition.DEFAULT;
-  @Input() theme: TooltipTheme = TooltipTheme.DEFAULT;
+  @Input() theme: TooltipTheme = TooltipTheme.LIGHT;
   @Input() showDelay = 0;
   @Input() hideDelay = 300;
 
@@ -29,8 +30,12 @@ export class TooltipDirective {
   private hideTimeout?: number;
   private touchTimeout?: number;
 
-  constructor(private elementRef: ElementRef, private appRef: ApplicationRef,
-              private componentFactoryResolver: ComponentFactoryResolver, private injector: Injector) {
+  constructor(
+    private elementRef: ElementRef, 
+    private appRef: ApplicationRef,
+              private componentFactoryResolver: ComponentFactoryResolver, 
+              private injector: Injector
+              ) {
   }
 
   @HostListener('mouseenter')

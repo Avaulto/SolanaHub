@@ -1,6 +1,6 @@
 <div id="validator-selection">
   <div class="light-title">Select Validator</div>
-  <ion-button slot="start" fill="clear" (click)="openTokensModal()" [disabled]="validatorsList().length === 0"
+  <ion-button slot="start" fill="clear" (click)="openValidatorModal()" [disabled]="validatorsList().length === 0"
     expand="block">
     @if(selectedValidator()){
     <div class="validator-profile">

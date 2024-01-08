@@ -49,16 +49,16 @@ export class AppComponent implements OnInit {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
   }
   ngOnInit(): void {
-    this._walletStore.anchorWallet$.pipe(
-      this._utilsService.isNotNull,
-      this._utilsService.isNotUndefined,
-      distinctUntilChanged(),
-    ).subscribe(wallet => {
-      // console.log(wallet);
+    // this._walletStore.anchorWallet$.pipe(
+    //   this._utilsService.isNotNull,
+    //   this._utilsService.isNotUndefined,
+    //   distinctUntilChanged(),
+    // ).subscribe(wallet => {
+    //   // console.log(wallet);
       
-      // this._solanaUtilsService.onAccountChangeCB(wallet.publicKey)
-      this._portfolioService.getPortfolioAssets(wallet.publicKey.toBase58())
-    })
+    //   // this._solanaUtilsService.onAccountChangeCB(wallet.publicKey)
+    //   // this._portfolioService.getPortfolioAssets(wallet.publicKey.toBase58())
+    // })
   }
  
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';

@@ -1,14 +1,14 @@
+
 .tooltip {
+  box-shadow: 0px 0px 6px #00000020;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
   position: fixed;
-  background-color: black;
-  border-radius: 4px;
-  color: #ffffff;
-  font-family: Arial;
-  padding: 3px 6px;
-  font-size: 13px;
   opacity: 0;
   max-width: 300px;
   width: 200px;
+
   &::before {
     content: '';
     width: 0;
@@ -23,7 +23,7 @@
 
   &--light {
     background-color: white;
-    color: black;
+    color: var(--Gray-600, #475467);
 
     &::before {
       border: 5px solid white;

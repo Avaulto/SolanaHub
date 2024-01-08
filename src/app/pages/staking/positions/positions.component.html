@@ -1,31 +1,34 @@
 <div id="stake-positions" class="ion-padding">
   <div id="title">active positions</div>
-  <div id="sub">sub sub subsubsubsubsubsubsubsub</div>
+  <div id="sub">Effortlessly handle all your staking, from native to liquid, with diverse, user-friendly features</div>
 
   <div id="stake-group">
-    <ion-button 
-    [fill]="positionGroup() !== 'native' ? 'clear' :'solid'"
-    (click)="positionGroup.set('native')" 
-    >native staking
-  </ion-button>
+    <ion-button mode="md" [fill]="positionGroup() !== 'native' ? 'clear' :'solid'" (click)="positionGroup.set('native')">native
+      staking
+    </ion-button>
 
-    <ion-button 
-    [fill]="positionGroup() !== 'liquid' ? 'clear' :'solid'"
-    (click)="positionGroup.set('liquid')"
-    >liquid staking
+    <ion-button mode="md" [fill]="positionGroup() !== 'liquid' ? 'clear' :'solid'" (click)="positionGroup.set('liquid')">liquid
+      staking
     </ion-button>
   </div>
   <div id="positions-container">
     @if(positionGroup() === 'native'){
+    @for (stakeAccount of stakePosition(); track $index) {
 
-    <stake-position />
-    <stake-position />
-    <stake-position />
-    <stake-position />
-    <stake-position />    
-    <stake-position />
-    <stake-position />
-    }@else {
+      <stake-position [stakeAccount]="stakeAccount" [stakeAccounts]="stakePosition()" />
+
+    
+    }@empty {
+      @if(stakePosition() === null){
+        <stake-position [stakeAccount]="" />
+        <stake-position [stakeAccount]="" />
+        <stake-position [stakeAccount]="" />
+      }@else {
+
+        No positions found
+      }
+    }
+    }@else if(positionGroup() === 'liquid'){
     liquid positions
     }
   </div>

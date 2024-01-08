@@ -1,12 +1,14 @@
-:host{
+:host {
     display: block;
-        margin-block-end: 12px;
+    margin-block-end: 12px;
 }
+
 .stake-card {
-    ion-icon{
+    ion-icon {
         color: #697586;
         cursor: pointer;
-      }
+    }
+
     border-radius: 12px;
     border: 1px solid #E3E8EF;
     background: #FFF;
@@ -21,15 +23,43 @@
 
     .validator-profile {
         margin-inline-end: 12px;
+        position: relative;
 
         ion-img,
         ion-skeleton-text {
+            margin: 0;
+            overflow: hidden;
             width: 40px;
             height: 40px;
             border-radius: 1000px;
             border: 0.75px solid rgba(0, 0, 0, 0.08);
         }
 
+        .account-status {
+            margin: 0;
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border-radius: var(--radius-full, 1000px);
+            border: 1.5px solid #FFF;
+            background: #C4C4C4;
+
+            //     activating,deactivating,active,inactive
+            &.active {
+                background: #2970FF;
+            }
+
+            &.activating {
+                background: #17B26A;
+            }
+
+            &.deactivating {
+                background: #F79009;
+            }
+
+        }
     }
 
     .validator-name {
@@ -47,9 +77,10 @@
         margin-block-end: 8px;
         display: flex;
         align-items: center;
-        ion-icon{
+
+        ion-icon {
             margin-inline-start: 4px;
-         
+
         }
     }
 
@@ -58,6 +89,7 @@
         font-weight: 500;
         line-height: 20px;
         display: flex;
+
         .sol-amount {
             color: #121926;
             margin-inline-end: 2px;
@@ -69,13 +101,16 @@
         }
 
     }
+
     .stake-details {
         display: flex;
-        div{
+
+        div {
             align-items: center;
             display: flex;
             height: 30px;
         }
+
         ion-chip {
             margin-block: 0;
             border-radius: var(--radius-full, 1000px);
@@ -86,48 +121,9 @@
             font-size: 12px;
             font-weight: 600;
             line-height: 14px;
-          }
-      
+        }
+
     }
-    // .stake-header {
-    //   display: flex;
-    //   justify-content: space-between;
-    //   align-items: center;
-    //   margin-bottom: 10px;
 
-    //   .stake-name {
-    //     color: #000000; // Assuming black text color
-    //     font-weight: bold;
-    //     font-size: 1.2rem;
-    //   }
 
-    //   .stake-interest {
-    //     background: #E1E3E6; // Light grey background for the interest rate
-    //     border-radius: 5px;
-    //     padding: 2px 5px;
-    //     font-size: 0.9rem;
-    //     color: #000000; // Assuming black text color
-    //   }
-    // }
-
-    // .stake-details {
-    //   .stake-address {
-    //     color: #646464; // Grey color for the obscured address
-    //     font-size: 0.9rem;
-    //     margin-bottom: 5px;
-    //   }
-
-    //   .stake-balance {
-    //     .crypto-amount {
-    //       color: #000000; // Assuming black text color
-    //       font-size: 1.1rem;
-    //       font-weight: bold;
-    //     }
-
-    //     .usd-amount {
-    //       color: #646464; // Grey color for USD amount
-    //       font-size: 1rem;
-    //     }
-    //   }
-    // }
 }

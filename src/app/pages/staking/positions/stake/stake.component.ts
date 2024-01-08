@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical } from 'ionicons/icons';
 import {
@@ -6,12 +6,17 @@ import {
   IonAvatar,
   IonImg,
   IonChip,
-  IonIcon
+  IonIcon,
+  IonPopover
 } from '@ionic/angular/standalone';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { PriceHistoryService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
+import { StakeAccount } from 'src/app/models';
+import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
+import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 @Component({
   selector: 'stake-position',
   templateUrl: './stake.component.html',
@@ -24,24 +29,56 @@ import { OptionsPopoverComponent } from './options-popover/options-popover.compo
     IonChip,
     IonIcon,
     DecimalPipe,
-    CurrencyPipe
+    CurrencyPipe,
+    IonPopover,
+    NgTemplateOutlet,
+    CopyTextDirective,
+    TooltipModule
   ]
 })
-export class StakeComponent implements OnInit {
+export class StakeComponent   {
+  @Input() stakeAccount: StakeAccount = null
+  @Input() stakeAccounts: StakeAccount[] = null
+  public toolTipPos = TooltipPosition.LEFT
   public solPrice = this._phs.solPrice;
+  public stakeAccountStatus = {
+    active:{
+      title: 'active',
+      desc: 'Active state means you earn staking reward every epoch',
+      statusColor:'#2970FF'
+    },
+    activating:{
+      title: 'activating',
+      desc: 'activating state means you need to want till end of epoch before you start earn stake rewards',
+      statusColor:'#17B26A'
+    },
+    deactivating:{
+      title: 'deactivating',
+      desc: 'deactivate means you need to wait till end of epoch before it changes to deceived status',
+      statusColor:'#F79009'
+    },
+    deactivate:{
+      title: 'deactivate',
+      desc: 'deactivate means you dont earn any staking rewards and it ready to withdrawal',
+      statusColor:'#C4C4C4'
+    }
+  }
   constructor(
     private _phs:PriceHistoryService, 
-    private popoverController: PopoverController
+    private _popoverController: PopoverController
     ) {
     addIcons({ copyOutline, ellipsisVertical });
   }
 
-  ngOnInit() { }
   async presentPopover(e: Event) {
-    const popover = await this.popoverController.create({
+ 
+    
+    const popover = await this._popoverController.create({
       component: OptionsPopoverComponent,
+      componentProps: {stakeAccount: this.stakeAccount,stakeAccounts: this.stakeAccounts },
       event: e,
       backdropDismiss: true,
+      dismissOnSelect:true,
       showBackdrop: false,
       cssClass:'stake-positions-actions-popover'
     });
@@ -49,6 +86,7 @@ export class StakeComponent implements OnInit {
     await popover.present();
 
     const { role } = await popover.onDidDismiss();
-    console.log(`Popover dismissed with role: ${role}`);
   }
+
+
 }

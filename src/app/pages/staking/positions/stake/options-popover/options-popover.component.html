@@ -1,34 +1,56 @@
 <div id="positions-actions-wrapper">
-  <ion-button expand="block" fill="clear">
+
+  @if(stakeAccount.state === 'active' || stakeAccount.state === 'activating'){
+  <ion-button (click)="unStake()" expand="block" fill="clear">
     <div class="ion-text-left">
       <ion-icon name="arrow-up"></ion-icon>
       unstake
     </div>
   </ion-button>
-  <ion-button expand="block" fill="clear">
+  }
+  @if(stakeAccount.state === 'inactive' || stakeAccount.state === 'deactivating'){
+  <ion-button (click)="reStake()" expand="block" fill="clear">
+    <div class="ion-text-left">
+      <ion-icon name="arrow-down"></ion-icon>
+      restake
+    </div>
+  </ion-button>
+  }
+  @if(stakeAccount.state === 'inactive'){
+  <ion-button (click)="withdraw()" expand="block" fill="clear">
+    <div class="ion-text-left">
+      <ion-icon name="arrow-up"></ion-icon>
+      withdraw stake
+    </div>
+  </ion-button>
+  }
+
+
+
+  @if(stakeAccount.state === 'active'){
+  <ion-button (click)="openModal('instant-unstake-modal')" expand="block" fill="clear">
     <div class="ion-text-left">
       <ion-icon name="flash"></ion-icon>
-      Instant Unstake
+      Instant UnStake
     </div>
   </ion-button>
-  <ion-button expand="block" fill="clear">
+  }
+  <ion-button (click)="openModal('merge-modal')" expand="block" fill="clear">
     <div class="ion-text-left">
       <ion-icon name="people"></ion-icon>
-      Merge Accounts
+      Merge accounts
     </div>
   </ion-button>
-  <ion-button expand="block" fill="clear">
+  <ion-button (click)="openModal('split-modal')" expand="block" fill="clear">
     <div class="ion-text-left">
       <ion-icon name="people-circle"></ion-icon>
-      Split Account
+      Split account
     </div>
   </ion-button>
-  <ion-button expand="block" fill="clear">
+  <ion-button (click)="openModal('transfer-auth-modal')" expand="block" fill="clear">
     <div class="ion-text-left">
       <ion-icon name="paper-plane"></ion-icon>
-
-        transfer Account Authority
-     
+      transfer account Authority
     </div>
   </ion-button>
 </div>

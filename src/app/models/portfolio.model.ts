@@ -1,4 +1,5 @@
 import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js"
+import { Validator } from "./stakewiz.model"
 
 export interface WalletExtended {
   balance?: number,
@@ -39,9 +40,18 @@ export interface LendingOrBorrow{
 }
 
 export interface StakeAccount {
-
+  lockedDue: string
+  locked: boolean
+  addr: string
+  shortAddr: string
+  balance: number
+  lamportsBalance: number
+  state: 'activating' | 'deactivating' | 'active' | 'inactive'
+  validator: Validator
+  excessLamport: number
+  startEpoch: string
+  stakeAuth: string
 }
-
 
 export interface TransactionHistory{
     txHash: string

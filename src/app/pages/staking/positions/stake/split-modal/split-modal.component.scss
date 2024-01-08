@@ -1,0 +1,91 @@
+ion-label {
+    color: var(--Gray-700, #344054);
+    font-size: 13px;
+    font-weight: 500;
+    margin-block-end: 8px;
+    display: block;
+    text-transform: capitalize;
+}
+
+#input-control {
+    margin-block-end: 16px;
+
+    #balance {
+        color: #697586;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 14px;
+        align-items: center;
+
+        #balance-label {
+            font-weight: 500;
+            margin-inline-end: 4px;
+        }
+    }
+
+    ion-input {
+        height: 38px;
+        min-height: 38px;
+    }
+
+    //     font-weight: 500;
+    /* 116.667% */
+    div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+}
+#splitting-summary {
+    height: 200px;
+}
+#splitting-calc {
+    border-radius:  8px;
+    border: 1px solid  #E3E8EF;
+    background:  #F8FAFC;
+    padding: 16px;
+    font-size: 12px;
+    line-height: 20px;
+    text-transform: capitalize;
+    color:  #101828;
+    .account{
+        font-weight: 400;
+        display: flex;
+        justify-content: space-between;
+    }
+    .account-id,.account-address{
+        flex: 1;
+    }
+    .account-id{
+        font-weight: 600;
+    }
+    .account-value{
+        color:  #475467;
+    }
+}
+
+:host ::ng-deep stake-position {
+    margin-block-end: 16px;
+
+    .stake-info {
+        width: 100%;
+
+        ion-img,
+        ion-skeleton-text {
+            width: 36px !important;
+            height: 36px !important;
+        }
+
+        span {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+            align-items: center;
+        }
+    }
+
+
+    .stake-details {
+        display: none !important;
+    }
+}

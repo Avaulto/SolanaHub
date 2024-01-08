@@ -8,9 +8,12 @@ import {
   IonAvatar,
   IonImg,
   IonContent,
-  IonPopover
+  IonPopover,
+  IonSkeletonText
 } from '@ionic/angular/standalone';
 import { StakePool } from 'src/app/models';
+import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
+import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 @Component({
   selector: 'select-stake-pool',
   templateUrl: './select-stake-pool.component.html',
@@ -24,27 +27,33 @@ import { StakePool } from 'src/app/models';
     IonSegment,
     IonPopover,
     IonContent,
-    IonImg
+    IonSkeletonText,
+    IonImg,
+    TooltipModule
   ]
 })
 export class SelectStakePoolComponent implements AfterViewInit {
   @ViewChild('popoverTpl', { static: true }) popoverTpl: TemplateRef<any> | any;
   @Output() onSelectPool = new EventEmitter();
-  // public defaultPool = ''
+  position: TooltipPosition = TooltipPosition.BELOW;
+  public defaultPool:StakePool =null;
   selectPool(ev){
+
     this.onSelectPool.emit(ev.detail.value)
+    
+  }
+  showToolTip(ev){
+    console.log(ev);
     
   }
   @Input() stakePools: StakePool[] = []
 
-  ngOnChanges(): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-    console.log(this.stakePools);
-    
-  }
   ngAfterViewInit() {
-    // this.defaultPool = 'marinade'
+  
+      const ev: any= {detail:{value: this.stakePools[0]}}
+      this.defaultPool = this.stakePools[0];
+      this.selectPool(ev)
+  
    }
    constructor(public popoverController: PopoverController) {}
 

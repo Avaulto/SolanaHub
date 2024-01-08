@@ -1,12 +1,14 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory, WalletExtended } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 import { ApiService } from './api.service';
 import { Observable, catchError, map, of, shareReplay, single } from 'rxjs';
 import { PriceHistoryService } from './price-history.service';
 import { SolanaHelpersService } from './solana-helpers.service';
+import { PublicKey } from '@solana/web3.js';
+import { NativeStakeService } from './native-stake.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,22 +17,34 @@ export class PortfolioService {
   public walletAssets = single();
   public tokens = signal<Token[]>([]);
   public nfts: WritableSignal<NFT[]> = signal([]);
-  public staking: WritableSignal<StakeAccount[]> = signal([]);
+  public staking: WritableSignal<StakeAccount[]> = signal(null);
   public defi: WritableSignal<LiquidityProviding[]> = signal([]);
   public walletHistory: WritableSignal<TransactionHistory[]> = signal([]);
-  readonly restAPI = this._utilService.serverlessAPI
+  readonly restAPI = this._utils.serverlessAPI
   constructor(
-    private _hsh: SolanaHelpersService,
-    private _utilService: UtilService,
+    private _utils: UtilService,
+    private _nss: NativeStakeService,
     //  private _apiService:ApiService
-    private _priceHistoryService: PriceHistoryService
-  ) { }
+    private _priceHistoryService: PriceHistoryService,
+    private _shs:SolanaHelpersService,
+  ) {
+    this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
+      if(wallet){
+        this._shs.connection.onAccountChange(wallet.publicKey, () =>{
+            console.log( 'init callback listen');
+            this.getPortfolioAssets(wallet.publicKey.toBase58())
+        })
+        this.getPortfolioAssets(wallet.publicKey.toBase58())
+      }
+    })
+
+   }
 
 
   public async getPortfolioAssets(walletAddress: string) {
 
     try {
-      const jupTokens = await this._utilService.getJupTokens()
+      const jupTokens = await this._utils.getJupTokens()
       const portfolio = await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
@@ -50,12 +64,12 @@ export class PortfolioService {
 
   private _portfolioTokens(tokens: any, jupTokens: JupToken[]): void {
     if (tokens) {
-      this._utilService.addTokenData(tokens?.data.assets, jupTokens)
+      this._utils.addTokenData(tokens?.data.assets, jupTokens)
       // add pipes
       const tokensAggregated: Token[] = tokens.data.assets.map((item: Token) => {
         // item.amount = this._utilService.decimalPipe.transform(item.amount, '1.2') || '0'
-        item.price = this._utilService.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
-        item.value = this._utilService.currencyPipe.transform(item.value) || '0'
+        item.price = this._utils.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
+        item.value = this._utils.currencyPipe.transform(item.value) || '0'
         return item
       })
       this.tokens.set(tokensAggregated)
@@ -92,8 +106,8 @@ export class PortfolioService {
           if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
             tx.mainAction = 'farm'
           }
-          tx.fromShort = this._utilService.addrUtil(tx.from).addrShort
-          tx.toShort = this._utilService.addrUtil(tx.to).addrShort
+          tx.fromShort = this._utils.addrUtil(tx.from).addrShort
+          tx.toShort = this._utils.addrUtil(tx.to).addrShort
           tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
           return { ...tx }
         })
@@ -108,8 +122,8 @@ export class PortfolioService {
     
   }
 
-  public async _portfolioStaking(walletAddress){
-   const stakeAccounts = await this._hsh.getOwnerNativeStake(walletAddress);
+  public async _portfolioStaking(walletAddress:string){
+   const stakeAccounts = await this._nss.getOwnerNativeStake(walletAddress);
    this.staking.set(stakeAccounts)
    console.log(stakeAccounts);
    

@@ -1,0 +1,37 @@
+<div class="ion-padding">
+  <div id="modal-intro">
+    <div>
+
+      <div class="icon-wrapper">
+        <ion-img [src]="config.imgUrl" />
+      </div>
+      <div id="title">{{config.title}}</div>
+      <div id="desc">{{config.desc}}</div>
+    </div>
+
+    <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+  </div>
+  @switch (componentName) {
+    @case ("validators-modal") {
+    <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
+    }
+    @case ("merge-modal") {
+    <merge-modal [stakeAccounts]="data.stakeAccounts" [targetStakeAccount]="data.stakeAccount" (onAccountsSelected)="emittedValue.set($event)" />
+    }
+    @case ("split-modal") {
+    <split-modal [stakeAccount]="data.stakeAccount" (onAmountSet)="emittedValue.set($event)" />
+    }
+    @case ("instant-unstake-modal") {
+    <instant-unstake-modal />
+    }
+    @case ("transfer-auth-modal") {
+    <transfer-auth-modal/>
+    }
+  }
+  <ng-container #containerBeforeTemplate></ng-container>
+
+  <div id="modal-controls">
+    <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
+    <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
+  </div>
+</div>

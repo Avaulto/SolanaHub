@@ -1,4 +1,4 @@
-import { Component,  Input, OnInit,  Signal,  computed,  effect,  inject, signal } from '@angular/core';
+import { Component,  EventEmitter,  Input, OnInit,  Output,  Signal,  computed,  effect,  inject, signal } from '@angular/core';
 
 import { UtilService } from 'src/app/services';
 import { SearchBoxComponent } from 'src/app/shared/components/search-box/search-box.component';
@@ -9,7 +9,7 @@ import { ModalController } from '@ionic/angular';
 import { Validator } from 'src/app/models';
 import { DecimalPipe } from '@angular/common';
 @Component({
-  selector: 'app-validators-modal',
+  selector: 'validators-modal',
   templateUrl: './validators-modal.component.html',
   styleUrls: ['./validators-modal.component.scss'],
   standalone: true,
@@ -31,38 +31,25 @@ import { DecimalPipe } from '@angular/common';
     DecimalPipe
   ]
 })
-export class ValidatorsModalComponent  implements OnInit {
+export class ValidatorsModalComponent {
   @Input() validatorsList: Validator[] = [];
+  @Output() onSelectValidator = new EventEmitter()
   public util = inject(UtilService);
-  private modalCtrl = inject(ModalController);
   public selectedValidator: Validator;
-  constructor() {
-    effect(() => {
-      console.log(this.filteredValidators());
-
-    })
-  }
   public filteredValidators: Signal<Validator[]> = computed(() => this.validatorsList.filter(t => t?.name?.toLowerCase().startsWith(this.searchTerm().toLowerCase())))
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term)
   }
-  async ngOnInit() {
-    // console.log(this.validatorsList);
-    
-  }
+
   selectValidator(validator: Validator){
     // this.onSelectedToken.emit(token);
     this.selectedValidator = validator;
-
+    this.onSelectValidator.emit(validator)
   }
   imagesLoaded = {};
   loadImage(uniqueId) {    
     this.imagesLoaded[uniqueId] = true;
   }
   
-  closeModal(){
-    this.modalCtrl.dismiss(this.selectedValidator)
-  }
-
 }

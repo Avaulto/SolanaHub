@@ -17,10 +17,11 @@ import {
   TokenOwnerOffCurveError
 } from 'node_modules/@solana/spl-token';
 import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccount } from '../models';
 import { environment } from 'src/environments/environment';
 import { ApiService } from './api.service';
 import { UtilService } from './util.service';
+import { PortfolioService } from './portfolio.service';
 ;
 
 // interface StakeWizEpochInfo {
@@ -60,6 +61,7 @@ export class SolanaHelpersService {
     switchMap(async (wallet: any) => {
 
       if (wallet) {
+        // this._portfolioService.getPortfolioAssets(wallet.publicKey.toBase58())
         wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
       }
       console.log(wallet);
@@ -70,6 +72,7 @@ export class SolanaHelpersService {
 
   constructor(
     private _apiService: ApiService,
+    // private _portfolioService:PortfolioService,
     // private _toasterService: ToasterService,
     private _connectionStore: ConnectionStore,
     private _utils: UtilService,
@@ -87,15 +90,13 @@ export class SolanaHelpersService {
   //     return this._currentSolPrice$.value;
   //   }
   public getCurrentWallet(): WalletExtended {
-    // console.log(this._walletExtended$);
-
     return this._walletExtended$.value
   }
-  //   public onAccountChangeCB(walletOwnerPk: PublicKey): void {
-  //     this.connection.onAccountChange(walletOwnerPk, async (ev) => {
-  //       this.accountChange$.next(ev);
-  //     });
-  //   }
+    // public onAccountChangeCB(walletOwnerPk: PublicKey): void {
+    //   this.connection.onAccountChange(walletOwnerPk, async (ev) => {
+    //     this.accountChange$.next(ev);
+    //   });
+    // }
   //   // public getStakeAccountsExtended() {
   //   //   return this._stakeAccounts$.value;
   //   // }
@@ -109,17 +110,23 @@ export class SolanaHelpersService {
   //     return throwError((() => error))
   //   }
 
-
+  private _validatorsList: Validator[] = [];
   public async getValidatorsList(): Promise<Validator[]> {
-    let validatorsList: Validator[] = [];
-    try {
-      const result = await (await fetch('https://api.stakewiz.com/validators')).json();
+    if(this._validatorsList.length){
 
-      validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
-    } catch (error) {
-      console.error(error);
+      return this._validatorsList;
+    }else{
+      let validatorsList: Validator[] = [];
+      try {
+        const result = await (await fetch('https://api.stakewiz.com/validators')).json();
+        
+        validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
+      } catch (error) {
+        console.error(error);
+      }
+      this._validatorsList = validatorsList;
+      return validatorsList
     }
-    return validatorsList
   }
   //   public getStakeChange() {
   //     return this._apiService.get(`https://api.stakewiz.com/validator_epoch_stakes/7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh`).pipe(
@@ -196,50 +203,51 @@ export class SolanaHelpersService {
   //   //     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
   //   //   ))[0];
   //   // }
-  public async extendStakeAccount(account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> }, validators: Validator[]): Promise<any> {
-    const pk = account.pubkey;
-    const addr = pk.toBase58()
-    const parsedData = account.account.data.parsed.info || null//.delegation.stake
-    const validatorVoteKey = parsedData.stake?.delegation?.voter
-    const stake = Number(parsedData.stake?.delegation?.stake) || 0;
-    const startEpoch = parsedData.stake.delegation.activationEpoch;
-    const rentReserve = Number(account.account.data.parsed.info.meta.rentExemptReserve);
-    const accountLamport = Number(account.account.lamports);
-    const excessLamport = accountLamport - stake - rentReserve
-    const { active, state }: StakeActivationData = await this.connection.getStakeActivation(pk);
-    const validator = validators.find(v => v.vote_identity === validatorVoteKey)
+  // public async extendStakeAccount(account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> }, validators: Validator[]): Promise<StakeAccount> {
+  //   const pk = account.pubkey;
+  //   const addr = pk.toBase58()
+  //   const parsedData = account.account.data.parsed.info || null//.delegation.stake
+  //   const validatorVoteKey = parsedData.stake?.delegation?.voter
+  //   const stake = Number(parsedData.stake?.delegation?.stake) || 0;
+  //   const startEpoch = parsedData.stake.delegation.activationEpoch;
+  //   const rentReserve = Number(account.account.data.parsed.info.meta.rentExemptReserve);
+  //   const accountLamport = Number(account.account.lamports);
+  //   const excessLamport = accountLamport - stake - rentReserve
+  //   const { active, state }: StakeActivationData = await this.connection.getStakeActivation(pk);
+  //   const validator = validators.find(v => v.vote_identity === validatorVoteKey)
 
-    const stakeAccountInfo = {
-      lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
-      locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
-      addr,
-      shortAddr: this._utils.addrUtil(addr).addrShort,
-      balance: Number((stake / LAMPORTS_PER_SOL)),
-      state,
-      validator,
-      excessLamport,
-      startEpoch,
-      stakeAuth: parsedData.meta.authorized.staker,
-    }
+  //   const stakeAccountInfo = {
+  //     lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
+  //     locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
+  //     addr,
+  //     shortAddr: this._utils.addrUtil(addr).addrShort,
+  //     balance: Number((stake / LAMPORTS_PER_SOL)),
+  //     lamportsBalance: stake + rentReserve,
+  //     state,
+  //     validator,
+  //     excessLamport,
+  //     startEpoch,
+  //     stakeAuth: parsedData.meta.authorized.staker,
+  //   }
 
 
-    return stakeAccountInfo
-  }
-  public async getOwnerNativeStake(walletAddress: string) {
-    try {
-      const validators: Validator[] = await this.getValidatorsList()
-      const stakeAccounts = await this.getStakeAccountsByOwner(walletAddress);
-      const extendStakeAccount = await stakeAccounts.map(async (acc) => {
-        return await this.extendStakeAccount(acc, validators)
-      })
-      const extendStakeAccountRes = await Promise.all(extendStakeAccount);
-      // this._stakeAccounts$.next(extendStakeAccountRes);
-      return extendStakeAccountRes
-    } catch (error) {
-      console.log(error);
-    }
-    return null
-  }
+  //   return stakeAccountInfo
+  // }
+  // public async getOwnerNativeStake(walletAddress: string):Promise<StakeAccount[]> {
+  //   try {
+  //     const validators: Validator[] = await this.getValidatorsList()
+  //     const stakeAccounts = await this.getStakeAccountsByOwner(walletAddress);
+  //     const extendStakeAccount = await stakeAccounts.map(async (acc) => {
+  //       return await this.extendStakeAccount(acc, validators)
+  //     })
+  //     const extendStakeAccountRes = await Promise.all(extendStakeAccount);
+  //     // this._stakeAccounts$.next(extendStakeAccountRes);
+  //     return extendStakeAccountRes
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   return null
+  // }
 
 
 

@@ -27,7 +27,7 @@ export class UtilService {
   }
   public serverlessAPI =  location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
-  private _systemExplorer = new BehaviorSubject<string>(this.localStore.getData('explorer') || 'https://solana.fm' as string);
+  private _systemExplorer = new BehaviorSubject<string>(this.localStore.getData('explorer') || 'https://solscan.io' as string);
   public explorer$ = this._systemExplorer.asObservable();
   public changeExplorer(name: string): void {
     this.localStore.saveData('explorer', name);

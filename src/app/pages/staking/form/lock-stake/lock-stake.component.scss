@@ -59,7 +59,7 @@
         --knob-box-shadow: 0px 0px 0px 2px var(--ion-color-primary);
         --pin-background: white;
         --pin-color: #121926;
-
+        padding-top: 8px;
         &::part(pin) {
             background: transparent;
             transform: translateY(36px);
