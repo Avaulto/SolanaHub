@@ -68,21 +68,21 @@ export class LiquidStakeService {
   public async stake(pool: StakePool, lamports: number, walletOwner: WalletExtended, validatorVoteAccount?: string) {
 
     const record = { message: 'liquid staking', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
+    const lamportsBN = new BN(lamports);
     if (pool.poolName.toLowerCase() === 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(walletOwner)
       }
-      return await this._marinadeStakeSOL(lamports,walletOwner, validatorVoteAccount, record)
+      return await this._marinadeStakeSOL(lamportsBN,walletOwner, validatorVoteAccount, record)
     } else {
-      return await this._stakePoolStakeSOL(new PublicKey(pool.poolPublicKey), walletOwner, lamports, validatorVoteAccount, record)
+      return await this._stakePoolStakeSOL(new PublicKey(pool.poolPublicKey), walletOwner, lamportsBN, validatorVoteAccount, record)
     }
   }
-  private async _marinadeStakeSOL(lamports: number, walletOwner: WalletExtended,  validatorVoteAccount: string, record) {
+  private async _marinadeStakeSOL(lamports: BN, walletOwner: WalletExtended,  validatorVoteAccount: string, record) {
     try {
-      console.log(this.marinadeSDK);
-      const lamportsBN = new BN(lamports);
+
       const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
-      const { transaction } = await this.marinadeSDK.deposit(lamportsBN, { directToValidatorVoteAddress });
+      const { transaction } = await this.marinadeSDK.deposit(lamports, { directToValidatorVoteAddress });
       
       return await this._txi.sendTx([transaction], walletOwner.publicKey, null, record)
     } catch (error) {
@@ -97,7 +97,6 @@ export class LiquidStakeService {
     validatorVoteAccount: string,
     record
   ) {
-    
       let ix = await depositSol(
         this._shs.connection,
         poolPublicKey,
