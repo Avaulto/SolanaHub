@@ -4,7 +4,8 @@
     connect wallet
  </ion-button>
 }@else {
-<div id="wallet">
+<div id="wallet" (click)="showConnectWalletActions($event)">
+  <div id="overlay"></div>
   <div id="wallet-profile" style="position: relative;">
     <ion-img 
     loading="lazy"

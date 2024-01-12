@@ -46,7 +46,7 @@
   #modal-controls {
     display: flex;
     justify-content: space-between;
-    position: fixed;
+    position: absolute;
     width: 100%;
     bottom: 0;
     height: 95px;
@@ -73,3 +73,32 @@
     }
   
   }
+
+  :host ::ng-deep merge-modal stake-position,
+  :host ::ng-deep split-modal stake-position,
+  :host ::ng-deep instant-unstake-modal stake-position,
+  :host ::ng-deep transfer-auth-modal stake-position {
+    margin-block-end: 16px;
+
+    .stake-info {
+        width: 100%;
+
+        ion-img,
+        ion-skeleton-text {
+            width: 36px !important;
+            height: 36px !important;
+        }
+
+        span {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+            align-items: center;
+        }
+    }
+
+
+    .stake-details {
+        display: none !important;
+    }
+}

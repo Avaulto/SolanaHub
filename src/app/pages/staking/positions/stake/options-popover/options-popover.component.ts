@@ -76,8 +76,8 @@ export class OptionsPopoverComponent implements OnInit {
       case 'transfer-auth-modal':
         config.imgUrl = 'assets/images/transfer-auth-icon.svg'
         config.title = 'transfer account authority'
-        config.desc = 'transfer your staking authority or withdraw authority to a new wallet'
-        config.btnText = 'unstake now'
+        config.desc = 'transfer your stake or withdraw authority to a new wallet'
+        config.btnText = 'transfer authorization'
         break;
       default:
         break;

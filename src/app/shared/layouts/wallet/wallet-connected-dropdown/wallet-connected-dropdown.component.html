@@ -1,11 +1,30 @@
-<ul id="wallet-connected-actions">
-<li class="sub" >
-   Copy address
-   </li> 
-   <li class="sub" (click)="showWalletAdapters()">
-     Change wallet
-   </li>
-   <li class="sub" (click)="onDisconnect();">
-      Disconnect
-   </li>
- </ul>
+<div id="wallet-connected-actions">
+  <div id="action-wrapper">
+
+
+  <ion-button expand="block" fill="clear">
+    <div class="div-left">
+      <ion-icon name="copy"/>
+      copy wallet address
+      </div>
+  </ion-button>
+  <ion-button expand="block" fill="clear">
+    <div class="div-left">
+      <ion-icon name="repeat"/>
+      change wallet 
+    </div>
+  </ion-button>
+  <ion-button expand="block" fill="clear">
+    <div class="div-left">
+      <ion-icon name="star"/>
+      loyalty league
+    </div>
+  </ion-button>
+</div>
+  <ion-button expand="block" fill="clear">
+    <div class="div-left">
+      <ion-icon name="log-out"/>
+      disconnect
+    </div>
+  </ion-button>
+ </div>

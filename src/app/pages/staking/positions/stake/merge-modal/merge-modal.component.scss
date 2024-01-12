@@ -89,44 +89,4 @@ ion-text {
     .stake-card {
         padding-inline-start: 42px;
     }
-
-    .stake-info {
-        width: 100%;
-
-        ion-img,
-        ion-skeleton-text {
-            width: 36px !important;
-            height: 36px !important;
-        }
-
-        span {
-            display: flex;
-            justify-content: space-between;
-            flex: 1;
-            align-items: center;
-        }
-    }
-
-
-    .stake-details {
-        display: none !important;
-    }
 }
-
-// test
-
-// ion-checkbox {
-//     width: 100%;
-//     height: 70px;
-//     position: relative;
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-// }
-// stake-position {
-//     display: block;
-//     margin-block-end: 12px;
-//     width: 100%;
-//     position: absolute;
-//     left: 0;
-// }

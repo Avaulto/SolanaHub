@@ -108,8 +108,7 @@ export class LiquidStakeService {
       );
       let ixs: any = [ix]
       if (validatorVoteAccount) {
-        console.log(validatorVoteAccount);
-        
+
         const stakeCLS = (validatorVoteAccount: string) => {
           let memo = JSON.stringify({
             type: "cls/validator_stake/lamports",

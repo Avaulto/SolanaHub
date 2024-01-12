@@ -4,14 +4,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
-import { WalletComponent } from './wallet/wallet.component';
-import { PortfolioService } from './services/portfolio.service';
-import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 
-import { WalletStore, provideWalletAdapter } from '@heavy-duty/wallet-adapter';
+import { PortfolioService } from './services/portfolio.service';
+
+import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { PriceHistoryService, UtilService } from './services';
-import { distinctUntilChanged } from 'rxjs';
+import {  UtilService } from './services';
 
 @Component({
   selector: 'app-root',
@@ -40,11 +38,7 @@ import { distinctUntilChanged } from 'rxjs';
 
 })
 export class AppComponent implements OnInit {
-  private readonly _walletStore = inject(WalletStore);
-  private _utilsService = inject(UtilService)
-  
   constructor(
-    private _portfolioService:PortfolioService
     ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
   }

@@ -36,8 +36,8 @@ export class TxInterceptorService {
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
       let transaction: Transaction = new Transaction(txArgs).add(...txParam);
-      const priorityFeeInst = this._addPriorityFee(this._utilService.priorityFee)
-      if (priorityFeeInst?.length > 0) transaction.add(...priorityFeeInst)
+      // const priorityFeeInst = this._addPriorityFee(this._utilService.priorityFee)
+      // if (priorityFeeInst?.length > 0) transaction.add(...priorityFeeInst)
       let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
       // let signedTx = await firstValueFrom(this._shs.getCurrentWallet().signTransaction(transaction)) as Transaction;
       if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)

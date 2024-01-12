@@ -1,0 +1,18 @@
+#alert {
+    padding: 16px;
+    color: var(--colors-text-text-tertiary-600, #4B5565);
+    font-family: Inter;
+    font-size: 13px;
+    border-radius: var(--radius-xl, 12px);
+    border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
+    background: var(--Colors-Gray-modern-50, #F8FAFC);
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    display: flex;
+    align-items: center;
+
+    ion-img {
+        width: 16px;
+        height: 16px;
+        margin-inline-end: 12px;
+    }
+}

@@ -152,7 +152,7 @@ export class SolanaHelpersService {
   public async getStakeAccountsByOwner(walletAddress: string): Promise<Array<{
     pubkey: PublicKey;
     account: AccountInfo<Buffer | ParsedAccountData | any>;
-  }> | any> {
+  }> > {
     try {
 
       // get stake account
@@ -174,9 +174,9 @@ export class SolanaHelpersService {
 
       return stakeAccounts;
     } catch (error) {
-      return new Error(error)
+       new Error(error)
     }
-    // return [];
+    return [];
   }
 
 

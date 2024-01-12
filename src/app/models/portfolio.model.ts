@@ -51,6 +51,8 @@ export interface StakeAccount {
   excessLamport: number
   startEpoch: string
   stakeAuth: string
+  withdrawAuth: string
+  inflationRewards?: any;
 }
 
 export interface TransactionHistory{

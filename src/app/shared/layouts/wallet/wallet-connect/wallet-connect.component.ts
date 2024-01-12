@@ -92,12 +92,17 @@ export class WalletConnectComponent implements OnInit {
     await popover.present();
   }
   public async showConnectWalletActions(e: Event) {
+    console.log(e);
+    
     const popover = await this.popoverController.create({
       component: WalletConnectedDropdownComponent,
       event: e,
       alignment: 'start',
-      side: 'top',
-      cssClass: 'wallet-connect-dropdown'
+      side: 'bottom',
+      cssClass: 'wallet-connect-dropdown',
+      showBackdrop: false,
+      mode: "md",
+      size:'cover'
     });
     await popover.present();
   }

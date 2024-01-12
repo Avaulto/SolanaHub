@@ -30,10 +30,10 @@ export class PortfolioService {
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if(wallet){
-        this._shs.connection.onAccountChange(wallet.publicKey, () =>{
-            console.log( 'init callback listen');
-            this.getPortfolioAssets(wallet.publicKey.toBase58())
-        })
+        // this._shs.connection.onAccountChange(wallet.publicKey, () =>{
+        //     console.log( 'init callback listen');
+        //     this.getPortfolioAssets(wallet.publicKey.toBase58())
+        // })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
     })

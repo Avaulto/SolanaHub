@@ -3,15 +3,15 @@ ion-menu {
   width: 14vw;
   ion-content {
     --background: var(--ion-item-background, var(--ion-background-color, #fff));
-    --padding-start: 8px;
-    --padding-end: 8px;
+    --padding-start: 16px;
+    --padding-end: 16px;
     --padding-top: 20px;
     --padding-bottom: 20px;
   }
 
-  ion-list {
-    padding-inline: 8px;
-  }
+  // ion-list {
+  //   padding-inline: 8px;
+  // }
 
   ion-list-header {
     color: var(--gray-modern-500, #697586);

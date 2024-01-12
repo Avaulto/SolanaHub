@@ -1,4 +1,4 @@
-<div class="ion-padding">
+<div style="position: relative;" class="ion-padding">
   <div id="modal-intro">
     <div>
 
@@ -19,13 +19,13 @@
     <merge-modal [stakeAccounts]="data.stakeAccounts" [targetStakeAccount]="data.stakeAccount" (onAccountsSelected)="emittedValue.set($event)" />
     }
     @case ("split-modal") {
-    <split-modal [stakeAccount]="data.stakeAccount" (onAmountSet)="emittedValue.set($event)" />
+    <split-modal [targetStakeAccount]="data.stakeAccount" (onAmountSet)="emittedValue.set($event)" />
     }
     @case ("instant-unstake-modal") {
-    <instant-unstake-modal />
+    <instant-unstake-modal  [targetStakeAccount]="data.stakeAccount" />
     }
     @case ("transfer-auth-modal") {
-    <transfer-auth-modal/>
+    <transfer-auth-modal [targetStakeAccount]="data.stakeAccount" (onAuthSet)="emittedValue.set($event)"/>
     }
   }
   <ng-container #containerBeforeTemplate></ng-container>

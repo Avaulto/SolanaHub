@@ -21,7 +21,7 @@ import { UtilService } from 'src/app/services';
   ]
 })
 export class SplitModalComponent implements OnInit{
-  @Input() stakeAccount: StakeAccount;
+  @Input() targetStakeAccount: StakeAccount;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
   public newStakeAccount = new Keypair();
@@ -36,7 +36,12 @@ export class SplitModalComponent implements OnInit{
     const amount = event.detail.value
   
     this.amount = amount;
-    this.onAmountSet.emit({amount: amount * LAMPORTS_PER_SOL, newStakeAccount: this.newStakeAccount})
+    let payload = null
+    if(this.amount > 0){
+       payload = {amount: amount * LAMPORTS_PER_SOL, newStakeAccount: this.newStakeAccount}
+    }
+    this.onAmountSet.emit(payload)
+
   }
   public calcAccountNewValue(balance, amount){
     return balance - amount

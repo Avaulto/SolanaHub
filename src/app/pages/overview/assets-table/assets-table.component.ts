@@ -11,6 +11,7 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
 import {tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder} from './table-options-helper'
+import { PriceHistoryService, UtilService } from 'src/app/services';
 
 @Component({
   selector: 'app-assets-table',
@@ -34,7 +35,8 @@ import {tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakin
 export class AssetsTableComponent implements OnInit {
   // token tps
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
-  @ViewChild('tokenOrValidatorTpl', { static: true }) tokenOrValidatorTpl: TemplateRef<any> | any;
+  @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
+  @ViewChild('validatorProfileTpl', { static: true }) validatorProfileTpl: TemplateRef<any> | any;
   @ViewChild('statusTpl', { static: true }) statusTpl: TemplateRef<any> | any;
   @ViewChild('redirectTpl', { static: true }) redirectTpl: TemplateRef<any> | any;
   @ViewChild('validatorBalanceTpl', { static: true }) validatorBalanceTpl: TemplateRef<any> | any;
@@ -47,11 +49,13 @@ export class AssetsTableComponent implements OnInit {
   // defi tpls
   @ViewChild('tokenPoolTpl', { static: true }) tokenPoolTpl: TemplateRef<any> | any;
   //@ts-ignore
-
+  public solPrice = this._phs.solPrice;
   tableMenuOptions: string[] = ['Tokens', 'NFTs', 'Staking', 'DeFi'];
 
 
   constructor(
+    private _utils: UtilService,
+    private _phs: PriceHistoryService,
     private _portfolioService: PortfolioService,
     private _modalCtrl: ModalController,
   ) {
@@ -72,33 +76,47 @@ export class AssetsTableComponent implements OnInit {
       return nftDummyPlaceholder
 
     }
-    if (tableType === 'staking') {
-      console.log(tableType);
-      return stakingDummyPlaceholder
-    }
+    // if (tableType === 'staking') {
+    //   console.log(tableType);
+    //   return stakingDummyPlaceholder
+    // }
+    
     if (tableType === 'defi') {
       
       return defiDummyPlaceholder
     }
+    console.log(this._portfolioService[tableType]());
     return  this._portfolioService[tableType]()
   })
 
   private _columnsOptions = {}
+  // public aggregateRow(data, type){
+  //   switch (type) {
+  //     case 'staking':
+  //       const staking = {
+  //         validatorImg: 
+  //       }
+  //       break;
+    
+  //     default:
+  //       break;
+  //   }
+  // }
   async ngOnInit() {
 
     this._columnsOptions = {
       tokens: [
-        { key: 'token', title: 'Token', cellTemplate: this.tokenOrValidatorTpl, width: '40%' },
+        { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '40%' },
         { key: 'amount', title: 'Amount', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value', width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
         { key: 'last-seven-days', title: 'Last 7 Days', width: '15%' }
       ],
       staking:  [
-        { key: 'validator', title: 'Validator', cellTemplate: this.tokenOrValidatorTpl, width: '40%' },
+        { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
         { key: 'apy', title: 'APY', width: '7%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl,width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'accumulatedRewards', title: 'Accumulated Rewards', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'status', title: 'Account Status',cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
         { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl}
       ],

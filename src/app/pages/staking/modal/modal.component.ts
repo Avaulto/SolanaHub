@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, effect, inject, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { StakeAccount, Validator } from 'src/app/models';
 import { IonButton, IonImg } from '@ionic/angular/standalone'
@@ -40,26 +40,31 @@ export class ModalComponent implements AfterViewInit {
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _nss: NativeStakeService
-  ) { }
+  ) {
+    effect(() => console.log(this.emittedValue()))
+  }
 
   ngAfterViewInit() {
 
   }
   async submit() {
+
     const wallet = this._shs.getCurrentWallet()
     switch (this.componentName) {
       case 'split-modal':
-        const stakeAccountPK = new PublicKey(this.data.stakeAccount.addr)
-        console.log(this.emittedValue());
 
-        await this._nss.splitStakeAccounts(wallet.publicKey, stakeAccountPK, this.emittedValue().newStakeAccount, this.emittedValue().amount)
+        await this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stakeAccount.addr), this.emittedValue().newStakeAccount, this.emittedValue().amount)
         break;
       case 'merge-modal':
-        console.log(this.emittedValue());
-        
-        const targetStakeAccount = new PublicKey(this.data.stakeAccount.addr)
-        const accountsToMerge = this.emittedValue().accountsToMerge.map((acc:StakeAccount) => new PublicKey(acc.addr))
-        await this._nss.mergeStakeAccounts(wallet.publicKey, targetStakeAccount, accountsToMerge);
+
+        const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: StakeAccount) => new PublicKey(acc.addr))
+        await this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stakeAccount.addr), accountsToMerge);
+        break;
+      case 'transfer-auth-modal':
+        const targetAddress = new PublicKey(this.emittedValue().targetAddress)
+        const authToTransfer = this.emittedValue().authorities;
+        await this._nss.transferStakeAccountAuth( new PublicKey(this.data.stakeAccount.addr),wallet.publicKey, targetAddress, authToTransfer);
+
         break;
       default:
         break;

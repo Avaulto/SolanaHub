@@ -1,19 +1,29 @@
-
 #wallet-connected-actions {
-    background-color: var(--deep-background);
-    border: 1px solid var(--ion-color-primary);
-    border-radius: 4px;
-    padding: 12px;
-    li {
-        height: 40px;
-        color: white;
-        align-items: center;
+    border-radius: 0px 0px 12px 12px;
+    border: 1px solid #E3E8EF;
+    background: white;
+    padding-block: 4px;
+}
+#action-wrapper {
+    margin-block-start: 2px;
+    padding-block-end: 10px;
+    border-bottom: 1px solid #E3E8EF;
+}
+ion-button {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    // width: 100%;
+    margin-block-end: 1px;
+    --color: #364152;
+    --box-shadow: 0 0 0;
+    text-transform: capitalize;
+
+    div {
+        width: 100%;
         display: flex;
-        cursor: pointer;
-        border-bottom: 1px solid rgb(132 141 164 / 20%);
-        text-transform: capitalize;
-        &:hover {
-            font-weight: 600;
-          }
+        ion-icon{
+            margin-inline-end: 4px;
+        }
     }
 }

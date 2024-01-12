@@ -40,7 +40,6 @@
     "@solana/wallet-adapter-wallets": "0.19.24",
     "@solana/web3.js": "1.87.6",
     "@sonarwatch/portfolio-core": "^0.8.115",
-    "@unstake-it/sol-ag": "^0.6.3",
     "@vercel/analytics": "^1.1.1",
     "chart.js": "^4.4.0",
     "ionicons": "^7.2.1",

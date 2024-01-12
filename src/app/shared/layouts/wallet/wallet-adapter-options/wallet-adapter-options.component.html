@@ -1,6 +1,7 @@
-<div id="wallet-adapters-wrapper">
+<div id="wallet-adapters-wrapper" class="ion-padding">
   <div id="wallet-adapter-opt-header">
-    <div class="ion-text-center heading-3">Choose wallet to connect</div>
+    <ion-label>Connect wallet</ion-label>
+    <p>Choose wallet to connect</p>
     <ion-buttons slot="end">
       <ion-button (click)="popoverController.dismiss()">
         <!-- <ion-icon style="font-size: 30px;" name="close-circle-outline"></ion-icon> -->
@@ -8,15 +9,16 @@
     </ion-buttons>
   </div>
   
-<ul id="wallet-connected-actions">
-  <li (click)="onSelectWallet(opt.adapter.name)" *ngFor="let opt of walletsOptions$ | async">
+<div id="wallet-connected-actions">
+  <div class="wallet" (click)="onSelectWallet(opt.adapter.name)" *ngFor="let opt of walletsOptions$ | async">
 
     <ion-avatar slot="start">
       <ion-img [src]="opt.adapter.icon"></ion-img>
     </ion-avatar>
-
+    <ion-text>
       {{opt.adapter?.name}}
+    </ion-text>
 
-  </li>
-</ul>
+  </div>
+</div>
 </div>

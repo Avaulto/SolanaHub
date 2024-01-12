@@ -146,13 +146,19 @@ ion-spinner{
 }}
 
 
+.wallet-adapter-options{
+    --width: 400px;
+    --max-width: 100%;
+    --border-radius: 12px;
+}
 
 .modal-style{
-    --min-width: 540px;
+    --width: 540px;
     // --min-height: 700px;
     // --max-width: 100%;
     // --border-radius: 12px;
-    --width: auto;
+    // --width: auto;
+    --border-radius: 12px;
     --height: auto;
     --max-width: 90%;
     --max-height: 90%;
@@ -163,7 +169,10 @@ ion-spinner{
       contain: initial;
     }
 }
-
+.wallet-connect-dropdown{
+    --width: 238px;
+    --box-shadow: 0 0 0;
+}
 .stake-positions-actions-popover{
     --width: 260px;
     --box-shadow: 0 0 0;

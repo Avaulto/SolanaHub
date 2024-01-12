@@ -1,8 +1,6 @@
 <app-mft [tableId]="'assets'" [label]="'your assets'"
   [desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions"
-  (onTabSelected)="selectedTab.set($event)" 
-  (onRowClicked)="eventEmitted($event)"
-  [tableColumns]="columns"
+  (onTabSelected)="selectedTab.set($event)" (onRowClicked)="eventEmitted($event)" [tableColumns]="columns"
   [tableData]="tableData">
 </app-mft>
 
@@ -49,7 +47,7 @@
   <ion-chip>{{row.offers}}</ion-chip>
 </ng-template>
 <!-- tokens table templates -->
-<ng-template #tokenOrValidatorTpl let-row let-rowIndex="rowIndex" let-column="column">
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
       <ion-img [src]="row.imgUrl" alt="image" />
@@ -64,12 +62,21 @@
     </div>
   </div>
 </ng-template>
+<ng-template #validatorProfileTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item">
+    <div class="item-img-wrapper">
+      <ion-img [src]="row.validator.image" alt="image" />
+    </div>
+    <div class="item-bold">{{row.validator.name}}</div>
+  </div>
+</ng-template>
+
 <ng-template #validatorBalanceTpl let-row let-rowIndex="rowIndex" let-column="column">
 
-    <div class="item-balance">
-      <div class="item-bold">{{row.balance.sol | number}} SOL</div>
-      <div class="item-light">{{row.balance.usd | currency}}</div>
-    </div>
+  <div class="item-balance">
+    <div class="item-bold">{{row.balance | number}} SOL</div>
+    <div class="item-light">{{row.balance * solPrice() | currency}}</div>
+  </div>
 
 </ng-template>
 <ng-template #redirectTpl let-row let-rowIndex="rowIndex" let-column="column">
@@ -79,10 +86,10 @@
 </ng-template>
 <ng-template #statusTpl let-row let-rowIndex="rowIndex" let-column="column">
   <ion-chip class="ion-text-capitalize" [ngClass]="{
-    'green': row.status.toLowerCase() === 'active',
-    'primary': row.status.toLowerCase() === 'deactive',
-    'blue': row.status.toLowerCase() === 'activated',
-}">{{row.status}}</ion-chip>
+    'green': row.state.toLowerCase() === 'active',
+    'primary': row.state.toLowerCase() === 'deactive',
+    'blue': row.state.toLowerCase() === 'activated',
+}">{{row.state}}</ion-chip>
 </ng-template>
 
 
