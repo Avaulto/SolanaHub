@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { RouterLink } from '@angular/router';
-
+import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 
 
 @NgModule({
@@ -22,6 +22,7 @@ import { RouterLink } from '@angular/router';
     WalletNotConnectedStateComponent,
   ],
   imports: [
+    CopyTextDirective,
     CommonModule,
     RouterLink,
     IonicModule,

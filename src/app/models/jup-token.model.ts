@@ -29,7 +29,7 @@ export interface JupRoute{
     inputMint:            string;
     inAmount:             string;
     outputMint:           string;
-    outAmount:            number;
+    outAmount:            string;
     otherAmountThreshold: string;
     swapMode:             string;
     slippageBps:          number;

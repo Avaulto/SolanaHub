@@ -1,33 +1,71 @@
-<form [formGroup]="tokenSwapForm" class="token-exchange">
-  <div class="token-input">
+<form [formGroup]="tokenSwapForm" class=" ion-margin-bottom">
+  <swap-setting></swap-setting>
+  <div class="token-exchange">
 
-    <ion-button fill="clear" class="token-select" (click)="openTokensModal('in')">
-      <ion-img [src]="tokenSwapForm.controls['inputToken']?.value.logoURI" />
-      {{tokenSwapForm.controls['inputToken']?.value.symbol}}
-      <ion-icon name="chevron-down-outline" />
-    </ion-button>
-    <!-- Other options -->
 
-    <ion-input type="number" [debounce]="800" formControlName="inputAmount" placeholder="0.00"
-      class="currency-amount" />
-  </div>
-  <div class="token-input">
+    <input-label label="you pay" [assetSymbol]="tokenSwapForm.controls['inputToken'].value.symbol" />
+    <div class="token-input">
+      <ion-button fill="clear" class="token-select" (click)="openTokensModal('in')">
+        <div>
+          <ion-img [src]="tokenSwapForm.controls['inputToken']?.value.logoURI" />
+        </div>
+        {{tokenSwapForm.controls['inputToken']?.value.symbol}}
+        <div>
+          <ion-icon name="chevron-down-outline" />
+        </div>
+      </ion-button>
+      <!-- Other options -->
 
-    <ion-button style="border: 1px solid #EFF0F0;" fill="clear" class="token-select" (click)="openTokensModal('out')">
-      <ion-img [src]="tokenSwapForm.controls['outputToken']?.value.logoURI" />
-      {{tokenSwapForm.controls['outputToken']?.value.symbol}}
-      <ion-icon name="chevron-down-outline" />
-    </ion-button>
-    <ion-input style="background-color: white;"
-      [value]="bestRoute()?.outAmount" readonly
-      class="currency-amount" />
-    @if(waitForBestRoute()){
-    <ion-skeleton-text animated />
+      <ion-input [maskito]="options" type="text" [debounce]="800" formControlName="inputAmount" placeholder="0.00"
+        class="currency-amount" />
+
+      <small>{{1 * tokenSwapForm.controls['inputAmount'].value.replaceAll(",", "") | currency}}</small>
+    </div>
+
+    <div id="flip-tokens-wrapper">
+      <ion-button (click)="flipTokens()" id="flip-tokens-btn" shape="round" size="small" fill="clear">
+        <ion-icon name="swap-vertical"></ion-icon>
+      </ion-button>
+    </div>
+    <input-label label="you receive" [showBtns]="false"
+      [assetSymbol]="tokenSwapForm.controls['outputToken'].value.symbol" />
+    <div class="token-input ion-margin-bottom">
+
+      <ion-button fill="clear" class="token-select" (click)="openTokensModal('out')">
+        <div>
+          <ion-img [src]="tokenSwapForm.controls['outputToken']?.value.logoURI" />
+        </div>
+        {{tokenSwapForm.controls['outputToken']?.value.symbol}}
+        <div>
+          <ion-icon name="chevron-down-outline" />
+        </div>
+      </ion-button>
+      <ion-input style="background-color: #EEF2F6;" [value]="bestRoute()?.outAmount | number" readonly
+        class="currency-amount" />
+        <small>{{1 * tokenSwapForm.controls['inputAmount'].value | currency}}</small>
+      @if(waitForBestRoute()){
+      <ion-skeleton-text animated />
+      }
+    </div>
+    @if(bestRoute()){
+
+      <div id="route-path">
+        <ion-button size="small">
+          {{bestRoute()?.routePlan?.length}} 
+          <ion-img src="assets/images/route-icon.svg"/>
+        </ion-button>
+        <span style="margin-inline-end: 3px;color: rgba(0, 0, 0, 0.25)">using </span>
+        @for (lp of bestRoute().routePlan; track $index) {
+          <span> {{lp.swapInfo.label}}  @if ($index +1 < bestRoute().routePlan.length) {,}</span>
+          
+        }
+      </div>
     }
+    <ion-button id="swap-button" (click)="submitSwap()" [disabled]="tokenSwapForm.invalid || !bestRoute()">
+      Swap
+    </ion-button>
   </div>
-  <ion-button id="swap-button" (click)="submitSwap()" [disabled]="tokenSwapForm.invalid || !bestRoute()">
-    Swap
-  </ion-button>
-
-  {{bestRoute()?.slippageBps}}
 </form>
+@if(bestRoute()){
+<route-calc [routeInfo]="bestRoute()" />
+}

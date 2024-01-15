@@ -1,0 +1,18 @@
+<div id="summary">Swap Summary</div>
+<div id="route-wrapper">
+  <div class="route-calc">
+    <div>Price Impact</div>
+    <span [ngStyle]="{
+      'color': routeInfo.priceImpactPct < '0.01' ? 'var(--ion-color-success)' : 'red'
+      }">
+      ~ {{routeInfo.priceImpactPct | percent:'1.0-4'}}</span>
+  </div>
+  <div class="route-calc">
+    <div>Minimum Received</div>
+    <span>{{routeInfo.otherAmountThreshold | number: '1.4'}}</span>
+  </div>
+  <div class="route-calc">
+    <div>Solana transaction fee</div>
+    <span>0.000005 SOL</span>
+  </div>
+</div>

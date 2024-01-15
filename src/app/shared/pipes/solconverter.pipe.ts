@@ -27,7 +27,7 @@ constructor(private _phs:PriceHistoryService){
 }
   transform(value) {
     const res  = this._phs.getTokenDataByAddress('solana');
-    console.log(res);
+
     
     return (value / 100).toFixedNoRounding(3) + '◎';
   }

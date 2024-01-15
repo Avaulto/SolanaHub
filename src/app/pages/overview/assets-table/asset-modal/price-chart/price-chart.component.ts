@@ -20,12 +20,10 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
     chartData: any;
     public priceDataService = inject(PriceHistoryService)
     async ngOnInit() {
-        console.log(this.token);
 
         const tokenChartData = await this.priceDataService.getCoinChartHistory(this.token.address, 'USD', 7)
         this.createGroupCategory(tokenChartData.chartData)
-        console.log(tokenChartData);
-        
+
         this.onPriceChangePercentage.emit(tokenChartData.market_data.price_change_percentage_24h)
     }
     ngAfterViewInit() {
@@ -35,7 +33,7 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
 
         this.chartData ? this.chartData.destroy() : null
         const ctx = this.breakdownChart.nativeElement
-        console.log(ctx);
+
 
         var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
         gradient.addColorStop(0, 'rgba(203,98,175,0.2)');
@@ -65,8 +63,7 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
                         ticks: {
                             callback: (value, index, values) => {
                                 if(Number(value) < 0.01){
-                                    console.log('here');
-                                    
+                               
                                     return this._utilService.decimalPipe.transform(value, '1.5' );
                                 }else{
                                     return this._utilService.decimalPipe.transform(value, '1.2' );

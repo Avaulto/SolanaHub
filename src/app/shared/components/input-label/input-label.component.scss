@@ -1,0 +1,69 @@
+:host{
+    display: block;
+    width: 100%;
+}
+
+.light-title {
+    text-transform: capitalize;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    margin-block-end: 8px;
+    /* 138.462% */
+}
+
+#stake-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: 8px;
+    .light-title {
+        margin-block-end: 0;
+    }
+
+    #size-btns {
+        display: flex;
+    }
+    #wallet-info {
+        text-align: right;
+        color: #697586;
+        text-align: right;
+        font-size: 12px;
+        line-height: 14px;
+        display: flex;
+        align-items: center;
+        ion-skeleton-text {
+            width: 50px;
+        }
+        ion-img {
+            height: 12px;
+            margin-inline-end: 4px;
+            width: 12px;
+        }
+
+        ion-button {
+         
+            color: var(--Component-colors-Utility-Gray-utility-gray-500, #697586);
+            text-align: center;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 14px;
+            letter-spacing: 0.2px;
+            // width: 28px;
+            // height: 18px;
+            --padding-start: 6px;
+            --padding-end: 6px;
+            --padding-top: 0px;
+            border: 1px solid #CDD5DF;
+            border-radius: 6px;
+            height: 18px;
+            margin: 0;
+        }
+
+        .space {
+            margin-inline: 6px 2px;
+        }
+    }
+
+}

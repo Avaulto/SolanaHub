@@ -85,7 +85,7 @@ export class AssetsTableComponent implements OnInit {
       
       return defiDummyPlaceholder
     }
-    console.log(this._portfolioService[tableType]());
+
     return  this._portfolioService[tableType]()
   })
 

@@ -32,6 +32,7 @@ import { LockStakeComponent } from './lock-stake/lock-stake.component';
 import { SelectStakePoolComponent } from './select-stake-pool/select-stake-pool.component';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { CustomValidatorComponent } from './custom-validator/custom-validator.component';
+import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 @Component({
   selector: 'stake-form',
   templateUrl: './form.component.html',
@@ -48,7 +49,8 @@ import { CustomValidatorComponent } from './custom-validator/custom-validator.co
     DecimalPipe,
     CurrencyPipe,
     ReactiveFormsModule,
-    AsyncPipe
+    AsyncPipe,
+    InputLabelComponent
   ]
 })
 export class FormComponent  implements OnInit {
@@ -79,21 +81,20 @@ export class FormComponent  implements OnInit {
       stakingPath: ['native',Validators.required],
       lockupDuration: [0],
     })
-    console.log('loaded');
-    
+
     this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
     this._lss.getStakePoolList().then(pl => this.stakePools = pl);
   }
 
 
-  setStakeSize(size: 'half' | 'max'){
-    let {balance} = this._shs.getCurrentWallet()
-    if(size === 'half'){
-      balance = balance / 2
-    }
-    balance = Number(this._util.decimalPipe.transform(balance, '1.4'))
-    this.stakeForm.controls['amount'].setValue(balance)
+  setStakeSize(amount){
+    // let {balance} = this._shs.getCurrentWallet()
+    // if(size === 'half'){
+    //   balance = balance / 2
+    // }
+    amount = Number(this._util.decimalPipe.transform(amount- 0.005, '1.4')) 
+    this.stakeForm.controls['amount'].setValue(amount)
   }
 
 
@@ -133,7 +134,7 @@ export class FormComponent  implements OnInit {
 
       const stake = await this._nss.stake(lamportsToDelegate,walletOwner,validatorVoteIdentity,lockupDuration);
       // const sendTx = await this._tis.sendTx(txIns.stakeIx, walletOwner,[txIns.stakeAcc])
-      console.log(stake);
+
       
     } else if (stakingPath === 'liquid'){
       this._lss.stake(pool,lamportsToDelegate,walletOwner,validatorVoteIdentity)

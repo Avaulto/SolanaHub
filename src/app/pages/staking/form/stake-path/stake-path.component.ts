@@ -32,7 +32,6 @@ export class StakePathComponent  implements OnInit {
 
   }
   selectPath(ev){
-    console.log('here', ev);
     this.onSelectPath.emit(ev.detail.value)
   }
 }

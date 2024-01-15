@@ -20,8 +20,7 @@ export class WalletConnectComponent implements OnInit {
   showSkeleton = true
 
   loadImg(ev){
-    console.log('heherhehehreh', ev);
-    
+
   }
 
 
@@ -48,7 +47,7 @@ export class WalletConnectComponent implements OnInit {
     combineLatestWith(this._loyaltyLeagueService.llb$),
     map(([wallet, lllb]) => {
         const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-        console.log(loyalMember);
+      
         if(loyalMember){
           this.loyaltyLeagueMemberScore.set(loyalMember.loyaltyPoints)
         }else{
@@ -77,6 +76,7 @@ export class WalletConnectComponent implements OnInit {
     this._utilsService.isNotUndefined,
     distinctUntilChanged(),
     map(  publicKey => {
+
       return this._utilsService.addrUtil(publicKey.toBase58()).addrShort
     })
   )
@@ -92,10 +92,10 @@ export class WalletConnectComponent implements OnInit {
     await popover.present();
   }
   public async showConnectWalletActions(e: Event) {
-    console.log(e);
-    
+    const walletAddress = this._shs.getCurrentWallet().publicKey.toBase58()
     const popover = await this.popoverController.create({
       component: WalletConnectedDropdownComponent,
+      componentProps:{walletAddress},
       event: e,
       alignment: 'start',
       side: 'bottom',

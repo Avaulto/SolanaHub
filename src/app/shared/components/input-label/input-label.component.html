@@ -1,0 +1,25 @@
+<div id="stake-head">
+  <div class="light-title">{{label}}</div>
+  @if (walletTokens(); as wallet) {
+
+    <div id="wallet-info">
+      <div>
+        <ion-img src="assets/images/wallet-icon.svg" />
+      </div>
+      @if(selectedAsset()){
+        <span>{{selectedAsset()?.amount || 0 | number: '1.4'}} {{selectedAsset()?.symbol}}</span>
+
+      }@else{
+          <ion-skeleton-text [animated]="true" />
+      }
+      @if(showBtns){
+
+        <div id="size-btns">
+          <ion-button size="small" class="space" fill="clear" (click)="setSize('half')">half</ion-button>
+          <ion-button size="small" fill="clear" (click)="setSize('max')">max</ion-button>
+        </div>
+      }
+    </div>
+  }
+
+</div>

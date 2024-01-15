@@ -42,10 +42,7 @@ export class SelectStakePoolComponent implements AfterViewInit {
     this.onSelectPool.emit(ev.detail.value)
     
   }
-  showToolTip(ev){
-    console.log(ev);
-    
-  }
+
   @Input() stakePools: StakePool[] = []
 
   ngAfterViewInit() {
@@ -60,7 +57,7 @@ export class SelectStakePoolComponent implements AfterViewInit {
    isOpen = false
    ev;
    async presentPopover(ev, visible) {
-    console.log(ev);
+
     this.ev = ev
      this.isOpen= visible
     //  const popover = await this.popoverController.create({

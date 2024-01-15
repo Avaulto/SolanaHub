@@ -56,7 +56,7 @@ export class MftComponent implements OnInit {
     // this.configuration.isLoading = true;
   }
   previousPage() {
-    console.log('trigger');
+  
     
     const res = this.table.apiEvent({
       type: API.getPaginationCurrentPage,
@@ -74,8 +74,7 @@ export class MftComponent implements OnInit {
     const currentPage = this.table.apiEvent({
       type: API.getPaginationCurrentPage,
     });
-    console.log( lastPage, this.tableColumns());
-    
+
     if (lastPage > currentPage) {
       this.table.apiEvent({
         type: API.setPaginationCurrentPage,

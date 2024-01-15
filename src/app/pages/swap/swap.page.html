@@ -8,25 +8,33 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-grid>
-    <ion-row class="ion-justify-content-center">
+    <header>
+
+      <ion-row>
+        <div id="title">Swap</div>
+        <div id="intro">
+          Swap your asset in fast lighting, zero fees, high liquidly environment.<br/> powered by Juptier
+        </div>
+        
+      </ion-row>
+    </header>
+    
+    <ion-row style="padding-inline: 5vw;transform: translateY(-70px);" class="ion-justify-content-center">
       <swap-form/>
     </ion-row>
 
-
-    <ion-row>
-      <ion-col size="12" class="data-set">
-      
-        <app-mft 
-        label=" Swap History"
-        desc="Obtain a comprehensive and detailed overview of your latest trades"
-        [tableId]="'swap'"
-        [tableRows]="10" 
-        [tableColumns]="columns" 
-        [tableData]="tradeHistoryTable" />
-
- 
-      </ion-col>
-    </ion-row>
+  
+      <ion-row style="padding-inline: 5vw;">
+        <ion-col size="12" class="data-set">
+          
+          <app-transactions-history-table
+          [tableData]="tradeHistoryTable"
+          />
+          
+          
+        </ion-col>
+      </ion-row>
+    
   </ion-grid>
 
 </ion-content>

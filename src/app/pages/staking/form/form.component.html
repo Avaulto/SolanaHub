@@ -3,22 +3,7 @@
     <div id="title">stake your SOL</div>
     <div id="desc">choose between native and liquid staking a</div>
   </div>
-
-  <div id="stake-head">
-    <div class="light-title">stake amount</div>
-    @if ((wallet$ | async); as wallet) {
-
-      <div id="wallet-info">
-        <ion-img src="assets/images/wallet-icon.svg" />
-        <span>{{wallet.balance | number: '1.4'}}</span>
-        <div id="size-btns">
-          <ion-button size="small" class="space" fill="clear" (click)="setStakeSize('half')">half</ion-button>
-          <ion-button size="small" fill="clear" (click)="setStakeSize('max')">max</ion-button>
-        </div>
-      </div>
-    }
-
-  </div>
+  <input-label label="stake amount" (onSetSize)="setStakeSize($event)" assetSymbol="SOL" />
   <form [formGroup]="stakeForm">
     <div id="input-control" class="ion-margin-bottom">
       <span>

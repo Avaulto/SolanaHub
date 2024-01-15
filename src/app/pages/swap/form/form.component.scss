@@ -1,3 +1,8 @@
+:host {
+    max-width: 100%;
+}
+
+
 // SCSS
 .token-exchange {
     display: flex;
@@ -5,7 +10,7 @@
     align-items: center;
     width: 485px;
     max-width: 100%;
-    padding: 8px;
+    padding: 16px;
     border-radius: 16px;
     background: #FFF;
 
@@ -14,44 +19,58 @@
         align-items: center;
         width: 100%;
         position: relative;
-        margin-block-end: 12px;
+
 
         ion-input {
-            font-size: 28px;
+            box-shadow: 0 0 0 0;
+            font-size: 24px;
+            color: #000;
             display: flex;
             align-items: center;
             width: 100%;
             position: relative;
             z-index: 1;
             border-radius: 12px;
-            background: #EFF0F0;
+            // background: #EFF0F0;
             text-align: right;
-            min-height: 84px;
+            min-height: 74px;
             --padding-end: 12px;
             border: 1px solid #EFF0F0;
+
         }
 
         ion-img {
             margin-inline: 12px;
             border-radius: 50%;
             overflow: hidden;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
         }
 
         ion-button {
+            --background: white;
+            width: 120px;
             margin-inline-start: 20px;
             position: absolute;
             z-index: 2;
-            border-radius: 12px;
-            background: #FFF;
+            --box-shadow: 0 0 0;
             --padding-start: 0;
             --padding-end: 0;
+            --border-width: 1px;
+            --border-style: solid;
+            --border-color: #EFF0F0;
+            min-height: 40px;
+            --padding-bottom: 0;
+            --padding-top: 0;
+            font-weight: 600;
+            --color: #000;
         }
 
         ion-icon {
+            color: #bfbfbf;
             margin-inline: 12px;
         }
+
         ion-skeleton-text {
             position: absolute;
             z-index: 2;
@@ -60,11 +79,99 @@
             height: 28px;
             border-radius: 8px;
         }
+
+        small {
+            position: absolute;
+            z-index: 2;
+            right: 14px;
+            bottom: 10px;
+            color: rgba(0, 0, 0, 0.35);
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 14px;
+            letter-spacing: 0.12px;
+        }
+    }
+
+    #flip-tokens-wrapper {
+        position: relative;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &::after {
+            content: "";
+            height: 1px;
+            background: #E3E8EF;
+            width: 100%;
+            position: absolute;
+            z-index: 0;
+        }
+    }
+
+    #flip-tokens-btn {
+        margin-block: 8px;
+        z-index: 2;
+        --box-shadow: 0px 0px 0px 0px rgba(16, 24, 40, 0.05);
+        width: 34px;
+        height: 34px;
+        --background: white;
+        --border-radius: 200px;
+        --border-style: solid;
+        --border-width: 1px;
+        --border-color: #CDD5DF;
+        --padding-bottom: 0;
+        --padding-end: 0;
+        --padding-top: 0;
+        --padding-start: 0;
+        --background-hover: transparent;
+
+        ion-icon {
+            width: 16px;
+            height: 16px;
+            color: #9aa4b2;
+        }
+
+        &:hover {
+
+            --border-color: var(--ion-color-primary);
+            ;
+
+            ion-icon {
+                color: var(--ion-color-primary);
+            }
+        }
+    }
+
+    #route-path {
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 21px;
+        text-align: left;
+        margin-block-end: 18px;
+        width: 100%;
+        align-items: center;
+        display: flex;
+        text-transform: capitalize;
+        /* 190.909% */
+        ion-button {
+            margin-inline-end: 4px;
+            --border-radius: 100px;
+            --background: #EFF0F0;
+            --color: rgba(0, 0, 0, 0.35);
+            font-family: Inter;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%;
+        }
     }
 
     #swap-button {
         width: 100%;
-        height: 60px;
+        height: 48px;
         font-size: 18px;
         font-weight: 600;
         text-transform: capitalize;

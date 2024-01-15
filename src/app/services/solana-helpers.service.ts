@@ -64,7 +64,7 @@ export class SolanaHelpersService {
         // this._portfolioService.getPortfolioAssets(wallet.publicKey.toBase58())
         wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
       }
-      console.log(wallet);
+
       return wallet;
     }),
     shareReplay(1),

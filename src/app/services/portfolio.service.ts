@@ -15,11 +15,11 @@ import { NativeStakeService } from './native-stake.service';
 export class PortfolioService {
   // todo - refactor to signal
   public walletAssets = single();
-  public tokens = signal<Token[]>([]);
-  public nfts: WritableSignal<NFT[]> = signal([]);
+  public tokens = signal<Token[]>(null);
+  public nfts: WritableSignal<NFT[]> = signal(null);
   public staking: WritableSignal<StakeAccount[]> = signal(null);
-  public defi: WritableSignal<LiquidityProviding[]> = signal([]);
-  public walletHistory: WritableSignal<TransactionHistory[]> = signal([]);
+  public defi: WritableSignal<LiquidityProviding[]> = signal(null);
+  public walletHistory: WritableSignal<TransactionHistory[]> = signal(null);
   readonly restAPI = this._utils.serverlessAPI
   constructor(
     private _utils: UtilService,
@@ -50,13 +50,14 @@ export class PortfolioService {
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens);
       this._portfolioStaking(walletAddress)
-      console.log(editedData);
+
       
       const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
       // console.log(extendNftData);
       this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
+      this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
     }
@@ -125,15 +126,20 @@ export class PortfolioService {
   public async _portfolioStaking(walletAddress:string){
    const stakeAccounts = await this._nss.getOwnerNativeStake(walletAddress);
    this.staking.set(stakeAccounts)
-   console.log(stakeAccounts);
-   
   }
 
-  public filteredTxHistory = (filterByAddress: string, filterByAction?:string) =>{
-    console.log(this.walletHistory());
+  public filteredTxHistory = (filterByAddress?: string, filterByAction?:string) =>{
     const filterResults = this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress) || tx.mainAction === filterByAction)
     console.log(filterResults);
      
      return filterResults
+  }
+
+  public clearWallet(){
+    this.tokens.set(null)
+    this.nfts.set(null)
+    this.defi.set(null)
+    this.staking.set(null)
+    this.walletHistory.set(null)
   }
 }

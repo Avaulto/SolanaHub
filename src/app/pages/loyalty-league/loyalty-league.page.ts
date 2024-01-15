@@ -50,7 +50,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
   ) {
     addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline });
 
-    effect(() => console.log(this.loyalMember()))
+    // effect(() => console.log(this.loyalMember()))
   }
   public prizePool$: BehaviorSubject<PrizePool> = new BehaviorSubject(null as PrizePool)
 
@@ -58,11 +58,9 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),
     this._utilService.isNotNullOrUndefined,
     map(([wallet, lllb, prizePool]) => {
-      console.log(wallet,);
 
 
       const findMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-      console.log('find member', findMember);
       if(findMember){
         //@ts-ignore
         findMember.weeklyAirdrop = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)

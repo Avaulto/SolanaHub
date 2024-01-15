@@ -2,26 +2,26 @@
   <div id="action-wrapper">
 
 
-  <ion-button expand="block" fill="clear">
+  <ion-button expand="block" appCopyText [copyText]="walletAddress"  fill="clear">
     <div class="div-left">
       <ion-icon name="copy"/>
       copy wallet address
       </div>
   </ion-button>
-  <ion-button expand="block" fill="clear">
+  <ion-button expand="block" (click)="showWalletAdapters()" fill="clear">
     <div class="div-left">
       <ion-icon name="repeat"/>
       change wallet 
     </div>
   </ion-button>
-  <ion-button expand="block" fill="clear">
+  <ion-button expand="block" routerLink="/loyalty-league" (click)="popoverController.dismiss()" fill="clear">
     <div class="div-left">
       <ion-icon name="star"/>
       loyalty league
     </div>
   </ion-button>
 </div>
-  <ion-button expand="block" fill="clear">
+  <ion-button expand="block" (click)="disconnectWallet()" fill="clear">
     <div class="div-left">
       <ion-icon name="log-out"/>
       disconnect
