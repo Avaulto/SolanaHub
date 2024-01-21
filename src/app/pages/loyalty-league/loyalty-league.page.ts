@@ -105,15 +105,15 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
   public regularTemplate() {
     return [
-      { key: 'rank', width: '5%', title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'rank',  title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'walletOwner', title: 'Wallet address', cellTemplate: this.addressTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'nativeStake', width: '10%', title: 'Native Stake', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'liquidStake', width: '15%', title: 'Liquid Stake', cellTemplate: this.LSTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'dao', width: '15%', title: 'DAO votes', cellTemplate: this.daoTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'nativeStake',title: 'Native Stake', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'liquidStake',  title: 'Liquid Stake', cellTemplate: this.LSTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'dao', title: 'DAO votes', cellTemplate: this.daoTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'referrals', title: 'Referrals', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'hubDomainHolder', title: 'HUB Domain Holder', cellTemplate: this.hubDomainHolderTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'totalPoints', title: 'Total Points', width: '10%', cssClass: { name: 'bold-text', includeHeader: true } },
-      { key: 'weeklyAirdrop', title: 'Airdrop', width: '10%', cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'totalPoints', title: 'Total Points',  cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'weeklyAirdrop', title: 'Airdrop',  cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
     ]
   }
   public copyAddress(address: string) {

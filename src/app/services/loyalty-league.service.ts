@@ -8,7 +8,7 @@ import { LoyaltyLeaderBoard, LoyaltyScore, NextAirdrop, PrizePool } from '../mod
   providedIn: 'root'
 })
 export class LoyaltyLeagueService {
-  public _loyaltyLeagueLeaderBoard$ = new BehaviorSubject(null as LoyaltyLeaderBoard);
+  private _loyaltyLeagueLeaderBoard$ = new BehaviorSubject(null as LoyaltyLeaderBoard);
   public llb$ = this._loyaltyLeagueLeaderBoard$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
   protected api = this._utilService.serverlessAPI + '/api/loyalty-points'
   constructor(

@@ -49,6 +49,7 @@ export class MftComponent implements OnInit {
     showDetailsArrow: true,
     paginationRangeEnabled: false,
     paginationEnabled: true,
+    // fixedColumnWidth: true
     // horizontalScroll: true
   };
   ngOnInit(): void {

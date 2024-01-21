@@ -23,9 +23,16 @@
     
     </div>
   
-    <div class="gap data-set stat">
-      <div class="key ion-text-capitalize">Total Points</div>
+    <div class="gap data-set stat" style="position: relative;">
+      <div class="key ion-text-capitalize">Total Points </div>
       @if(totalPts){
+        <div id="last-snapshot">
+          <ion-icon id="tooltip" [tooltip]="toolTipTpl" class="tooltip-icon" name="information-circle-outline"></ion-icon>
+          <!-- <ion-img id="tooltip" [tooltip]="toolTipTpl" class="tooltip-icon" src="assets/images/help-icon.svg" /> -->
+         <span>
+           {{(lls.llb$ | async)?.snapshotDate | date}}
+         </span>
+        </div>
         <div class="value">{{totalPts | number:'1.1' }}</div>
       }@else{
         <ion-skeleton-text [animated]="true" style="width: 50%;"/>
@@ -44,3 +51,7 @@
     </div>
 
 
+
+    <ng-template #toolTipTpl>
+      Last Snapshot
+    </ng-template>

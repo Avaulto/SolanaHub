@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
 import { PortfolioService } from 'src/app/services/portfolio.service';
-
+import { IonRow,IonCol,IonButton, IonContent, IonGrid, IonHeader, IonButtons, IonMenuButton } from '@ionic/angular/standalone';
 import { FormComponent } from './form/form.component';
 import { TransactionsHistoryTableComponent } from 'src/app/shared/components/transactions-history-table/transactions-history-table.component';
 @Component({
@@ -13,7 +13,14 @@ import { TransactionsHistoryTableComponent } from 'src/app/shared/components/tra
   styleUrls: ['./swap.page.scss'],
   standalone: true,
   imports: [
-    IonicModule,
+    IonGrid, 
+    IonHeader,
+     IonButtons,
+     IonMenuButton,
+    IonRow,
+    IonCol,
+    IonButton, 
+    IonContent, 
     TransactionsHistoryTableComponent,
     FormComponent
   ]
