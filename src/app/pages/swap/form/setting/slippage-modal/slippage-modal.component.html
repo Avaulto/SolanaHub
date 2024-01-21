@@ -1,0 +1,36 @@
+<div class="ion-padding">
+  <div id="modal-intro">
+    <div>
+      <div id="title">Select Slippage Settings</div>
+      <!-- <div id="desc">{{config.desc}}</div> -->
+    </div>
+    <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+  </div>
+<ion-segment class="ion-margin-bottom" (ionChange)="setSlippage($event.detail.value)" [value]="emittedValue()" mode="ios">
+  <ion-segment-button value="10">
+    <ion-label>0.1%</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="50">
+    <ion-label>0.5%</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="100">
+    <ion-label>1.0%</ion-label>
+  </ion-segment-button>
+</ion-segment>
+<ion-text >
+  or set custom slippage
+</ion-text>
+<div id="input-control" class="ion-margin-bottom">
+  <ion-input 
+  type="number"
+   max="50" 
+   inputmode="number" 
+   [placeholder]="emittedValue() > 100 ? emittedValue() / 100 : 'enter custom value'" 
+   (ionInput)="setSlippage($event.detail.value, 100)" />
+  <span>%</span>
+</div>
+  <div id="modal-controls">
+    <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
+    <ion-button (click)="submit()" [disabled]="!emittedValue()">save slippage</ion-button>
+  </div>
+</div>

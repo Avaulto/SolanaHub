@@ -15,7 +15,7 @@ import {
   IonContent
 } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
+import { JupStoreService, PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { Validator } from 'src/app/models';
 import { forkJoin, map, take } from 'rxjs';
 import { PositionsComponent } from './positions/positions.component';
@@ -108,11 +108,12 @@ export class StakingPage implements OnInit {
     }
   ]
   constructor(
-    private _phs: PriceHistoryService,
+
     private _shs: SolanaHelpersService, 
-    private _util: UtilService
+    private _util: UtilService,
+    private _jupStore:JupStoreService
     ) { }
-  public solPrice = this._phs.solPrice;
+  public solPrice = this._jupStore.solPrice;
   ngOnInit() {
     this._validatorsData$.pipe(take(1)).subscribe()
 

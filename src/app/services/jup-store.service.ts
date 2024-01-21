@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { JupRoute, JupToken, JupiterPriceFeed } from '../models/jup-token.model';
 import { VersionedTransaction } from '@solana/web3.js';
 import { SolanaHelpersService } from './solana-helpers.service';
@@ -9,8 +9,12 @@ import { TxInterceptorService } from './tx-interceptor.service';
 })
 export class JupStoreService {
   // private _wallet = this._shs.getCurrentWallet();
-  private _txIntercept = inject(TxInterceptorService)
-  constructor(private _shs: SolanaHelpersService) { }
+  // private _txIntercept = inject(TxInterceptorService)
+  public solPrice = signal(0);
+  constructor(private _shs: SolanaHelpersService, private _txIntercept: TxInterceptorService) {
+    this.fetchPriceFeed('So11111111111111111111111111111111111111112').then(p => this.solPrice.set(p.data['So11111111111111111111111111111111111111112'].price))
+
+   }
   public async fetchPriceFeed(mintAddress: string, vsAmount: number = 1): Promise<JupiterPriceFeed> {
     let data: JupiterPriceFeed = null
     try {

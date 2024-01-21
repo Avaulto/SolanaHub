@@ -1,5 +1,6 @@
 import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js"
 import { Validator } from "./stakewiz.model"
+import { JupToken } from "./jup-token.model"
 
 export interface WalletExtended {
   balance?: number,
@@ -7,17 +8,13 @@ export interface WalletExtended {
   signTransaction: (transaction: Transaction | VersionedTransaction) => Promise<Transaction | VersionedTransaction>,
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
 }
-export interface Token{
-    type: string,
-    networkId: string,
-    value: string,
-    name: string,
-    symbol: string,
-    imgUrl: string,
-    decimals: number,
-    address: string,
-    amount: string,
-    price: string
+export interface Token extends JupToken{
+    type?: string,
+    networkId?: string,
+    imgUrl?: string,
+    value?: string,
+    amount?: string,
+    price?: string
 }
 export interface NFT{
     collectionName: string,

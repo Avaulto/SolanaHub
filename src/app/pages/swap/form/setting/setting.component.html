@@ -7,9 +7,9 @@
   </ion-button>
   <div id="route-configs">
     <ion-button class="tx-fee-config">Turbo 🚀 </ion-button>
-    <ion-button class="slippage-config">
+    <ion-button class="slippage-config" (click)="openSlippageModal()">
       <ion-img src="assets/images/group-icon.svg"/>
-      0.1% 
+     {{selectedSlippage() / 100}}% 
     </ion-button>
   </div>
 </div>

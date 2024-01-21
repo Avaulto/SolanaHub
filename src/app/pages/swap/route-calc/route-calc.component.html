@@ -3,7 +3,7 @@
   <div class="route-calc">
     <div>Price Impact</div>
     <span [ngStyle]="{
-      'color': routeInfo.priceImpactPct < '0.01' ? 'var(--ion-color-success)' : 'red'
+      'color': routeInfo.priceImpactPct < '0.02' ? 'var(--ion-color-success)' : 'red'
       }">
       ~ {{routeInfo.priceImpactPct | percent:'1.0-4'}}</span>
   </div>

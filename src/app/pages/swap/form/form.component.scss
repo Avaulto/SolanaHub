@@ -14,84 +14,6 @@
     border-radius: 16px;
     background: #FFF;
 
-    .token-input {
-        display: flex;
-        align-items: center;
-        width: 100%;
-        position: relative;
-
-
-        ion-input {
-            box-shadow: 0 0 0 0;
-            font-size: 24px;
-            color: #000;
-            display: flex;
-            align-items: center;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-            border-radius: 12px;
-            // background: #EFF0F0;
-            text-align: right;
-            min-height: 74px;
-            --padding-end: 12px;
-            border: 1px solid #EFF0F0;
-
-        }
-
-        ion-img {
-            margin-inline: 12px;
-            border-radius: 50%;
-            overflow: hidden;
-            width: 24px;
-            height: 24px;
-        }
-
-        ion-button {
-            --background: white;
-            width: 120px;
-            margin-inline-start: 20px;
-            position: absolute;
-            z-index: 2;
-            --box-shadow: 0 0 0;
-            --padding-start: 0;
-            --padding-end: 0;
-            --border-width: 1px;
-            --border-style: solid;
-            --border-color: #EFF0F0;
-            min-height: 40px;
-            --padding-bottom: 0;
-            --padding-top: 0;
-            font-weight: 600;
-            --color: #000;
-        }
-
-        ion-icon {
-            color: #bfbfbf;
-            margin-inline: 12px;
-        }
-
-        ion-skeleton-text {
-            position: absolute;
-            z-index: 2;
-            width: 40%;
-            right: 12px;
-            height: 28px;
-            border-radius: 8px;
-        }
-
-        small {
-            position: absolute;
-            z-index: 2;
-            right: 14px;
-            bottom: 10px;
-            color: rgba(0, 0, 0, 0.35);
-            font-size: 12px;
-            font-weight: 500;
-            line-height: 14px;
-            letter-spacing: 0.12px;
-        }
-    }
 
     #flip-tokens-wrapper {
         position: relative;
@@ -108,10 +30,10 @@
             position: absolute;
             z-index: 0;
         }
+        margin-block: 8px;
     }
 
     #flip-tokens-btn {
-        margin-block: 8px;
         z-index: 2;
         --box-shadow: 0px 0px 0px 0px rgba(16, 24, 40, 0.05);
         width: 34px;
@@ -161,11 +83,11 @@
             --border-radius: 100px;
             --background: #EFF0F0;
             --color: rgba(0, 0, 0, 0.35);
-            font-family: Inter;
             font-size: 10px;
-            font-style: normal;
+            height: 23px;
+            --padding-bottom: 0;
+            --padding-top: 0;
             font-weight: 600;
-            line-height: 100%;
         }
     }
 

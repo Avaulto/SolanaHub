@@ -38,6 +38,8 @@ export interface JupRoute{
     routePlan:            RoutePlan[];
     contextSlot:          number;
     timeTaken:            number;
+    outAmountCopy?:       string;
+    otherAmountThresholdCopy?: string;
 }
 
 export interface RoutePlan {

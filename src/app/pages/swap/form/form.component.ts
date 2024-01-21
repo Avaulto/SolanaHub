@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, WritableSignal, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, WritableSignal, computed, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 
@@ -6,7 +6,7 @@ import { addIcons } from 'ionicons';
 import { swapVertical } from 'ionicons/icons';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { JupStoreService } from 'src/app/services/jup-store.service';
-import { JupRoute, JupToken, WalletExtended } from 'src/app/models';
+import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { TokenListComponent } from '../token-list/token-list.component';
 import { IonInput, IonIcon, IonButton, IonImg, IonSkeletonText } from '@ionic/angular/standalone';
@@ -20,6 +20,7 @@ import { RouteCalcComponent } from '../route-calc/route-calc.component';
 import { SettingComponent } from './setting/setting.component';
 import { Observable } from 'rxjs';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
+import { InputComponent } from './input/input.component';
 @Component({
   selector: 'swap-form',
   templateUrl: './form.component.html',
@@ -36,24 +37,12 @@ import { InputLabelComponent } from 'src/app/shared/components/input-label/input
     DecimalPipe,
     RouteCalcComponent,
     SettingComponent,
-    InputLabelComponent,
-    AsyncPipe,
-    CurrencyPipe
+    InputComponent
   ]
 })
 export class FormComponent implements OnInit {
-  // @ViewChild('amountInput',{ read: ElementRef }) amountInput
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
-  readonly onlyDigitsInput: MaskitoOptions = {
-    mask: /^\d+$/,
-  };
-  readonly options: MaskitoOptions = maskitoNumberOptionsGenerator({
-    decimalSeparator: '.',
-    thousandSeparator: ',',
-    precision: 2,
-  });
-
-  public tokenOut = {
+  public tokenOut:Token = {
     "address": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
     "chainId": 101,
     "decimals": 6,
@@ -61,10 +50,10 @@ export class FormComponent implements OnInit {
     "symbol": "USDC",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
   }
-  public tokenIn = {
+  public tokenIn:Token = {
     "address": "So11111111111111111111111111111111111111112",
-    "chainId": 101,
     "decimals": 9,
+    "chainId": 101,
     "name": "Wrapped SOL",
     "symbol": "SOL",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
@@ -72,12 +61,13 @@ export class FormComponent implements OnInit {
   public waitForBestRoute = signal(false);
   public jupTokens = signal([] as JupToken[])
   public slippage = signal(0.5);
-  public bestRoute: WritableSignal<JupRoute> = signal(null)
+  public getInTokenPrice = signal(null);
+  public getOutTokenPrice = signal(null);
+
+  public bestRoute: WritableSignal<JupRoute> = signal(null);
   public tokenSwapForm: FormGroup;
   constructor(
     private _shs: SolanaHelpersService,
-    private _modalCtrl: ModalController,
-    private _portfolioService: PortfolioService,
     private _fb: FormBuilder,
     private _jupStore: JupStoreService,
     private _util: UtilService
@@ -90,7 +80,11 @@ export class FormComponent implements OnInit {
       inputToken: this.tokenSwapForm.controls['outputToken'].value,
       outputToken: temp
     })
-
+    this.tokenIn = this.tokenSwapForm.controls['outputToken'].value
+    this.tokenOut = temp
+  }
+  updateBalance() {
+        
   }
   async ngOnInit() {
 
@@ -102,26 +96,33 @@ export class FormComponent implements OnInit {
     })
 
     this.tokenSwapForm.valueChanges.subscribe(async (values: { inputToken, outputToken, inputAmount, slippage }) => {
-
+      console.log('value change', values);
+      // if(values.inputToken.symbol === values.outputToken.symbol){
+      //   this.tokenSwapForm.controls['outputToken'].reset()
+      // }
+      const inputAmount = values.inputAmount//.replaceAll(",", "")   
+      this.getInTokenPrice.set(null)
+      this.getOutTokenPrice.set(null)
+      this.bestRoute.set(null)
       if (this.tokenSwapForm.valid) {
-     
-          this.bestRoute.set(null)
           this.waitForBestRoute.set(true)
-          const inputAmount = values.inputAmount.replaceAll(",", "")
           const route = await this._jupStore.computeBestRoute(inputAmount, values.inputToken, values.outputToken, values.slippage)
-          const outAmount = (Number(route.outAmount) / 10 ** this.tokenIn.decimals).toString()
-          const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** this.tokenIn.decimals).toString()
-          //  const definitelyValidValue = maskitoTransform(outAmount, this.options);
-          //  console.log(definitelyValidValue);
+          const outAmount = (Number(route.outAmount) / 10 ** values.outputToken.decimals).toString()
+          const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** values.outputToken.decimals).toString()
+
 
           route.outAmount = outAmount
           route.otherAmountThreshold = minOutAmount
+
+          // this._getSelectedTokenPrice(values, route.outAmount)
+
+
           //  this.formControl.patchValue(definitelyValidValue);
           this.bestRoute.set(route)
           //  const minimumReceived = Number(route.outAmount) / 10 **  values.outputToken.decimals
           //  this.toReceive.set(minimumReceived)
           this.waitForBestRoute.set(false)
-          console.log(this.bestRoute());
+          // console.log(this.bestRoute());
         
       }
       if (!values.inputAmount) {
@@ -130,31 +131,20 @@ export class FormComponent implements OnInit {
     })
     const tokensList = await this._util.getJupTokens();
     this.jupTokens.set(tokensList)
-
+    // this.tokenIn = tokensList.find()
   }
-  async openTokensModal(operation: 'in' | 'out') {
-    const modal = await this._modalCtrl.create({
-      component: TokenListComponent,
-      componentProps: { jupTokens: this.jupTokens() },
-      // cssClass:'modal-style'
-    });
-    modal.present();
 
-    const { data, role } = await modal.onWillDismiss();
-    let jupToken: JupToken = data
-    if (data) {
 
-      if (operation === 'in') {
-        this.tokenSwapForm.controls['inputToken'].setValue(jupToken)
-      }
-      else if (operation === 'out') {
-        this.tokenSwapForm.controls['outputToken'].setValue(jupToken)
-      }
-    }
-
-  }
   public async submitSwap(): Promise<void> {
-    await this._jupStore.swapTx(this.bestRoute());
+    const route = {...this.bestRoute()}
+    const outAmount = (Number(route.outAmount) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toString()
+    const minOutAmount = (Number(route.otherAmountThreshold) * 10 **  this.tokenSwapForm.value.outputToken.decimals).toString()
+
+    
+    route.outAmount = outAmount
+    route.otherAmountThreshold = minOutAmount
+
+    await this._jupStore.swapTx(route);
   }
 
 

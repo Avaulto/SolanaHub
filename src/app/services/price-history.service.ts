@@ -12,13 +12,11 @@ export class PriceHistoryService {
     private _utilService: UtilService,
     private _apiService: ApiService
     ) { 
-      this.getTokenDataByAddress("So11111111111111111111111111111111111111112").then(r => this.solPrice.set(r.market_data.current_price.usd))
 
     }
 
 
   protected _coingeckoAPI = 'https://api.coingecko.com/api/v3';
-  public solPrice = signal(0);
 
   public async getTokenDataByAddress(mintAddress: string){
     let data = null

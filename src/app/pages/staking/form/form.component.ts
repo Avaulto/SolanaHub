@@ -20,7 +20,7 @@ import { IonImg,
 import {  ModalController } from '@ionic/angular';
 import { ValidatorsModalComponent } from './validators-modal/validators-modal.component';
 import { Validator, WalletExtended } from 'src/app/models';
-import { SolanaHelpersService, UtilService, TxInterceptorService,PriceHistoryService, NativeStakeService } from 'src/app/services';
+import { SolanaHelpersService, UtilService, TxInterceptorService,PriceHistoryService, NativeStakeService, JupStoreService } from 'src/app/services';
 import { Observable } from 'rxjs';
 import { ApyCalcComponent } from './apy-calc/apy-calc.component';
 import { IonicModule } from '@ionic/angular';
@@ -59,16 +59,16 @@ export class FormComponent  implements OnInit {
   public stakePath = signal('native');
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
-  public solPrice = this._phs.solPrice
+  public solPrice = this._jupStore.solPrice
   public stakePools = []
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
     private _util:UtilService,
-    private _phs:PriceHistoryService,
     private _lss:LiquidStakeService,
     private _nss:NativeStakeService,
     private _tis: TxInterceptorService,
+    private _jupStore: JupStoreService,
     ){
  
   }

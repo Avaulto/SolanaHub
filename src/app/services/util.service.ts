@@ -1,9 +1,10 @@
 import { CurrencyPipe, DecimalPipe, DatePipe, PercentPipe } from "@angular/common";
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 import { BehaviorSubject, filter, Observable } from "rxjs";
 import { LocalStorageService } from "./local-storage.service";
 import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
+import { JupStoreService } from "./jup-store.service";
 // import { PriorityFee } from "../models/priorityFee.model";
 // import * as moment from "moment";
 // import { v4 as uuidv4 } from "uuid";
@@ -23,7 +24,9 @@ export class UtilService {
   public percentPipe: PercentPipe = new PercentPipe('en-US');
   public datePipe: DatePipe = new DatePipe('en-US');
   constructor(
-    private localStore: LocalStorageService) {
+    // private _jupStore:JupStoreService,
+    private localStore: LocalStorageService
+    ) {
   }
   public serverlessAPI =  location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
@@ -100,11 +103,4 @@ export class UtilService {
     })
   }
 
-  public getSolPrice(){
-    try {
-      const soldata = fetch('https://api.coingecko.com/api/v3')
-    } catch (error) {
-      
-    }
-  }
 }

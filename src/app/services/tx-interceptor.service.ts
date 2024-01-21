@@ -1,11 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import { UtilService,SolanaHelpersService } from './';
 
 import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
 import { PriorityFee } from '../models';
 import va from '@vercel/analytics';
-import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SolanaHelpersService } from './solana-helpers.service';
+import { UtilService } from './util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class TxInterceptorService {
   // private _wallet = this._shs.getCurrentWallet()
   constructor(
     private _shs: SolanaHelpersService,
-    private _utilService:UtilService
+    private _util: UtilService,
     ) { }
     private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
       if (priorityFee != '0') {
@@ -50,7 +50,7 @@ export class TxInterceptorService {
       }
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
       const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
-      const url = `${this._utilService.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
+      const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
       // const txSend: toastData = {
       //   message: `Transaction Submitted`,
       //   btnText: `view on explorer`,

@@ -44,7 +44,7 @@
 
         ion-button {
          
-            color: var(--Component-colors-Utility-Gray-utility-gray-500, #697586);
+            --color: var(--Component-colors-Utility-Gray-utility-gray-500, #697586);
             text-align: center;
             font-size: 10px;
             font-weight: 600;
@@ -55,8 +55,10 @@
             --padding-start: 6px;
             --padding-end: 6px;
             --padding-top: 0px;
-            border: 1px solid #CDD5DF;
-            border-radius: 6px;
+            --border-style:solid;
+            --border-radius: 6px;
+            --border-color: #CDD5DF;
+            --border-width: 1px;
             height: 18px;
             margin: 0;
         }

@@ -10,7 +10,7 @@ import {
   IonPopover
 } from '@ionic/angular/standalone';
 import { CurrencyPipe, DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
-import { PriceHistoryService } from 'src/app/services';
+import { JupStoreService, PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
 import { StakeAccount } from 'src/app/models';
@@ -40,7 +40,7 @@ export class StakeComponent   {
   @Input() stakeAccount: StakeAccount = null
   @Input() stakeAccounts: StakeAccount[] = null
   public toolTipPos = TooltipPosition.LEFT
-  public solPrice = this._phs.solPrice;
+  public solPrice = this._jupStore.solPrice;
   public stakeAccountStatus = {
     active:{
       title: 'active',
@@ -64,7 +64,7 @@ export class StakeComponent   {
     }
   }
   constructor(
-    private _phs:PriceHistoryService, 
+    private _jupStore: JupStoreService,
     private _popoverController: PopoverController
     ) {
     addIcons({ copyOutline, ellipsisVertical });

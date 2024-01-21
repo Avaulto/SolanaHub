@@ -153,10 +153,6 @@ ion-spinner{
 
 .modal-style{
     --width: 540px;
-    // --min-height: 700px;
-    // --max-width: 100%;
-    // --border-radius: 12px;
-    // --width: auto;
     --border-radius: 12px;
     --height: auto;
     --max-width: 90%;
@@ -167,6 +163,11 @@ ion-spinner{
       position: static;
       contain: initial;
     }
+}
+.swap-setting-modal{
+    --width: 340px;
+    --height: 300px;
+    --border-radius: 12px;
 }
 .wallet-connect-dropdown{
     --width: 238px;
