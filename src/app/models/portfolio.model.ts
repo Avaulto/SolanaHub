@@ -37,19 +37,20 @@ export interface LendingOrBorrow{
 }
 
 export interface StakeAccount {
-  lockedDue: string
-  locked: boolean
-  addr: string
-  shortAddr: string
+  lockedDue?: string
+  locked?: boolean
+  address: string
+  shortAddress: string
   balance: number
-  lamportsBalance: number
-  state: 'activating' | 'deactivating' | 'active' | 'inactive'
-  validator: Validator
-  excessLamport: number
-  startEpoch: string
-  stakeAuth: string
-  withdrawAuth: string
+  lamportsBalance?: number
+  state?: 'activating' | 'deactivating' | 'active' | 'inactive'
+  validator?: Validator
+  excessLamport?: number
+  startEpoch?: string
+  stakeAuth?: string
+  withdrawAuth?: string
   inflationRewards?: any;
+  symbol: string
 }
 
 export interface TransactionHistory{

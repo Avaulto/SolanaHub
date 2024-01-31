@@ -1,15 +1,18 @@
 <div id="wallet-adapters-wrapper" class="ion-padding">
-  <div id="wallet-adapter-opt-header">
-    <ion-label>Connect wallet</ion-label>
-    <p>Choose wallet to connect</p>
-    <ion-buttons slot="end">
-      <ion-button (click)="popoverController.dismiss()">
-        <!-- <ion-icon style="font-size: 30px;" name="close-circle-outline"></ion-icon> -->
-      </ion-button>
-    </ion-buttons>
-  </div>
+
+    <div id="modal-intro">
+      <div>
+        <ion-label>Connect wallet</ion-label>
+        <ion-text>You need to connect a Solana wallet.</ion-text>
+      </div>
   
-<div id="wallet-connected-actions">
+          <ion-img id="close-modal" (click)="popoverController.dismiss()" src="assets/images/close-icon.svg" />
+    
+    </div>
+
+  
+    <div id="wallet-connected-actions">
+  <ion-label>Popular Wallets</ion-label>
   <div class="wallet" (click)="onSelectWallet(opt.adapter.name)" *ngFor="let opt of walletsOptions$ | async">
 
     <ion-avatar slot="start">

@@ -1,30 +1,21 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonImg,
+import {
+
   IonInput, 
   IonButton,
-   IonCheckbox,
-  IonIcon,
-  IonToggle,
-  IonLabel,
-  IonText,
-  IonChip,
-  IonSelect,
-  IonSegment,
-  IonSegmentButton,
-  IonSelectOption,
-   IonRange
+
   } from '@ionic/angular/standalone';
 
-import {  ModalController } from '@ionic/angular';
-import { ValidatorsModalComponent } from './validators-modal/validators-modal.component';
+
+
 import { Validator, WalletExtended } from 'src/app/models';
 import { SolanaHelpersService, UtilService, TxInterceptorService,PriceHistoryService, NativeStakeService, JupStoreService } from 'src/app/services';
 import { Observable } from 'rxjs';
 import { ApyCalcComponent } from './apy-calc/apy-calc.component';
 import { IonicModule } from '@ionic/angular';
-import { BN } from '@marinade.finance/marinade-ts-sdk';
+
 import { Keypair, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js';
 import { StakePathComponent } from './stake-path/stake-path.component';
 import { SelectValidatorComponent } from './select-validator/select-validator.component';
@@ -45,22 +36,29 @@ import { InputLabelComponent } from 'src/app/shared/components/input-label/input
     LockStakeComponent,
     SelectStakePoolComponent,
     CustomValidatorComponent,
-    IonicModule,
-    DecimalPipe,
+    IonInput, 
+    IonButton,
     CurrencyPipe,
     ReactiveFormsModule,
-    AsyncPipe,
     InputLabelComponent
   ]
 })
 export class FormComponent  implements OnInit {
+  public asset = {
+    "address": "So11111111111111111111111111111111111111112",
+    "decimals": 9,
+    "chainId": 101,
+    "name": "Wrapped SOL",
+    "symbol": "SOL",
+    "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
+}
   public stakeAPY = signal(null);
   @Input() validatorsList = signal([] as Validator[])
   public stakePath = signal('native');
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public solPrice = this._jupStore.solPrice
-  public stakePools = []
+  @Input() stakePools = []
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
@@ -84,7 +82,6 @@ export class FormComponent  implements OnInit {
 
     this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
-    this._lss.getStakePoolList().then(pl => this.stakePools = pl);
   }
 
 

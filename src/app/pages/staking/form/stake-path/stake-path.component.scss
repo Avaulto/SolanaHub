@@ -35,14 +35,13 @@ ion-radio{
     white-space: initial;
 }
 .stake-type {
-    flex-direction: column;
-    // display: flex;
     padding: 16px;
     border-radius: 12px;
     border: 2px solid #E3E8EF;
-    width: 49%;
     transition: 0.3s ease all;
     cursor: pointer;
+    height: 100%;
+    width: 100%;
 
 
   

@@ -1,25 +1,60 @@
+
+
+#modal-intro {
+    display: flex;
+    justify-content: space-between;
+    margin-block-end: 24px;
+
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    ion-img {
+        width: 24px;
+        height: 24px;
+    }
+
+    ion-label {
+        text-transform: capitalize;
+        color: #121926;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 28px;
+        margin-block-end: 4px;
+    }
+
+    ion-text {
+        text-transform: capitalize;
+        color: #4B5565;
+        font-size: 13px;
+        line-height: 18px;
+        /* 138.462% */
+    }
+
+    #close-modal {
+        cursor: pointer;
+    }
+}
 #wallet-connected-actions {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
+    ion-label {
+        display: block;
+        color:  #344054;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        width: 100%;
+        margin-block-end: 8px;
+    }
 }
-ion-label{
-    color: #101828;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 28px;
-    margin-block-end: 4px;
-    letter-spacing: 0.18px;
-    text-transform: capitalize;
-}
-p{
-    color: #697586;
-    font-size: 13px;
-    margin: 0;
-    font-weight: 400;
-}
-.wallet{
-    border-radius: var(--radius-md, 8px);
-    background: var(--Colors-Gray-modern-50, #F8FAFC);
+
+.wallet {
+    border-radius: 12px;
+    border: 1px solid var(--Gray-50, #F9FAFB);
+    background: var(--Gray-50, #F9FAFB);
     padding: 16px;
     font-size: 12px;
     font-weight: 600;
@@ -28,12 +63,13 @@ p{
     display: flex;
     align-items: center;
     flex-direction: column;
-    color: gray;
+    color: #475467;
     padding: 17px 38px;
     cursor: pointer;
+
     ion-avatar {
-        width: 40px;
-        height: 40px;
-        margin-block-end: 5px;
+        width: 36px;
+        height: 36px;
+        margin-block-end: 12px;
     }
 }

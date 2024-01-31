@@ -1,6 +1,5 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, WritableSignal, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 
 import { addIcons } from 'ionicons';
 import { chevronDownSharp, options,refresh } from 'ionicons/icons';
@@ -23,7 +22,8 @@ import { SlippageModalComponent } from './slippage-modal/slippage-modal.componen
 export class SettingComponent  implements OnInit {
   @Input() slippageControl;
   public selectedSlippage = signal(null)
-  private _modalCtrl = inject(ModalController);
+
+  private _modalCtrl = inject(PopoverController);
   // private _utilService = inject(UtilService)
   constructor() {
     addIcons({ chevronDownSharp, options , refresh})
@@ -36,7 +36,8 @@ export class SettingComponent  implements OnInit {
     const modal = await this._modalCtrl.create({
       component: SlippageModalComponent,
       componentProps:{selectedSlippage:this.selectedSlippage() },
-      cssClass:'swap-setting-modal'
+      cssClass:'swap-setting-modal',
+      mode: "ios",
     });
     modal.present();
 
@@ -51,7 +52,7 @@ export class SettingComponent  implements OnInit {
   async openTradingFeeModal() {
     const modal = await this._modalCtrl.create({
       component: TradingFeeModalComponent,
-
+      mode: "ios",
       // cssClass:'modal-style'
     });
     modal.present();

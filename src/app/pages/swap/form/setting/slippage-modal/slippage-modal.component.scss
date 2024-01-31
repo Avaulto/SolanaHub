@@ -3,19 +3,6 @@
     justify-content: space-between;
     margin-block-end: 20px;
 
-    .icon-wrapper {
-        width: 48px;
-        height: 48px;
-        border-radius: var(--radius-lg, 10px);
-        border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
-        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-block-end: 12px;
-
-    }
-
     ion-img {
         width: 24px;
         height: 24px;

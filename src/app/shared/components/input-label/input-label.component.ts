@@ -19,12 +19,14 @@ export class InputLabelComponent  implements OnInit, OnChanges  {
   @Output() onSetSize = new EventEmitter()
   constructor(private _portfolioService: PortfolioService) {
     effect(()=>{
+
       if(this.walletTokens()){
-        this.asset.amount = this.walletTokens().find(t => t.address === this.asset.address)?.amount
+        // this.asset.amount = this.walletTokens().find(t => t.address === this.asset.address)?.amount
       }
     })
    }
    ngOnChanges(changes: SimpleChanges): void {
+   
     if(this.asset && this.walletTokens()){
 
       this.asset.amount = this.walletTokens().find(t => t.address === this.asset.address)?.amount

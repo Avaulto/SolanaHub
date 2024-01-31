@@ -5,7 +5,7 @@ import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeade
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
 
-import { PortfolioService } from './services/portfolio.service';
+
 
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
@@ -38,7 +38,9 @@ import {  UtilService } from './services';
 
 })
 export class AppComponent implements OnInit {
+  readonly isReady$ =  this._walletStore.connected$
   constructor(
+    private _walletStore: WalletStore
     ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
   }

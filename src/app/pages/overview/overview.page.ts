@@ -33,7 +33,7 @@ export class OverviewPage implements OnInit {
   async ngOnInit() {
     this._shs.walletExtended$.pipe(this._utilService.isNotNullOrUndefined).subscribe(wallet =>{
 
-       this._portfolioService.getWalletHistory(wallet.publicKey.toBase58())
+      //  this._portfolioService.getWalletHistory(wallet.publicKey.toBase58())
     })
     
   }

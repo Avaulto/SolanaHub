@@ -2,8 +2,8 @@ header {
     background-color: #E9E9E6;
     align-items: center;
     justify-content: space-between;
-    padding: 40px 5vw;
-    height: 295px;
+    padding: 40px 5vw 0;
+    // height: 295px;
 
     #title {
         color: var(--gray-modern-950, var(--colors-gray-modern-950, #0D121C));
@@ -28,7 +28,7 @@ header {
     }
 
     #stat-wrapper {
-        transform: translateY(50px);
+        transform: translateY(70px);
     
     
         .staking-stat {
@@ -36,7 +36,6 @@ header {
             border-radius: var(--radius-xl, 12px);
             background: var(--Colors-Background-bg-primary, #FFF);
             box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-            width: 23%;
     
             .icon-wrapper {
                 width: 48px;

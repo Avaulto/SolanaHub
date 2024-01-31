@@ -3,7 +3,7 @@
     <div id="title">stake your SOL</div>
     <div id="desc">choose between native and liquid staking a</div>
   </div>
-  <input-label label="stake amount" (onSetSize)="setStakeSize($event)" assetSymbol="SOL" />
+  <input-label label="stake amount" (onSetSize)="setStakeSize($event)" [asset]="asset" />
   <form [formGroup]="stakeForm">
     <div id="input-control" class="ion-margin-bottom">
       <span>

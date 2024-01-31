@@ -9,11 +9,11 @@ import {
   IonIcon,
   IonPopover
 } from '@ionic/angular/standalone';
-import { CurrencyPipe, DecimalPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
-import { JupStoreService, PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
+import { CurrencyPipe, DecimalPipe, JsonPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { JupStoreService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
-import { StakeAccount } from 'src/app/models';
+import { Stake, StakeAccount } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
@@ -33,11 +33,13 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
     IonPopover,
     NgTemplateOutlet,
     CopyTextDirective,
-    TooltipModule
+    TooltipModule,
+    JsonPipe
   ]
 })
-export class StakeComponent   {
-  @Input() stakeAccount: StakeAccount = null
+export class StakeComponent {
+  @Input() stake: Stake = null;
+  @Input() account: StakeAccount = null
   @Input() stakeAccounts: StakeAccount[] = null
   public toolTipPos = TooltipPosition.LEFT
   public solPrice = this._jupStore.solPrice;
@@ -54,14 +56,24 @@ export class StakeComponent   {
     },
     deactivating:{
       title: 'deactivating',
-      desc: 'deactivate means you need to wait till end of epoch before it changes to deceived status',
+      desc: 'deactivating means you need to wait till end of epoch before it changes to deceived status before you can withdraw your funds',
       statusColor:'#F79009'
     },
-    deactivate:{
-      title: 'deactivate',
-      desc: 'deactivate means you dont earn any staking rewards and it ready to withdrawal',
+    inactive:{
+      title: "inactive",
+      desc: 'inactive means you dont earn any staking rewards and it ready to withdrawal',
       statusColor:'#C4C4C4'
-    }
+    },
+    directStake:{
+      title: "Direct stake",
+      desc: 'This stake is partially or fully staked with a specific validator in the stake pool',
+      statusColor:'#B84794'
+    },
+    delegationStrategyPool:{
+      title: "delegation strategy",
+      desc: 'This stake is delegation with all the validators in the delegation strategy of this pool',
+      statusColor:'#2970FF'
+    },
   }
   constructor(
     private _jupStore: JupStoreService,
@@ -75,7 +87,7 @@ export class StakeComponent   {
     
     const popover = await this._popoverController.create({
       component: OptionsPopoverComponent,
-      componentProps: {stakeAccount: this.stakeAccount,stakeAccounts: this.stakeAccounts },
+      componentProps: {stakeAccount: this.account,stakeAccounts: this.stakeAccounts },
       event: e,
       backdropDismiss: true,
       dismissOnSelect:true,

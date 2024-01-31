@@ -1,6 +1,6 @@
 
 @if((isReady$ | async) === false){
-  <ion-button class="ion-hide-lg-down" (click)="showWalletAdapters()" expand="block">
+  <ion-button (click)="showWalletAdapters()" expand="block">
     connect wallet
  </ion-button>
 }@else {

@@ -87,7 +87,8 @@ export class WalletConnectComponent implements OnInit {
   public async showWalletAdapters() {
     const popover = await this.popoverController.create({
       component: WalletAdapterOptionsComponent,
-      cssClass: 'wallet-adapter-options'
+      cssClass: 'wallet-adapter-options',
+      mode: "ios",
     });
     await popover.present();
   }

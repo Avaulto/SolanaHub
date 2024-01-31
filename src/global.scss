@@ -36,7 +36,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 0;
 }
 ::selection {
     background: var(--ion-color-primary);
@@ -146,9 +146,10 @@ ion-spinner{
 
 
 .wallet-adapter-options{
-    --width: 400px;
+    --width: 480px;
     --max-width: 100%;
     --border-radius: 12px;
+    --overflow: auto;
 }
 
 .modal-style{

@@ -19,6 +19,7 @@ import { JupStoreService, PriceHistoryService, SolanaHelpersService, UtilService
 import { Validator } from 'src/app/models';
 import { forkJoin, map, take } from 'rxjs';
 import { PositionsComponent } from './positions/positions.component';
+import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 interface ValidatorsStats {
   numberOfValidators: number,
   clusterAPY: number,
@@ -108,15 +109,16 @@ export class StakingPage implements OnInit {
     }
   ]
   constructor(
-
     private _shs: SolanaHelpersService, 
     private _util: UtilService,
-    private _jupStore:JupStoreService
+    private _jupStore:JupStoreService,
+    private _lss: LiquidStakeService
     ) { }
   public solPrice = this._jupStore.solPrice;
+  public stakePools = signal([])
   ngOnInit() {
     this._validatorsData$.pipe(take(1)).subscribe()
-
+    this._lss.getStakePoolList().then(pl => this.stakePools.set(pl));
   }
 
 }

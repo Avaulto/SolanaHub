@@ -33,7 +33,7 @@ export class OptionsPopoverComponent implements OnInit {
   }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()
-    await this._nss.deactivateStakeAccount(this.stakeAccount.addr, walletOwner)
+    await this._nss.deactivateStakeAccount(this.stakeAccount.address, walletOwner)
   }
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet()
@@ -43,7 +43,7 @@ export class OptionsPopoverComponent implements OnInit {
     const walletOwner = this._shs.getCurrentWallet()
     await this._nss.withdraw(this.stakeAccount, walletOwner)
 
-    const stakeBalance = await this._shs.connection.getBalance(new PublicKey(this.stakeAccount.addr));
+    const stakeBalance = await this._shs.connection.getBalance(new PublicKey(this.stakeAccount.address));
     console.log(`Stake account balance: ${stakeBalance / LAMPORTS_PER_SOL} SOL`);
   }
 

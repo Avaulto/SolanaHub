@@ -1,4 +1,8 @@
-<input-label [label]="readonly ? 'you receive' : 'you pay'" [showBtns]="!readonly" (onSetSize)="valueChange($event)" [asset]="tokenControl?.value" />
+<input-label 
+[label]="readonly ? 'you receive' : 'you pay'"
+ [showBtns]="!readonly" 
+ (onSetSize)="valueChange($event)" 
+[asset]="tokenControl?.value" />
 <div class="token-input">
   <ion-button fill="clear" class="token-select" (click)="openTokensModal()">
     <div>

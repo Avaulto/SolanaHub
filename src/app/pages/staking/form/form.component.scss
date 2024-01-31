@@ -1,7 +1,9 @@
-#stake-wrapper{
-    background-color: rgba(255, 255, 255, 1);
+:host{
     border-radius: 12px 0 0 12px;
+    display: block;
+    background-color: rgba(255, 255, 255, 1);
 }
+
 #stake-intro {
     margin-block-end: 20px;
 
@@ -144,4 +146,10 @@
 #stake-btn {
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     margin-block: 20px;
+}
+
+@media only screen and (max-width: 1200px) {
+    :host{
+        border-radius: 12px 12px 0 0;
+    }
 }

@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { IsConnectedGuard } from './shared/guards/is-connected.guard';
 
 export const routes: Routes = [
   {
@@ -13,7 +14,7 @@ export const routes: Routes = [
   // },
   {
     path: 'overview',
-    loadComponent: () => import('./pages/overview/overview.page').then( m => m.OverviewPage)
+    loadComponent: () => import('./pages/overview/overview.page').then( m => m.OverviewPage),
   },
   {
     path: 'settings',

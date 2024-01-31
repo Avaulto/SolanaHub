@@ -1,18 +1,15 @@
-export interface StakePool{
-    poolName: string
+
+export interface Stake{
+    type: 'native' | 'liquid'
+    lockedDue?: string
+    locked?: boolean
+    address?: string
+    validatorName?:string
+    shortAddress?: string
+    balance: number
+    value: number
+    state: 'activating' | 'deactivating' | 'active' | 'inactive' | 'directStake' | 'delegationStrategyPool'
     apy: number
-    exchangeRate: number
-    tokenSymbol: string
-    tokenMint: string
-    tokenImageURL: string
-    poolPublicKey: string
-    MEVDelegation: boolean
-    website: string
-    tokenMintSupply: number
-    commission: number
-    solDepositFee: number
-    solWithdrawalFee: number
-    totalStakedSol: number
-    reserveSol: number
-  }
-  
+    imgUrl: string
+    symbol: string
+}

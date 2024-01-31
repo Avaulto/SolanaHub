@@ -23,6 +23,15 @@
 
       </ion-content>
     </ion-menu>
-    <ion-router-outlet id="main-content"></ion-router-outlet>
+    <ion-content class="ion-page" id="main-content">
+    @if (isReady$ | async) {
+      <ion-router-outlet ></ion-router-outlet>
+    }@else {
+      <div id="not-connected">
+        not connected
+      </div>
+    }
+    </ion-content>
+   
   </ion-split-pane>
 </ion-app>

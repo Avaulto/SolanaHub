@@ -12,7 +12,10 @@ import { Observable, shareReplay } from 'rxjs';
 export class WalletAdapterOptionsComponent implements OnInit {
   @ViewChild('modal', { static: true }) selectAdapter: IonModal;
   public walletsOptions$: Observable<Wallet[]> = this._walletStore.wallets$.pipe(shareReplay(1))
-  constructor(private _walletStore: WalletStore, public popoverController: PopoverController) { }
+  constructor(
+    private _walletStore: WalletStore,
+     public popoverController: PopoverController
+     ) { }
 
   ngOnInit() {
   }

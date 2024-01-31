@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {   WalletAdapterOptionsComponent, WalletConnectComponent, WalletConnectedDropdownComponent, WalletNotConnectedStateComponent } from './index';
+import {   WalletAdapterOptionsComponent, WalletConnectComponent, WalletConnectedDropdownComponent } from './index';
 import { IonicModule } from '@ionic/angular';
 import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
@@ -19,7 +19,6 @@ import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive
     WalletConnectComponent,
     WalletAdapterOptionsComponent,
     WalletConnectedDropdownComponent,
-    WalletNotConnectedStateComponent,
   ],
   imports: [
     CopyTextDirective,

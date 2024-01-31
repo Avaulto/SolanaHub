@@ -57,7 +57,7 @@ export class ModalComponent implements AfterViewInit {
         break;
       case 'merge-modal':
 
-        const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: StakeAccount) => new PublicKey(acc.addr))
+        const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: StakeAccount) => new PublicKey(acc.address))
         await this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stakeAccount.addr), accountsToMerge);
         break;
       case 'transfer-auth-modal':

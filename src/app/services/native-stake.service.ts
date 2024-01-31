@@ -40,23 +40,23 @@ export class NativeStakeService {
     // inflationReward: InflationReward
     ): Promise<StakeAccount>  {
     const pk = account.pubkey;
-    const addr = pk.toBase58()
+    const address = pk.toBase58()
     const parsedData = account.account.data.parsed.info || null//.delegation.stake
     const validatorVoteKey = parsedData.stake?.delegation?.voter
     const stake = Number(parsedData.stake?.delegation?.stake) || 0;
-    const startEpoch = parsedData.stake.delegation.activationEpoch;
+    const startEpoch = parsedData.stake?.delegation?.activationEpoch || 0;
     const rentReserve = Number(account.account.data.parsed.info.meta.rentExemptReserve);
     const accountLamport = Number(account.account.lamports);
     const excessLamport = accountLamport - stake - rentReserve
     const { active, state }: StakeActivationData = await this._shs.connection.getStakeActivation(pk);
-    const validator = validators.find(v => v.vote_identity === validatorVoteKey)
+    const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
 
     const stakeAccountInfo = {
       lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
       locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
-      addr,
-      shortAddr: this._utils.addrUtil(addr).addrShort,
-      balance: Number((stake / LAMPORTS_PER_SOL)),
+      address,
+      shortAddress: this._utils.addrUtil(address).addrShort,
+      balance: Number(((stake || excessLamport) / LAMPORTS_PER_SOL)),
       lamportsBalance: stake + rentReserve,
       state,
       validator,
@@ -65,6 +65,7 @@ export class NativeStakeService {
       // lastReward: inflationReward?.amount / LAMPORTS_PER_SOL || 0,
       stakeAuth: parsedData.meta.authorized.staker,
       withdrawAuth: parsedData.meta.authorized.withdrawer,
+      symbol: 'SOL'
     }
 
 
@@ -215,7 +216,7 @@ export class NativeStakeService {
     console.log(stakeAccount);
 
     const withdrawTx = StakeProgram.withdraw({
-      stakePubkey: new PublicKey(stakeAccount.addr),
+      stakePubkey: new PublicKey(stakeAccount.address),
       authorizedPubkey: walletOwner.publicKey,
       toPubkey: walletOwner.publicKey,
       lamports: stakeAccount.lamportsBalance, // Withdraw the full balance at the time of the transaction
@@ -279,7 +280,7 @@ export class NativeStakeService {
   }
   public reStake(stakeAccount: StakeAccount, walletOwner: WalletExtended) {
     try {
-      const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.addr, stakeAccount.validator.vote_identity, walletOwner)
+      const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, stakeAccount.validator.vote_identity, walletOwner)
       const record = { message: `native reStake` }
 
       return this._txi.sendTx([delegateTX], walletOwner.publicKey, null, record)

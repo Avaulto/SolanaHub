@@ -1,37 +1,39 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, effect, signal } from '@angular/core';
-import{  
+import {
   IonImg,
-  IonCheckbox,
-IonItem,
-IonLabel,
+  IonItem,
+  IonLabel,
   IonRadioGroup,
-  IonRadio
- } from '@ionic/angular/standalone';
+  IonRadio,
+  IonRow,
+  IonCol
+} from '@ionic/angular/standalone';
 @Component({
   selector: 'stake-path',
   templateUrl: './stake-path.component.html',
   styleUrls: ['./stake-path.component.scss'],
   standalone: true,
-  imports:[ 
-     IonImg,
-     IonItem,
-IonLabel,
-     IonRadioGroup,
-     IonRadio,
-    IonCheckbox
+  imports: [
+    IonImg,
+    IonItem,
+    IonLabel,
+    IonRadioGroup,
+    IonRadio,
+    IonRow,
+    IonCol
   ]
 })
-export class StakePathComponent  implements OnInit {
-  @ViewChild('selectedPath',{static:false}) selectedPath: IonRadioGroup;
+export class StakePathComponent implements OnInit {
+  @ViewChild('selectedPath', { static: false }) selectedPath: IonRadioGroup;
   @Output() onSelectPath = new EventEmitter()
   constructor() {
 
-   }
+  }
 
   ngOnInit() {
 
   }
-  selectPath(ev){
+  selectPath(ev) {
     this.onSelectPath.emit(ev.detail.value)
   }
 }

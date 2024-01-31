@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+
 import {
   IonLabel,
   IonText,
@@ -52,7 +52,7 @@ export class SelectStakePoolComponent implements AfterViewInit {
       this.selectPool(ev)
   
    }
-   constructor(public popoverController: PopoverController) {}
+ 
 
    isOpen = false
    ev;
@@ -60,15 +60,6 @@ export class SelectStakePoolComponent implements AfterViewInit {
 
     this.ev = ev
      this.isOpen= visible
-    //  const popover = await this.popoverController.create({
-    //    component: this.popoverTpl,
-    //    triggerAction:'hover',
-    //    event: e,
-    //  });
- 
-    //  await popover.present();
- 
-    //  const { role } = await popover.onDidDismiss();
-    //  console.log(`Popover dismissed with role: ${role}`);
+
    }
 }

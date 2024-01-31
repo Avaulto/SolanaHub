@@ -1,5 +1,11 @@
+ion-button{
+  height: 44px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+  text-transform: capitalize;
+}
 #wallet {
-  margin: 24px 0;
   cursor: pointer;
   display: flex;
   padding: var(--spacing-lg, 12px);

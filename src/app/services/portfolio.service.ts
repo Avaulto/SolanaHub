@@ -44,12 +44,20 @@ export class PortfolioService {
   public async getPortfolioAssets(walletAddress: string) {
 
     try {
-      const jupTokens = await this._utils.getJupTokens()
-      const portfolio = await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+      this._portfolioStaking(walletAddress)
+      const [jupTokens, portfolioData] = await Promise.all([
+        this._utils.getJupTokens(),
+        await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+      ])
+      // console.log(jupTokens, portfolioData);
+       
+      const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
+      // console.log(extendTokenData, jupTokens);
+      
       this._portfolioTokens(extendTokenData, jupTokens);
-      this._portfolioStaking(walletAddress)
+      
 
       
       const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
@@ -57,7 +65,7 @@ export class PortfolioService {
       this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
-      this.getWalletHistory(walletAddress)
+      // this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
     }

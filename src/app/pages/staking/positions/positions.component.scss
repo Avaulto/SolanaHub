@@ -24,6 +24,7 @@
 }
 
 #stake-group{
+    flex-wrap: wrap;
     display: flex;
     margin-block-end: 12px;
     ion-button{
@@ -45,3 +46,12 @@
     overflow-y: auto;
 }
 
+
+
+@media only screen and (max-width: 1200px) {
+    :host{
+        border-radius: 0 0 12px 12px;
+        border-top: 1px solid #E3E8EF;
+        border-left: 0;
+    }
+}

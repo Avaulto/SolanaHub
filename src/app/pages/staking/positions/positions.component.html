@@ -1,36 +1,37 @@
 <div id="stake-positions" class="ion-padding">
   <div id="title">active positions</div>
   <div id="sub">Effortlessly handle all your staking, from native to liquid, with diverse, user-friendly features</div>
-
   <div id="stake-group">
-    <ion-button mode="md" [fill]="positionGroup() !== 'native' ? 'clear' :'solid'" (click)="positionGroup.set('native')">native
-      staking
-    </ion-button>
-
-    <ion-button mode="md" [fill]="positionGroup() !== 'liquid' ? 'clear' :'solid'" (click)="positionGroup.set('liquid')">liquid
-      staking
-    </ion-button>
+    @for (btn of stakePosButton; track $index) {
+      <ion-button mode="md" 
+      [disabled]="loading"
+      [fill]="positionGroup() !== btn.label ? 'clear' :'solid'" 
+      (click)="setPositionGroup(btn.label)">
+        <span class="ion-hide-xl-down">{{btn.label}} staking</span>
+        <span class="ion-hide-xl-up"><ion-img [src]="btn.imgUrl" /></span>
+      </ion-button>
+    }
   </div>
   <div id="positions-container">
-    @if(positionGroup() === 'native'){
-    @for (stakeAccount of stakePosition(); track $index) {
-
-      <stake-position [stakeAccount]="stakeAccount" [stakeAccounts]="stakePosition()" />
-
-    
+@if(loading === false){
+    @for (stake of stakePosition(); track $index) {
+      <stake-position [stake]="stake" [account]="stakeAccounts()[$index]" [stakeAccounts]="stakeAccounts()" />
     }@empty {
       @if(stakePosition() === null){
-        <stake-position [stakeAccount]="" />
-        <stake-position [stakeAccount]="" />
-        <stake-position [stakeAccount]="" />
+        <stake-position [stake]="" />
+        <stake-position [stake]="" />
+        <stake-position [stake]="" />
       }@else {
 
         No positions found
       }
     }
-    }@else if(positionGroup() === 'liquid'){
-    liquid positions
-    }
+  }@else {
+    
+    <stake-position [stake]="" />
+    <stake-position [stake]="" />
+    <stake-position [stake]="" />
+  }
   </div>
   <!-- {{stakePosition() | json}} -->
 </div>
