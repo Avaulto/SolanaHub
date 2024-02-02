@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, WritableSignal, computed, effect, inject, signal } from '@angular/core';
-import { StakeAccount } from 'src/app/models';
+import { Stake, StakeAccount } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
   IonLabel,
@@ -30,8 +30,8 @@ export class MergeModalComponent implements OnInit {
   @Input() stakeAccounts: StakeAccount[];
   @Output() onAccountsSelected = new EventEmitter();
   @ViewChildren('checkAccounts') checkAccounts: QueryList<IonCheckbox>
-  public accountsToMerge: WritableSignal<StakeAccount[]> = signal(null);
-  public mergedBalance = computed(() => this.accountsToMerge() ? this.accountsToMerge().reduce((accumulator, currentValue: StakeAccount) => accumulator + currentValue.balance, 0) : 0)
+  public accountsToMerge: WritableSignal<Stake[]> = signal(null);
+  public mergedBalance = computed(() => this.accountsToMerge() ? this.accountsToMerge().reduce((accumulator, currentValue: Stake) => accumulator + currentValue.balance, 0) : 0)
   public selectedAccounts = []
   constructor() {
     effect(() => console.log(this.accountsToMerge(), this.mergedBalance()))

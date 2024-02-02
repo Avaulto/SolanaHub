@@ -65,7 +65,6 @@ export class NativeStakeService {
       // lastReward: inflationReward?.amount / LAMPORTS_PER_SOL || 0,
       stakeAuth: parsedData.meta.authorized.staker,
       withdrawAuth: parsedData.meta.authorized.withdrawer,
-      symbol: 'SOL'
     }
 
 

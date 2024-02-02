@@ -29,7 +29,8 @@ export class OptionsPopoverComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log(this.stakeAccount, this.stakeAccounts);
+    
   }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()

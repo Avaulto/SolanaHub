@@ -21,7 +21,7 @@
 
   </div>
   <div>
-    @if((llScore$ | async)?.pointsBreakDown?.hubDomainHolder; as hubDomainHolder){
+    @if((llScore$ | async)?.hubDomainHolder; as hubDomainHolder){
       <ion-label id="wallet-domain">{{hubDomainHolder}}</ion-label>
     }
     <div id="wallet-address"> {{ (walletPublicKey$ | async) }}</div>

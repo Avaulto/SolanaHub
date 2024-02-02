@@ -14,7 +14,7 @@ import { NativeStakeService } from './native-stake.service';
 })
 export class PortfolioService {
   // todo - refactor to signal
-  public walletAssets = single();
+  public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
   public nfts: WritableSignal<NFT[]> = signal(null);
   public staking: WritableSignal<StakeAccount[]> = signal(null);
@@ -45,7 +45,7 @@ export class PortfolioService {
 
     try {
       this._portfolioStaking(walletAddress)
-      const [jupTokens, portfolioData] = await Promise.all([
+      const [jupTokens, portfolioData]: [JupToken[], FetchersResult | any] = await Promise.all([
         this._utils.getJupTokens(),
         await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       ])
@@ -53,7 +53,7 @@ export class PortfolioService {
        
       const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
-      const extendTokenData: any = editedData.find(group => group.platformId === 'wallet-tokens')
+      const extendTokenData = editedData.find(group => group.platformId === 'wallet-tokens')
       // console.log(extendTokenData, jupTokens);
       
       this._portfolioTokens(extendTokenData, jupTokens);
@@ -65,7 +65,8 @@ export class PortfolioService {
       this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
-      // this.getWalletHistory(walletAddress)
+      this.walletAssets.set(portfolio)
+      this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
     }

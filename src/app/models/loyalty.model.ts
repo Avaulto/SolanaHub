@@ -20,6 +20,7 @@ export interface LoyaltyPoint {
     walletOwner:     string;
     loyaltyPoints:   number;
     pointsBreakDown: PointsBreakDown;
+    hubDomainHolder: string;
     prizePoolShare:  number;
     prize?: number
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StakeComponent } from '../stake.component';
-import { StakeAccount } from 'src/app/models';
+import { Stake, StakeAccount } from 'src/app/models';
 import {
   IonLabel,
   IonInput,

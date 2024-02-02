@@ -61,7 +61,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
 
       const findMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-      if(findMember){
+      if(findMember && lllb && prizePool){
         //@ts-ignore
         findMember.weeklyAirdrop = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
       }
@@ -89,7 +89,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         liquidStake: { mSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.mSOLpts), bSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.bSOLpts) },
         dao: { veMNDE: this._utilService.formatBigNumbers(staker.pointsBreakDown.veMNDEpts), veBLZE: this._utilService.formatBigNumbers(staker.pointsBreakDown.veBLZEpts) },
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
-        hubDomainHolder: staker.pointsBreakDown.hubDomainHolder,
+        hubDomainHolder: staker.hubDomainHolder,
         totalPoints: this._utilService.formatBigNumbers(staker.loyaltyPoints),
         weeklyAirdrop: this._utilService.formatBigNumbers(this.prizePool$.value.rebates * staker?.prizePoolShare)
       }

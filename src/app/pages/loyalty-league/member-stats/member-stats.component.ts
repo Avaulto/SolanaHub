@@ -44,8 +44,8 @@ export class MemberStatsComponent implements OnInit {
           value: this._utilService.formatBigNumbers(pointsBreakDown.referralPts)
         },
         {
-          label: 'HUB domain holder:',
-          value: pointsBreakDown.hubDomainHolder ? 'Yes' : 'No'
+          label: 'HUB domain boost:',
+          value: this._utilService.formatBigNumbers(pointsBreakDown.hubDomain_Boost)
         },
       ]
     }

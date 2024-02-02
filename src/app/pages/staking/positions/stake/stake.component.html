@@ -64,7 +64,7 @@
       }
 
 
-      @if(stake){
+      @if(stake?.type === 'native'){
       <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"></ion-icon>
       }
     </div>

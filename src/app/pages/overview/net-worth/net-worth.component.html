@@ -1,2 +1,6 @@
 <div id="nw-key" class="ion-text-capitalize">net worth</div>
-<div id="nw-val">{{portfolioTotalValue | currency }}</div>
+    @if (portfolioTotalValue()) {
+        <div id="nw-val">{{portfolioTotalValue() | currency }}</div>
+    }@else {
+        <ion-skeleton-text [animated]="true" />
+    }

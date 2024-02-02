@@ -54,7 +54,7 @@ export class MftComponent implements OnInit {
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
-    // this.configuration.isLoading = true;
+    this.configuration.isLoading = true;
   }
   previousPage() {
   
@@ -88,14 +88,14 @@ export class MftComponent implements OnInit {
   constructor() { 
     effect(() =>{
       // console.log('mft loaded', this.tableData(), this.tableRows);
-      if(this.tableData().length < this.tableRows){
+      if(this.tableData && this.tableData()?.length < this.tableRows){
         this.configuration.paginationEnabled = false
       }else{
         this.configuration.paginationEnabled = true
       }
       if(this.tableData()){
         
-        // this.configuration.isLoading = false;
+        this.configuration.isLoading = false;
       }
     })
   }

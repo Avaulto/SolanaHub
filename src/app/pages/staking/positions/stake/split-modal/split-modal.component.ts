@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
-import { StakeAccount } from 'src/app/models';
+import { Stake, StakeAccount } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
   IonLabel,
@@ -21,6 +21,7 @@ import { UtilService } from 'src/app/services';
   ]
 })
 export class SplitModalComponent implements OnInit{
+  @Input() stake:Stake;
   @Input() targetStakeAccount: StakeAccount;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)

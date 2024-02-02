@@ -4,7 +4,6 @@
   <div id="stake-group">
     @for (btn of stakePosButton; track $index) {
       <ion-button mode="md" 
-      [disabled]="loading"
       [fill]="positionGroup() !== btn.label ? 'clear' :'solid'" 
       (click)="setPositionGroup(btn.label)">
         <span class="ion-hide-xl-down">{{btn.label}} staking</span>
@@ -13,11 +12,13 @@
     }
   </div>
   <div id="positions-container">
-@if(loading === false){
-    @for (stake of stakePosition(); track $index) {
+
+  @if(positionGroup() === 'native'){
+    @for (stake of nativeStake(); track $index) {
       <stake-position [stake]="stake" [account]="stakeAccounts()[$index]" [stakeAccounts]="stakeAccounts()" />
     }@empty {
-      @if(stakePosition() === null){
+      
+      @if(nativeStake() === null){
         <stake-position [stake]="" />
         <stake-position [stake]="" />
         <stake-position [stake]="" />
@@ -27,11 +28,21 @@
       }
     }
   }@else {
-    
-    <stake-position [stake]="" />
-    <stake-position [stake]="" />
-    <stake-position [stake]="" />
+    @for (stake of liquidStake(); track $index) {
+      <stake-position [stake]="stake"  />
+    }@empty {
+      @if(liquidStake() === null){
+        <stake-position [stake]="" />
+        <stake-position [stake]="" />
+        <stake-position [stake]="" />
+      }@else {
+
+        No positions found
+      }
+    }
   }
+
+
   </div>
   <!-- {{stakePosition() | json}} -->
 </div>
