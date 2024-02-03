@@ -6,7 +6,7 @@
  id="search-bar" /> -->
 
 
-@for (token of filteredTokens()?.length; track $index) {
+<!-- @for (token of filteredTokens(); track $index) { -->
   <!-- <ion-content> -->
 <cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900"  maxBufferPx="1350">
   <ion-list lines="none">
@@ -28,7 +28,7 @@
   </ion-list>
 </cdk-virtual-scroll-viewport>
 <!-- </ion-content> -->
-
+<!-- <br/>
 }@empty {
   no tokens found
-} 
+} -->

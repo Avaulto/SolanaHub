@@ -1,5 +1,5 @@
 <form [formGroup]="tokenSwapForm" class=" ion-margin-bottom">
-  <swap-setting [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting>
+  <swap-setting (reloadRoute)="calcBestRoute()" [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting>
   <div class="token-exchange">
     <swap-input 
     [tokenControl]="tokenSwapForm.controls['inputToken']"

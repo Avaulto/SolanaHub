@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 
 import { addIcons } from 'ionicons';
@@ -21,6 +21,7 @@ import { SlippageModalComponent } from './slippage-modal/slippage-modal.componen
 })
 export class SettingComponent  implements OnInit {
   @Input() slippageControl;
+  @Output() reloadRoute = new EventEmitter()
   public selectedSlippage = signal(null)
 
   private _modalCtrl = inject(PopoverController);
