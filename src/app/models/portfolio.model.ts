@@ -13,8 +13,8 @@ export interface Token extends JupToken{
     networkId?: string,
     imgUrl?: string,
     value?: string,
-    amount?: string,
     price?: string
+    amount?: string
 }
 export interface NFT{
     collectionName: string,

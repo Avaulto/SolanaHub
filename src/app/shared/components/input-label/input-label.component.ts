@@ -29,7 +29,7 @@ export class InputLabelComponent  implements OnInit, OnChanges  {
    
     if(this.asset && this.walletTokens()){
 
-      this.asset.amount = this.walletTokens().find(t => t.address === this.asset.address)?.amount
+      this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
     }
    }
 ngOnInit(): void {
@@ -37,7 +37,7 @@ ngOnInit(): void {
 }
 
   setSize(size: 'half' | 'max'){
-    let amount = Number(this.asset.amount)
+    let amount = Number(this.asset.balance)
     if(size === 'half'){
       amount = amount / 2
     }

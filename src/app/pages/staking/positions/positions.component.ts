@@ -47,7 +47,7 @@ export class PositionsComponent implements OnInit, OnChanges {
         type: 'liquid',
         address: lst.address,
         apy: pool.apy,
-        balance: Number(lst.amount),
+        balance: Number(lst.balance),
         value: Number(lst.value),
         state: 'directStake',
         symbol: lst.symbol,

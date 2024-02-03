@@ -49,12 +49,12 @@ export class PortfolioService {
         this._utils.getJupTokens(),
         await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       ])
-      // console.log(jupTokens, portfolioData);
+  
        
       const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       const extendTokenData = editedData.find(group => group.platformId === 'wallet-tokens')
-      // console.log(extendTokenData, jupTokens);
+
       
       this._portfolioTokens(extendTokenData, jupTokens);
       
@@ -65,7 +65,7 @@ export class PortfolioService {
       this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
-      this.walletAssets.set(portfolio)
+      this.walletAssets.set(editedData)
       this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
@@ -78,8 +78,7 @@ export class PortfolioService {
       // add pipes
       const tokensAggregated: Token[] = tokens.data.assets.map((item: Token) => {
         // item.amount = this._utilService.decimalPipe.transform(item.amount, '1.2') || '0'
-        item.price = this._utils.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
-        item.value = this._utils.currencyPipe.transform(item.value) || '0'
+        // item.price = this._utils.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
         return item
       })
       this.tokens.set(tokensAggregated)

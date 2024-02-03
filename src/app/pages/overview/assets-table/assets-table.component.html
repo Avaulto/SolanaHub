@@ -71,10 +71,18 @@
   </div>
 </ng-template>
 
+<ng-template #simpleUsdValue let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item-light">{{row.value | currency}}</div>
+</ng-template>
+
+<ng-template #simplePriceValue let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item-light">{{row.price | currency: 'USD':'symbol':'1.2-5'}}</div>
+</ng-template>
+
 <ng-template #validatorBalanceTpl let-row let-rowIndex="rowIndex" let-column="column">
 
   <div class="item-balance">
-    <div class="item-bold">{{row.balance | number}} SOL</div>
+    <div class="item-bold">{{row.balance | number: '1.2'}} SOL</div>
     <div class="item-light">{{row.balance * solPrice() | currency}}</div>
   </div>
 
@@ -109,7 +117,7 @@
 
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="balance">
-    {{row.amount | number: '1.2'}} {{row.symbol}}
+    {{row.balance | number: '1.2'}} {{row.symbol}}
 
   </div>
 </ng-template>

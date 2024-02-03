@@ -10,9 +10,13 @@ import { IonSkeletonText } from '@ionic/angular/standalone';
   standalone: true,
   imports:[CurrencyPipe, IonSkeletonText]
 })
-export class NetWorthComponent implements OnInit {
+export class NetWorthComponent {
   public walletAssets = inject(PortfolioService).walletAssets
-  public portfolioTotalValue = computed(() => this.walletAssets()?.elements.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
-  ngOnInit() {}
-
+  public portfolioTotalValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
+  constructor(){
+    effect(() =>{
+      console.log(this.walletAssets()?.filter(data => data.value));
+      
+    })
+  }
 }

@@ -73,8 +73,8 @@ export class InputComponent implements OnInit,OnChanges {
   async openTokensModal() {
     const modal = await this._modalCtrl.create({
       component: TokenListComponent,
-      componentProps: { jupTokens: this.jupTokens() },
-      // cssClass:'modal-style'
+      componentProps: { jupTokens: this.jupTokens },
+      cssClass:'swap-tokens-modal'
     });
     modal.present();
 

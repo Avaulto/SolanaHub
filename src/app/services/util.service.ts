@@ -26,9 +26,9 @@ export class UtilService {
   constructor(
     // private _jupStore:JupStoreService,
     private localStore: LocalStorageService
-    ) {
+  ) {
   }
-  public serverlessAPI =  location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
+  public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
   private _systemExplorer = new BehaviorSubject<string>(this.localStore.getData('explorer') || 'https://solscan.io' as string);
   public explorer$ = this._systemExplorer.asObservable();
@@ -73,30 +73,39 @@ export class UtilService {
     return PublicKey.isOnCurve(address);
   }
 
+  public jupTokens: JupToken[] = null
   public async getJupTokens(): Promise<JupToken[]> {
     //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
-    let tokensList:JupToken[] = []
-    try {
-       tokensList = await (await fetch('https://token.jup.ag/all')).json();
-       tokensList.forEach(t => t.logoURI = t.logoURI ?  t.logoURI : 'assets/images/unknown.svg');
-    } catch (error) {
-      console.error();
+    if (this.jupTokens) {
+      return this.jupTokens
+    } else {
+      try {
+        this.jupTokens = await (await fetch('https://token.jup.ag/strict')).json();
+        this.jupTokens.forEach(t => t.logoURI = t.logoURI ? t.logoURI : 'assets/images/unknown.svg');
+      } catch (error) {
+        console.error();
+      }
     }
-    return tokensList
+    return this.jupTokens
   }
-  public addTokenData(assets: any,  tokensInfo: JupToken[]): any[] {
+  public addTokenData(assets: any, tokensInfo: JupToken[]): any[] {
+
     return assets.map((res: any) => {
+
+
       res.data.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
       const token = tokensInfo.find(token => token.address === res.data.address)
-      res.name = token?.name ? token.name  : '';
-      res.name === 'Wrapped SOL' ?  res.name = 'Solana' :  res.name 
-      res.symbol = token?.symbol ? token.symbol  : '';
-      res.imgUrl = token?.logoURI ? token.logoURI  : 'assets/images/unknown.svg';
-      res.decimals = token?.decimals ? token.decimals  : '';;
+      res.name = token?.name ? token.name : '';
+      res.name === 'Wrapped SOL' ? res.name = 'Solana' : res.name
+      res.symbol = token?.symbol ? token.symbol : '';
+      res.imgUrl = token?.logoURI ? token.logoURI : 'assets/images/unknown.svg';
+      res.decimals = token?.decimals ? token.decimals : '';;
+      res.balance = res.data.amount
       return res
     }).map((item: any) => {
       Object.assign(item, item.data)
+      delete item.amount
       delete item.data;
 
       return item

@@ -1,6 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild, WritableSignal, computed, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, WritableSignal, computed, effect, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
 
 import { addIcons } from 'ionicons';
 import { swapVertical } from 'ionicons/icons';
@@ -8,18 +7,12 @@ import { PortfolioService } from 'src/app/services/portfolio.service';
 import { JupStoreService } from 'src/app/services/jup-store.service';
 import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
-import { TokenListComponent } from '../token-list/token-list.component';
 import { IonInput, IonIcon, IonButton, IonImg, IonSkeletonText } from '@ionic/angular/standalone';
 import { MaskitoModule } from '@maskito/angular';
-import { Maskito, maskitoTransform, type MaskitoOptions } from '@maskito/core';
-
-
-import { maskitoNumberOptionsGenerator } from '@maskito/kit';
-import { AsyncPipe, CurrencyPipe, DecimalPipe } from '@angular/common';
+import {  DecimalPipe } from '@angular/common';
 import { RouteCalcComponent } from '../route-calc/route-calc.component';
 import { SettingComponent } from './setting/setting.component';
 import { Observable } from 'rxjs';
-import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { InputComponent } from './input/input.component';
 @Component({
   selector: 'swap-form',
@@ -59,14 +52,15 @@ export class FormComponent implements OnInit {
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
   }
   public waitForBestRoute = signal(false);
-  public jupTokens = signal([] as JupToken[])
+  public jupTokens = signal(null as JupToken[])
   public slippage = signal(0.5);
   public getInTokenPrice = signal(null);
   public getOutTokenPrice = signal(null);
-
+  
   public bestRoute: WritableSignal<JupRoute> = signal(null);
   public tokenSwapForm: FormGroup;
   constructor(
+    private _portfolioService: PortfolioService,
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
     private _jupStore: JupStoreService,
@@ -130,8 +124,8 @@ export class FormComponent implements OnInit {
       }
     })
     const tokensList = await this._util.getJupTokens();
+
     this.jupTokens.set(tokensList)
-    // this.tokenIn = tokensList.find()
   }
 
 

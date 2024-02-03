@@ -1,6 +1,6 @@
 <div id="action-box">
   <div id="title">Wallet Balance</div>
-  <div id="token-balance">{{token.amount| number: '1.2'}} {{token.symbol}}</div>
+  <div id="token-balance">{{token.balance| number: '1.2'}} {{token.symbol}}</div>
 
   <ion-segment value="default" mode="md">
     <ion-segment-button value="default">
@@ -17,14 +17,15 @@
       <ion-input formControlName="targetAddress"></ion-input>
     </div>
     <div class="control-group">
-      <ion-label>amount</ion-label>
+      <!-- <ion-label>amount</ion-label> -->
+      <input-label label="Amount" (onSetSize)="setStakeSize($event)" [asset]="token"/>
       <ion-input type="number" formControlName="amount"></ion-input>
     </div>
-    <div class="private-tx">
+    <!-- <div class="private-tx">
       <ion-toggle></ion-toggle>
       <ion-label>private transaction</ion-label>
       <ion-icon name="help-circle-outline"></ion-icon>
-    </div>
-    <ion-button expand="block" [disabled]="formSubmitted || sendTokenForm.invalid">send</ion-button>
+    </div> -->
+    <ion-button expand="block" (click)="send()" [disabled]="formSubmitted || sendTokenForm.invalid">Send</ion-button>
   </form>
 </div>

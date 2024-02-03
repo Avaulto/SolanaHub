@@ -186,48 +186,49 @@ export class SolanaHelpersService {
   //     return tokensBalance;
 
   //   }
-  // async getOrCreateTokenAccountInstruction(mint: PublicKey, user: PublicKey, payer: PublicKey | null = null): Promise<TransactionInstruction | null> {
-  //   try {
-  //     const userTokenAccountAddress = await getAssociatedTokenAddress(mint, user, false);
-  //     const userTokenAccount = await this.connection.getParsedAccountInfo(userTokenAccountAddress);
-  //     if (userTokenAccount.value === null) {
-  //       return createAssociatedTokenAccountInstruction(payer ? payer : user, userTokenAccountAddress, user, mint);
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     console.warn(error)
-  //     return
-  //     // this._formatErrors()
-  //   }
-  // }
-  // public async sendSplOrNft(mintAddressPK: PublicKey, walletOwner: PublicKey, toWallet: string, amount: number) {
-  //   try {
-  //     const toWalletPK = new PublicKey(toWallet);
-  //     const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
-  //     const targetAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, toWalletPK, walletOwner);
-  //     const tokenAccountSourcePubkey = await getAssociatedTokenAddress(mintAddressPK, walletOwner);
-  //     const tokenAccountTargetPubkey = await getAssociatedTokenAddress(mintAddressPK, toWalletPK);
+  async getOrCreateTokenAccountInstruction(mint: PublicKey, user: PublicKey, payer: PublicKey | null = null): Promise<TransactionInstruction | null> {
+    try {
+      const userTokenAccountAddress = await getAssociatedTokenAddress(mint, user, false);
+      const userTokenAccount = await this.connection.getParsedAccountInfo(userTokenAccountAddress);
+      if (userTokenAccount.value === null) {
+        return createAssociatedTokenAccountInstruction(payer ? payer : user, userTokenAccountAddress, user, mint);
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.warn(error)
+      return null
+      // this._formatErrors()
+    }
+  }
+  public async sendSplOrNft(mintAddressPK: PublicKey, walletOwner: PublicKey, toWallet: string, amount: number): Promise<TransactionInstruction[] | null> {
+    try {
+      const toWalletPK = new PublicKey(toWallet);
+      const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
+      const targetAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, toWalletPK, walletOwner);
+      const tokenAccountSourcePubkey = await getAssociatedTokenAddress(mintAddressPK, walletOwner);
+      const tokenAccountTargetPubkey = await getAssociatedTokenAddress(mintAddressPK, toWalletPK);
 
-  //     const decimals = await (await this.connection.getParsedAccountInfo(mintAddressPK)).value.data['parsed'].info.decimals;
+      const decimals = await (await this.connection.getParsedAccountInfo(mintAddressPK)).value.data['parsed'].info.decimals;
 
-  //     const transferSplOrNft = createTransferCheckedInstruction(
-  //       tokenAccountSourcePubkey,
-  //       mintAddressPK,
-  //       tokenAccountTargetPubkey,
-  //       walletOwner,
-  //       amount * Math.pow(10, decimals),
-  //       decimals,
-  //       [],
-  //       TOKEN_PROGRAM_ID
-  //     )
-  //     const instructions: TransactionInstruction[] = [ownerAta, targetAta, transferSplOrNft].filter(i => i !== null) as TransactionInstruction[];
-  //     return await this.sendTx(instructions, walletOwner)
-  //   } catch (error) {
+      const transferSplOrNft = createTransferCheckedInstruction(
+        tokenAccountSourcePubkey,
+        mintAddressPK,
+        tokenAccountTargetPubkey,
+        walletOwner,
+        amount * Math.pow(10, decimals),
+        decimals,
+        [],
+        TOKEN_PROGRAM_ID
+      )
+      const instructions: TransactionInstruction[] = [ownerAta, targetAta, transferSplOrNft].filter(i => i !== null) as TransactionInstruction[];
+      return instructions
+    } catch (error) {
 
-  //     const res = new TokenOwnerOffCurveError()
-  //     console.error(error, res)
-  //     this._formatErrors(error)
-  //   }
-  // }
+      const res = new TokenOwnerOffCurveError()
+      console.error(error, res)
+      // this._formatErrors(error)
+      return null
+    }
+  }
 }

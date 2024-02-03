@@ -165,6 +165,21 @@ ion-spinner{
       contain: initial;
     }
 }
+
+.swap-tokens-modal{
+    --width: 420px;
+    --border-radius: 12px;
+    --max-width: 90%;
+    --max-height: 90%;
+    --overflow: auto;
+  
+    > .ion-page {
+      position: static;
+      contain: initial;
+    }
+}
+
+
 .swap-setting-modal{
     --width: 340px;
     --height: 300px;

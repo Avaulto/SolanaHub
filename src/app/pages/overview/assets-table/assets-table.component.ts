@@ -40,7 +40,8 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('statusTpl', { static: true }) statusTpl: TemplateRef<any> | any;
   @ViewChild('redirectTpl', { static: true }) redirectTpl: TemplateRef<any> | any;
   @ViewChild('validatorBalanceTpl', { static: true }) validatorBalanceTpl: TemplateRef<any> | any;
-
+  @ViewChild('simpleUsdValue', { static: true }) simpleUsdValue: TemplateRef<any> | any;
+  @ViewChild('simplePriceValue', { static: true }) simplePriceValue: TemplateRef<any> | any;
   // nft tpls
   @ViewChild('collectionInfoTpl', { static: true }) collectionInfoTpl: TemplateRef<any> | any;
   @ViewChild('nftListTpl', { static: true }) nftListTpl: TemplateRef<any> | any;
@@ -107,9 +108,9 @@ export class AssetsTableComponent implements OnInit {
     this._columnsOptions = {
       tokens: [
         { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '40%' },
-        { key: 'amount', title: 'Amount', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'price', title: 'Price', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'value', title: 'Value', width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
+        { key: 'balance', title: 'balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'price', title: 'Price',cellTemplate:this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'value', title: 'Value',cellTemplate:this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
         { key: 'last-seven-days', title: 'Last 7 Days', width: '15%' }
       ],
       staking:  [
