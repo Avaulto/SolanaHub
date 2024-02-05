@@ -151,10 +151,12 @@ export const defiDummyPlaceholder = [
                 symbol: 'SOL'
             },
         ],
-        dex: 'orca',
+        imgURL:'https://assets.coingecko.com/coins/images/17547/large/Orca_Logo.png?1696517083',
+        platform: 'orca',
         type: 'farm',
-        yourLiquidity: 2342,
-        apy: 11,
+        holdings: [{symbol: 'USDC', balance: 123 }, {symbol: 'SOL', balance: 567 }],
+        value: 32434,
+        link: 'www.meteora.ag',
         supported: false,
     },
     {
@@ -165,10 +167,12 @@ export const defiDummyPlaceholder = [
                 symbol: 'SOL'
             },
         ],
-        dex: 'meteora',
+        imgURL:'https://assets.coingecko.com/coins/images/17547/large/Orca_Logo.png?1696517083',
+        pool: 'meteora',
         type: 'farm',
-        yourLiquidity: 2342,
-        apy: 11,
+        holdings: [ {symbol: 'SOL', balance: 567 }],
+        value: 32434,
+        link: 'www.marginfi.com',
         supported: false,
     },
     {
@@ -186,10 +190,12 @@ export const defiDummyPlaceholder = [
                 symbol: 'SOL'
             },
         ],
+        imgURL:'https://styles.redditmedia.com/t5_6qrg6t/styles/communityIcon_92h259miw7l91.png',
         dex: 'kamino',
         type: 'providing liquidity',
-        yourLiquidity: 2342,
-        apy: 11,
+        holdings: [{symbol: 'USDC', balance: 123 }, {symbol: 'SOL', balance: 567 }, {symbol: 'SOL', balance: 567 }],
+        value: 32434,
+        link: 'www.marginfi.com',
         supported: false,
     },
 ]

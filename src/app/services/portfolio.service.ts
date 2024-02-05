@@ -1,13 +1,12 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory, WalletExtended } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory, WalletExtended, Platform, defiHolding } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
-import { ApiService } from './api.service';
-import { Observable, catchError, map, of, shareReplay, single } from 'rxjs';
+
 import { PriceHistoryService } from './price-history.service';
 import { SolanaHelpersService } from './solana-helpers.service';
-import { PublicKey } from '@solana/web3.js';
+
 import { NativeStakeService } from './native-stake.service';
 @Injectable({
   providedIn: 'root'
@@ -30,10 +29,10 @@ export class PortfolioService {
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if(wallet){
-        // this._shs.connection.onAccountChange(wallet.publicKey, () =>{
-        //     console.log( 'init callback listen');
-        //     this.getPortfolioAssets(wallet.publicKey.toBase58())
-        // })
+        this._shs.connection.onAccountChange(wallet.publicKey, () =>{
+            console.log( 'init callback listen');
+            this.getPortfolioAssets(wallet.publicKey.toBase58())
+        })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
     })
@@ -52,20 +51,21 @@ export class PortfolioService {
   
        
       const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
-      const editedData: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
-      const extendTokenData = editedData.find(group => group.platformId === 'wallet-tokens')
-
+      const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
       
+      // console.log(portfolio.elements);
+      
+      const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens);
-      
+      this._portfolioDeFi(portfolio.elements, jupTokens)
 
       
-      const extendNftData: any = editedData.find(group => group.platformId === 'wallet-nfts')
+      const extendNftData: any = mergeDuplications.find(group => group.platformId === 'wallet-nfts')
       // console.log(extendNftData);
       this.nfts.set(extendNftData)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
-      this.walletAssets.set(editedData)
+      this.walletAssets.set(mergeDuplications)
       this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
@@ -100,6 +100,79 @@ export class PortfolioService {
 
     }
 
+  }
+  private async _getPlatformsData(): Promise<Platform[]> {
+    let platformInfo = []
+    try {
+      platformInfo = await (await fetch(`${this.restAPI}/api/portfolio/platforms`)).json();
+    } catch (error) {
+      console.warn(error)
+    }
+    return platformInfo
+  }
+  private async _portfolioDeFi(editedDataExtended, tokensInfo){
+     // add more data for platforms
+     const getPlatformsData = await this._getPlatformsData();
+
+     
+    const excludeList = ['wallet-tokens','wallet-nfts', 'native-stake' ]
+    const defiHolding = await Promise.all(editedDataExtended
+    .filter(g => !excludeList.includes(g.platformId) && g.value > 0.01)
+    .sort((a:defiHolding, b:defiHolding) => a.value > b.value ? -1 : 1)
+    .map(async group => {
+  
+        
+         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
+        //  group.platformUrl = this._addPlatformUrl(platformData.id)
+         Object.assign(group, platformData);
+         let assets = []
+         let poolTokens, holdings;
+         if(group.type === "liquidity" ){
+           if(group.data.liquidities){
+
+             group.data.liquidities.forEach(async liquid => {
+              this._utils.addTokenData(liquid.assets,  tokensInfo)
+              assets.push(liquid.assets)
+             })
+             assets = assets.flat()
+           }
+         }
+         if(group.type === "multiple" ){
+          this._utils.addTokenData(group.data.assets,  tokensInfo)
+          assets.push(group.data.assets)
+   
+          assets = assets.flat()
+         }
+         
+         if(group.type === "borrowlend" ){
+           group.data.suppliedAssets ? this._utils.addTokenData(group.data.suppliedAssets,  tokensInfo) : null;
+           group.data.borrowedAssets ? this._utils.addTokenData(group.data.borrowedAssets,  tokensInfo) : null;
+           group.data.suppliedAssets.map(a => a.condition = 'credit')
+           group.data.borrowedAssets.map(a => a.condition = 'debt')
+
+           assets.push(group.data.suppliedAssets)
+           assets.push(group.data.borrowedAssets)
+           assets = assets.flat()
+          }
+          holdings =  assets?.map(a => { return {balance: a.balance,symbol: a.symbol, condition: a.condition }}) || []
+          poolTokens = assets?.map(a => { return {imgURL: a.imgUrl,symbol: a.symbol }}) || []
+          console.log(group);
+          console.log(assets);
+         let defiHolding: defiHolding = {
+          value:group.value,
+          imgURL:group.image,
+          poolTokens,
+          holdings,
+          type:       group.label,
+          link:       group.website
+         };
+
+         return defiHolding
+     })
+    
+     )
+     this.defi.set(defiHolding)
+     
   }
   public async getWalletHistory(walletAddress: string): Promise<WritableSignal<TransactionHistory[]>> {
 

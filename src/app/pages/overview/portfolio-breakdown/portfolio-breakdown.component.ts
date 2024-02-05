@@ -34,7 +34,6 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   }, []))
   public colorPicker(assetClass: string) {
     let color = ''
-    console.log(assetClass);
     
     switch (assetClass) {
       case 'Wallet':

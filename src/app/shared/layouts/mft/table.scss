@@ -92,6 +92,7 @@ ion-button {
         }
      
         tbody>tr>td {
+            min-width: 100px;
             color: var(--gray-modern-600, #4B5565);
             font-size: 12px;
             font-weight: 400;
@@ -122,32 +123,9 @@ ion-button {
         .pagination-previous, .pagination-next{
             visibility: hidden;
         }
-        // }
-        // .pagination-previous{
-        //     left: 32px;
-        // }
-        // .pagination-next{
-        //     right: 32px;
-        // }
-        // .pagination-next::before{
-        //     content: "Next";
-        //     position: absolute;
-        //     // left: 32px;
-        // }
-        // .pagination-previous::before{
-        //     content: "Previous";
-        //     position: absolute;
-        //     // right: 32px;
-        // }
-        // .pagination-previous, .pagination-next {
-        //     content: "dawd";
-        //     position: absolute;
-        //     border-radius: var(--radius-md, 8px);
-        //     border: 1px solid var(--gray-modern-200, #E3E8EF);
-        //     background: #FFF;
-        //     padding: 3px 12px;
-        // }
-
+        .ngx-pagination.responsive{
+            margin: 10px;
+        }
         .ngx-pagination li {
             a:hover {
                 background-color: transparent;
@@ -155,8 +133,8 @@ ion-button {
 
             background-color: white;
 
-            width: 40px;
-            height: 40px;
+            // width: 40px;
+            // height: 40px;
             color: var(--gray-modern-500, #697586);
             text-align: center;
 

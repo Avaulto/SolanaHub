@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, WritableSignal, effect } from '@angular/core';
 
 import {
   IonLabel,
@@ -9,8 +10,9 @@ import {
   IonImg,
   IonContent,
   IonPopover,
-  IonSkeletonText
-} from '@ionic/angular/standalone';
+  IonSkeletonText,
+  IonChip
+ } from '@ionic/angular/standalone';
 import { StakePool } from 'src/app/models';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
@@ -20,6 +22,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
   styleUrls: ['./select-stake-pool.component.scss'],
   standalone: true,
   imports: [
+    IonChip, 
     IonLabel,
     IonAvatar,
     IonText,
@@ -29,7 +32,8 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
     IonContent,
     IonSkeletonText,
     IonImg,
-    TooltipModule
+    TooltipModule,
+    DecimalPipe
   ]
 })
 export class SelectStakePoolComponent implements AfterViewInit {
@@ -43,13 +47,22 @@ export class SelectStakePoolComponent implements AfterViewInit {
     
   }
 
-  @Input() stakePools: StakePool[] = []
-
+  @Input() stakePools: WritableSignal<StakePool[]>
+constructor(){
+  effect(() => {
+    if (this.stakePools()) {
+      console.log(this.stakePools());
+      
+      const ev: any = { detail: { value: this.stakePools()[0] } }
+      this.defaultPool = this.stakePools()[0];
+      setTimeout(() => { 
+        this.selectPool(ev)
+      });
+    }
+  })
+}
   ngAfterViewInit() {
-  
-      const ev: any= {detail:{value: this.stakePools[0]}}
-      this.defaultPool = this.stakePools[0];
-      this.selectPool(ev)
+
   
    }
  

@@ -1,4 +1,4 @@
-import { CurrencyPipe, DecimalPipe, NgClass, SlicePipe } from '@angular/common';
+import { CurrencyPipe, DecimalPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
@@ -29,7 +29,8 @@ import { PriceHistoryService, UtilService } from 'src/app/services';
     IonButton,
     IonIcon,
     IonChip,
-    NgClass
+    NgClass,
+    NgStyle
   ]
 })
 export class AssetsTableComponent implements OnInit {
@@ -49,6 +50,9 @@ export class AssetsTableComponent implements OnInit {
 
   // defi tpls
   @ViewChild('tokenPoolTpl', { static: true }) tokenPoolTpl: TemplateRef<any> | any;
+  @ViewChild('typeDefiTpl', { static: true }) typeDefiTpl: TemplateRef<any> | any;
+  @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
+  @ViewChild('holdingsTpl', { static: true }) holdingsTpl: TemplateRef<any> | any;
   //@ts-ignore
   public solPrice = this._phs.solPrice;
   tableMenuOptions: string[] = ['Tokens', 'NFTs', 'Staking', 'DeFi'];
@@ -82,10 +86,10 @@ export class AssetsTableComponent implements OnInit {
     //   return stakingDummyPlaceholder
     // }
     
-    if (tableType === 'defi') {
+    // if (tableType === 'defi') {
       
-      return defiDummyPlaceholder
-    }
+    //   return defiDummyPlaceholder
+    // }
 
     return  this._portfolioService[tableType]()
   })
@@ -108,10 +112,10 @@ export class AssetsTableComponent implements OnInit {
     this._columnsOptions = {
       tokens: [
         { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '40%' },
-        { key: 'balance', title: 'balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'balance', title: 'Balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price',cellTemplate:this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value',cellTemplate:this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
-        { key: 'last-seven-days', title: 'Last 7 Days', width: '15%' }
+        { key: 'last-seven-days', title: 'Last 7 Days', width: '15%', cssClass: { name: 'ion-hide-md-down', includeHeader: true } }
       ],
       staking:  [
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
@@ -130,11 +134,12 @@ export class AssetsTableComponent implements OnInit {
         { key: 'totalValue', title: 'Total Value', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } }
       ],
       defi: [
-        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '45%' },
-        { key: 'dex', title: 'DEX', width: '10%' },
-        { key: 'your-liquidity', title: 'Your liquidity', width: '10%' },
-        { key: 'type', title: 'Type', width: '15%' },
-        { key: 'apy', title: 'APY', width: '10%', cssClass: { name: 'bold-text', includeHeader: false } },
+        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '40%' },
+        { key: 'type', title: 'Type',cellTemplate: this.typeDefiTpl, width: '10%' },
+        { key: 'platform', title: 'Platform',cellTemplate: this.platformIconTpl, width: '5%' },
+        { key: 'balance', title: 'Balance', cellTemplate:this.holdingsTpl, width: '10%' },
+        { key: 'value', title: 'Value', cellTemplate:this.simpleUsdValue, width: '10%' },
+        { key: 'website', title: 'Website', width: '5%',cellTemplate:this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
       ]
 
     }

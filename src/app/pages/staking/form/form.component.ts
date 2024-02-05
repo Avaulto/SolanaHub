@@ -10,7 +10,7 @@ import {
 
 
 
-import { Validator, WalletExtended } from 'src/app/models';
+import { StakePool, Validator, WalletExtended } from 'src/app/models';
 import { SolanaHelpersService, UtilService, TxInterceptorService,PriceHistoryService, NativeStakeService, JupStoreService } from 'src/app/services';
 import { Observable } from 'rxjs';
 import { ApyCalcComponent } from './apy-calc/apy-calc.component';
@@ -58,7 +58,7 @@ export class FormComponent  implements OnInit {
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public solPrice = this._jupStore.solPrice
-  @Input() stakePools = []
+  @Input() stakePools: WritableSignal<StakePool[]>
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,

@@ -6,16 +6,13 @@
     padding: 20px 32px;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 #search-box-wrapper{
     display: flex;
     justify-content: flex-end;
 }
-ion-searchbar{
-    width: 300px;
-    max-width: 100%;
-  
-}
+
 
 ion-img{
     margin-inline:6px ;

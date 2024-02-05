@@ -13,10 +13,4 @@ import { IonSkeletonText } from '@ionic/angular/standalone';
 export class NetWorthComponent {
   public walletAssets = inject(PortfolioService).walletAssets
   public portfolioTotalValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
-  constructor(){
-    effect(() =>{
-      console.log(this.walletAssets()?.filter(data => data.value));
-      
-    })
-  }
 }

@@ -36,10 +36,14 @@
   <div id="table-controls">
     <ion-button mode="md" fill="clear" (click)="previousPage()">
       <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" />
-      previous
+      <span class="ion-hide-md-down">
+        previous
+      </span>
     </ion-button>
     <ion-button mode="md" fill="clear" (click)="nextPage()">
+      <span class="ion-hide-md-down">
       next
+      </span>
       <ion-img src="/assets/icon/arrow-right.svg" />
 
     </ion-button>

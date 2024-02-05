@@ -4,20 +4,22 @@
 
 
     <ion-segment mode="ios" #loaded (ionChange)="selectPool($event)" [value]="defaultPool">
-      @for (pool of stakePools; track $index) {
+      @for (pool of stakePools(); track $index) {
       <ion-segment-button [value]="pool">
         <!-- <ion-popover trigger="hover-trigger" [showBackdrop]="false" triggerAction="hover">
           <ng-template>
             <ion-content class="ion-padding">Hello World!</ion-content>
           </ng-template>
         </ion-popover> -->
-        <ion-img id="tooltip" class="tooltip-icon" src="assets/images/help-icon.svg" />
-
+        <!-- <ion-img id="tooltip" class="tooltip-icon" src="assets/images/help-icon.svg" /> -->
+        <div>
         <ion-avatar>
           <ion-img [src]="pool?.tokenImageURL" />
         </ion-avatar>
         <ion-label>{{pool?.poolName}}</ion-label>
-
+        <ion-text>{{(2 - pool?.exchangeRate) * pool?.tokenMintSupply| number:  '1.2-2'}} SOL</ion-text>
+        <ion-chip color="primary">{{pool?.apy | number: '1.2-2'}}%</ion-chip>
+        </div>
       </ion-segment-button>
       }
     </ion-segment>

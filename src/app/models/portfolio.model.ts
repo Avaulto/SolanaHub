@@ -89,3 +89,32 @@ export interface TransactionHistory{
     icon: string
   }
   
+  export interface defiHolding {
+    poolTokens: PoolToken[];
+    imgURL:     string;
+    type:       string;
+    value:      number;
+    link:       string;
+    holdings: holding[]
+}
+
+export interface PoolToken {
+    imgURL: string;
+    symbol: string;
+}
+export interface holding {
+  balance: string;
+  symbol: string;
+}
+
+
+  export interface Platform {
+    id: string
+    name: string
+    description: string
+    image: string
+    discord: string
+    twitter: string
+    website: string
+    medium: string
+  }

@@ -62,6 +62,12 @@
     </div>
   </div>
 </ng-template>
+<ng-template #typeDefiTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="defi-type ion-text-center ion-text-capitalize">
+    <ion-chip>{{row.type}}</ion-chip>
+  </div>
+</ng-template>
+<!-- validator tpl -->
 <ng-template #validatorProfileTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
@@ -72,7 +78,7 @@
 </ng-template>
 
 <ng-template #simpleUsdValue let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item-light">{{row.value | currency}}</div>
+  <div class="item-light ion-text-center">{{row.value | currency}}</div>
 </ng-template>
 
 <ng-template #simplePriceValue let-row let-rowIndex="rowIndex" let-column="column">
@@ -103,21 +109,40 @@
 
 <!-- defi table templates -->
 <ng-template #tokenPoolTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="pools">
+  <div class="pool-item">
+    
+    <div class="pool-img-wrapper">
+    @for (item of row.poolTokens; track $index) {
+        <ion-img [src]="item.imgURL" alt="image" />
+      }
+    </div>
+    @for (item of row.poolTokens; track $index) {
+      <div class="pool-item-info ion-text-center">
+        <div class="asset-symbol">{{item.symbol}}@if ($index +1 < row.poolTokens.length) {-}</div>
+      </div>
+    }
+    </div>
+</ng-template>
 
-    <div class="asset-img-wrapper">
-      <ion-img [src]="row.imgUrl" alt="image" />
-    </div>
-    <div class="asset-info">
-      <div class="asset-symbol">{{row.symbol}}</div>
-      <div class="asset-name">{{row.name}}</div>
-    </div>
+<ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="platform-icon-wrapper ion-text-center"> 
+    <ion-img [src]="row.imgURL" alt="platform icon"></ion-img>
   </div>
 </ng-template>
 
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="balance">
+  <div class="ion-text-center">
     {{row.balance | number: '1.2'}} {{row.symbol}}
-
   </div>
+</ng-template>
+
+
+<ng-template #holdingsTpl let-row let-rowIndex="rowIndex" let-column="column">
+  @for (asset of row.holdings; track $index) {
+    <div class="ion-text-center" [ngStyle]="{
+      'color': asset?.condition === 'credit' ? '#17B26A' : asset?.condition === 'debt' ? '#F04438' : '' 
+      }">
+      {{asset.balance | number: '1.2'}} {{asset.symbol}}
+    </div>
+  }
 </ng-template>
