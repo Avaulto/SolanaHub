@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
+import { home, diamond, images, fileTrayFull,notifications, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
 
 
 
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
   constructor(
     private _walletStore: WalletStore
     ) {
-    addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline });
+    addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline, notifications });
   }
   ngOnInit(): void {
     // this._walletStore.anchorWallet$.pipe(
@@ -65,6 +65,7 @@ export class AppComponent implements OnInit {
       pages: [
         { title: 'Overview', url: '/overview', icon: 'home' },
         { title: 'NFT Gallery', url: '/nft-gallery', icon: 'images' },
+        { title: 'Notifications', url: '/notifications', icon: 'notifications' },
         { title: 'Settings', url: '/settings', icon: 'cog' },
       ],
     },
@@ -76,6 +77,7 @@ export class AppComponent implements OnInit {
         { title: 'Lending', url: '/lending', icon: 'barcode' },
         { title: 'Liquidity pools', url: '/liquidity-pools', icon: 'barcode' },
         { title: 'Vaults', url: '/vaults', icon: 'barcode' },
+        { title: 'DAO', url: '/dao', icon: 'barcode' },
       ],
     },
 
