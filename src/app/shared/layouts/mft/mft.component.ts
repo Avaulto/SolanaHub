@@ -12,6 +12,7 @@ import {
   signal
 } from '@angular/core';
 import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
+import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-mft',
   templateUrl: './mft.component.html',
@@ -50,11 +51,14 @@ export class MftComponent implements OnInit {
     paginationRangeEnabled: false,
     paginationEnabled: true,
     // fixedColumnWidth: true,
-    horizontalScroll: true,
+    // horizontalScroll: true,
     isLoading: true,
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
+    if(this._platform.width() < 1200){
+      this.configuration.horizontalScroll = true;
+    }
     // this.configuration.isLoading = true;
   }
   previousPage() {
@@ -86,7 +90,7 @@ export class MftComponent implements OnInit {
 
 
   }
-  constructor() { 
+  constructor(private _platform: Platform) { 
     effect(() =>{
       // console.log('mft loaded', this.tableData(), this.tableRows);
       if(this.tableData && this.tableData()?.length < this.tableRows){
