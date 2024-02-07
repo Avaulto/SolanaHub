@@ -76,6 +76,10 @@
     <div class="item-bold">{{row.validator.name}}</div>
   </div>
 </ng-template>
+<ng-template #validatorApy let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item-light ion-text-center">{{row.validator?.apy_estimate | number: '1.2-2'}}%</div>
+</ng-template>
+
 
 <ng-template #simpleUsdValue let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item-light ion-text-center">{{row.value | currency}}</div>

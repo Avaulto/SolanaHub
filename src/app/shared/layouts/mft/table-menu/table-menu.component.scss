@@ -23,3 +23,9 @@ ion-button {
     --background: #FFF3FB;
     color: var(--ion-color-primary)
 }
+
+@media only screen and (max-width: 1200px) {
+    :host {
+        padding: 0;
+    }
+  }

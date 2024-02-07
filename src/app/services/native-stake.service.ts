@@ -37,7 +37,7 @@ export class NativeStakeService {
   private async _extendStakeAccount(
     account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> },
     validators: Validator[],
-    // inflationReward: InflationReward
+    inflationReward: InflationReward
     ): Promise<StakeAccount>  {
     const pk = account.pubkey;
     const address = pk.toBase58()
@@ -62,50 +62,25 @@ export class NativeStakeService {
       validator,
       excessLamport,
       startEpoch,
-      // lastReward: inflationReward?.amount / LAMPORTS_PER_SOL || 0,
+      lastReward: this._utils.decimalPipe.transform(inflationReward?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0,
       stakeAuth: parsedData.meta.authorized.staker,
       withdrawAuth: parsedData.meta.authorized.withdrawer,
     }
-
+    console.log('my acc:', account);
+    
 
     return stakeAccountInfo
   }
 
-
-
-
-
-  // public  async getInflationReward(accounts){
-  //   const infRewards = accounts.map(async (acc,i) => {
-  //     const startEpoch =  acc.account.data.parsed.info.stake.delegation.activationEpoch || null//.delegation.stake
-  //     console.log(startEpoch,acc.pubkey);
-      
-  //     const res = await this._shs.connection.getInflationReward([acc.pubkey]) || null;
-  //     console.log(res);
-      
-  //   })
-  //   // const extendStakeAccountRes = await Promise.all(infRewards);
-  //   // console.log(extendStakeAccountRes);
-    
-  //   try {
-  //     // console.log(infRewards);
-      
-  //   } catch (error) {
-      
-  //   }
-  //   // return stakeAccounts
-  // }
   public async getOwnerNativeStake(walletAddress: string): Promise<StakeAccount[]> {
     // try {
       const validators: Validator[] = await this._shs.getValidatorsList()
       const stakeAccounts = await this._shs.getStakeAccountsByOwner(walletAddress);
-      // const stakeAccountsPk = stakeAccounts.map(acc => acc.pubkey)
-      // const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk,);
-      // const infReward = await this.getInflationReward(stakeAccounts);
+      const stakeAccountsPk = stakeAccounts.map(acc => acc.pubkey)
+      const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk);
 
-      // console.log(amount);
       const extendStakeAccount = stakeAccounts.map(async (acc,i) => {
-        return await this._extendStakeAccount(acc, validators)
+        return await this._extendStakeAccount(acc, validators, infReward[i])
       })
       const extendStakeAccountRes = await Promise.all(extendStakeAccount);
       // this.getInflationReward(extendStakeAccountRes)

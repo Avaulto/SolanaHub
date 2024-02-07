@@ -11,7 +11,7 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
 import {tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder} from './table-options-helper'
-import { PriceHistoryService, UtilService } from 'src/app/services';
+import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
 
 @Component({
   selector: 'app-assets-table',
@@ -34,13 +34,14 @@ import { PriceHistoryService, UtilService } from 'src/app/services';
   ]
 })
 export class AssetsTableComponent implements OnInit {
-  // token tps
+  // token & validator tpl 
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   @ViewChild('validatorProfileTpl', { static: true }) validatorProfileTpl: TemplateRef<any> | any;
   @ViewChild('statusTpl', { static: true }) statusTpl: TemplateRef<any> | any;
   @ViewChild('redirectTpl', { static: true }) redirectTpl: TemplateRef<any> | any;
   @ViewChild('validatorBalanceTpl', { static: true }) validatorBalanceTpl: TemplateRef<any> | any;
+  @ViewChild('validatorApy', { static: true }) validatorApy: TemplateRef<any> | any;
   @ViewChild('simpleUsdValue', { static: true }) simpleUsdValue: TemplateRef<any> | any;
   @ViewChild('simplePriceValue', { static: true }) simplePriceValue: TemplateRef<any> | any;
   // nft tpls
@@ -54,13 +55,14 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
   @ViewChild('holdingsTpl', { static: true }) holdingsTpl: TemplateRef<any> | any;
   //@ts-ignore
-  public solPrice = this._phs.solPrice;
+  public solPrice = this._jupStore.solPrice;
   tableMenuOptions: string[] = ['Tokens', 'NFTs', 'Staking', 'DeFi'];
 
 
   constructor(
     private _utils: UtilService,
     private _phs: PriceHistoryService,
+    private _jupStore: JupStoreService,
     private _portfolioService: PortfolioService,
     private _modalCtrl: ModalController,
   ) {
@@ -91,6 +93,8 @@ export class AssetsTableComponent implements OnInit {
     //   return defiDummyPlaceholder
     // }
 
+    console.log(this._portfolioService[tableType]());
+    
     return  this._portfolioService[tableType]()
   })
 
@@ -119,7 +123,7 @@ export class AssetsTableComponent implements OnInit {
       ],
       staking:  [
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
-        { key: 'apy', title: 'APY', width: '7%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'apy', title: 'APY', width: '7%',cellTemplate: this.validatorApy,  cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl,width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'status', title: 'Account Status',cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
