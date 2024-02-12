@@ -60,8 +60,6 @@ export class AssetsTableComponent implements OnInit {
 
 
   constructor(
-    private _utils: UtilService,
-    private _phs: PriceHistoryService,
     private _jupStore: JupStoreService,
     private _portfolioService: PortfolioService,
     private _modalCtrl: ModalController,
@@ -99,18 +97,7 @@ export class AssetsTableComponent implements OnInit {
   })
 
   private _columnsOptions = {}
-  // public aggregateRow(data, type){
-  //   switch (type) {
-  //     case 'staking':
-  //       const staking = {
-  //         validatorImg: 
-  //       }
-  //       break;
-    
-  //     default:
-  //       break;
-  //   }
-  // }
+
   async ngOnInit() {
 
     this._columnsOptions = {
@@ -168,4 +155,43 @@ export class AssetsTableComponent implements OnInit {
     });
     modal.present();
   }
+
+
+  public colorPicker(assetClass: string) {
+    let color = ''
+    
+    switch (assetClass) {
+      case 'Wallet':
+        color = '#341663'
+        break;
+      case 'LiquidityPool':
+        color = '#560BAD'
+        break;
+      case 'Staked':
+        color = '#7209B7'
+        break;
+      case 'Lending':
+        color = '#B5179E'
+        break;
+      case 'Rewards':
+        color = '#F72585'
+        break;
+      case 'Deposit':
+        color = '#E9CDC2'
+        break;
+      case 'Farming':
+        color = '#341663'
+        break;
+      case 'Vesting':
+        color = '#b58ef2'
+        break;
+      case 'Leverage':
+        color = '#8ea3f2'
+        break;
+      default:
+        break;
+    }
+    return color
+  }
+  
 }

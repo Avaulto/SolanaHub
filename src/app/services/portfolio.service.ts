@@ -8,6 +8,7 @@ import { PriceHistoryService } from './price-history.service';
 import { SolanaHelpersService } from './solana-helpers.service';
 
 import { NativeStakeService } from './native-stake.service';
+import { LiquidStakeService } from './liquid-stake.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +24,7 @@ export class PortfolioService {
   constructor(
     private _utils: UtilService,
     private _nss: NativeStakeService,
+    private _lss: LiquidStakeService,
     //  private _apiService:ApiService
     private _priceHistoryService: PriceHistoryService,
     private _shs:SolanaHelpersService,
@@ -49,6 +51,8 @@ export class PortfolioService {
         await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       ])
   
+
+      
        
       const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
@@ -56,7 +60,7 @@ export class PortfolioService {
       // console.log(portfolio.elements);
       
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
-      this._portfolioTokens(extendTokenData, jupTokens);
+      this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
       this._portfolioDeFi(portfolio.elements, jupTokens)
 
       
@@ -66,17 +70,26 @@ export class PortfolioService {
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)
-      this.getWalletHistory(walletAddress)
+      // this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
     }
   }
 
-  private _portfolioTokens(tokens: any, jupTokens: JupToken[]): void {
+  private async _portfolioTokens(tokens: any, jupTokens: JupToken[], walletAddress): Promise<void> {
     if (tokens) {
+      // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
+
       this._utils.addTokenData(tokens?.data.assets, jupTokens)
       // add pipes
       const tokensAggregated: Token[] = tokens.data.assets.map((item: Token) => {
+        // if(LST_direct_stake.mSOL && item.symbol.toLowerCase() === 'msol'){
+        //   item.extraData = LST_direct_stake.mSOL;
+        // }
+        // if(LST_direct_stake.bSOL && item.symbol.toLowerCase() === 'bsol'){
+        //   item.extraData = LST_direct_stake.bSOL[0];
+
+        // }
         // item.amount = this._utilService.decimalPipe.transform(item.amount, '1.2') || '0'
         // item.price = this._utils.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
         return item
@@ -156,8 +169,7 @@ export class PortfolioService {
           }
           holdings =  assets?.map(a => { return {balance: a.balance,symbol: a.symbol, condition: a.condition }}) || []
           poolTokens = assets?.map(a => { return {imgURL: a.imgUrl,symbol: a.symbol }}) || []
-          console.log(group);
-          console.log(assets);
+
          let defiHolding: defiHolding = {
           value:group.value,
           imgURL:group.image,

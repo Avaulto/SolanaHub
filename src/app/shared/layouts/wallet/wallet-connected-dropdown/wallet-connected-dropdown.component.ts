@@ -3,7 +3,7 @@ import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { ActionSheetController, PopoverController } from '@ionic/angular';
 import { WalletAdapterOptionsComponent } from '../wallet-adapter-options/wallet-adapter-options.component';
 import { addIcons } from 'ionicons';
-import {copy, repeat, logOut, star } from 'ionicons/icons';
+import {copy, repeat, logOut, trophyOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService } from 'src/app/services';
 
 @Component({
@@ -21,7 +21,7 @@ export class WalletConnectedDropdownComponent {
     private _portfolioService:PortfolioService
 
     ) {
-    addIcons({copy, repeat, logOut, star })
+    addIcons({copy, repeat, logOut, trophyOutline })
   }
 
   public disconnectWallet() {

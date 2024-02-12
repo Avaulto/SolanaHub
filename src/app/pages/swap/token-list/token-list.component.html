@@ -1,31 +1,46 @@
-<div class="ion-padding-horizontal">
+<app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search by token'" />
 
-  <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search by token'"/>
-</div>
-  <!-- <ion-searchbar inputmode="search" (ionInput)="searchItem($event)" [value]="searchTerm()" [debounce]="time" type="search"
- id="search-bar" /> -->
-
-
+<ion-row id="table-head">
+  <ion-col size="9.5">
+    Token
+  </ion-col>
+  @if(walletTokens()){
+    <ion-col size="2.5">
+      balance
+    </ion-col>
+  }
+</ion-row>
 <!-- @for (token of filteredTokens(); track $index) { -->
-  <!-- <ion-content> -->
-<cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900"  maxBufferPx="1350">
-  <ion-list lines="none">
-    <ion-item (click)="selectToken(token)" *cdkVirtualFor="let token of filteredTokens()">
+<!-- <ion-content> -->
+<cdk-virtual-scroll-viewport itemSize="56" minBufferPx="900" maxBufferPx="1350">
+  <div>
+    <div 
+    
+    class="token" 
+    (click)="selectToken(token)" *cdkVirtualFor="let token of tokens | async; let i = index;">
       <div class="token-profile" slot="start">
-      <ion-avatar>
-        <img [src]="token.logoURI" />
-      </ion-avatar>
-      <div>
-        <ion-label> {{token.symbol}}</ion-label>
-        <ion-text>{{token.name}}</ion-text>
+        <div>
+          <ion-img (ionImgDidLoad)="loadImage(i)" [src]="token.logoURI || 'assets/images/unknown.svg'" />
+          @if (!imagesLoaded[i]) {
+          <ion-skeleton-text [animated]="true" />
+          }
+        </div>
+        <div>
+          <ion-label> {{token.symbol}}</ion-label>
+          <ion-text>{{token.name}}</ion-text>
+        </div>
       </div>
-      </div>
+
+      
       <div class="token-holding" slot="end">
-        <ion-label>  {{token.value | currency }}</ion-label>
-        <ion-text> {{token.balance | number }}</ion-text>
-      </div>
-    </ion-item>
-  </ion-list>
+        <!-- <ion-label> {{token.value | currency }}</ion-label> -->
+        @if(walletTokens() !== null){
+          <ion-text> {{token.balance | number }} {{token.symbol}}</ion-text>
+        }
+        </div>
+    </div>
+  </div>
+
 </cdk-virtual-scroll-viewport>
 <!-- </ion-content> -->
 <!-- <br/>

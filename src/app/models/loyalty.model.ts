@@ -11,12 +11,12 @@ export interface LoyaltyScore {
     referral_Boost:           number;
 }
   export interface LoyaltyLeaderBoard {
-    loyaltyPoints: LoyaltyPoint[];
+    loyaltyPoints: loyalMember[];
     totalPoints:          number;
     snapshotDate:         Date;
 }
 
-export interface LoyaltyPoint {
+export interface loyalMember {
     walletOwner:     string;
     loyaltyPoints:   number;
     pointsBreakDown: PointsBreakDown;

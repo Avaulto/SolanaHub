@@ -1,13 +1,14 @@
 import { Component, Input, OnChanges, OnInit, WritableSignal, computed, effect, signal } from '@angular/core';
-import { PortfolioService, UtilService } from 'src/app/services';
+import { PortfolioService, SolanaHelpersService, UtilService } from 'src/app/services';
 import {
   IonButton, IonImg
 } from '@ionic/angular/standalone';
 import { StakeComponent } from './stake/stake.component';
-import { Stake, StakeAccount, StakePool, Token, Validator } from 'src/app/models';
+import { Stake, StakeAccount, StakePool, Token, Validator, WalletExtended } from 'src/app/models';
 import { JsonPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 
 @Component({
   selector: 'stake-positions',
@@ -39,9 +40,12 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   //   return this.stakePosition() ? false : true
   // });
-  public liquidStake = computed(() => this._portfolio.tokens() ? this._portfolio.tokens()?.filter(t => this._LSTs.includes(t.symbol.toLowerCase())).map(lst => {
-    console.log('run');
-    
+  
+  public liquidStake = computed(() => this._portfolio.tokens() ? this._portfolio.tokens()?.
+  filter(t => this._LSTs.includes(t.symbol.toLowerCase())).
+  map(lst => {
+    console.log(lst);
+      
       const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
       const stake: Stake = {
         type: 'liquid',
@@ -49,10 +53,10 @@ export class PositionsComponent implements OnInit, OnChanges {
         apy: pool.apy,
         balance: Number(lst.balance),
         value: Number(lst.value),
-        state: 'directStake',
+        state: lst.extraData ? 'directStake' : 'delegationStrategyPool',
         symbol: lst.symbol,
         imgUrl: pool.tokenImageURL,
-        validatorName: 'solanaHub'
+        validatorName: lst.extraData ? lst?.extraData?.validator?.name : null
       }
       return stake
     }) : null
@@ -78,8 +82,18 @@ export class PositionsComponent implements OnInit, OnChanges {
 
     return stake
   }) : null)
+  // wallet = this._shs.walletExtended$.subscribe(async (v: WalletExtended) => {
+  //   if(v){
+
+  //     const res = await this._lss.getDirectStake(v.publicKey.toBase58())
+  //     console.log(res);
+  //   }
+   
+  // })
   constructor(
-    private _portfolio: PortfolioService
+    private _lss: LiquidStakeService,
+    private _portfolio: PortfolioService,
+    private _shs: SolanaHelpersService
   ) {
     effect(() => {
       // console.log(this.positionGroup(), this.stakePosition());

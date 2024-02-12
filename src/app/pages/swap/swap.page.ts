@@ -7,12 +7,14 @@ import { PortfolioService } from 'src/app/services/portfolio.service';
 import { IonRow,IonCol,IonButton, IonContent, IonGrid, IonHeader, IonButtons, IonMenuButton } from '@ionic/angular/standalone';
 import { FormComponent } from './form/form.component';
 import { TransactionsHistoryTableComponent } from 'src/app/shared/components/transactions-history-table/transactions-history-table.component';
+import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 @Component({
   selector: 'app-swap',
   templateUrl: './swap.page.html',
   styleUrls: ['./swap.page.scss'],
   standalone: true,
   imports: [
+    PageHeaderComponent,
     IonGrid, 
     IonHeader,
      IonButtons,
@@ -22,7 +24,7 @@ import { TransactionsHistoryTableComponent } from 'src/app/shared/components/tra
     IonButton, 
     IonContent, 
     TransactionsHistoryTableComponent,
-    FormComponent
+    FormComponent,
   ]
 })
 export class SwapPage implements OnInit {

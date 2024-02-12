@@ -27,11 +27,16 @@
     @case ("transfer-auth-modal") {
     <transfer-auth-modal [targetStakeAccount]="data.stakeAccount" (onAuthSet)="emittedValue.set($event)"/>
     }
+    @case ("token-list") {
+      <token-list (onSelectToken)="emittedValue.set($event)" [jupTokens]="data.jupTokens" />
+      }
   }
   <ng-container #containerBeforeTemplate></ng-container>
+  @if (componentName !== 'token-list') {
 
-  <div id="modal-controls">
-    <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
-    <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
+    <div id="modal-controls">
+      <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
+      <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
+    </div>
+  }
   </div>
-</div>

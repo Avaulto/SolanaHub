@@ -9,7 +9,7 @@ import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane } from 'ion
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { ModalController } from '@ionic/angular';
-import { ModalComponent } from '../../../modal/modal.component';
+import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 @Component({
   selector: 'options-popover',
   templateUrl: './options-popover.component.html',

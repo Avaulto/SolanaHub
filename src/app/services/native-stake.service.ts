@@ -66,8 +66,6 @@ export class NativeStakeService {
       stakeAuth: parsedData.meta.authorized.staker,
       withdrawAuth: parsedData.meta.authorized.withdrawer,
     }
-    console.log('my acc:', account);
-    
 
     return stakeAccountInfo
   }

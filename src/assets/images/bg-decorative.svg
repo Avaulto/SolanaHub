@@ -1,0 +1,57 @@
+<svg width="480" height="364" viewBox="0 0 480 364" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_71_31835" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="-116" width="480" height="480">
+<rect width="480" height="480" transform="translate(0 -116)" fill="url(#paint0_radial_71_31835)"/>
+</mask>
+<g mask="url(#mask0_71_31835)">
+<g clip-path="url(#clip0_71_31835)">
+<g clip-path="url(#clip1_71_31835)">
+<line x1="0.5" y1="-116" x2="0.5" y2="364" stroke="#EAECF0"/>
+<line x1="32.5" y1="-116" x2="32.5" y2="364" stroke="#EAECF0"/>
+<line x1="64.5" y1="-116" x2="64.5" y2="364" stroke="#EAECF0"/>
+<line x1="96.5" y1="-116" x2="96.5" y2="364" stroke="#EAECF0"/>
+<line x1="128.5" y1="-116" x2="128.5" y2="364" stroke="#EAECF0"/>
+<line x1="160.5" y1="-116" x2="160.5" y2="364" stroke="#EAECF0"/>
+<line x1="192.5" y1="-116" x2="192.5" y2="364" stroke="#EAECF0"/>
+<line x1="224.5" y1="-116" x2="224.5" y2="364" stroke="#EAECF0"/>
+<line x1="256.5" y1="-116" x2="256.5" y2="364" stroke="#EAECF0"/>
+<line x1="288.5" y1="-116" x2="288.5" y2="364" stroke="#EAECF0"/>
+<line x1="320.5" y1="-116" x2="320.5" y2="364" stroke="#EAECF0"/>
+<line x1="352.5" y1="-116" x2="352.5" y2="364" stroke="#EAECF0"/>
+<line x1="384.5" y1="-116" x2="384.5" y2="364" stroke="#EAECF0"/>
+<line x1="416.5" y1="-116" x2="416.5" y2="364" stroke="#EAECF0"/>
+<line x1="448.5" y1="-116" x2="448.5" y2="364" stroke="#EAECF0"/>
+</g>
+<rect x="0.5" y="-115.5" width="479" height="479" stroke="#EAECF0"/>
+<g clip-path="url(#clip2_71_31835)">
+<line y1="11.5" x2="480" y2="11.5" stroke="#EAECF0"/>
+<line y1="43.5" x2="480" y2="43.5" stroke="#EAECF0"/>
+<line y1="75.5" x2="480" y2="75.5" stroke="#EAECF0"/>
+<line y1="107.5" x2="480" y2="107.5" stroke="#EAECF0"/>
+<line y1="139.5" x2="480" y2="139.5" stroke="#EAECF0"/>
+<line y1="171.5" x2="480" y2="171.5" stroke="#EAECF0"/>
+<line y1="203.5" x2="480" y2="203.5" stroke="#EAECF0"/>
+<line y1="235.5" x2="480" y2="235.5" stroke="#EAECF0"/>
+<line y1="267.5" x2="480" y2="267.5" stroke="#EAECF0"/>
+<line y1="299.5" x2="480" y2="299.5" stroke="#EAECF0"/>
+<line y1="331.5" x2="480" y2="331.5" stroke="#EAECF0"/>
+<line y1="363.5" x2="480" y2="363.5" stroke="#EAECF0"/>
+</g>
+<rect x="0.5" y="-115.5" width="479" height="479" stroke="#EAECF0"/>
+</g>
+</g>
+<defs>
+<radialGradient id="paint0_radial_71_31835" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(240 240) rotate(90) scale(240 240)">
+<stop/>
+<stop offset="1" stop-opacity="0"/>
+</radialGradient>
+<clipPath id="clip0_71_31835">
+<rect width="480" height="480" fill="white" transform="translate(0 -116)"/>
+</clipPath>
+<clipPath id="clip1_71_31835">
+<rect y="-116" width="480" height="480" fill="white"/>
+</clipPath>
+<clipPath id="clip2_71_31835">
+<rect y="-116" width="480" height="480" fill="white"/>
+</clipPath>
+</defs>
+</svg>

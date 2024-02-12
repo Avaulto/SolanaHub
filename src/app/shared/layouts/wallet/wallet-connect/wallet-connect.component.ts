@@ -5,12 +5,13 @@ import { WalletAdapterOptionsComponent } from '../wallet-adapter-options/wallet-
 
 import va from '@vercel/analytics';
 import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { SolanaHelpersService, UtilService, ToasterService } from 'src/app/services';
 import { WalletConnectedDropdownComponent } from '../wallet-connected-dropdown/wallet-connected-dropdown.component';
 import { addIcons } from 'ionicons';
 import { chevronDownOutline } from 'ionicons/icons';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { PortfolioService } from 'src/app/services/portfolio.service';
+import { loyalMember } from 'src/app/models';
 @Component({
   selector: 'app-wallet-connect',
   templateUrl: './wallet-connect.component.html',
@@ -27,7 +28,7 @@ export class WalletConnectComponent implements OnInit {
   constructor(
     private _utilsService: UtilService,
     private _walletStore: WalletStore,
-    // private _toasterService: ToasterService,
+    private _toasterService: ToasterService,
     public popoverController: PopoverController,
     private _shs:SolanaHelpersService,
     private _loyaltyLeagueService: LoyaltyLeagueService,
@@ -41,19 +42,21 @@ export class WalletConnectComponent implements OnInit {
   }
   public profilePic;
   // loyalty league member score
-  public loyaltyLeagueMemberScore = signal(null);
   public llScore$ = this._shs.walletExtended$.pipe(
     this._utilsService.isNotNullOrUndefined,
     combineLatestWith(this._loyaltyLeagueService.llb$),
     map(([wallet, lllb]) => {
-        const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+
       
+        const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
         if(loyalMember){
-          this.loyaltyLeagueMemberScore.set(loyalMember.loyaltyPoints)
-        }else{
-          this.loyaltyLeagueMemberScore.set(0)
+          return loyalMember
         }
-        return loyalMember
+        console.log(loyalMember);
+        
+
+          return {} as loyalMember
+        
   })) 
 
   
@@ -61,12 +64,12 @@ export class WalletConnectComponent implements OnInit {
   readonly isReady$ =  this._walletStore.connected$.pipe(switchMap(async isReady => {
     if (isReady) {
   
-      //trackEvent('wallet connected')
-      // this._toasterService.msg.next({
-        //   message: `Wallet connected`,
-        //   segmentClass: "toastInfo",
-        //   duration: 2000
-        // })
+      // trackEvent('wallet connected')
+      this._toasterService.msg.next({
+          message: `Wallet connected`,
+          segmentClass: "toastInfo",
+          duration: 2000
+        })
 
     }
     return isReady;

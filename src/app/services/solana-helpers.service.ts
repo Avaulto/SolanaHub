@@ -23,6 +23,8 @@ import { ApiService } from './api.service';
 import { UtilService } from './util.service';
 import { PortfolioService } from './portfolio.service';
 import { JupStoreService } from './jup-store.service';
+import { LocalStorageService } from './local-storage.service';
+import { SessionStorageService } from './session-storage.service';
 ;
 
 @Injectable({
@@ -50,7 +52,8 @@ export class SolanaHelpersService {
     // private _toasterService: ToasterService,
     private _connectionStore: ConnectionStore,
     // public popoverController: PopoverController,
-    private _walletStore: WalletStore
+    private _walletStore: WalletStore,
+    private _sessionStorageService:SessionStorageService,
   ) {
 
     this._connectionStore.setEndpoint(environment.solanaCluster)
@@ -62,12 +65,14 @@ export class SolanaHelpersService {
     return this._walletExtended$.value
   }
 
-  private _validatorsList: Validator[] = [];
+  private _validatorsList: Validator[] = this._sessionStorageService.getData('validators') ? JSON.parse(this._sessionStorageService.getData('validators')) : []
   public async getValidatorsList(): Promise<Validator[]> {
-    if (this._validatorsList.length) {
+    if (this._validatorsList.length > 0) {
 
       return this._validatorsList;
     } else {
+      console.log('here');
+      
       let validatorsList: Validator[] = [];
       try {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
@@ -76,6 +81,8 @@ export class SolanaHelpersService {
       } catch (error) {
         console.error(error);
       }
+
+      this._sessionStorageService.saveData('validators',JSON.stringify(validatorsList))
       this._validatorsList = validatorsList;
       return validatorsList
     }

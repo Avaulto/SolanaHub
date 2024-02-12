@@ -7,16 +7,15 @@
 
 </ion-header>
 <ion-content [fullscreen]="true">
-  <ion-grid>
-    <header>
-      <ion-row>
-        <div id="title">staking</div>
-        <div id="intro">
-          Stake your SOL today and start earning staking rewards – transform your digital currency into a continuous
-          source of passive income
-        </div>
+  <page-header
+  title="staking"
+  environment="Stake your SOL today and start earning staking rewards – transform your digital currency into a continuous source of passive income"
+  />
 
-      </ion-row>
+  <ion-grid style=" padding-inline: 5vw;">
+
+  
+
       <ion-row id="stat-wrapper" class="ion-justify-content-between">
         @for (stat of validatorsData; track $index) {
         <ion-col size="5.9" sizeLg="2.9" class="staking-stat">
@@ -42,9 +41,9 @@
         }
 
       </ion-row>
-    </header>
 
-    <div style=" padding-inline: 5vw;">
+
+    <div>
 
       <ion-row id="stake-box">
         <ion-col size="12" sizeXl="8">

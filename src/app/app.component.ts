@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull,notifications, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
 
@@ -10,6 +10,8 @@ import { home, diamond, images, fileTrayFull,notifications, barcode, cog, swapHo
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
 import {  UtilService } from './services';
+import { PageHeaderComponent } from './shared/components/page-header/page-header.component';
+import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,9 @@ import {  UtilService } from './services';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
+    NotConnectedComponent,
+    PageHeaderComponent,
+    IonRow, 
     WalletModule,
     RouterLink,
     RouterLinkActive,

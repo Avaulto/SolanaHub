@@ -15,6 +15,7 @@ export interface Token extends JupToken{
     value?: string,
     price?: string
     amount?: string
+    extraData?: any
 }
 export interface NFT{
     collectionName: string,

@@ -47,7 +47,7 @@
             background: #C4C4C4;
 
             //     activating,deactivating,active,inactive
-            &.active {
+            &.active, &.delegationStrategyPool {
                 background: #2970FF;
             }
 

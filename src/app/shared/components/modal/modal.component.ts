@@ -2,13 +2,15 @@ import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, Embed
 import { ModalController } from '@ionic/angular';
 import { StakeAccount, Validator } from 'src/app/models';
 import { IonButton, IonImg } from '@ionic/angular/standalone'
-import { ValidatorsModalComponent, } from '../form/validators-modal/validators-modal.component';
-import { InstantUnstakeModalComponent } from '../positions/stake/instant-unstake-modal/instant-unstake-modal.component';
-import { MergeModalComponent } from '../positions/stake/merge-modal/merge-modal.component';
-import { SplitModalComponent } from '../positions/stake/split-modal/split-modal.component';
-import { TransferAuthModalComponent } from '../positions/stake/transfer-auth-modal/transfer-auth-modal.component';
+
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { PublicKey } from '@solana/web3.js';
+import { ValidatorsModalComponent } from 'src/app/pages/staking/form/validators-modal/validators-modal.component';
+import { InstantUnstakeModalComponent } from 'src/app/pages/staking/positions/stake/instant-unstake-modal/instant-unstake-modal.component';
+import { MergeModalComponent } from 'src/app/pages/staking/positions/stake/merge-modal/merge-modal.component';
+import { SplitModalComponent } from 'src/app/pages/staking/positions/stake/split-modal/split-modal.component';
+import { TransferAuthModalComponent } from 'src/app/pages/staking/positions/stake/transfer-auth-modal/transfer-auth-modal.component';
+import { TokenListComponent } from 'src/app/pages/swap/token-list/token-list.component';
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
@@ -21,7 +23,8 @@ import { PublicKey } from '@solana/web3.js';
     InstantUnstakeModalComponent,
     MergeModalComponent,
     SplitModalComponent,
-    TransferAuthModalComponent
+    TransferAuthModalComponent,
+    TokenListComponent
   ]
 
 })
@@ -34,18 +37,19 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal'
+  @Input() componentName: 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _nss: NativeStakeService
   ) {
-    effect(() => console.log(this.emittedValue()))
+    effect(() => console.log(this.data.jupTokens(), this.emittedValue()))
   }
 
   ngAfterViewInit() {
-
+    
+    
   }
   async submit() {
 

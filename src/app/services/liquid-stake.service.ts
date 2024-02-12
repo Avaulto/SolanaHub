@@ -2,19 +2,22 @@ import { Injectable } from '@angular/core';
 import { UtilService } from './util.service';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { ApiService } from './api.service';
-import { StakePool, WalletExtended } from '../models';
+import { StakePool, WalletExtended, DirectStake, Validator} from '../models';
 import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { BN, Marinade, MarinadeConfig, getRefNativeStakeSOLTx } from '@marinade.finance/marinade-ts-sdk';
 import { depositSol, withdrawStake, stakePoolInfo } from '@solana/spl-stake-pool';
 import { TxInterceptorService } from './tx-interceptor.service';
+import { NativeStakeService } from './native-stake.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LiquidStakeService {
+  readonly restAPI = this._utils.serverlessAPI
   public stakePools: StakePool[] = []
   public marinadeSDK: Marinade;
   constructor(
+    private _nss: NativeStakeService,
     private _txi: TxInterceptorService,
     private _shs: SolanaHelpersService,
     private _utils: UtilService,
@@ -142,4 +145,24 @@ export class LiquidStakeService {
   }
 
 
+  public async getDirectStake(walletAddress): Promise<DirectStake>{
+    let directStake: DirectStake = {mSOL: null, bSOL: null};
+    try {
+      const validators = await this._shs.getValidatorsList();
+
+      const result: DirectStake = await (await fetch(`${this.restAPI}/api/get-direct-stake?walletAddress=${walletAddress}`)).json();
+      
+      result.mSOL ? directStake.mSOL.validator = validators.find((v: Validator) => v.vote_identity === result.mSOL.validatorVoteAccount) : null
+     result.bSOL ? directStake.bSOL.map(s=> s.validator = validators.find((v: Validator, i) => v.vote_identity === result.bSOL[i].validatorVoteAccount))  : null;
+     directStake = result;
+     console.log(directStake);
+     
+    //  directStake.mSOL.validator = mSOLvalidator
+    //  directStake.bSOL.map(s=> s.validator = bSOLvalidator)// .validator = mSOLvalidator
+    }
+    catch (error) {
+      console.error(error);
+    }
+    return directStake
+  }
 }

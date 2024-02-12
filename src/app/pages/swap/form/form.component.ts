@@ -74,8 +74,7 @@ export class FormComponent implements OnInit {
       inputToken: this.tokenSwapForm.controls['outputToken'].value,
       outputToken: temp
     })
-    this.tokenIn = this.tokenSwapForm.controls['outputToken'].value
-    this.tokenOut = temp
+    
   }
 
   async ngOnInit() {

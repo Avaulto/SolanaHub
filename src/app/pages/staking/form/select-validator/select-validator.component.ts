@@ -14,7 +14,8 @@ import{
  import {  ModalController } from '@ionic/angular';
 import { Validator } from 'src/app/models';
 import { ValidatorsModalComponent } from '../validators-modal/validators-modal.component';
-import { ModalComponent } from '../../modal/modal.component';
+import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
+
 @Component({
   selector: 'select-validator',
   templateUrl: './select-validator.component.html',

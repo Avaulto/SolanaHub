@@ -27,9 +27,7 @@
     @if (isReady$ | async) {
       <ion-router-outlet ></ion-router-outlet>
     }@else {
-      <div id="not-connected">
-        not connected
-      </div>
+      <not-connected/>
     }
     </ion-content>
    
