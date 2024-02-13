@@ -64,21 +64,21 @@ export class ModalComponent implements AfterViewInit {
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
         
-      await this._lss.stakePoolStakeAccount(this.data.stake, pool)
+       this._lss.stakePoolStakeAccount(this.data.stake, pool)
       break;
       case 'split-modal':
 
-        await this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
+         this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
         break;
       case 'merge-modal':
 
         const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: Stake) => new PublicKey(acc.address))
-        await this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), accountsToMerge);
+         this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), accountsToMerge);
         break;
       case 'transfer-auth-modal':
         const targetAddress = new PublicKey(this.emittedValue().targetAddress)
         const authToTransfer = this.emittedValue().authorities;
-        await this._nss.transferStakeAccountAuth( new PublicKey(this.data.stake.address),wallet.publicKey, targetAddress, authToTransfer);
+         this._nss.transferStakeAccountAuth( new PublicKey(this.data.stake.address),wallet.publicKey, targetAddress, authToTransfer);
 
         break;
       default:

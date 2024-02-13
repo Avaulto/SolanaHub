@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 
 import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
-import { PriorityFee } from '../models';
+import { PriorityFee, toastData } from '../models';
 import va from '@vercel/analytics';
 import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
+import { ToasterService } from './toaster.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class TxInterceptorService {
   // private _shs = inject(SolanaHelpersService);
   // private _wallet = this._shs.getCurrentWallet()
   constructor(
+    private _toasterService:ToasterService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
   ) { }
@@ -51,30 +53,30 @@ export class TxInterceptorService {
     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
     const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
     const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
-    // const txSend: toastData = {
-    //   message: `Transaction Submitted`,
-    //   btnText: `view on explorer`,
-    //   segmentClass: "toastInfo",
-    //   duration: 5000,
-    //   cb: () => window.open(url)
-    // }
-    // this.toasterService.msg.next(txSend)
+    const txSend: toastData = {
+      message: `Transaction Submitted`,
+      btnText: `view on explorer`,
+      segmentClass: "toastInfo",
+      duration: 5000,
+      cb: () => window.open(url)
+    }
+    this._toasterService.msg.next(txSend)
     const config: BlockheightBasedTransactionConfirmationStrategy = {
       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
     }
     console.log(url);
 
     await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
-    // const txCompleted: toastData = {
-    //   message: 'Transaction Completed',
-    //   segmentClass: "toastInfo"
-    // }
+    const txCompleted: toastData = {
+      message: 'Transaction Completed',
+      segmentClass: "toastInfo"
+    }
     if (record) {
       console.log(record);
 
       va.track(record.message, record.data)
     }
-    // this.toasterService.msg.next(txCompleted)
+    this._toasterService.msg.next(txCompleted)
 
     return signature
 
