@@ -9,13 +9,7 @@
           { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
         ]
       }
-    ],
-      "crons": [
-        {
-          "path": "/api/cron?key=pullData",
-          "schedule": "0 0 * * *"
-        }
-      ]
+    ]
   }
   
  
