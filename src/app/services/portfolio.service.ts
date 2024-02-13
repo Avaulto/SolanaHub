@@ -82,7 +82,7 @@ export class PortfolioService {
 
       this._utils.addTokenData(tokens?.data.assets, jupTokens)
       // add pipes
-      const tokensAggregated: Token[] = tokens.data.assets.map((item: Token) => {
+      const tokensAggregated: Token[] = tokens.data.assets.filter(item => item.value).map((item: Token) => {
         // if(LST_direct_stake.mSOL && item.symbol.toLowerCase() === 'msol'){
         //   item.extraData = LST_direct_stake.mSOL;
         // }
