@@ -35,6 +35,15 @@
     </div>
   </ion-button>
   } -->
+  @if(stake.state === 'active'){
+
+    <ion-button (click)="openModal('delegate-lst-modal')" expand="block" fill="clear">
+      <div class="ion-text-left">
+        <ion-icon name="water"></ion-icon>
+        delegate to liquid stake 
+      </div>
+    </ion-button>
+  }
   <ion-button (click)="openModal('merge-modal')" expand="block" fill="clear">
     <div class="ion-text-left">
       <ion-icon name="people"></ion-icon>

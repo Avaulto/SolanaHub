@@ -15,9 +15,13 @@
     @case ("validators-modal") {
     <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
     }
+    @case ("delegate-lst-modal") {
+      <delegate-lst-modal [stake]="data.stake"  (onSelectPool)="emittedValue.set($event)" />
+      }
     @case ("merge-modal") {
     <merge-modal [targetStake]="data.stake" [stakeAccounts]="data.stakeAccounts" (onAccountsSelected)="emittedValue.set($event)" />
     }
+    
     @case ("split-modal") {
     <split-modal [stake]="data.stake" (onAmountSet)="emittedValue.set($event)" />
     }

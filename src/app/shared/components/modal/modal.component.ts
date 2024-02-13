@@ -11,6 +11,9 @@ import { MergeModalComponent } from 'src/app/pages/staking/positions/stake/merge
 import { SplitModalComponent } from 'src/app/pages/staking/positions/stake/split-modal/split-modal.component';
 import { TransferAuthModalComponent } from 'src/app/pages/staking/positions/stake/transfer-auth-modal/transfer-auth-modal.component';
 import { TokenListComponent } from 'src/app/pages/swap/token-list/token-list.component';
+import { DelegateLSTModalComponent } from 'src/app/pages/staking/positions/stake/delegate-lst/delegate-lst-modal.component';
+import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
@@ -20,6 +23,7 @@ import { TokenListComponent } from 'src/app/pages/swap/token-list/token-list.com
     IonButton,
     IonImg,
     ValidatorsModalComponent,
+    DelegateLSTModalComponent,
     InstantUnstakeModalComponent,
     MergeModalComponent,
     SplitModalComponent,
@@ -37,12 +41,13 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
+  @Input() componentName: 'delegate-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
-    private _nss: NativeStakeService
+    private _nss: NativeStakeService,
+    private _lss: LiquidStakeService
   ) {
     effect(() => console.log(this.data.jupTokens(), this.emittedValue()))
   }
@@ -56,6 +61,12 @@ export class ModalComponent implements AfterViewInit {
 
     const wallet = this._shs.getCurrentWallet()
     switch (this.componentName) {
+      case 'delegate-lst-modal':
+        const pool = this.emittedValue().pool;
+        console.log(this.data.stake, pool);
+        
+      await this._lss.stakePoolStakeAccount(this.data.stake, pool)
+      break;
       case 'split-modal':
 
         await this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)

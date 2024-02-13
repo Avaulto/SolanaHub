@@ -5,7 +5,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Stake } from 'src/app/models';
 import { addIcons } from 'ionicons';
-import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane } from 'ionicons/icons';
+import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water } from 'ionicons/icons';
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { ModalController } from '@ionic/angular';
@@ -25,7 +25,7 @@ export class OptionsPopoverComponent implements OnInit {
     private _shs: SolanaHelpersService,
     private _nss: NativeStakeService
   ) {
-    addIcons({ arrowUp, arrowDown, people, peopleCircle, flash, paperPlane });
+    addIcons({ arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water });
   }
 
   ngOnInit() {
@@ -48,7 +48,7 @@ export class OptionsPopoverComponent implements OnInit {
     console.log(`Stake account balance: ${stakeBalance / LAMPORTS_PER_SOL} SOL`);
   }
 
-  async openModal(componentName: 'instant-unstake-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
+  async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
     let config = {
       imgUrl: null,
       title: null,
@@ -56,6 +56,12 @@ export class OptionsPopoverComponent implements OnInit {
       btnText: null
     }
     switch (componentName) {
+      case 'delegate-lst-modal':
+        config.imgUrl = 'assets/images/droplets-icon.svg'
+        config.title = 'liquid staking'
+        config.desc = 'Turn your stake account into a liquid stake token'
+        config.btnText = 'delegate now'
+        break;
       case 'instant-unstake-modal':
         config.imgUrl = 'assets/images/bolt-icon.svg'
         config.title = 'Instantly unstake your SOL'

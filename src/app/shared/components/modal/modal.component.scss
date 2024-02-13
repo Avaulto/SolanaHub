@@ -76,6 +76,7 @@
 
   :host ::ng-deep merge-modal stake-position,
   :host ::ng-deep split-modal stake-position,
+  :host ::ng-deep delegate-lst-modal stake-position,
   :host ::ng-deep instant-unstake-modal stake-position,
   :host ::ng-deep transfer-auth-modal stake-position {
     margin-block-end: 16px;

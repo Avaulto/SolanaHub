@@ -58,7 +58,7 @@ export class NativeStakeService {
       locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
       address,
       shortAddress: this._utils.addrUtil(address).addrShort,
-      balance: Number(((stake || excessLamport) / LAMPORTS_PER_SOL)),
+      balance: Number(((stake + excessLamport + rentReserve || excessLamport) / LAMPORTS_PER_SOL)),
       lamportsBalance: stake + rentReserve,
       state,
       validator,
