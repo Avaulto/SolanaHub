@@ -24,16 +24,11 @@ export class LiquidStakeService {
     private _utils: UtilService,
     private _apiService: ApiService,
   ) { }
-  private _initMarinade(walletOwner: WalletExtended) {
-    console.log({
-      connection: this._shs.connection,
-      publicKey: walletOwner.publicKey,
-      // referralCode: new PublicKey('9CLFBo1nsG24DNoVZvsSNEYRNGU1LAHGS5M3o9Ei33o6'),
-    });
+  private _initMarinade(publicKey: PublicKey) {
 
     const config = new MarinadeConfig({
       connection: this._shs.connection,
-      publicKey: walletOwner.publicKey,
+      publicKey,
       // referralCode: new PublicKey('9CLFBo1nsG24DNoVZvsSNEYRNGU1LAHGS5M3o9Ei33o6'),
     })
     this.marinadeSDK = new Marinade(config)
@@ -75,7 +70,7 @@ export class LiquidStakeService {
     const lamportsBN = new BN(lamports);
     if (pool.poolName.toLowerCase() === 'marinade') {
       if (!this.marinadeSDK) {
-        this._initMarinade(walletOwner)
+        this._initMarinade(walletOwner.publicKey)
       }
       return await this._marinadeStakeSOL(lamportsBN, walletOwner, validatorVoteAccount, record)
     } else {
@@ -86,8 +81,9 @@ export class LiquidStakeService {
     try {
 
       const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
-      const { transaction } = await this.marinadeSDK.deposit(lamports, { directToValidatorVoteAddress });
-
+      const { transaction } = await this.marinadeSDK.deposit(lamports);
+      console.log(transaction);
+      
       return await this._txi.sendTx([transaction], walletOwner.publicKey, null, record)
     } catch (error) {
       console.log(error);
@@ -157,10 +153,16 @@ export class LiquidStakeService {
     } }
     const validatorVoteAccount = new PublicKey(stakeAccount.validator.vote_identity);
     const stakeAccountPK = new PublicKey(stakeAccount.address);
-
+    console.log(pool);
+    
     try {
       if (pool.poolName.toLowerCase() == 'marinade') {
-        const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK, { directToValidatorVoteAddress: validatorVoteAccount });
+        if (!this.marinadeSDK) {
+          this._initMarinade(publicKey)
+        }
+        
+        const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
+       
         const txIns: Transaction = depositAccount.transaction
         await this._txi.sendTx([txIns], publicKey);
       } else {
@@ -187,6 +189,8 @@ export class LiquidStakeService {
 
       }
     } catch (error) {
+      console.error(error);
+      
       // const toasterMessage: toastData = {
       //   message: error.toString().substring(6),
       //   segmentClass: "merinadeErr"

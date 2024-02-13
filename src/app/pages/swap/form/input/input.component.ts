@@ -6,7 +6,7 @@ import { TokenListComponent } from '../../token-list/token-list.component';
 import { ModalController } from '@ionic/angular';
 import { JupStoreService } from 'src/app/services';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { MaskitoModule } from '@maskito/angular';
+
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 @Component({
   selector: 'swap-input',
@@ -14,7 +14,6 @@ import { ModalComponent } from 'src/app/shared/components/modal/modal.component'
   styleUrls: ['./input.component.scss'],
   standalone: true,
   imports: [
-    MaskitoModule,
     InputLabelComponent,
     IonInput,
     IonIcon,

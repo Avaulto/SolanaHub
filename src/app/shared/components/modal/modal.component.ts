@@ -63,7 +63,6 @@ export class ModalComponent implements AfterViewInit {
     switch (this.componentName) {
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
-        console.log(this.data.stake, pool);
         
       await this._lss.stakePoolStakeAccount(this.data.stake, pool)
       break;

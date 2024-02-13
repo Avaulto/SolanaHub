@@ -8,7 +8,7 @@ import { JupStoreService } from 'src/app/services/jup-store.service';
 import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { IonInput, IonIcon, IonButton, IonImg, IonSkeletonText } from '@ionic/angular/standalone';
-import { MaskitoModule } from '@maskito/angular';
+
 import { DecimalPipe } from '@angular/common';
 import { RouteCalcComponent } from '../route-calc/route-calc.component';
 import { SettingComponent } from './setting/setting.component';
@@ -20,7 +20,7 @@ import { InputComponent } from './input/input.component';
   styleUrls: ['./form.component.scss'],
   standalone: true,
   imports: [
-    MaskitoModule,
+
     ReactiveFormsModule,
     IonInput,
     IonIcon,
