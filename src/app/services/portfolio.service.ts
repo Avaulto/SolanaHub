@@ -1,7 +1,7 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, StakeAccount, TransactionHistory, WalletExtended, Platform, defiHolding } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
 import { PriceHistoryService } from './price-history.service';
@@ -17,7 +17,7 @@ export class PortfolioService {
   public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
   public nfts: WritableSignal<NFT[]> = signal(null);
-  public staking: WritableSignal<StakeAccount[]> = signal(null);
+  public staking: WritableSignal<Stake[]> = signal(null);
   public defi: WritableSignal<LiquidityProviding[]> = signal(null);
   public walletHistory: WritableSignal<TransactionHistory[]> = signal(null);
   readonly restAPI = this._utils.serverlessAPI

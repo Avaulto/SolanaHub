@@ -18,7 +18,7 @@ import {
 } from '@solana/web3.js';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
-import { StakeAccount, Validator, WalletExtended } from '../models';
+import { Stake, Validator, WalletExtended } from '../models';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -38,7 +38,7 @@ export class NativeStakeService {
     account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> },
     validators: Validator[],
     inflationReward: InflationReward
-    ): Promise<StakeAccount>  {
+    ): Promise<Stake>  {
     const pk = account.pubkey;
     const address = pk.toBase58()
     const parsedData = account.account.data.parsed.info || null//.delegation.stake
@@ -51,7 +51,9 @@ export class NativeStakeService {
     const { active, state }: StakeActivationData = await this._shs.connection.getStakeActivation(pk);
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
 
-    const stakeAccountInfo = {
+    const stakeAccountInfo: Stake = {
+      type: 'native',
+      symbol: 'SOL',
       lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
       locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
       address,
@@ -65,12 +67,15 @@ export class NativeStakeService {
       lastReward: this._utils.decimalPipe.transform(inflationReward?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0,
       stakeAuth: parsedData.meta.authorized.staker,
       withdrawAuth: parsedData.meta.authorized.withdrawer,
+      validatorName: validator?.name || null,
+      imgUrl: validator?.image,
+      apy: validator?.apy_estimate || null
     }
 
     return stakeAccountInfo
   }
 
-  public async getOwnerNativeStake(walletAddress: string): Promise<StakeAccount[]> {
+  public async getOwnerNativeStake(walletAddress: string): Promise<Stake[]> {
     // try {
       const validators: Validator[] = await this._shs.getValidatorsList()
       const stakeAccounts = await this._shs.getStakeAccountsByOwner(walletAddress);
@@ -184,7 +189,7 @@ export class NativeStakeService {
 
   }
 
-  public async withdraw(stakeAccount: StakeAccount, walletOwner: WalletExtended): Promise<any> {
+  public async withdraw(stakeAccount: Stake, walletOwner: WalletExtended): Promise<any> {
     console.log(stakeAccount);
 
     const withdrawTx = StakeProgram.withdraw({
@@ -250,7 +255,7 @@ export class NativeStakeService {
     }
     return null
   }
-  public reStake(stakeAccount: StakeAccount, walletOwner: WalletExtended) {
+  public reStake(stakeAccount: Stake, walletOwner: WalletExtended) {
     try {
       const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, stakeAccount.validator.vote_identity, walletOwner)
       const record = { message: `native reStake` }

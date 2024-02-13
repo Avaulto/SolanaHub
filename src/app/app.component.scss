@@ -44,7 +44,11 @@ ion-menu {
     font-style: normal;
     font-weight: 600;
     line-height: 24px;
-
+ion-chip{
+  scale: 0.75;
+    --border-radius: 0;
+    margin: 0;
+}
     &.selected {
       border-radius: var(--radius-sm, 6px);
       --background: #FFF3FB;

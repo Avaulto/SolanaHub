@@ -22,7 +22,7 @@ export interface loyalMember {
     pointsBreakDown: PointsBreakDown;
     hubDomainHolder: string;
     prizePoolShare:  number;
-    prize?: number
+    airdrop?: number
 }
 
 export interface PointsBreakDown {
@@ -32,7 +32,7 @@ export interface PointsBreakDown {
     veMNDEpts:      number;
     veBLZEpts:      number;
     referralPts:    number;
-    hubDomainHolder:   number;
+    hubDomainPts:   number;
 }
 
 

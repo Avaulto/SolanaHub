@@ -12,11 +12,14 @@
           <ion-menu-toggle auto-hide="false" *ngFor="let g of appPages; let i = index">
             <ion-list-header *ngIf="g.group">{{g.group}}</ion-list-header>
 
-            <ion-item  *ngFor="let p of g.pages; let i = index" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
+            <ion-item [disabled]="!p.active" style="opacity: 1;"  *ngFor="let p of g.pages; let i = index" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
               routerLinkActive="selected">
 
               <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
+              @if (!p.active) {
+                <ion-chip color="secondary">Soon</ion-chip>
+              }
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

@@ -11,7 +11,9 @@ ion-label {
     display: block;
     text-transform: capitalize;
 }
-
+.stake-account-checkbox{
+    display: none;
+}
 #merge-summary{
     height: 170px;
     padding-block: 10px;
@@ -85,8 +87,8 @@ ion-text {
         opacity: 0.8;
     }
 }
-:host ::ng-deep stake-position {
-    .stake-card {
-        padding-inline-start: 42px;
-    }
-}
+// :host ::ng-deep stake-position {
+//     .stake-card {
+//         padding-inline-start: 42px;
+//     }
+// }

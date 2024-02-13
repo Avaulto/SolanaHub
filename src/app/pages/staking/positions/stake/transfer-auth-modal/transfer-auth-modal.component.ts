@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
-import { StakeAccount } from 'src/app/models';
+import { Stake } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
   IonLabel,
@@ -28,7 +28,7 @@ import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
   ]
 })
 export class TransferAuthModalComponent implements OnInit {
-  @Input() targetStakeAccount: StakeAccount;
+  @Input() stake: Stake;
   @Output() onAuthSet = new EventEmitter();
   @ViewChild('targetAddress') targetAddress: IonInput;
   public authoritiesChecked = signal({ withdraw: false, stake: false })
@@ -36,8 +36,8 @@ export class TransferAuthModalComponent implements OnInit {
 
 
   ngOnInit() {
-    this.targetStakeAccount.withdrawAuth = this.utils.addrUtil(this.targetStakeAccount.withdrawAuth).addrShort
-    this.targetStakeAccount.stakeAuth = this.utils.addrUtil(this.targetStakeAccount.stakeAuth).addrShort
+    this.stake.withdrawAuth = this.utils.addrUtil(this.stake.withdrawAuth).addrShort
+    this.stake.stakeAuth = this.utils.addrUtil(this.stake.stakeAuth).addrShort
 
    }
   updateTransferAuth(ev) {

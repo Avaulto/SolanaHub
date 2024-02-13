@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StakeComponent } from '../stake.component';
-import { Stake, StakeAccount } from 'src/app/models';
+import { Stake } from 'src/app/models';
 import {
   IonLabel,
   IonInput,
@@ -19,7 +19,7 @@ import {
   ]
 })
 export class InstantUnstakeModalComponent  implements OnInit {
-  @Input() targetStakeAccount: StakeAccount;
+  @Input() stake: Stake;
   constructor() { }
 
   ngOnInit() {}

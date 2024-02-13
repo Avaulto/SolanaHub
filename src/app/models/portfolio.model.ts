@@ -1,6 +1,7 @@
 import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js"
 import { Validator } from "./stakewiz.model"
 import { JupToken } from "./jup-token.model"
+import { StakePool } from "./stake-pool.model"
 
 export interface WalletExtended {
   balance?: number,
@@ -37,19 +38,27 @@ export interface LendingOrBorrow{
     apy: string
 }
 
-export interface StakeAccount {
+export interface Stake {
+  type: 'native' | 'liquid'
   lockedDue?: string
   locked?: boolean
   lamportsBalance?: number
   excessLamport?: number
   stakeAuth?: string
   startEpoch?: string
+  lastReward?: any
   withdrawAuth?: string
   validator?: Validator
+  imgUrl?: string,
+  apy?: number,
+  pool?: StakePool
   address: string
-  shortAddress: string
+  validatorName?: string
+  shortAddress?: string
   balance: number
-  state: 'active' | 'inactive' | 'activating' | 'deactivating'
+  value?: number
+  state: string //'activating' | 'deactivating' | 'active' | 'inactive' | 'directStake' | 'delegationStrategyPool'
+  symbol: string
 }
 
 export interface TransactionHistory{

@@ -16,16 +16,16 @@
     <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
     }
     @case ("merge-modal") {
-    <merge-modal [stakeAccounts]="data.stakeAccounts" [targetStakeAccount]="data.stakeAccount" (onAccountsSelected)="emittedValue.set($event)" />
+    <merge-modal [targetStake]="data.stake" [stakeAccounts]="data.stakeAccounts" (onAccountsSelected)="emittedValue.set($event)" />
     }
     @case ("split-modal") {
-    <split-modal [targetStakeAccount]="data.stakeAccount" (onAmountSet)="emittedValue.set($event)" />
+    <split-modal [stake]="data.stake" (onAmountSet)="emittedValue.set($event)" />
     }
     @case ("instant-unstake-modal") {
-    <instant-unstake-modal  [targetStakeAccount]="data.stakeAccount" />
+    <instant-unstake-modal  [stake]="data.stake" />
     }
     @case ("transfer-auth-modal") {
-    <transfer-auth-modal [targetStakeAccount]="data.stakeAccount" (onAuthSet)="emittedValue.set($event)"/>
+    <transfer-auth-modal [stake]="data.stake" (onAuthSet)="emittedValue.set($event)"/>
     }
     @case ("token-list") {
       <token-list (onSelectToken)="emittedValue.set($event)" [jupTokens]="data.jupTokens" />

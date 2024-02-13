@@ -13,7 +13,7 @@
         </div>
         <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
           Boost your score to unlock weekly SOL rewards.</div>
-        @if(llScore$ | async){
+        @if(loyaltyLeagueMember$ | async){
         <app-member-stats [loyalMember]="loyalMember" />
         }@else {
         <ion-button id="stake-redirect">Start Stake with SolanaHub</ion-button>
@@ -39,7 +39,10 @@
         <ion-col size="12" class="data-set">
           <app-mft 
           [tableId]="'loyalty-league'"
-          [label]="'Leader Board'" desc="Obtain a comprehensive overview for your loyalty points from each source" [tableRows]="10" [tableColumns]="columns" [tableData]="leaderBoard" />
+          [label]="'Leader Board'" 
+          desc="Obtain a comprehensive overview for your loyalty points from each source" 
+          [tableRows]="10" [tableColumns]="columns" 
+          [tableData]="leaderBoard" />
 
           <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="addr-item">

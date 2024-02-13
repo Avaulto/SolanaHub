@@ -2,6 +2,7 @@
   <div class="stake-info">
     <div class="validator-profile">
       @if(stake){
+        
       <ion-img [src]="stake?.imgUrl || 'assets/images/unknown.svg'" />
       }@else{
       <ion-skeleton-text animated />
@@ -14,11 +15,14 @@
 
     <span>
       
+      <div>
       @if(stake){
+
+       
       <div class="validator-info">
         <div class="validator-name">
-            @if (stake.validatorName) {
-              {{stake?.validatorName}}
+            @if (stake?.validator?.name) {
+              {{stake?.validator?.name}}
             }
         </div>
       </div>
@@ -36,7 +40,7 @@
             </div>
           }
          
-
+        </div>
         <div class="account-value">
 
         @if(stake){

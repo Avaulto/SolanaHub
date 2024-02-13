@@ -13,7 +13,7 @@ import { CurrencyPipe, DecimalPipe, JsonPipe, NgStyle, NgTemplateOutlet } from '
 import { JupStoreService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
-import { Stake, StakeAccount } from 'src/app/models';
+import { Stake } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
@@ -37,10 +37,10 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
     JsonPipe
   ]
 })
-export class StakeComponent {
-  @Input() stake: Stake = null;
-  @Input() account: StakeAccount = null
-  @Input() stakeAccounts: StakeAccount[] = null
+export class StakeComponent implements OnInit{
+  // @Input() stake: Stake = null;
+  @Input() stake: Stake = null
+  @Input() stakeAccounts: Stake[] = null
   public toolTipPos = TooltipPosition.LEFT
   public solPrice = this._jupStore.solPrice;
   public stakeAccountStatus = {
@@ -81,13 +81,16 @@ export class StakeComponent {
     ) {
     addIcons({ copyOutline, ellipsisVertical });
   }
-
+ngOnInit(): void {
+  console.log(this.stake);
+  
+}
   async presentPopover(e: Event) {
  
-    
+    console.log(this.stake);
     const popover = await this._popoverController.create({
       component: OptionsPopoverComponent,
-      componentProps: {stakeAccount: this.account,stakeAccounts: this.stakeAccounts },
+      componentProps: {stake: this.stake,stakeAccounts: this.stakeAccounts },
       event: e,
       backdropDismiss: true,
       dismissOnSelect:true,

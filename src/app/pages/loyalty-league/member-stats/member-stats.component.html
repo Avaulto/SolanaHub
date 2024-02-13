@@ -2,17 +2,18 @@
   <div id="score-head">
     <div>
       <div id="total-pts-title">Your weekly airdrop</div>
-      <div id="total-pts-value">{{currentMember().airdrop }} SOL</div>
+      <div id="total-pts-value">{{loyalMember()?.airdrop }} SOL</div>
     </div>
+
     <div id="referral-btn">
-      <ion-button fill="clear" appCopyText [copyText]="'https://solanahub.app/stake?refWallet='+ currentMember().walletOwner" >
+      <ion-button fill="clear" appCopyText [copyText]="'https://solanahub.app/stake?refWallet='+loyalMember()?.walletOwner" >
         Copy referral link <ion-icon name="copy-outline"></ion-icon>
       </ion-button>
     </div>
   </div>
   <div id="score-body">
     <ion-row>
-      @for (points of currentMember().pointsBreakDown; track $index) {
+      @for (points of loyalMember().pointsBreakDown; track $index) {
       <ion-col size="4" [ngStyle]="{'margin-block-end': $index < 3 ? '10px' : ''}">
         <div class="pts-title">{{points.label}}</div>
         <div class="pts-value">{{points.value}}</div>

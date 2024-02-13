@@ -1,19 +1,29 @@
 <div id="split-stake-account">
   <ion-label>Target account</ion-label>
-  <stake-position [account]="targetStakeAccount" />
+  <stake-position [stake]="stake" />
   <div id="current-auth" class="ion-margin-bottom">
-    
-      <ion-label>
-      current authorities:
-      </ion-label>
-   <div>
 
-     <ion-text>
-       Stake: {{targetStakeAccount.stakeAuth}},
-      </ion-text> 
-      <ion-text>
-        Withdraw: {{targetStakeAccount.withdrawAuth}}
-      </ion-text> 
+    <ion-label>
+      current authorities:
+    </ion-label>
+    <div class="auth-wrapper">
+      
+      <div class="auth-values" style="margin-block-end: 8px;">
+        <ion-label>
+          Stake:
+        </ion-label>
+        <ion-text>
+          {{stake.stakeAuth}}
+        </ion-text>
+      </div>
+      <div class="auth-values">
+        <ion-label>
+          Withdraw:
+        </ion-label>
+        <ion-text>
+          {{stake.withdrawAuth}}
+        </ion-text>
+      </div>
     </div>
   </div>
   <div class="control-group ion-margin-bottom">
@@ -24,7 +34,8 @@
   <div id="authorities-selection" class="ion-margin-bottom">
     <ion-label>select authority to transfer</ion-label>
     <div id="checkbox-wrapper" class="ion-margin-bottom">
-      <ion-checkbox mode="md" class="stake-type wrapping-list" value="withdraw" (ionChange)="updateTransferAuth($event.detail)">
+      <ion-checkbox mode="md" class="stake-type wrapping-list" value="withdraw"
+        (ionChange)="updateTransferAuth($event.detail)">
         <!-- <div class="inliner">
           <div class="icon-wrapper">
             <ion-img src="assets/images/lock-icon.svg" /> 
@@ -40,7 +51,8 @@
 
         </div>
       </ion-checkbox>
-      <ion-checkbox mode="md" class="stake-type wrapping-list" value="stake" (ionChange)="updateTransferAuth($event.detail)">
+      <ion-checkbox mode="md" class="stake-type wrapping-list" value="stake"
+        (ionChange)="updateTransferAuth($event.detail)">
         <!-- <div class="inliner">
           <div class="icon-wrapper">
              <ion-img src="assets/images/droplets-icon.svg" />
@@ -49,17 +61,17 @@
         <div>
 
           <div class="type-title">stake</div>
-              <ion-label class="ion-text-wrap type-desc">
-                Stake Authority is responsible for staking actions like delegating to validators
-              </ion-label>    
-     
+          <ion-label class="ion-text-wrap type-desc">
+            Stake Authority is responsible for staking actions like delegating to validators
+          </ion-label>
+
         </div>
       </ion-checkbox>
-      
+
     </div>
     @if(this.authoritiesChecked().withdraw){
-      <alert text="Please note: If you transfer your withdraw authority, you'll be giving up control over your funds"/>
-    
+    <alert text="Please note: If you transfer your withdraw authority, you'll be giving up control over your funds" />
+
     }
-</div>
+  </div>
 </div>

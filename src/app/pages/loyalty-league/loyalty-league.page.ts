@@ -52,33 +52,75 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
     // effect(() => console.log(this.loyalMember()))
   }
-  public prizePool$: BehaviorSubject<PrizePool> = new BehaviorSubject(null as PrizePool)
-
-  public llScore$ = this._shs.walletExtended$.pipe(
+  public prizePool$: Subject<PrizePool> = new Subject()
+  public loyaltyLeagueMember$ = this._shs.walletExtended$.pipe(
     combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),
     this._utilService.isNotNullOrUndefined,
     map(([wallet, lllb, prizePool]) => {
+      console.log(wallet, lllb, prizePool);
+
+      if (wallet) {
 
 
-      const findMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-      if(findMember && lllb && prizePool){
-        //@ts-ignore
-        findMember.weeklyAirdrop = this._utilService.formatBigNumbers(prizePool.rebates * findMember?.prizePoolShare)
+
+        const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+        if (loyalMember && lllb && prizePool) {
+          //@ts-ignore
+          console.log(loyalMember, lllb, prizePool);
+          
+          const airdrop = this._utilService.formatBigNumbers(prizePool.rebates * loyalMember?.prizePoolShare)
+
+          const pointsBreakDown = loyalMember.pointsBreakDown
+          const loyalMemberRes = {
+            walletOwner: loyalMember.walletOwner,
+            airdrop,
+            pointsBreakDown: [
+              {
+                label: 'total points:',
+                value: this._utilService.formatBigNumbers(loyalMember.loyaltyPoints)
+              },
+              {
+                label: 'native stake:',
+                value: this._utilService.formatBigNumbers(pointsBreakDown.nativeStakePts)
+              },
+              {
+                label: 'liquid stake:',
+                value: this._utilService.formatBigNumbers(pointsBreakDown.mSOLpts + pointsBreakDown.bSOLpts)
+              },
+              {
+                label: 'DAO votes:',
+                value: this._utilService.formatBigNumbers(pointsBreakDown.veBLZEpts + pointsBreakDown.veMNDEpts)
+              },
+              {
+                label: 'referrals:',
+                value: this._utilService.formatBigNumbers(pointsBreakDown.referralPts)
+              },
+              {
+                label: 'HUB domain boost:',
+                value: this._utilService.formatBigNumbers(pointsBreakDown.hubDomainPts)
+              },
+            ]
+          }
+          this.loyalMember.set(loyalMemberRes)
+          console.log(loyalMemberRes);
+          
+          return loyalMemberRes
+        }
+      else {
+          return null
+        }
+      } else {
+        return null
       }
-
-      this.loyalMember.set(findMember)
-
-      return this.loyalMember()
-
     }))
   public totalPts: number = null
   public ll = this._loyaltyLeagueService.llb$.pipe(switchMap(async (ll) => {
 
     this.totalPts = ll.totalPoints
-    if(this.prizePool$.value === null){
-      const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
-      this.prizePool$.next(prizePool)
-    }
+    const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
+    // if (this.prizePool$.value === null) {
+    //   this.prizePool$.next(prizePool)
+    // }
 
 
     const loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
@@ -91,29 +133,29 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
         hubDomainHolder: staker.hubDomainHolder,
         totalPoints: this._utilService.formatBigNumbers(staker.loyaltyPoints),
-        weeklyAirdrop: this._utilService.formatBigNumbers(this.prizePool$.value.rebates * staker?.prizePoolShare)
+        weeklyAirdrop: this._utilService.formatBigNumbers(prizePool.rebates * staker?.prizePoolShare)
       }
     })
     return loyaltyLeagueExtended
   }))
   public leaderBoard = toSignal(this.ll)
 
-  public leaderBoardTable = signal([])//toSignal(this._loyaltyLeagueService.getLoyaltyLeaderBoard())
+  // public leaderBoardTable = signal([])//toSignal(this._loyaltyLeagueService.getLoyaltyLeaderBoard())
   public columns = signal([])
 
 
 
   public regularTemplate() {
     return [
-      { key: 'rank',  title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'rank', title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'walletOwner', title: 'Wallet address', cellTemplate: this.addressTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'nativeStake',title: 'Native Stake', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'liquidStake',  title: 'Liquid Stake', cellTemplate: this.LSTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'nativeStake', title: 'Native Stake', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'liquidStake', title: 'Liquid Stake', cellTemplate: this.LSTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'dao', title: 'DAO votes', cellTemplate: this.daoTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'referrals', title: 'Referrals', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'hubDomainHolder', title: 'HUB Domain Holder', cellTemplate: this.hubDomainHolderTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'totalPoints', title: 'Total Points',  cssClass: { name: 'bold-text', includeHeader: true } },
-      { key: 'weeklyAirdrop', title: 'Airdrop',  cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'totalPoints', title: 'Total Points', cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'weeklyAirdrop', title: 'Airdrop', cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
     ]
   }
   public copyAddress(address: string) {

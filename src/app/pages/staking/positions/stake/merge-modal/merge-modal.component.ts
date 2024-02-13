@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, WritableSignal, computed, effect, inject, signal } from '@angular/core';
-import { Stake, StakeAccount } from 'src/app/models';
+import { Stake } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
   IonLabel,
@@ -26,8 +26,8 @@ import { DecimalPipe, NgClass } from '@angular/common';
   ]
 })
 export class MergeModalComponent implements OnInit {
-  @Input() targetStakeAccount: StakeAccount;
-  @Input() stakeAccounts: StakeAccount[];
+  @Input() targetStake: Stake;
+  @Input() stakeAccounts: Stake[];
   @Output() onAccountsSelected = new EventEmitter();
   @ViewChildren('checkAccounts') checkAccounts: QueryList<IonCheckbox>
   public accountsToMerge: WritableSignal<Stake[]> = signal(null);
@@ -56,7 +56,9 @@ export class MergeModalComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log(this.targetStake, this.stakeAccounts);
+    
     // hide the target stake account from the list 
-    this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStakeAccount.address);
+    this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStake.address);
   }
 }

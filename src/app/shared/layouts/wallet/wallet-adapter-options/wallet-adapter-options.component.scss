@@ -2,8 +2,8 @@
 
 #modal-intro {
     display: flex;
-    justify-content: space-between;
     margin-block-end: 24px;
+    justify-content: space-between;
 
     div {
         display: flex;
@@ -37,8 +37,8 @@
     }
 }
 #wallet-connected-actions {
+    gap: 8px;
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
     ion-label {
         display: block;
@@ -52,6 +52,9 @@
 }
 
 .wallet {
+    margin-bottom: 8px;
+    flex: 1;
+
     border-radius: 12px;
     border: 1px solid var(--Gray-50, #F9FAFB);
     background: var(--Gray-50, #F9FAFB);
@@ -73,3 +76,22 @@
         margin-block-end: 12px;
     }
 }
+
+
+
+@media only screen and (max-width: 1000px) {
+    .wallet {
+      width: 49%;
+      flex-direction: row !important;
+
+      padding: 12px 20px !important;
+      ion-avatar {
+        width: 20px;
+        height: 20px;
+        margin-block-end: 0;
+        margin-inline-end: 4px;
+      }
+    }
+  
+
+  }

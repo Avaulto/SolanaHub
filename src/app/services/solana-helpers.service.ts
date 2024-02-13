@@ -17,7 +17,7 @@ import {
   TokenOwnerOffCurveError
 } from 'node_modules/@solana/spl-token';
 import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccount } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, Stake } from '../models';
 import { environment } from 'src/environments/environment';
 import { ApiService } from './api.service';
 import { UtilService } from './util.service';

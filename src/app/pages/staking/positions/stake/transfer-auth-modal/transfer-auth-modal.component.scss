@@ -9,18 +9,39 @@
 }
 
 #current-auth {
-    ion-label{
-        margin: 0;
-    }
     color: #697586;
     font-size: 12px;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    ion-text {
-        font-weight: 400;
+
+    .auth-wrapper {
+        padding-inline: 16px;
+        padding-block: 8px;
+        border-radius: var(--radius-md, 8px);
+        border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
+        background: var(--Colors-Gray-modern-50, #F8FAFC);
     }
+
+    .auth-values {
+        display: flex;
+        justify-content: space-between;
+        
+        color: var(--colors-text-text-primary-900, #101828);
+        font-size: 12px;
+        ion-label {
+            font-weight: 600;
+            line-height: 20px;
+            margin-block-end: 0;
+            /* 166.667% */
+        }
+
+        ion-text {            
+            font-weight: 400;
+            line-height: 20px;
+            /* 166.667% */
+        }
+    }
+
+
 }
 
 ion-label {
@@ -103,4 +124,3 @@ ion-checkbox {
     line-height: 130%;
     /* 15.6px */
 }
-

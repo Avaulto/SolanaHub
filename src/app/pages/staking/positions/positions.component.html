@@ -15,7 +15,7 @@
 
   @if(positionGroup() === 'native'){
     @for (stake of nativeStake(); track $index) {
-      <stake-position [stake]="stake" [account]="stakeAccounts()[$index]" [stakeAccounts]="stakeAccounts()" />
+      <stake-position [stake]="stake" [stakeAccounts]="stakeAccounts()" />
     }@empty {
       
       @if(nativeStake() === null){

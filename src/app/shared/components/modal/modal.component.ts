@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, effect, inject, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { StakeAccount, Validator } from 'src/app/models';
+import { Stake, Validator } from 'src/app/models';
 import { IonButton, IonImg } from '@ionic/angular/standalone'
 
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
@@ -48,6 +48,7 @@ export class ModalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    console.log(this.data);
     
     
   }
@@ -57,17 +58,17 @@ export class ModalComponent implements AfterViewInit {
     switch (this.componentName) {
       case 'split-modal':
 
-        await this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stakeAccount.addr), this.emittedValue().newStakeAccount, this.emittedValue().amount)
+        await this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
         break;
       case 'merge-modal':
 
-        const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: StakeAccount) => new PublicKey(acc.address))
-        await this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stakeAccount.addr), accountsToMerge);
+        const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: Stake) => new PublicKey(acc.address))
+        await this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), accountsToMerge);
         break;
       case 'transfer-auth-modal':
         const targetAddress = new PublicKey(this.emittedValue().targetAddress)
         const authToTransfer = this.emittedValue().authorities;
-        await this._nss.transferStakeAccountAuth( new PublicKey(this.data.stakeAccount.addr),wallet.publicKey, targetAddress, authToTransfer);
+        await this._nss.transferStakeAccountAuth( new PublicKey(this.data.stake.address),wallet.publicKey, targetAddress, authToTransfer);
 
         break;
       default:

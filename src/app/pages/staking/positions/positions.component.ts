@@ -4,7 +4,7 @@ import {
   IonButton, IonImg
 } from '@ionic/angular/standalone';
 import { StakeComponent } from './stake/stake.component';
-import { Stake, StakeAccount, StakePool, Token, Validator, WalletExtended } from 'src/app/models';
+import { Stake, StakePool, Token, Validator, WalletExtended } from 'src/app/models';
 import { JsonPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -40,55 +40,35 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   //   return this.stakePosition() ? false : true
   // });
-  
+
   public liquidStake = computed(() => this._portfolio.tokens() ? this._portfolio.tokens()?.
-  filter(t => this._LSTs.includes(t.symbol.toLowerCase())).
-  map(lst => {
-    console.log(lst);
-      
+    filter(t => this._LSTs.includes(t.symbol.toLowerCase())).
+    map(lst => {
       const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
       const stake: Stake = {
         type: 'liquid',
         address: lst.address,
-        apy: pool.apy,
         balance: Number(lst.balance),
         value: Number(lst.value),
         state: lst.extraData ? 'directStake' : 'delegationStrategyPool',
         symbol: lst.symbol,
         imgUrl: pool.tokenImageURL,
-        validatorName: lst.extraData ? lst?.extraData?.validator?.name : null
+        validatorName: lst.extraData ? lst?.extraData?.validator?.name : null,
+        pool: pool,
+        apy: pool.apy
       }
       return stake
     }) : null
-  
+
   );
-  public nativeStake = computed(() => this.stakeAccounts() ? this.stakeAccounts()?.map(account => {
-
-    const stake: Stake = {
-      type: 'native',
-      address: account.address,
-      shortAddress: account.shortAddress,
-      validatorName: account.validator.name,
-      apy: account.validator.apy_estimate || null,
-      balance: Number(account.balance),
-      value: Number(account),
-      state: account.state,
-      symbol: 'SOL',
-      imgUrl: account.validator.image
-    }
-
-    console.log('ready');
-
-
-    return stake
-  }) : null)
+  public nativeStake = computed(() => this.stakeAccounts() ? this.stakeAccounts() : null)
   // wallet = this._shs.walletExtended$.subscribe(async (v: WalletExtended) => {
   //   if(v){
 
   //     const res = await this._lss.getDirectStake(v.publicKey.toBase58())
   //     console.log(res);
   //   }
-   
+
   // })
   constructor(
     private _lss: LiquidStakeService,

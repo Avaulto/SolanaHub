@@ -3,7 +3,7 @@ import {
   IonButton,
   IonIcon
 } from '@ionic/angular/standalone';
-import { StakeAccount } from 'src/app/models';
+import { Stake } from 'src/app/models';
 import { addIcons } from 'ionicons';
 import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane } from 'ionicons/icons';
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
@@ -18,8 +18,8 @@ import { ModalComponent } from 'src/app/shared/components/modal/modal.component'
   imports: [IonButton, IonIcon]
 })
 export class OptionsPopoverComponent implements OnInit {
-  @Input() stakeAccount: StakeAccount;
-  @Input() stakeAccounts: StakeAccount[];
+  @Input() stake: Stake;
+  @Input() stakeAccounts: Stake[];
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
@@ -29,22 +29,22 @@ export class OptionsPopoverComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.stakeAccount, this.stakeAccounts);
+    console.log(this.stake, this.stakeAccounts);
     
   }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()
-    await this._nss.deactivateStakeAccount(this.stakeAccount.address, walletOwner)
+    await this._nss.deactivateStakeAccount(this.stake.address, walletOwner)
   }
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet()
-    await this._nss.reStake(this.stakeAccount, walletOwner)
+    await this._nss.reStake(this.stake, walletOwner)
   }
   public async withdraw() {
     const walletOwner = this._shs.getCurrentWallet()
-    await this._nss.withdraw(this.stakeAccount, walletOwner)
+    await this._nss.withdraw(this.stake, walletOwner)
 
-    const stakeBalance = await this._shs.connection.getBalance(new PublicKey(this.stakeAccount.address));
+    const stakeBalance = await this._shs.connection.getBalance(new PublicKey(this.stake.address));
     console.log(`Stake account balance: ${stakeBalance / LAMPORTS_PER_SOL} SOL`);
   }
 
@@ -83,11 +83,12 @@ export class OptionsPopoverComponent implements OnInit {
       default:
         break;
     }
+    
     const modal = await this._modalCtrl.create({
       component: ModalComponent,
       componentProps: {
         componentName,
-        data: {stakeAccount: this.stakeAccount, stakeAccounts: this.stakeAccounts},
+        data: {stake: this.stake, stakeAccounts: this.stakeAccounts},
         config
       },
       cssClass: 'modal-style'
