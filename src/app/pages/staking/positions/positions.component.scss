@@ -32,7 +32,8 @@
         text-transform: capitalize;
         --box-shadow: 0 0 0;
         --color:#364152;
-        margin-inline-end:6px;
+        margin-inline-end: 4px;
+        width: 48%;
         &.button-solid{
             --color:var(--ion-color-primary);
             --background:  #FAF0F8;

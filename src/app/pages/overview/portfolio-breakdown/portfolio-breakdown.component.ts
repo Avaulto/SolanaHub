@@ -109,7 +109,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         setTimeout(() => {
 
           this.createGroupCategory()
-        });
+        }, 300);
       }
     })
   }
@@ -134,6 +134,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
       type: 'pie',
 
       data: {
+        
         labels: groupNames,
         datasets: [{
           parsing: false,

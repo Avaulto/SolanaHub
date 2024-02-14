@@ -24,13 +24,13 @@
       </ion-col>
     </ion-row>
     <div id="loyalty-league-info">
-      <ion-row class="ion-justify-content-between ion-margin-bottom">
+      <ion-row class="ion-justify-content-between ion-align-items-stretch ion-margin-bottom">
         <ion-col sizeXl="5.9" size="12">
 
           <app-pool-stats [prizePool$]="prizePool$" [totalPts]="totalPts" />
 
         </ion-col>
-        <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div>
+        <!-- <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div> -->
         <ion-col id="points-multiplier" sizeXl="5.9" size="12" class="gap data-set">
           <app-points-stats />
         </ion-col>

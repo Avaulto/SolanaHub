@@ -9,7 +9,7 @@ import {  IonRow, IonCol } from '@ionic/angular/standalone';
 })
 export class PageHeaderComponent  implements OnInit {
   @Input() title: string;
-  @Input() environment: string;
+  @Input() description: string;
   constructor() { }
 
   ngOnInit() {}

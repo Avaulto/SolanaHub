@@ -1,9 +1,15 @@
 
 :host {
     height: 100%;
+    overflow-x: auto;
+    display: block;
+
+}
+#stat-wrapper{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
+    height: 100%;
 }
 
 .stat {
@@ -49,4 +55,11 @@ ion-skeleton-text{
         margin-inline-end: 4px;
         font-size: 16px;
     }
+}
+@media only screen and (max-width: 1200px) {
+    #stat-wrapper{
+    grid-template-columns: 1fr 1fr;
+    width: 500px;
+    overflow-x: auto;
+}
 }
