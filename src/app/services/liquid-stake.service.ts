@@ -82,9 +82,12 @@ export class LiquidStakeService {
 
       const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
       const { transaction } = await this.marinadeSDK.deposit(lamports);
-      console.log(transaction);
-      
-      return await this._txi.sendTx([transaction], walletOwner.publicKey, null, record)
+      let ixs: any = [transaction]
+      if(directToValidatorVoteAddress){
+        const directStakeix = await this.marinadeSDK.createDirectedStakeVoteIx(directToValidatorVoteAddress)
+        ixs.push(directStakeix)
+      }
+      return await this._txi.sendTx([ixs], walletOwner.publicKey, null, record)
     } catch (error) {
       console.log(error);
     }
