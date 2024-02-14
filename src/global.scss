@@ -62,8 +62,9 @@ ion-button{
         opacity: 1;
     }
 }
-ion-content {
+ion-content, ion-header {
     --background: #f3f4f6;
+    background: #f3f4f6;
 }
 
 .data-set {

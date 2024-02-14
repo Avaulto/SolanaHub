@@ -14,6 +14,7 @@ import { PointsStatsComponent } from './points-stats/points-stats.component';
 import { BehaviorSubject, Subject, combineLatestWith, firstValueFrom, map, switchMap } from 'rxjs';
 import { PrizePool } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-loyalty-league',
@@ -21,6 +22,7 @@ import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive
   styleUrls: ['./loyalty-league.page.scss'],
   standalone: true,
   imports: [
+    RouterLink,
     IonicModule,
     NgStyle,
     MftModule,

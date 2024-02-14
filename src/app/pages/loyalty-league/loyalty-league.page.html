@@ -16,7 +16,10 @@
         @if(loyaltyLeagueMember$ | async){
         <app-member-stats [loyalMember]="loyalMember" />
         }@else {
-        <ion-button id="stake-redirect">Start Stake with SolanaHub</ion-button>
+        <ion-button
+        routerDirection="root" 
+        routerLink="/staking" 
+        id="stake-redirect">Start Stake with SolanaHub</ion-button>
         }
       </ion-col>
       <ion-col class="ion-hide-sm-down" id="promo-media">
