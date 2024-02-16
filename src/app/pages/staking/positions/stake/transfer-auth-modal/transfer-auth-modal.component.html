@@ -73,5 +73,10 @@
     <alert text="Please note: If you transfer your withdraw authority, you'll be giving up control over your funds" />
 
     }
+
+    @if(this.authoritiesChecked().stake && this.stake.validatorName.toLowerCase() === 'marinade native'){
+      <alert text="Please note: If you transfer your stake authority, you'll be giving up marinade automatic delegation strategy control" />
+  
+      }
   </div>
 </div>

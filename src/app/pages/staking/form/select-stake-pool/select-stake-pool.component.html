@@ -12,13 +12,15 @@
           </ng-template>
         </ion-popover> -->
         <!-- <ion-img id="tooltip" class="tooltip-icon" src="assets/images/help-icon.svg" /> -->
-        <div>
-        <ion-avatar>
-          <ion-img [src]="pool?.tokenImageURL" />
-        </ion-avatar>
-        <ion-label>{{pool?.poolName}}</ion-label>
-        <ion-text>{{(2 - pool?.exchangeRate) * pool?.tokenMintSupply| number:  '1.2-2'}} SOL</ion-text>
-        <ion-chip color="primary">{{pool?.apy | number: '1.2-2'}}%</ion-chip>
+        <div class="pool-profile">
+          <ion-avatar>
+            <ion-img [src]="pool?.tokenImageURL" />
+          </ion-avatar>
+          <div class="pool-name">
+            <ion-label>{{pool?.poolName}}</ion-label>
+            <ion-text>{{(2 - pool?.exchangeRate) * pool?.tokenMintSupply| number: '1.2-2'}} SOL</ion-text>
+          </div>
+          <ion-chip color="primary">{{pool?.apy | number: '1.2-2'}}%</ion-chip>
         </div>
       </ion-segment-button>
       }

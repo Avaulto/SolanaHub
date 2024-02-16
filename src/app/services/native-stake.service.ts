@@ -39,6 +39,7 @@ export class NativeStakeService {
     validators: Validator[],
     inflationReward: InflationReward
     ): Promise<Stake>  {
+      const marinadeStakeAuth = 'stWirqFCf2Uts1JBL1Jsd3r6VBWhgnpdPxCTe1MFjrq'
     const pk = account.pubkey;
     const address = pk.toBase58()
     const parsedData = account.account.data.parsed.info || null//.delegation.stake
@@ -50,7 +51,8 @@ export class NativeStakeService {
     const excessLamport = accountLamport - stake - rentReserve
     const { active, state }: StakeActivationData = await this._shs.connection.getStakeActivation(pk);
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
-
+    const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : validator.name
+    const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : validator.image
     const stakeAccountInfo: Stake = {
       type: 'native',
       symbol: 'SOL',
@@ -67,8 +69,8 @@ export class NativeStakeService {
       lastReward: this._utils.decimalPipe.transform(inflationReward?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0,
       stakeAuth: parsedData.meta.authorized.staker,
       withdrawAuth: parsedData.meta.authorized.withdrawer,
-      validatorName: validator?.name || null,
-      imgUrl: validator?.image,
+      validatorName: validatorName || null,
+      imgUrl: imgUrl || null,
       apy: validator?.apy_estimate || null
     }
 

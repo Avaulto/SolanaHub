@@ -7,7 +7,10 @@ import {
   selector: 'alert',
   template: `
   <div id="alert">
+    <div>
+
   <ion-img src="assets/images/info-icon.svg"/>
+</div>
   <ion-text>
     {{text}}
   </ion-text>

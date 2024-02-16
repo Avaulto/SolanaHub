@@ -19,6 +19,8 @@ ion-segment {
     border-radius: 10px;
     border: 1px solid #E3E8EF;
     padding: 4px;
+    flex-wrap: wrap;
+    display: flex;
     --background: #F8FAFC;
 }
 
@@ -51,6 +53,7 @@ ion-chip{
     scale: 0.71;
 }
 ion-segment-button {
+    flex: 1;
     --border-color: transparent;
     --padding-bottom: 0;
     --padding-end: 12px;
@@ -60,10 +63,15 @@ ion-segment-button {
     --border-width: 2px;
     --border-style: solid;
     --indicator-box-shadow: 0px 0px 0px 0px #B84794;
-    div{
+    .pool-profile{
+        width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+    .pool-name{
+        display: flex;
+        flex-direction: column;
     }
     ion-img {
         width: 36px;
@@ -71,4 +79,17 @@ ion-segment-button {
         margin-block-end: 8px;
     }
 
+}
+
+@media only screen and (max-width: 1200px) {
+    ion-segment-button {
+        flex: 100% !important;
+    }
+    .pool-profile{
+        flex-direction: row !important;
+        justify-content: space-between;
+    }
+    ion-avatar{
+        margin: 0;
+    }
 }
