@@ -49,7 +49,6 @@ export class ModalComponent implements AfterViewInit {
     private _nss: NativeStakeService,
     private _lss: LiquidStakeService
   ) {
-    effect(() => console.log(this.data.jupTokens(), this.emittedValue()))
   }
 
   ngAfterViewInit() {

@@ -88,6 +88,8 @@ export class InputComponent implements OnInit, OnChanges {
 
     const { data, role } = await modal.onWillDismiss();
     let jupToken: JupToken = data
+    console.log(jupToken);
+    
     if (data) {
       this.tokenControl.setValue(jupToken);
       this.getTokenPrice();
@@ -96,7 +98,7 @@ export class InputComponent implements OnInit, OnChanges {
   }
 
   getTokenPrice() {
-    const { address } = this.tokenControl
+    const { address } = this.tokenControl.value
 
     this._jupStore.fetchPriceFeed(address, 1).then(res => {
       const price = res.data[address]['price'];

@@ -2,13 +2,13 @@
 [label]="readonly ? 'you receive' : 'you pay'"
  [showBtns]="!readonly" 
  (onSetSize)="valueChange($event)" 
-[asset]="tokenControl" />
+[asset]="tokenControl.value" />
 <div class="token-input">
   <ion-button fill="clear" class="token-select" (click)="openTokensModal()">
     <div>
-      <ion-img [src]="tokenControl?.logoURI" />
+      <ion-img [src]="tokenControl.value?.logoURI" />
     </div>
-    {{tokenControl?.symbol}}
+    {{tokenControl.value?.symbol}}
     <div>
       <ion-icon name="chevron-down-outline" />
     </div>
@@ -17,7 +17,7 @@
   (ionInput)="valueChange($event)"
   [readonly]="readonly" 
   inputmode="decimal" 
-  [value]="visibleValue() | number"
+  [value]="visibleValue() | number: '1.0-7'"
   [class.readonly]="readonly"
     class="currency-amount" />
   @if(amountControl?.value || outValue){

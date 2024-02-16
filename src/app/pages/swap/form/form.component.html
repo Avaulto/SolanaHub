@@ -2,7 +2,7 @@
   <swap-setting (reloadRoute)="calcBestRoute()" [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting>
   <div class="token-exchange">
     <swap-input 
-    [tokenControl]="tokenSwapForm.controls['inputToken'].value"
+    [tokenControl]="tokenSwapForm.controls['inputToken']"
     [amountControl]="tokenSwapForm.controls['inputAmount']"
     [jupTokens]="jupTokens"/>
     <div id="flip-tokens-wrapper">
@@ -11,7 +11,7 @@
       </ion-button>
     </div>
     <swap-input 
-    [tokenControl]="tokenSwapForm.controls['outputToken'].value" 
+    [tokenControl]="tokenSwapForm.controls['outputToken']" 
     [jupTokens]="jupTokens" 
     [outValue]="bestRoute()?.outAmount" 
     [readonly]="true"
