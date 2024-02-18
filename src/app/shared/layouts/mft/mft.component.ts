@@ -46,7 +46,7 @@ export class MftComponent implements OnInit {
   public configuration: Config = {
     ...DefaultConfig,
     orderEnabled: true,
-    threeWaySort: true,
+    // threeWaySort: true,
     showDetailsArrow: true,
     paginationRangeEnabled: false,
     paginationEnabled: true,

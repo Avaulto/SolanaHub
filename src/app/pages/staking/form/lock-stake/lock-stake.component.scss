@@ -61,6 +61,7 @@
         --pin-color: #121926;
         padding-top: 8px;
         &::part(pin) {
+            padding: 5px;
             background: transparent;
             transform: translateY(36px);
             width: 68px;

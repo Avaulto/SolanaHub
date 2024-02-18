@@ -39,6 +39,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 export class SelectStakePoolComponent implements AfterViewInit {
   @ViewChild('popoverTpl', { static: true }) popoverTpl: TemplateRef<any> | any;
   @Output() onSelectPool = new EventEmitter();
+  @Input() stakePools: WritableSignal<StakePool[]> = null
   position: TooltipPosition = TooltipPosition.BELOW;
   public defaultPool:StakePool =null;
   selectPool(ev){
@@ -47,7 +48,6 @@ export class SelectStakePoolComponent implements AfterViewInit {
     
   }
 
-  @Input() stakePools: WritableSignal<StakePool[]>
 constructor(){
   effect(() => {
     if (this.stakePools()) {

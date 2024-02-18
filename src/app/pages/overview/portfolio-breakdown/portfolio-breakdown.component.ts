@@ -69,37 +69,6 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     return color
   }
   public utilService = inject(UtilService)
-  // public portfolio = [{
-  //   group: 'tokens',
-  //   value: 1784561,
-  //   color: '#341663'
-  // },
-  // {
-  //   group: 'NFTs',
-  //   value: 178153,
-  //   color: '#560BAD'
-  // },
-  // {
-  //   group: 'LPs',
-  //   value: 276179,
-  //   color: '#7209B7'
-  // },
-  // { // lending is equal to lending less borrowing
-  //   group: 'lending',
-  //   value: 361738,
-  //   color: '#560BAD'
-  // },
-  // {
-  //   group: 'vaults',
-  //   value: 191545,
-  //   color: '#F72585'
-  // },
-  // {
-  //   group: 'staking',
-  //   value: 567878,
-  //   color: '#E9CDC2'
-  // }] as any
-
   chartData: Chart;
 
   @ViewChild('breakdownChart', { static: false }) breakdownChart: ElementRef;
@@ -145,6 +114,9 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         }]
       },
       options: {
+        layout: {
+          padding: 4
+      },
         elements: {
           arc: {
             borderWidth: 0
