@@ -5,7 +5,7 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { addIcons } from 'ionicons';
-import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline } from 'ionicons/icons';
+import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline, wallet } from 'ionicons/icons';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { PoolStatsComponent } from './pool-stats/pool-stats.component';
@@ -116,16 +116,13 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
       }
     }))
   public totalPts: number = null
-  public ll = this._loyaltyLeagueService.llb$.pipe(switchMap(async (ll) => {
+  public ll = this._loyaltyLeagueService.llb$.pipe(
+    combineLatestWith(this._shs.walletExtended$),
+    switchMap(async ([ll ,wallet]) => {
 
     this.totalPts = ll.totalPoints
     const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
-    // if (this.prizePool$.value === null) {
-    //   this.prizePool$.next(prizePool)
-    // }
-
-
-    const loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
+    let loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
       return {
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(staker.walletOwner),
@@ -138,6 +135,11 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         weeklyAirdrop: this._utilService.formatBigNumbers(prizePool.rebates * staker?.prizePoolShare)
       }
     })
+    if(wallet){
+      loyaltyLeagueExtended.sort((x, y) => { return x.walletOwner.addr === wallet.publicKey.toBase58() ? -1 : y.walletOwner === wallet.publicKey.toBase58() ? 1 : 0; });
+      console.log(loyaltyLeagueExtended);
+      
+    }
     return loyaltyLeagueExtended
   }))
   public leaderBoard = toSignal(this.ll)

@@ -20,6 +20,8 @@ constructor(
   this.msg.subscribe((toastData: toastData) => this.presentToastWithOptions(toastData.message,toastData.btnText, toastData.segmentClass,toastData.duration,  toastData.cb));
 }
 async presentToastWithOptions(message: string,btnText: string, segmentClass: string, duration?: number, cb?: Function) {
+  console.log(duration);
+  
   let toastOptions:ToastOptions = {
     cssClass: `toastStyle ${segmentClass}`,
     color:'primary',

@@ -198,9 +198,9 @@ ion-spinner{
     --border-width: 1px;
     --border-style: solid;
     --button-color: var(--ion-text-color);
+    --start: 1;
+    transform: translateX(-18px);
     .toast-wrapper{
-
-        margin-right: 2%;
         margin-bottom: 2%;
     }
 

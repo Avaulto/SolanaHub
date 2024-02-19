@@ -12,6 +12,7 @@ import { WalletModule } from './shared/layouts/wallet/wallet.module';
 import { PageHeaderComponent } from './shared/components/page-header/page-header.component';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 import { LocalStorageService } from './services/local-storage.service';
+import { PublicKey } from '@solana/web3.js';
 
 @Component({
   selector: 'app-root',
@@ -56,7 +57,8 @@ export class AppComponent implements OnInit {
     this._activeRoute.queryParams
     .subscribe((params) => {
       const refWallet = params['refWallet']
-      if(refWallet){
+      if(refWallet && PublicKey.isOnCurve(refWallet)){
+        
         this._localStorage.saveData('refWallet', refWallet)
       }
 
