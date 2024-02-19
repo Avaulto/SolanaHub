@@ -217,9 +217,7 @@ export class PortfolioService {
   }
 
   public async _portfolioStaking(walletAddress:string){
-   const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
-                          console.log(stakeAccounts);
-                          
+   const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);                 
    this.staking.set(stakeAccounts)
   }
 

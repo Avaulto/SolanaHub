@@ -77,17 +77,20 @@ export class LiquidStakeService {
       return await this._stakePoolStakeSOL(new PublicKey(pool.poolPublicKey), walletOwner, lamportsBN, validatorVoteAccount, record)
     }
   }
-  private async _marinadeStakeSOL(lamports: BN, walletOwner: WalletExtended, validatorVoteAccount: string, record) {
+  private async _marinadeStakeSOL(lamports: BN, walletOwner: WalletExtended, validatorVoteAccount?: string, record?) {
     try {
 
-      const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
       const { transaction } = await this.marinadeSDK.deposit(lamports);
       let ixs: any = [transaction]
+      const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
       if(directToValidatorVoteAddress){
-        const directStakeix = await this.marinadeSDK.createDirectedStakeVoteIx(directToValidatorVoteAddress)
-        ixs.push(directStakeix)
+
+        const directStakeIx = await this.marinadeSDK.createDirectedStakeVoteIx(directToValidatorVoteAddress)
+        ixs.push(directStakeIx)
       }
-      return await this._txi.sendTx([ixs], walletOwner.publicKey, null, record)
+
+      
+      return await this._txi.sendTx([...ixs], walletOwner.publicKey, null, record)
     } catch (error) {
       console.log(error);
     }
@@ -135,7 +138,6 @@ export class LiquidStakeService {
       result.mSOL ? directStake.mSOL.validator = validators.find((v: Validator) => v.vote_identity === result.mSOL.validatorVoteAccount) : null
       result.bSOL ? directStake.bSOL.map(s => s.validator = validators.find((v: Validator, i) => v.vote_identity === result.bSOL[i].validatorVoteAccount)) : null;
       directStake = result;
-      console.log(directStake);
 
       //  directStake.mSOL.validator = mSOLvalidator
       //  directStake.bSOL.map(s=> s.validator = bSOLvalidator)// .validator = mSOLvalidator

@@ -52,9 +52,7 @@ export class ModalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.data);
-    
-    
+
   }
   async submit() {
 

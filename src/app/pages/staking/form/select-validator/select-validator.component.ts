@@ -104,6 +104,8 @@ export class SelectValidatorComponent  implements OnInit {
   }
 
   ngOnInit() {
+    console.log('init');
+    
     this.selectedValidator.set(this.defaultValidator);
     this.onSelectValidator.emit(this.defaultValidator)
   }

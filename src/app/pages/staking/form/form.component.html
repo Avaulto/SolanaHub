@@ -24,8 +24,10 @@
       <select-stake-pool style="display: block;" class="ion-margin-bottom" [stakePools]="stakePools" (onSelectPool)="setPool($event);"/>
     }
     @if(stakePath() === 'liquid' && stakeForm.controls['pool']?.value?.poolName != 'Jito'){
-      <custom-validator>
-        <select-validator [validatorsList]="validatorsList" (onSelectValidator)="setValidator($event)"/>
+      <custom-validator (onShowCustomValidator)="onShowCustomValidator($event)">
+        @if(showCustomValidator){
+          <select-validator [validatorsList]="validatorsList" (onSelectValidator)="setValidator($event)"/>
+        }
       </custom-validator>
     }
     <ion-button id="stake-btn" (click)="submitNewStake()" class="ion-text-capitalize" [disabled]="stakeForm.invalid" expand="block">

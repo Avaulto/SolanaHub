@@ -48,11 +48,11 @@ export class SwapPage implements OnInit {
 
   async ngOnInit() {
   
-    setTimeout(() => {
-      const filteredTx =this._portfolioService.filteredTxHistory('', 'swap')//.filter(tx => tx.mainAction === 'swap');
-      this.tradeHistoryTable.set(filteredTx)
-      console.log(filteredTx);
-    }, 10000);
+    // setTimeout(() => {
+    //   const filteredTx =this._portfolioService.filteredTxHistory('', 'swap')//.filter(tx => tx.mainAction === 'swap');
+    //   this.tradeHistoryTable.set(filteredTx)
+    //   console.log(filteredTx);
+    // }, 10000);
     
     // this.tradeHistoryTable.set(filteredTx)
   }

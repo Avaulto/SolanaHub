@@ -42,7 +42,6 @@ export interface Stake {
   type: 'native' | 'liquid'
   lockedDue?: string
   locked?: boolean
-  lamportsBalance?: number
   excessLamport?: number
   stakeAuth?: string
   startEpoch?: string
@@ -55,6 +54,7 @@ export interface Stake {
   address: string
   validatorName?: string
   shortAddress?: string
+  accountLamport?: any
   balance: number
   value?: number
   state: string //'activating' | 'deactivating' | 'active' | 'inactive' | 'directStake' | 'delegationStrategyPool'

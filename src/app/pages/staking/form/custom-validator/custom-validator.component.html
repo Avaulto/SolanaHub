@@ -4,7 +4,7 @@
       <div class="light-title">use custom validator</div>
      
     </div>
-    <ion-toggle mode="ios" (ionChange)="setValidator($event)" #customValidator />
+    <ion-toggle mode="ios" (ionChange)="setCustomValidator($event)" #customValidator />
   </div>
   @if (customValidator.checked) {
     <div id="custom-validator-selection">

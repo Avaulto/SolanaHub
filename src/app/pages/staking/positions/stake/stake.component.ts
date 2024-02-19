@@ -82,12 +82,11 @@ export class StakeComponent implements OnInit{
     addIcons({ copyOutline, ellipsisVertical });
   }
 ngOnInit(): void {
-  console.log(this.stake);
+
   
 }
   async presentPopover(e: Event) {
- 
-    console.log(this.stake);
+
     const popover = await this._popoverController.create({
       component: OptionsPopoverComponent,
       componentProps: {stake: this.stake,stakeAccounts: this.stakeAccounts },

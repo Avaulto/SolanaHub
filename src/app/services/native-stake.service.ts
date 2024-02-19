@@ -53,6 +53,7 @@ export class NativeStakeService {
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
     const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : validator.name
     const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : validator.image
+
     const stakeAccountInfo: Stake = {
       type: 'native',
       symbol: 'SOL',
@@ -60,8 +61,8 @@ export class NativeStakeService {
       locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
       address,
       shortAddress: this._utils.addrUtil(address).addrShort,
-      balance: Number(((stake + excessLamport + rentReserve || excessLamport) / LAMPORTS_PER_SOL)),
-      lamportsBalance: stake + rentReserve,
+      balance: Number(accountLamport / LAMPORTS_PER_SOL),
+      accountLamport,
       state,
       validator,
       excessLamport,
@@ -192,13 +193,11 @@ export class NativeStakeService {
   }
 
   public async withdraw(stakeAccount: Stake, walletOwner: WalletExtended): Promise<any> {
-    console.log(stakeAccount);
-
     const withdrawTx = StakeProgram.withdraw({
       stakePubkey: new PublicKey(stakeAccount.address),
       authorizedPubkey: walletOwner.publicKey,
       toPubkey: walletOwner.publicKey,
-      lamports: stakeAccount.lamportsBalance, // Withdraw the full balance at the time of the transaction
+      lamports: stakeAccount.accountLamport, // Withdraw the full balance at the time of the transaction
     });
     try {
       //   const validTx = await this.prepTx(lamports, withdrawTx, walletOwnerPk)

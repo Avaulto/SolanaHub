@@ -52,7 +52,32 @@
         /* 150% */
     }
 
-
+    #no-stake-box{
+        text-transform: capitalize;
+        border-radius: var(--radius-xl, 12px);
+        border: 1px solid #DBDBD8;
+        background: #E3E3D9;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        margin-block-end: 32px;
+        ion-label {
+            color: var(--colors-text-text-primary-900, #101828);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.16px;
+            line-height: 100%;
+            margin-block-end: 10px;
+        }
+    
+        ion-text {
+            color: var(--colors-text-text-primary-900, #101828);
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: 0.36px;
+            line-height: 100%;
+        }
+    }
     #stake-redirect {
         font-size: 18px;
         font-weight: 600;

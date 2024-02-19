@@ -51,8 +51,6 @@ export class SelectStakePoolComponent implements AfterViewInit {
 constructor(){
   effect(() => {
     if (this.stakePools()) {
-      console.log(this.stakePools());
-      
       const ev: any = { detail: { value: this.stakePools()[0] } }
       setTimeout(() => { 
         this.defaultPool = this.stakePools()[0];

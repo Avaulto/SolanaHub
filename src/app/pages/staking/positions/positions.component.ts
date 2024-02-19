@@ -99,22 +99,9 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   }
   ngOnChanges(changes) {
-    console.log(this.stakePools);
-
   }
   setPositionGroup(group: string) {
-    // this.loading.set(true)
     this.positionGroup.set(group)
-    // if (group === 'native') {
-    //   this.stakePosition.set(this.nativeStake)
-    // } else {
-    //   // this.stakePosition = this.liquidStake
-    // }
-    // if(this.stakePosition()){
-    //   this.loading.set(false)
-    // }
-    console.log(this.liquidStake());
-
   }
 
 

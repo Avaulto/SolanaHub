@@ -29,8 +29,7 @@ export class OptionsPopoverComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.stake, this.stakeAccounts);
-    
+
   }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()
@@ -43,9 +42,6 @@ export class OptionsPopoverComponent implements OnInit {
   public async withdraw() {
     const walletOwner = this._shs.getCurrentWallet()
     await this._nss.withdraw(this.stake, walletOwner)
-
-    const stakeBalance = await this._shs.connection.getBalance(new PublicKey(this.stake.address));
-    console.log(`Stake account balance: ${stakeBalance / LAMPORTS_PER_SOL} SOL`);
   }
 
   async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {

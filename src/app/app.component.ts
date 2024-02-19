@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import { IonApp,IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull,notifications, barcode, cog, swapHorizontal,chevronDownOutline } from 'ionicons/icons';
@@ -11,6 +11,7 @@ import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
 import { PageHeaderComponent } from './shared/components/page-header/page-header.component';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
+import { LocalStorageService } from './services/local-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -44,12 +45,23 @@ import { NotConnectedComponent } from './shared/layouts/not-connected/not-connec
 export class AppComponent implements OnInit {
   readonly isReady$ =  this._walletStore.connected$
   constructor(
-    private _walletStore: WalletStore
+    private _activeRoute: ActivatedRoute,
+    private _walletStore: WalletStore,
+    private _localStorage: LocalStorageService
     ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog,swapHorizontal, chevronDownOutline, notifications });
   }
-  ngOnInit(): void {
 
+  ngOnInit(): void {
+    this._activeRoute.queryParams
+    .subscribe((params) => {
+      const refWallet = params['refWallet']
+      if(refWallet){
+        this._localStorage.saveData('refWallet', refWallet)
+      }
+
+    }
+  );
   }
  
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';

@@ -47,10 +47,10 @@ export class ActionBoxComponent implements OnInit {
       targetAddress: ['', [Validators.required]],
       privateTx: [false]
     })
-    this.sendTokenForm.valueChanges.subscribe(v => {
-      console.log(v, this.sendTokenForm);
+    // this.sendTokenForm.valueChanges.subscribe(v => {
+    //   console.log(v, this.sendTokenForm);
       
-    })
+    // })
   }
   setStakeSize(amount){
     // let {balance} = this._shs.getCurrentWallet()

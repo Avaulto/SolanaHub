@@ -14,9 +14,7 @@ export class IsConnectedGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      // this.isReady$.subscribe(res => console.log(res))
-      // console.log(this.isReady$);
-      
+
     return this.isReady$
   }
   

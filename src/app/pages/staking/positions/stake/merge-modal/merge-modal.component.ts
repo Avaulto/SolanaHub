@@ -34,7 +34,6 @@ export class MergeModalComponent implements OnInit {
   public mergedBalance = computed(() => this.accountsToMerge() ? this.accountsToMerge().reduce((accumulator, currentValue: Stake) => accumulator + currentValue.balance, 0) : 0)
   public selectedAccounts = []
   constructor() {
-    effect(() => console.log(this.accountsToMerge(), this.mergedBalance()))
   }
 
   selectAccount(checkbox, valid) {
@@ -56,8 +55,6 @@ export class MergeModalComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log(this.targetStake, this.stakeAccounts);
-    
     // hide the target stake account from the list 
     this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStake.address);
   }

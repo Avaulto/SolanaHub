@@ -68,7 +68,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
         if (loyalMember && lllb && prizePool) {
           //@ts-ignore
-          console.log(loyalMember, lllb, prizePool);
+  
           
           const airdrop = this._utilService.formatBigNumbers(prizePool.rebates * loyalMember?.prizePoolShare)
 
@@ -104,7 +104,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
             ]
           }
           this.loyalMember.set(loyalMemberRes)
-          console.log(loyalMemberRes);
+  
           
           return loyalMemberRes
         }

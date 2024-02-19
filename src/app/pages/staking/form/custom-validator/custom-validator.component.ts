@@ -12,11 +12,11 @@ import { SelectValidatorComponent } from '../select-validator/select-validator.c
   imports: [IonToggle,SelectValidatorComponent]
 })
 export class CustomValidatorComponent  implements OnInit {
-
+@Output() onShowCustomValidator = new EventEmitter()
   constructor() { }
 
   ngOnInit() {}
-  setValidator(ev){
-
+  public setCustomValidator(ev){
+    this.onShowCustomValidator.emit(ev.detail.checked)
   }
 }

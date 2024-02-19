@@ -10,14 +10,14 @@ import { LoyaltyLeaderBoard, LoyaltyScore, NextAirdrop, PrizePool } from '../mod
 export class LoyaltyLeagueService {
   private _loyaltyLeagueLeaderBoard$ = new BehaviorSubject(null as LoyaltyLeaderBoard);
   public llb$ = this._loyaltyLeagueLeaderBoard$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
-  
+
   protected api = this._utilService.serverlessAPI + '/api/loyalty-points'
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService,
     // private _toasterService:ToasterService
-  ) { 
-    if(!this._loyaltyLeagueLeaderBoard$.value){
+  ) {
+    if (!this._loyaltyLeagueLeaderBoard$.value) {
       firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
 
     }
@@ -43,7 +43,7 @@ export class LoyaltyLeagueService {
       shareReplay(),
       this._utilService.isNotNull,
       map((loyaltyScore: LoyaltyScore) => {
-  
+
         return loyaltyScore
       }),
       // catchError((err) => this._formatErrors(err))
@@ -69,11 +69,15 @@ export class LoyaltyLeagueService {
       // catchError((err) => this._formatErrors(err))
     )
   }
-  public addReferral(referer:string, participantAddress: string) {
-    return this._apiService.get(`${this.api}/referral?referAddress=${referer}&participantAddress=${participantAddress}`).pipe(
-      this._utilService.isNotNull,
-      shareReplay(),
-      // catchError((err) => this._formatErrors(err))
-    )
+
+  public async addReferral(referer: string, participantAddress: string) {
+    let data = null
+    try {
+      const res = await fetch(`${this.api}/referral?referAddress=${referer}&participantAddress=${participantAddress}`);
+      data = await res.json();
+    } catch (error) {
+      console.warn(error);
+    }
+    return data
   }
 }

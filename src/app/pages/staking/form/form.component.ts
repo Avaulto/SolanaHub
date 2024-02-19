@@ -3,15 +3,15 @@ import { Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } f
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
 
-  IonInput, 
+  IonInput,
   IonButton,
 
-  } from '@ionic/angular/standalone';
+} from '@ionic/angular/standalone';
 
 
 
 import { StakePool, Validator, WalletExtended } from 'src/app/models';
-import { SolanaHelpersService, UtilService, TxInterceptorService,PriceHistoryService, NativeStakeService, JupStoreService } from 'src/app/services';
+import { SolanaHelpersService, UtilService, TxInterceptorService, PriceHistoryService, NativeStakeService, JupStoreService } from 'src/app/services';
 import { Observable } from 'rxjs';
 import { ApyCalcComponent } from './apy-calc/apy-calc.component';
 import { IonicModule } from '@ionic/angular';
@@ -24,26 +24,29 @@ import { SelectStakePoolComponent } from './select-stake-pool/select-stake-pool.
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { CustomValidatorComponent } from './custom-validator/custom-validator.component';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 @Component({
   selector: 'stake-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   standalone: true,
-  imports:[
+  imports: [
     ApyCalcComponent,
     StakePathComponent,
     SelectValidatorComponent,
     LockStakeComponent,
     SelectStakePoolComponent,
     CustomValidatorComponent,
-    IonInput, 
+    IonInput,
     IonButton,
     CurrencyPipe,
     ReactiveFormsModule,
     InputLabelComponent
   ]
 })
-export class FormComponent  implements OnInit {
+export class FormComponent implements OnInit {
+  public solanaHubVoteKey = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public asset = {
     "address": "So11111111111111111111111111111111111111112",
     "decimals": 9,
@@ -51,59 +54,70 @@ export class FormComponent  implements OnInit {
     "name": "Wrapped SOL",
     "symbol": "SOL",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
-}
-  public stakeAPY = signal(null);
+  }
   @Input() validatorsList = signal([] as Validator[])
+  @Input() stakePools: WritableSignal<StakePool[]>
+  public stakeAPY = signal(null);
   public stakePath = signal('native');
+  public showCustomValidator: any = false;
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public solPrice = this._jupStore.solPrice
-  @Input() stakePools: WritableSignal<StakePool[]>
   constructor(
+    private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
-    private _util:UtilService,
-    private _lss:LiquidStakeService,
-    private _nss:NativeStakeService,
+    private _util: UtilService,
+    private _lss: LiquidStakeService,
+    private _nss: NativeStakeService,
     private _tis: TxInterceptorService,
     private _jupStore: JupStoreService,
-    ){
- 
-  }
+    private _localStorage: LocalStorageService
+  ) {
 
-  ngOnInit() {
+  }
+  onShowCustomValidator(show){
+    this.showCustomValidator = show
+
+    // return to delegation strategy if user cancelled custom validator
+    if(!show){
+      this.stakeForm.controls['validatorVoteIdentity'].reset()
+    }
     
+  }
+  ngOnInit() {
+
     this.stakeForm = this._fb.group({
       amount: [null, [Validators.required]],
       validatorVoteIdentity: [null, [Validators.required]],
-      stakingPath: ['native',Validators.required],
+      stakingPath: ['native', Validators.required],
       lockupDuration: [0],
     })
 
-    this.stakeForm.valueChanges.subscribe(v=> console.log(v))
+    // this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
   }
 
 
-  setStakeSize(amount){
+  setStakeSize(amount) {
     // let {balance} = this._shs.getCurrentWallet()
     // if(size === 'half'){
     //   balance = balance / 2
     // }
-    amount = Number(this._util.decimalPipe.transform(amount- 0.005, '1.4')) 
+    amount = Number(this._util.decimalPipe.transform(amount, '1.4'))
     this.stakeForm.controls['amount'].setValue(amount)
   }
 
 
-  selectStakePath(stakePath: 'native' | 'liquid'){
+  selectStakePath(stakePath: 'native' | 'liquid') {
     this.stakePath.set(stakePath)
     this.stakeForm.controls['validatorVoteIdentity'].reset()
     this.stakeForm.controls['stakingPath'].setValue(stakePath)
-    if(stakePath === 'native'){
+    if (stakePath === 'native') {
       this.stakeForm.controls['validatorVoteIdentity'].addValidators(Validators.required)
       this._removeStakePoolControl()
     }
-    if(stakePath === 'liquid'){
+    if (stakePath === 'liquid') {
       this.stakeForm.controls['validatorVoteIdentity'].removeValidators(Validators.required);
       this._addStakePoolControl()
     }
@@ -126,26 +140,38 @@ export class FormComponent  implements OnInit {
     let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
     const lamportsToDelegate = amount * LAMPORTS_PER_SOL
     const walletOwner = this._shs.getCurrentWallet();
+    const stakeReferer = this._localStorage.getData('refWallet')
 
     if (stakingPath === 'native') {
 
-      const stake = await this._nss.stake(lamportsToDelegate,walletOwner,validatorVoteIdentity,lockupDuration);
+      const stake = await this._nss.stake(lamportsToDelegate, walletOwner, validatorVoteIdentity, lockupDuration);
+
+      // add stakers to loyalty league referee program
+      if (stake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
+        const participantAddress = walletOwner.publicKey.toBase58()
+        this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
+      }
       // const sendTx = await this._tis.sendTx(txIns.stakeIx, walletOwner,[txIns.stakeAcc])
 
-      
-    } else if (stakingPath === 'liquid'){
-      this._lss.stake(pool,lamportsToDelegate,walletOwner,validatorVoteIdentity)
+
+    } else if (stakingPath === 'liquid') {
+      const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
+      // add stakers to loyalty league referee program
+      if (liquidStake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
+        const participantAddress = walletOwner.publicKey.toBase58()
+        this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
+      }
     }
   }
-setValidator(validator:Validator){
-  this.stakeForm.controls['validatorVoteIdentity'].setValue(validator.vote_identity);
-  if(this.stakePath() === 'native'){
-    this.stakeAPY.set(validator.apy_estimate)
+  setValidator(validator: Validator) {
+    this.stakeForm.controls['validatorVoteIdentity'].setValue(validator.vote_identity);
+    if (this.stakePath() === 'native') {
+      this.stakeAPY.set(validator.apy_estimate)
+    }
   }
-}
-setPool(pool){
-  this.stakeForm.controls['pool'].setValue(pool)
-  this.stakeAPY.set(pool.apy)
-}
+  setPool(pool) {
+    this.stakeForm.controls['pool'].setValue(pool)
+    this.stakeAPY.set(pool.apy)
+  }
 
 }
