@@ -5,9 +5,9 @@ import {
 } from '@ionic/angular/standalone';
 import { StakeComponent } from './stake/stake.component';
 import { Stake, StakePool, Token, Validator, WalletExtended } from 'src/app/models';
-import { JsonPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, switchMap } from 'rxjs';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
   templateUrl: './positions.component.html',
   styleUrls: ['./positions.component.scss'],
   standalone: true,
-  imports: [IonButton, StakeComponent, IonImg, JsonPipe]
+  imports: [IonButton, StakeComponent, IonImg, JsonPipe, AsyncPipe]
 })
 export class PositionsComponent implements OnInit, OnChanges {
   @Input() stakePools: WritableSignal<StakePool[]> = signal([])
@@ -40,63 +40,61 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   //   return this.stakePosition() ? false : true
   // });
+  _stake$ = new Subject()
+  stake$: Observable<Stake[]> = this._stake$.asObservable()
+    .pipe(switchMap(async (stake: Token[] | Stake[]) => {
+      if (this.positionGroup() === 'liquid') {
 
-  public liquidStake = computed(() => this._portfolio.tokens() ? this._portfolio.tokens()?.
-    filter(t => this._LSTs.includes(t.symbol.toLowerCase())).
-    map(lst => {
-      const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
-      const stake: Stake = {
-        type: 'liquid',
-        address: lst.address,
-        balance: Number(lst.balance),
-        value: Number(lst.value),
-        state: lst.extraData ? 'directStake' : 'delegationStrategyPool',
-        symbol: lst.symbol,
-        imgUrl: pool.tokenImageURL,
-        validatorName: lst.extraData ? lst?.extraData?.validator?.name : null,
-        pool: pool,
-        apy: pool.apy
+        
+        return stake
+        .filter(t => this._LSTs.includes(t.symbol.toLowerCase()))
+        .map(lst => {
+          
+          const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
+          const stake: Stake = {
+            type: 'liquid',
+            address: lst.address,
+            balance: Number(lst.balance),
+            value: Number(lst.value),
+            state: lst.extraData ? 'directStake' : 'delegationStrategyPool',
+            symbol: lst.symbol,
+            imgUrl: pool.tokenImageURL,
+            // validatorName: lst[directStake[lst.symbol]] ? lst?.extraData?.validator?.name : null,
+            pool: pool,
+            apy: pool.apy * 100
+          }
+          return stake
+        });
+      } else {
+        return stake as Stake[]
       }
-      return stake
-    }) : null
 
-  );
+    }))
+ 
   public nativeStake = computed(() => this.stakeAccounts() ? this.stakeAccounts() : null)
-  // wallet = this._shs.walletExtended$.subscribe(async (v: WalletExtended) => {
-  //   if(v){
 
-  //     const res = await this._lss.getDirectStake(v.publicKey.toBase58())
-  //     console.log(res);
-  //   }
-
-  // })
   constructor(
     private _lss: LiquidStakeService,
     private _portfolio: PortfolioService,
     private _shs: SolanaHelpersService
   ) {
     effect(() => {
-      // console.log(this.positionGroup(), this.stakePosition());
-      // if(this.positionGroup() ==='native' && this.nativeStake()){
-      //   console.log('native');
-      //   this.stakePosition.set(this.nativeStake())
-      // }
-      // if(this.positionGroup() ==='liquid' && this.liquidStake()){
-      //   console.log('liquid');
 
-      //   this.stakePosition.set(this.liquidStake())
-      // }
-      // if(this.stakePosition && this.stakePosition()){
-      //   this.loading.set(false)
-      // }else{
-      //   this.loading = true
-      // }
-      // console.log(this.stakePosition, this.loading());
+      if (this.positionGroup() === 'liquid' && this._portfolio.tokens()) {
+        console.log('trigger');
+
+        this._stake$.next(this._portfolio.tokens())
+      }
+      if (this.positionGroup() === 'native' && this._portfolio.staking()) {
+        this._stake$.next(this._portfolio.staking())
+      }
+
     })
   }
   ngOnInit(): void {
     // this.stakePosition.set(this.nativeStake)
-
+    // const { publicKey } = this._shs.getCurrentWallet()
+    // const directStake = await this._lss.getDirectStake(publicKey.toBase58())
   }
   ngOnChanges(changes) {
   }

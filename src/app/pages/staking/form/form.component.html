@@ -23,7 +23,7 @@
     @if(stakePath() === 'liquid'){
       <select-stake-pool style="display: block;" class="ion-margin-bottom" [stakePools]="stakePools" (onSelectPool)="setPool($event);"/>
     }
-    @if(stakePath() === 'liquid' && stakeForm.controls['pool']?.value?.poolName != 'Jito'){
+    @if(stakePath() === 'liquid' && stakeForm.controls['pool']?.value?.poolName != 'jito'){
       <custom-validator (onShowCustomValidator)="onShowCustomValidator($event)">
         @if(showCustomValidator){
           <select-validator [validatorsList]="validatorsList" (onSelectValidator)="setValidator($event)"/>

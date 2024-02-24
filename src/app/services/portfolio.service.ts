@@ -65,8 +65,8 @@ export class PortfolioService {
 
       
       const extendNftData: any = mergeDuplications.find(group => group.platformId === 'wallet-nfts')
-      // console.log(extendNftData);
-      this.nfts.set(extendNftData)
+      console.log(extendNftData);
+      this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)
@@ -217,7 +217,8 @@ export class PortfolioService {
   }
 
   public async _portfolioStaking(walletAddress:string){
-   const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);                 
+   const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);          
+        
    this.staking.set(stakeAccounts)
   }
 

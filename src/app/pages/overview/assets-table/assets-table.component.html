@@ -8,15 +8,15 @@
 <ng-template #collectionInfoTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="collection-info">
     <div class="collection-img">
-      @if (false) {
-      <ion-img [src]="'awdaw'" />
+      @if (row) {
+      <ion-img class="img-ph" [src]="row.data.imageUri" />
       } @else {
       <ion-skeleton-text animated class="img-ph" />
       }
     </div>
     <div class="collection-name">
-      @if (false) {
-      {{row.collection}}
+      @if (row.data?.collection?.name) {
+      {{row.data.collection.name}}
       } @else {
       <ion-skeleton-text animated />
       }
@@ -26,7 +26,7 @@
 <!-- nft table templates -->
 <ng-template #nftListTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="nft-list">
-    @for (nft of row.nfts; track $index) {
+    <!-- @for (nft of row.nfts; track $index) {
     @if($index < 5){ <div>
       @if (false) {
       <ion-img [src]="'awdaw'" />
@@ -35,12 +35,12 @@
       }
   </div>
   }
-  }
-  @if(row.nfts.length > 5) {
+  } -->
+  <!-- @if(row.nfts.length > 5) {
   <div class="nft-remaining">
     +{{row.nfts.length - 5}}
   </div>
-  }
+  } -->
   </div>
 </ng-template>
 <ng-template #nftOffersTpl let-row let-rowIndex="rowIndex" let-column="column">
@@ -149,4 +149,10 @@
       {{asset.balance | number: '1.2'}} {{asset.symbol}}
     </div>
   }
+</ng-template>
+
+
+<ng-template #priceChart let-row let-rowIndex="rowIndex" let-column="column">
+
+  <app-price-chart type="lean" [token]="row"/>
 </ng-template>

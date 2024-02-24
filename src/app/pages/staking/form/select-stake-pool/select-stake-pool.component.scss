@@ -71,6 +71,7 @@ ion-segment-button {
     }
     .pool-name{
         display: flex;
+        text-transform: capitalize;
         flex-direction: column;
     }
     ion-img {

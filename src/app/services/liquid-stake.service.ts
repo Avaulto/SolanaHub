@@ -37,9 +37,11 @@ export class LiquidStakeService {
   public async getStakePoolList(): Promise<StakePool[]> {
     let stakePools: StakePool[] = [];
     try {
-      const result = await (await fetch('https://cogentcrypto.io/api/stakepoolinfo')).json();
-      const poolIncludes = ['jito', 'marinade', 'blazestake']
-      stakePools = result.stake_pool_data.filter(s => poolIncludes.includes(s.poolName.toLowerCase()));
+      const result = await (await fetch(`${this.restAPI}/api/get-stake-pools`)).json();
+      const poolIncludes = ['jito', 'marinade', 'solblaze']
+      stakePools = result.filter(s => poolIncludes.includes(s.poolName));
+      console.log(stakePools);
+      
       this.stakePools = stakePools;
     }
     catch (error) {

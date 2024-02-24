@@ -13,12 +13,12 @@
   </div>
   <div id="positions-container">
 
-  @if(positionGroup() === 'native'){
-    @for (stake of nativeStake(); track $index) {
+  <!-- @if(positionGroup() === 'native'){ -->
+    @for  (stake of stake$ | async; track $index) {
       <stake-position [stake]="stake" [stakeAccounts]="stakeAccounts()" />
     }@empty {
       
-      @if(nativeStake() === null){
+      @if((stake$ | async) === null){
         <stake-position [stake]="" />
         <stake-position [stake]="" />
         <stake-position [stake]="" />
@@ -27,11 +27,13 @@
         No positions found
       }
     }
-  }@else {
-    @for (stake of liquidStake(); track $index) {
+  <!-- } -->
+<!--   
+  @else {
+    @for (stake of liquidStake$ | async; track $index) {
       <stake-position [stake]="stake"  />
     }@empty {
-      @if(liquidStake() === null){
+      @if((liquidStake$ | async) === null){
         <stake-position [stake]="" />
         <stake-position [stake]="" />
         <stake-position [stake]="" />
@@ -40,7 +42,7 @@
         No positions found
       }
     }
-  }
+  } -->
 
 
   </div>

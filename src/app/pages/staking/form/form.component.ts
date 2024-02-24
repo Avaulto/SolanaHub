@@ -94,7 +94,7 @@ export class FormComponent implements OnInit {
       lockupDuration: [0],
     })
 
-    // this.stakeForm.valueChanges.subscribe(v=> console.log(v))
+    this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
   }
 

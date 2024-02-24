@@ -56,11 +56,11 @@
   </div>
   <div class="stake-details">
     <div>
-      @if(stake?.state === 'active'){
+      @if(stake?.state === 'active' || stake?.state === 'delegationStrategyPool'){
 
         <ion-chip class="stake-apy">
           @if(stake){
-            {{stake?.apy}}%
+            {{stake?.apy | number: '1.2-2'}}%
           }@else{
             <ion-skeleton-text style="width: 30px;" animated />
           }

@@ -12,7 +12,7 @@ export interface StakePool{
     commission: number
     solDepositFee: number
     solWithdrawalFee: number
-    totalStakedSol: number
+    totalStake: number
     reserveSol: number
   }
   

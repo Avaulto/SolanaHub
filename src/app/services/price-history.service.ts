@@ -16,12 +16,12 @@ export class PriceHistoryService {
     }
 
 
-  protected _coingeckoAPI = 'https://api.coingecko.com/api/v3';
+  protected _coingeckoAPI = `${this._utilService.serverlessAPI}/api/CG-proxy`;
 
   public async getTokenDataByAddress(mintAddress: string){
     let data = null
     try {
-      const res = await fetch(`${this._coingeckoAPI}/coins/solana/contract/${mintAddress}`);
+      const res = await fetch(`${this._coingeckoAPI}?endpoint=coins/solana/contract/${mintAddress}`);
       data = await res.json();
     } catch (error) {
       console.warn(error);
@@ -29,11 +29,12 @@ export class PriceHistoryService {
     return data
   }
   public async getCoinChartHistory(mintAddress: string, currency: string, days: number): Promise<any> {
-    let {name,web_slug,  market_data } = await this.getTokenDataByAddress(mintAddress)
+    let {name,id,  market_data } = await this.getTokenDataByAddress(mintAddress)
     name = name == 'Wrapped Solana' ? 'solana' : name
     let chartData = []
     try {
-      const res = await fetch(`${this._coingeckoAPI}/coins/${web_slug.toLowerCase()}/market_chart?vs_currency=${currency}&days=${days}`);
+      const queryParams = encodeURIComponent(`vs_currency=${currency}&days=${days}`)
+      const res = await fetch(`${this._coingeckoAPI}?endpoint=coins/${id}/market_chart&queryParam=${queryParams}`);
       const data = await res.json();
       const dateList = data.prices.map((item) => this._utilService.datePipe.transform(item[0], 'MMM d'));
       const priceList = data.prices.map((item) => item[1]);

@@ -1,4 +1,4 @@
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, WritableSignal, effect } from '@angular/core';
 
 import {
@@ -33,7 +33,8 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
     IonSkeletonText,
     IonImg,
     TooltipModule,
-    DecimalPipe
+    DecimalPipe,
+    PercentPipe
   ]
 })
 export class SelectStakePoolComponent implements AfterViewInit {

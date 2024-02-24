@@ -2,6 +2,7 @@
   <div class="light-title">Validator</div>
   <ion-button slot="start" fill="clear" (click)="openValidatorModal()" [disabled]="validatorsList().length === 0"
     expand="block">
+    <!-- <div> -->
     @if(selectedValidator()){
     <div class="validator-profile">
       <ion-img [src]="selectedValidator().image" />
@@ -19,5 +20,6 @@
     <span style="margin-right: auto">Select your preferred validator</span>
     }
     <ion-icon class="ion-hide-lg-down" slot="end" name="chevron-down-outline" />
+  <!-- </div> -->
   </ion-button>
 </div>

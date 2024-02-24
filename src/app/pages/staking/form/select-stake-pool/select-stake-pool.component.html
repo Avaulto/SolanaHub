@@ -19,9 +19,9 @@
           </ion-avatar>
           <div class="pool-name">
             <ion-label>{{pool?.poolName}}</ion-label>
-            <ion-text>{{(2 - pool?.exchangeRate) * pool?.tokenMintSupply| number: '1.2-2'}} SOL</ion-text>
+            <ion-text>{{ pool?.totalStake | number: '1.2-2'}} SOL</ion-text>
           </div>
-          <ion-chip color="primary">{{pool?.apy | number: '1.2-2'}}%</ion-chip>
+          <ion-chip color="primary">{{pool?.apy | percent : '1.2-2'}}</ion-chip>
         </div>
       </ion-segment-button>
       }@empty {

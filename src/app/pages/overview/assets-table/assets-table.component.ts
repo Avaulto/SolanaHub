@@ -12,6 +12,7 @@ import { Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
 import {tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder} from './table-options-helper'
 import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
+import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 
 @Component({
   selector: 'app-assets-table',
@@ -30,7 +31,8 @@ import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/servi
     IonIcon,
     IonChip,
     NgClass,
-    NgStyle
+    NgStyle,
+    PriceChartComponent
   ]
 })
 export class AssetsTableComponent implements OnInit {
@@ -44,6 +46,8 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('validatorApy', { static: true }) validatorApy: TemplateRef<any> | any;
   @ViewChild('simpleUsdValue', { static: true }) simpleUsdValue: TemplateRef<any> | any;
   @ViewChild('simplePriceValue', { static: true }) simplePriceValue: TemplateRef<any> | any;
+  @ViewChild('priceChart', { static: true }) priceChart: TemplateRef<any> | any;
+
   // nft tpls
   @ViewChild('collectionInfoTpl', { static: true }) collectionInfoTpl: TemplateRef<any> | any;
   @ViewChild('nftListTpl', { static: true }) nftListTpl: TemplateRef<any> | any;
@@ -77,20 +81,12 @@ export class AssetsTableComponent implements OnInit {
     // if(tableType === 'tokens'){
     //   return tokenDummyPlaceholder
     // }
-    if (tableType === 'nfts') {
-      return nftDummyPlaceholder
+    console.log(tableType, this._portfolioService[tableType]());
+    // if (tableType === 'nfts') {
+    //   return nftDummyPlaceholder
 
-    }
-    // if (tableType === 'staking') {
-    //   console.log(tableType);
-    //   return stakingDummyPlaceholder
     // }
     
-    // if (tableType === 'defi') {
-      
-    //   return defiDummyPlaceholder
-    // }
-
     return  this._portfolioService[tableType]()
   })
 
@@ -104,7 +100,7 @@ export class AssetsTableComponent implements OnInit {
         { key: 'balance', title: 'Balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price',cellTemplate:this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value',cellTemplate:this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
-        { key: 'last-seven-days', title: 'Last 7 Days', width: '15%', cssClass: { name: 'ion-hide-md-down', includeHeader: true } }
+        { key: 'last-seven-days', title: 'Last 7 Days',cellTemplate:this.priceChart, width: '15%', cssClass: { name: 'ion-hide-md-down', includeHeader: true } }
       ],
       staking:  [
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },

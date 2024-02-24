@@ -93,15 +93,16 @@ export class MftComponent implements OnInit {
   constructor(private _platform: Platform) { 
     effect(() =>{
       // console.log('mft loaded', this.tableData(), this.tableRows);
+      if(this.tableData()){
+        
+        this.configuration.isLoading = false;
+      }
       if(this.tableData && this.tableData()?.length < this.tableRows){
         this.configuration.paginationEnabled = false
       }else{
         this.configuration.paginationEnabled = true
       }
-      if(this.tableData()){
-        
-        this.configuration.isLoading = false;
-      }
+
     })
   }
   public searchTerm = signal('')

@@ -59,6 +59,7 @@ export interface Stake {
   value?: number
   state: string //'activating' | 'deactivating' | 'active' | 'inactive' | 'directStake' | 'delegationStrategyPool'
   symbol: string
+  extraData?: any
 }
 
 export interface TransactionHistory{
