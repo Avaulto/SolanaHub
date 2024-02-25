@@ -14,18 +14,34 @@ export interface Token extends JupToken{
     networkId?: string,
     imgUrl?: string,
     value?: string,
-    price?: string
+    price?: number
     amount?: string
     extraData?: any
 }
 export interface NFT{
-    collectionName: string,
-    collectionImgUrl:string,
-    imgUrl: string,
-    name: string,
-    floorPrice: string,
-    listed: boolean,
-    value: string
+  type: string
+  attributes: {
+    tags: Array<string>
+  }
+  data: {
+    address: string
+    amount: number
+    price: any
+    name: string
+    dataUri: string
+    imageUri: string
+    attributes: Array<{
+      value: string
+      trait_type: string
+    }>
+    collection: {
+      floorPrice: any
+      id: string
+      name: string
+    }
+  }
+  networkId: string
+  value: any
 }
 export interface LiquidityProviding{
     token: Token[]

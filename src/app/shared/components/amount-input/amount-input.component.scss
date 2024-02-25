@@ -1,0 +1,32 @@
+.token-input{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+
+}
+ion-input {
+    // box-shadow: 0 0 0 0;
+    // font-size: 24px;
+    // display: flex;
+    // align-items: center;
+    // width: 100%;
+    // position: relative;
+    // z-index: 1;
+    // border-radius: 12px;
+    // text-align: left;
+    // min-height: 74px;
+    // --padding-end: 12px;
+    // border: 1px solid #EFF0F0;
+}
+small{
+    position: absolute;
+    z-index: 2;
+    right: 14px;
+    bottom: 10px;
+    color: rgba(0, 0, 0, 0.35);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 0.12px;
+}

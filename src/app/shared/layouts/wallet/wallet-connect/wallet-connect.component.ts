@@ -37,7 +37,11 @@ export class WalletConnectComponent implements OnInit {
     addIcons({ chevronDownOutline });
     effect(() => {
     //@ts-ignore
-   this.profilePic = this._portfolioService.nfts()?.data?.assets[0]?.data.imageUri
+    if(this._portfolioService.nfts()){
+
+      this.profilePic = this._portfolioService.nfts()[0]?.data.imageUri;
+      console.log(this._portfolioService.nfts())
+    }
     })
   }
   public profilePic;

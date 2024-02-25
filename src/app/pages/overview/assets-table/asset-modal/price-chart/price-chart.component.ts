@@ -10,7 +10,7 @@ import { PriceHistoryService } from 'src/app/services/price-history.service';
     templateUrl: './price-chart.component.html',
     styleUrls: ['./price-chart.component.scss'],
     standalone: true,
-    imports:[NgStyle]
+    imports: [NgStyle]
 })
 export class PriceChartComponent implements OnInit, AfterViewInit {
     private _utilService = inject(UtilService)
@@ -22,13 +22,20 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
     public priceDataService = inject(PriceHistoryService)
     async ngOnInit() {
 
+    }
+    async ngAfterViewInit() {
+        const placeholderData = [
+            [this._utilService.datePipe.transform(new Date(), 'MMM d')],
+            [0,0]
+        ]
+        // placeholder while data is fetched
+        this.createGroupCategory(placeholderData);
+
+        // get chard data
         const tokenChartData = await this.priceDataService.getCoinChartHistory(this.token.address, 'USD', 7)
         this.createGroupCategory(tokenChartData.chartData)
 
         this.onPriceChangePercentage.emit(tokenChartData.market_data.price_change_percentage_24h)
-    }
-    ngAfterViewInit() {
-
     }
     private createGroupCategory(priceDataHistory) {
 
@@ -46,7 +53,7 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
                 datasets: [{
                     label: 'price',
                     data: priceDataHistory[1], // Y-axis data points
-                    backgroundColor: gradient ,
+                    backgroundColor: gradient,
                     borderColor: '#B84794',
                     borderWidth: 2,
                     tension: 0.4, // This will make the line chart smoother
@@ -58,19 +65,19 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
                 responsive: true,
                 maintainAspectRatio: false,
                 layout: {
-                    
-                    padding: this.type === 'full' ? { left: 24, top: 24, bottom: 24 } : { left: 5,right:5, top: 10, bottom: 5 }
+
+                    padding: this.type === 'full' ? { left: 24, top: 24, bottom: 24 } : { left: 5, right: 5, top: 10, bottom: 5 }
                 },
                 scales: {
                     y: {
                         ticks: {
                             display: this.type === 'full' ? true : false,
                             callback: (value, index, values) => {
-                                if(Number(value) < 0.01){
-                               
-                                    return this._utilService.decimalPipe.transform(value, '1.5' );
-                                }else{
-                                    return this._utilService.decimalPipe.transform(value, '1.2' );
+                                if (Number(value) < 0.01) {
+
+                                    return this._utilService.decimalPipe.transform(value, '1.5');
+                                } else {
+                                    return this._utilService.decimalPipe.transform(value, '1.2');
                                 }
                             }
                         },

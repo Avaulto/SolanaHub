@@ -39,6 +39,7 @@ export class PriceHistoryService {
       const dateList = data.prices.map((item) => this._utilService.datePipe.transform(item[0], 'MMM d'));
       const priceList = data.prices.map((item) => item[1]);
       chartData = [dateList, priceList];
+      
     } catch (error) {
       console.warn(error);
     }

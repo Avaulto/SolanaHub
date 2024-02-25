@@ -1,0 +1,12 @@
+<div class="token-input">
+
+  <ion-input 
+  (ionInput)="valueChange($event)"
+  inputmode="decimal" 
+  [value]="visibleValue() | number: '1.0-7'"
+  
+  class="currency-amount" />
+  @if(visibleValue()){
+    <small>{{tokenPrice() * visibleValue() | currency}}</small>
+  }
+</div>

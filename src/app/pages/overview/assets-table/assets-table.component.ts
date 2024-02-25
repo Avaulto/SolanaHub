@@ -82,16 +82,18 @@ export class AssetsTableComponent implements OnInit {
     //   return tokenDummyPlaceholder
     // }
     console.log(tableType, this._portfolioService[tableType]());
-    // if (tableType === 'nfts') {
-    //   return nftDummyPlaceholder
+    if (tableType === 'nfts') {
+      return nftDummyPlaceholder
 
-    // }
+    }
     
     return  this._portfolioService[tableType]()
   })
 
   private _columnsOptions = {}
+  public _groupNftCollections(nfts){
 
+  }
   async ngOnInit() {
 
     this._columnsOptions = {
@@ -133,7 +135,7 @@ export class AssetsTableComponent implements OnInit {
 
   eventEmitted($event: { event: string; value: any }): void {
     const token: Token = $event.value.row
-    if(this.selectedTab() === 'tokens'){
+    if(this.selectedTab().toLowerCase() === 'tokens'){
       if ($event.event === 'onClick') {
         this.openModal(token)
       }

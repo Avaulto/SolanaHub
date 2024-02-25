@@ -65,7 +65,7 @@ export class PortfolioService {
 
       
       const extendNftData: any = mergeDuplications.find(group => group.platformId === 'wallet-nfts')
-      console.log(extendNftData);
+      console.log('extends', extendNftData);
       this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);

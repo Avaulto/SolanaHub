@@ -1,26 +1,30 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, NgControl, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { helpCircleOutline } from 'ionicons/icons';
-import { IonSegmentButton, IonSegment, IonLabel, IonInput, IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { helpCircleOutline,eyeOffOutline,eyeOutline, add } from 'ionicons/icons';
+import { IonSegmentButton, IonSegment, IonLabel,IonText, IonInput, IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { Token } from 'src/app/models';
 import { SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
+import { ViewEncapsulation } from '@angular/core';
+import { AmountInputComponent } from 'src/app/shared/components/amount-input/amount-input.component';
 @Component({
   selector: 'app-action-box',
   templateUrl: './action-box.component.html',
   styleUrls: ['./action-box.component.scss'],
   standalone: true,
+  encapsulation: ViewEncapsulation.None,
   imports: [
+    AmountInputComponent,
     InputLabelComponent,
-    FormsModule,
     ReactiveFormsModule,
     DecimalPipe,
     IonSegmentButton,
     IonSegment,
     IonLabel,
+    IonText,
     IonInput,
     IonIcon,
     IonButton,
@@ -31,13 +35,15 @@ export class ActionBoxComponent implements OnInit {
   public sendTokenForm: FormGroup;
   @Input() token: Token // Asset;
   public formSubmitted: boolean = false;
+  public showAddressToggle = true;
+  public invalidAddress = false;
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
     private _txi: TxInterceptorService,
     private _util: UtilService,
   ) {
-    addIcons({ helpCircleOutline })
+    addIcons({ helpCircleOutline,eyeOffOutline,eyeOutline  })
   }
 
   ngOnInit() {
@@ -45,40 +51,64 @@ export class ActionBoxComponent implements OnInit {
       mintAddress: [this.token.address, Validators.required],
       amount: ['', [Validators.required]],
       targetAddress: ['', [Validators.required]],
+      targetAddressShorted: ['', [Validators.required]],
       privateTx: [false]
     })
-    // this.sendTokenForm.valueChanges.subscribe(v => {
-    //   console.log(v, this.sendTokenForm);
+    // this.sendTokenForm.controls['targetAddressShorted'].valueChanges.subscribe(v => {
+    //   this.hideAddress();
+    //   console.log(v, this.sendTokenForm.value);
       
     // })
   }
+  CheckAddress(){
+    const address = this.sendTokenForm.controls['targetAddressShorted'].value
+    if(this.pkVerifyValidator(address)){
+      this.sendTokenForm.controls['targetAddress'].setValue(address)
+      this.hideAddress();
+      this.invalidAddress = false
+    }else{
+      this.invalidAddress = true
+      this.sendTokenForm.controls['targetAddress'].reset()
+      this.showAddressToggle = !this.showAddressToggle
+    }
+  }
+  showAddress(){
+    const address = this.sendTokenForm.controls['targetAddress'].value
+    if(this.pkVerifyValidator(address)){
+      this.sendTokenForm.controls['targetAddressShorted'].setValue(this._util.addrUtil(address).addr)
+      this.showAddressToggle = !this.showAddressToggle
+    }
+  }
+  hideAddress(){
+    const address = this.sendTokenForm.controls['targetAddress'].value
+    if(this.pkVerifyValidator(address)){
+      this.sendTokenForm.controls['targetAddressShorted'].setValue(this._util.addrUtil(address).addrShort)
+      this.showAddressToggle = !this.showAddressToggle
+    }
+  }
   setStakeSize(amount){
-    // let {balance} = this._shs.getCurrentWallet()
-    // if(size === 'half'){
-    //   balance = balance / 2
-    // }
-    // amount = Number(this._util.decimalPipe.transform(amount- 0.005, '1.4')) 
     this.sendTokenForm.controls['amount'].setValue(amount)
   }
 
-  async pkVerifyValidator() {
-    return (control: AbstractControl): ValidationErrors | null => {
-
-      const value = control.value;
-      const pk = new PublicKey(value)
+  pkVerifyValidator(address) {
+    try {
+      const pk = new PublicKey(address)
       const isValid = PublicKey.isOnCurve(pk.toBytes());
-      if (!isValid) {
-        return null;
-      }
-      return new Error('invalid address')
+      return isValid
+    } catch (error) {
+      return false
     }
+
+  
+     
+    
   }
   async send() {
     this.formSubmitted = true;
     const { symbol, address } = this.token
     const { amount, targetAddress, privateTx } = this.sendTokenForm.value;
-    const targetPk = new PublicKey(targetAddress);
     try {
+      const targetPk = new PublicKey(targetAddress);
       const { publicKey } = this._shs.getCurrentWallet()
       if (symbol !== 'SOL') {
         const mintAddress = new PublicKey(address)
@@ -103,6 +133,7 @@ export class ActionBoxComponent implements OnInit {
       // va.track('send asset', { privateTx });
     } catch (error) {
       console.error(error)
+      this.formSubmitted = false;
     }
     this.formSubmitted = false;
   }
