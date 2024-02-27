@@ -1,6 +1,7 @@
 ion-grid{
     padding-inline: 2vw;
-    transform: translateY(-70px);
+    top: -70px;
+    position: relative;
 }
 
 #nft-gallery {
