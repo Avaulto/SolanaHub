@@ -1,0 +1,37 @@
+ion-grid{
+    padding-inline: 2vw;
+    transform: translateY(-70px);
+}
+
+#nft-gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+
+    nft-item {
+        border-radius: var(--radius-xl, 12px);
+        border: 2px solid transparent;
+        overflow: hidden;
+    }
+
+    .checked {
+        border: 2px solid #B84794;
+    }
+}
+::ng-deep nft-item.checked{
+    .floor-price{
+        border: 1px solid  #F1D5EB;
+        background:  #FAF0F8;
+        color: #9B3678;
+    }
+}
+ion-checkbox {
+    display: none;
+}
+
+feature-toast{
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}

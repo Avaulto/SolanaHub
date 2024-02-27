@@ -38,9 +38,7 @@ export class WalletConnectComponent implements OnInit {
     effect(() => {
     //@ts-ignore
     if(this._portfolioService.nfts()){
-
       this.profilePic = this._portfolioService.nfts()[0]?.data.imageUri;
-      console.log(this._portfolioService.nfts())
     }
     })
   }

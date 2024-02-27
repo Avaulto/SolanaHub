@@ -8,29 +8,35 @@
       {{desc}}
     </div>
   </div>
-  @if(searchBoxEnable){
-  <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
-  }
 </div>
 
 
 
-@if(tableMenuOptions.length){
-<app-table-menu 
-[menu]="tableMenuOptions" 
-[currentTab]="tableMenuOptions[0]"
-(onSelectTab)="tabSelected($event)">
-</app-table-menu>
-}
+<ion-row class="ion-align-items-center ">
+
+  @if(tableMenuOptions.length){
+  <ion-col size="8">
+    <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)">
+    </app-table-menu>
+  </ion-col>
+  }
+  @if(searchBoxEnable){
+    <ion-col size="auto">
+      <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
+    </ion-col>
+  }
+
+</ion-row>
+
+
+
+
+@if(mftOnlyHeader === false){
+
 
 <div id="table-wrapper">
-  <ngx-table #table
-   [id]="tableId" 
-    (event)="onRowClicked.emit($event)"
-    [configuration]="configuration"
-    [data]="tableData()" 
-    [columns]="tableColumns()" 
-    [loadingTemplate]="loadingTemplate">
+  <ngx-table #table [id]="tableId" (event)="onRowClicked.emit($event)" [configuration]="configuration"
+    [data]="tableData()" [columns]="tableColumns()" [loadingTemplate]="loadingTemplate">
   </ngx-table>
   @if (configuration.paginationEnabled) {
   <div id="table-controls">
@@ -42,7 +48,7 @@
     </ion-button>
     <ion-button mode="md" fill="clear" (click)="nextPage()">
       <span class="ion-hide-md-down">
-      next
+        next
       </span>
       <ion-img src="/assets/icon/arrow-right.svg" />
 
@@ -51,7 +57,7 @@
   }
 </div>
 
-
+}
 
 
 <ng-template #loadingTemplate>

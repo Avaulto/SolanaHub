@@ -34,6 +34,16 @@
     @case ("token-list") {
       <token-list (onSelectToken)="emittedValue.set($event)" [jupTokens]="data.jupTokens" />
       }
+
+    @case ('list-nft-modal') {
+      <list-nft-modal/>
+    }
+    @case ('send-nft-modal') {
+      <send-nft-modal/>
+    }
+    @case ('burn-nft-modal') {
+      <burn-nft-modal/>
+    }
   }
   <ng-container #containerBeforeTemplate></ng-container>
   @if (componentName !== 'token-list') {

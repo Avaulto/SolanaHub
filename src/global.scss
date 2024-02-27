@@ -82,7 +82,11 @@ ion-content, ion-header {
     --height: 90vh;
     align-items: flex-end;
 }
-
+#nft-toast {
+    --width: 100vw;
+    --height: 10vh;
+    align-items: flex-end;
+}
 .searchbar-input.sc-ion-searchbar-ios {
     padding-inline-start: 35px !important;
 }

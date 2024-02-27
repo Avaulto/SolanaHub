@@ -4,13 +4,11 @@ import {
   Input,
   OnInit,
   Output,
-  TemplateRef,
   ViewChild,
-  ViewEncapsulation,
-  computed,
   effect,
   signal
 } from '@angular/core';
+
 import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
 import { Platform } from '@ionic/angular';
 @Component({
@@ -20,6 +18,7 @@ import { Platform } from '@ionic/angular';
 })
 // multi functional table
 export class MftComponent implements OnInit {
+  @Input() mftOnlyHeader = false 
   @Input() label:string;
   @Input() desc:string;
   @Input() tableId: string;
@@ -29,9 +28,11 @@ export class MftComponent implements OnInit {
   @Input('tableColumns') tableColumns 
     //@ts-ignore
   @Input('tableData') tableData 
+
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
   @Output('onRowClicked') onRowClicked = new EventEmitter()
   @Output('onTabSelected') onTabSelected = new EventEmitter()
+  @Output('onSearch') onSearch = new EventEmitter()
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
@@ -108,6 +109,8 @@ export class MftComponent implements OnInit {
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
+    this.onSearch.emit(term)
+
     this.table.apiEvent({
       type: API.onGlobalSearch,
       value: this.searchTerm(),

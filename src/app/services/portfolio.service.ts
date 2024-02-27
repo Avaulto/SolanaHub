@@ -9,6 +9,7 @@ import { SolanaHelpersService } from './solana-helpers.service';
 
 import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
+import { SessionStorageService } from './session-storage.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -24,16 +25,14 @@ export class PortfolioService {
   constructor(
     private _utils: UtilService,
     private _nss: NativeStakeService,
-    private _lss: LiquidStakeService,
-    //  private _apiService:ApiService
-    private _priceHistoryService: PriceHistoryService,
     private _shs:SolanaHelpersService,
+    private _sessionStorageService: SessionStorageService
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if(wallet){
         this._shs.connection.onAccountChange(wallet.publicKey, () =>{
-            console.log( 'init callback listen');
-            this.getPortfolioAssets(wallet.publicKey.toBase58())
+            // console.log( 'init callback listen');
+            // this.getPortfolioAssets(wallet.publicKey.toBase58())
         })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
@@ -41,15 +40,23 @@ export class PortfolioService {
 
    }
 
-
+   private _portfolioData = this._sessionStorageService.getData('portfolioData') ? JSON.parse(this._sessionStorageService.getData('portfolioData')) : null
+   
   public async getPortfolioAssets(walletAddress: string) {
-
+    let jupTokens = await this._utils.getJupTokens();
+    let portfolioData = this._portfolioData
     try {
       this._portfolioStaking(walletAddress)
-      const [jupTokens, portfolioData]: [JupToken[], FetchersResult | any] = await Promise.all([
-        this._utils.getJupTokens(),
-        await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
-      ])
+      if(!portfolioData || !jupTokens){
+
+         let res = await Promise.all([
+          this._utils.getJupTokens(),
+          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+        ])
+        jupTokens = res[0];
+        portfolioData = res[1]
+        this._sessionStorageService.saveData('portfolioData', JSON.stringify(portfolioData))
+      }
   
 
       

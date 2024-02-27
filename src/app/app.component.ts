@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
       // group: 'Portfolio',
       pages: [
         { title: 'Overview', url: '/overview', icon: 'https://cdn.lordicon.com/mixcgtqu.json', active: true },
-        { title: 'NFT Gallery', url: '/nft-gallery', icon: 'https://cdn.lordicon.com/yvvkyhue.json', active: false },
+        { title: 'Collectibles', url: '/collectibles', icon: 'https://cdn.lordicon.com/yvvkyhue.json', active: true },
         // { title: 'Notifications', url: '/notifications', icon: 'https://cdn.lordicon.com/vspbqszr.json', active: false },
         { title: 'Settings', url: '/settings', icon: 'https://cdn.lordicon.com/ygumtulo.json', active: false },
       ],

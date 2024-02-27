@@ -20,6 +20,7 @@ export interface Token extends JupToken{
 }
 export interface NFT{
   type: string
+  checked?: boolean
   attributes: {
     tags: Array<string>
   }

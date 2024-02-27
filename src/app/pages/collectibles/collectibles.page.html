@@ -1,0 +1,63 @@
+<ion-header mode="md" [translucent]="true">
+
+  <ion-buttons slot="start">
+    <ion-menu-button></ion-menu-button>
+  </ion-buttons>
+
+
+</ion-header>
+<ion-content [fullscreen]="true">
+  <page-header title="Collectibles"
+    description="Take a full tour into your NFTs holdings and enjoy rich feature and seamless environment to control them from one centralize location"></page-header>
+  <ion-grid>
+    <div  class="data-set ion-margin-bottom">
+        <app-mft 
+        [tableMenuOptions]="tableMenuOptions" 
+        [searchBoxEnable]="true" 
+        [mftOnlyHeader]="true"
+        (onSearch)="searchTerm.set($event)"
+          [tableId]="'collectibles'" [label]="'Manage your NFTs'"
+          desc="Manage and Analyze Wallet Transactions for Your Crypto Portfolio" />
+    </div>
+    <div id="nft-gallery">
+
+      @for (nft of filterNft(); track $index) {
+      <!-- <ion-checkbox mode="md" class="wrapping-list" value="withdraw"> -->
+
+  
+        <nft-item 
+        
+        [class.checked]="checkNfts.checked" 
+        (click)="selectNft(checkNfts)" 
+        [nft]="nft" />
+        <ion-checkbox 
+        mode="md" 
+        [value]="nft" 
+        #checkNfts 
+        class="nft-checkbox">
+        </ion-checkbox>
+
+
+ 
+
+      <!-- </ion-checkbox> -->
+      }@empty {
+
+      @if(nfts() === null){
+      <nft-item />
+      <nft-item />
+      <nft-item />
+      <nft-item />
+      <nft-item />
+      }@else {
+
+      No nft found
+      }
+      }
+    </div>
+    @if(bulkSelection().length > 0){
+
+      <feature-toast [nfts]="bulkSelection()" @slideDownUp/>
+    }
+  </ion-grid>
+</ion-content>

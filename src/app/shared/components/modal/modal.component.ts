@@ -13,6 +13,9 @@ import { TransferAuthModalComponent } from 'src/app/pages/staking/positions/stak
 import { TokenListComponent } from 'src/app/pages/swap/token-list/token-list.component';
 import { DelegateLSTModalComponent } from 'src/app/pages/staking/positions/stake/delegate-lst/delegate-lst-modal.component';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+import { SendNftModalComponent } from 'src/app/pages/collectibles/send-nft-modal/send-nft-modal.component';
+import { ListNftModalComponent } from 'src/app/pages/collectibles/list-nft-modal/list-nft-modal.component';
+import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal/burn-nft-modal.component';
 
 @Component({
   selector: 'app-modal',
@@ -28,7 +31,10 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
     MergeModalComponent,
     SplitModalComponent,
     TransferAuthModalComponent,
-    TokenListComponent
+    TokenListComponent,
+    SendNftModalComponent,
+    ListNftModalComponent,
+    BurnNftModalComponent
   ]
 
 })
@@ -41,7 +47,7 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'delegate-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
+  @Input() componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list' 
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,

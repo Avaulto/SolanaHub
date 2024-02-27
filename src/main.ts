@@ -9,6 +9,11 @@ import { environment } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
+
 
 if (environment.production) {
   enableProdMode();
@@ -17,6 +22,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    provideAnimations(),
     provideIonicAngular(),
     provideHttpClient(),
     provideRouter(routes),

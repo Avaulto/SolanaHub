@@ -5,6 +5,7 @@ import { LocalStorageService } from "./local-storage.service";
 import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
 import { JupStoreService } from "./jup-store.service";
+import { SessionStorageService } from "./session-storage.service";
 // import { PriorityFee } from "../models/priorityFee.model";
 // import * as moment from "moment";
 // import { v4 as uuidv4 } from "uuid";
@@ -43,6 +44,7 @@ export class UtilService {
   public datePipe: DatePipe = new DatePipe('en-US');
   constructor(
     // private _jupStore:JupStoreService,
+    private _sessionStorageService: SessionStorageService,
     private localStore: LocalStorageService
   ) {
   }
@@ -91,7 +93,9 @@ export class UtilService {
     return PublicKey.isOnCurve(address);
   }
 
-  public jupTokens: JupToken[] = null
+
+  private jupTokens: JupToken[] = null
+
   public async getJupTokens(): Promise<JupToken[]> {
     //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
     if (this.jupTokens) {
@@ -101,7 +105,7 @@ export class UtilService {
         this.jupTokens = await (await fetch('https://token.jup.ag/all')).json();
         this.jupTokens.forEach(t => t.logoURI = t.logoURI ? t.logoURI : 'assets/images/unknown.svg');
       } catch (error) {
-        console.error();
+        console.error(error);
       }
     }
     return this.jupTokens

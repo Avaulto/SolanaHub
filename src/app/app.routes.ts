@@ -21,8 +21,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/settings/settings.page').then( m => m.SettingsPage)
   },
   {
-    path: 'nft-gallery',
-    loadComponent: () => import('./pages/nft-gallery/nft-gallery.page').then( m => m.NftGalleryPage)
+    path: 'collectibles',
+    loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage)
   },
   {
     path: 'loyalty-league',
