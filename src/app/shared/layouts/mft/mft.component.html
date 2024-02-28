@@ -21,7 +21,7 @@
   </ion-col>
   }
   @if(searchBoxEnable){
-    <ion-col size="auto">
+    <ion-col size="4" sizeLg="auto">
       <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
     </ion-col>
   }

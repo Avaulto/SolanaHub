@@ -23,8 +23,8 @@
         --border-style: solid;
         --border-radius: 6px;
 
-        ion-img {
-            margin-inline-end: 6px;
+        ion-text {
+            margin-inline-start: 6px;
         }
 
         &#burn-nfts {
@@ -52,4 +52,9 @@
     min-height: 20px;
     --padding-bottom: 0;
     --padding-top: 0;
+}
+@media only screen and (max-width: 1200px) {
+ion-button {
+    min-width: 40px !important;
+}
 }

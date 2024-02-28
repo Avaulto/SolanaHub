@@ -3,16 +3,24 @@
     @if(nfts.length === 1){
     <ion-button id="list-nft" (click)="openModal('list-nft-modal')">
       <ion-img src="assets/images/list-icon.svg" />
-      List NFT
+      <ion-text class="ion-hide-lg-down">
+
+        List NFT
+      </ion-text>
     </ion-button>
     }
     <ion-button id="send-nfts" (click)="openModal('send-nft-modal')">
       <ion-img src="assets/images/send-icon.svg" />
+      <ion-text class="ion-hide-lg-down">
+
       send {{nfts.length}} NFT{{nfts.length > 1 ? 's' : ''}}
+      </ion-text>
     </ion-button>
     <ion-button color="danger" id="burn-nfts" (click)="openModal('burn-nft-modal')">
       <ion-img src="assets/images/trash-white-icon.svg" />
+      <ion-text class="ion-hide-lg-down">
       burn {{nfts.length}} NFT{{nfts.length > 1 ? 's' : ''}}
+      </ion-text>
     </ion-button>
   </div>
   <ion-button id="nfts-alert">
