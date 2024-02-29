@@ -10,6 +10,7 @@ import { SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { ViewEncapsulation } from '@angular/core';
 import { AmountInputComponent } from 'src/app/shared/components/amount-input/amount-input.component';
+import { AddressInputComponent } from 'src/app/shared/components/address-input/address-input.component';
 @Component({
   selector: 'app-action-box',
   templateUrl: './action-box.component.html',
@@ -29,19 +30,17 @@ import { AmountInputComponent } from 'src/app/shared/components/amount-input/amo
     IonIcon,
     IonButton,
     IonToggle,
+    AddressInputComponent
   ]
 })
 export class ActionBoxComponent implements OnInit {
-  public sendTokenForm: FormGroup;
   @Input() token: Token // Asset;
+  public sendTokenForm: FormGroup;
   public formSubmitted: boolean = false;
-  public showAddressToggle = true;
-  public invalidAddress = false;
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
-    private _txi: TxInterceptorService,
-    private _util: UtilService,
+    private _txi: TxInterceptorService
   ) {
     addIcons({ helpCircleOutline,eyeOffOutline,eyeOutline  })
   }
@@ -51,57 +50,18 @@ export class ActionBoxComponent implements OnInit {
       mintAddress: [this.token.address, Validators.required],
       amount: ['', [Validators.required]],
       targetAddress: ['', [Validators.required]],
-      targetAddressShorted: ['', [Validators.required]],
       privateTx: [false]
     })
     // this.sendTokenForm.controls['targetAddressShorted'].valueChanges.subscribe(v => {
-    //   this.hideAddress();
+      
     //   console.log(v, this.sendTokenForm.value);
       
     // })
   }
-  CheckAddress(){
-    const address = this.sendTokenForm.controls['targetAddressShorted'].value
-    if(this.pkVerifyValidator(address)){
-      this.sendTokenForm.controls['targetAddress'].setValue(address)
-      this.hideAddress();
-      this.invalidAddress = false
-    }else{
-      this.invalidAddress = true
-      this.sendTokenForm.controls['targetAddress'].reset()
-      this.showAddressToggle = !this.showAddressToggle
-    }
-  }
-  showAddress(){
-    const address = this.sendTokenForm.controls['targetAddress'].value
-    if(this.pkVerifyValidator(address)){
-      this.sendTokenForm.controls['targetAddressShorted'].setValue(this._util.addrUtil(address).addr)
-      this.showAddressToggle = !this.showAddressToggle
-    }
-  }
-  hideAddress(){
-    const address = this.sendTokenForm.controls['targetAddress'].value
-    if(this.pkVerifyValidator(address)){
-      this.sendTokenForm.controls['targetAddressShorted'].setValue(this._util.addrUtil(address).addrShort)
-      this.showAddressToggle = !this.showAddressToggle
-    }
-  }
+ 
+
   setStakeSize(amount){
     this.sendTokenForm.controls['amount'].setValue(amount)
-  }
-
-  pkVerifyValidator(address) {
-    try {
-      const pk = new PublicKey(address)
-      const isValid = PublicKey.isOnCurve(pk.toBytes());
-      return isValid
-    } catch (error) {
-      return false
-    }
-
-  
-     
-    
   }
   async send() {
     this.formSubmitted = true;

@@ -44,7 +44,8 @@ export class PortfolioService {
    
   public async getPortfolioAssets(walletAddress: string) {
     let jupTokens = await this._utils.getJupTokens();
-    let portfolioData = this._portfolioData
+    // if user switch wallet - clean the session storage
+    let portfolioData = this._portfolioData?.owner == walletAddress ? this._portfolioData : null
     try {
       this._portfolioStaking(walletAddress)
       if(!portfolioData || !jupTokens){

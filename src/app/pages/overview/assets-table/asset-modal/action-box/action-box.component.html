@@ -13,21 +13,7 @@
   
   <form id="send-asset" [formGroup]="sendTokenForm" >
     <div class="control-group">
-      <ion-label>Recipient’s  address</ion-label>
-      <ion-input formControlName="targetAddress" class="ion-hide" ></ion-input>
-      <ion-input formControlName="targetAddressShorted" (ionInput)="CheckAddress()">
-        @if(sendTokenForm.controls['targetAddress'].valid){
-
-          @if(showAddressToggle){
-            <ion-icon aria-hidden="true" (click)="hideAddress()" slot="end" name="eye-outline"></ion-icon>
-          }@else{
-            <ion-icon aria-hidden="true" (click)="showAddress()" slot="end" name="eye-off-outline"></ion-icon>
-          }
-        }
-      </ion-input>
-      @if(invalidAddress){
-        <ion-text>invalid address</ion-text>
-      }
+      <address-input (onValidAddress)="sendTokenForm.controls['targetAddress'].setValue($event)"/>
     </div>
     <div class="control-group">
       <!-- <ion-label>amount</ion-label> -->

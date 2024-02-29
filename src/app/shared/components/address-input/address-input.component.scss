@@ -1,0 +1,29 @@
+ion-label {
+    display: block;
+    text-transform: capitalize;
+    color: var(--colors-text-text-secondary-700, #364152);
+    font-family: Inter;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+    margin-block-end: 6px;
+}
+ion-input {
+    margin-block-end: 6px;
+    ion-icon {
+        position: absolute;
+        right: 10px;
+        top: 12px;
+        color: var(--ion-color-primary);
+        z-index: 2;
+        padding: 2px;
+        cursor: pointer;
+    }
+}
+ion-text {
+    color: var(--ion-color-danger);
+    font-size: 13px;
+    line-height: 18px;
+    /* 138.462% */
+}

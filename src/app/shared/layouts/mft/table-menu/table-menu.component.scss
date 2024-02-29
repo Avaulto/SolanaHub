@@ -1,5 +1,5 @@
 :host {
-    padding: 12px 32px;
+    padding: 12px 0;
     // border-top: 1px solid var(--gray-modern-100, #EEF2F6);
     display: block;
 }
@@ -26,6 +26,6 @@ ion-button {
 
 @media only screen and (max-width: 1200px) {
     :host {
-        padding: 0;
+        padding: 12px 12px;
     }
   }
