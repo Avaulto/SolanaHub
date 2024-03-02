@@ -1,10 +1,10 @@
 
 <div class="nft">
   <div class="nft-img-wrapper">
-    <!-- <ion-img (ionImgDidLoad)="loadImage()" [src]="nft?.data?.imageUri || 'assets/images/unknown.svg'" /> -->
+    <ion-img (ionImgDidLoad)="loadImage()" [src]="nft?.data?.imageUri || 'assets/images/unknown.svg'" />
     @if (!imagesLoaded) {
+      <ion-skeleton-text [animated]="true" />
     }
-    <ion-skeleton-text [animated]="true" />
   </div>
   <div class="nft-body">
     <ion-text>
@@ -29,7 +29,9 @@
       <!-- <ion-text>
 
     </ion-text> -->
-      <ion-icon (click)="openActionDropDown()" name="ellipsis-vertical" />
+    <ion-button value="modal-btn" (click)="openNftPreview()" fill="clear">
+      <ion-icon  name="ellipsis-horizontal" />
+    </ion-button>
     </div>
   </div>
   

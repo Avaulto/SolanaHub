@@ -1,23 +1,11 @@
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
+<div id="burn-nft-modal">
 
-<p>
-  burn-nft-modal works!
-</p>
-
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
+  <div class="ion-margin-bottom">
+    <alert type="danger"  text="Once burned, your nfts will be completely loss" />
+  </div>
+  <div id="nfts-list">
+    @for (nft of nfts; track $index) {
+      <nft-modal-item [nft]="nft"/>
+    }
+  </div>
+</div>

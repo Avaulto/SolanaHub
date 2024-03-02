@@ -1,15 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NFT } from 'src/app/models';
+import { IonImg, IonLabel, IonText } from "@ionic/angular/standalone";
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
+import { NftModalItemComponent } from '../nft-modal-item/nft-modal-item.component';
 
 @Component({
   selector: 'burn-nft-modal',
   templateUrl: './burn-nft-modal.component.html',
   styleUrls: ['./burn-nft-modal.component.scss'],
-  standalone: true
+  standalone: true,
+  imports:[IonImg,IonLabel, IonText,AlertComponent,NftModalItemComponent]
 })
 export class BurnNftModalComponent  implements OnInit {
-
+  @Input() nfts:NFT[]
+  @Output() toBurnNFTs = new EventEmitter();
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.toBurnNFTs.emit({nftsToBurn: this.nfts})
+    console.log(this.nfts);
+    
+  }
 
 }

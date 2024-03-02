@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, effect, inject, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Stake, Validator } from 'src/app/models';
+import { NFT, Stake, Validator } from 'src/app/models';
 import { IonButton, IonImg } from '@ionic/angular/standalone'
 
-import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
+import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { PublicKey } from '@solana/web3.js';
 import { ValidatorsModalComponent } from 'src/app/pages/staking/form/validators-modal/validators-modal.component';
 import { InstantUnstakeModalComponent } from 'src/app/pages/staking/positions/stake/instant-unstake-modal/instant-unstake-modal.component';
@@ -47,13 +47,14 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list' 
+  @Input() componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _nss: NativeStakeService,
-    private _lss: LiquidStakeService
+    private _lss: LiquidStakeService,
+    private _txi: TxInterceptorService
   ) {
   }
 
@@ -66,23 +67,35 @@ export class ModalComponent implements AfterViewInit {
     switch (this.componentName) {
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
-        
-       this._lss.stakePoolStakeAccount(this.data.stake, pool)
-      break;
+
+        this._lss.stakePoolStakeAccount(this.data.stake, pool)
+        break;
       case 'split-modal':
 
-         this._nss.splitStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
+        this._nss.splitStakeAccounts(wallet.publicKey, new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
         break;
       case 'merge-modal':
 
         const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: Stake) => new PublicKey(acc.address))
-         this._nss.mergeStakeAccounts(wallet.publicKey,  new PublicKey(this.data.stake.address), accountsToMerge);
+        this._nss.mergeStakeAccounts(wallet.publicKey, new PublicKey(this.data.stake.address), accountsToMerge);
         break;
       case 'transfer-auth-modal':
         const targetAddress = new PublicKey(this.emittedValue().targetAddress)
         const authToTransfer = this.emittedValue().authorities;
-         this._nss.transferStakeAccountAuth( new PublicKey(this.data.stake.address),wallet.publicKey, targetAddress, authToTransfer);
+        this._nss.transferStakeAccountAuth(new PublicKey(this.data.stake.address), wallet.publicKey, targetAddress, authToTransfer);
 
+        break;
+
+      case 'burn-nft-modal':
+        const nftsToBurn: NFT[] = this.emittedValue().nftsToBurn;
+        let burnIns = await this._shs.burnNft(nftsToBurn[0].data.address, wallet.publicKey);
+        this._txi.sendTx([burnIns], wallet.publicKey)
+        break;
+      case 'send-nft-modal':
+        const nftsToSend: NFT[] = this.emittedValue().nftsToSend;
+        const newTargetAddress = this.emittedValue().targetAddress
+        let sendIns = await this._shs.sendSplOrNft(new PublicKey(nftsToSend[0].data.address), wallet.publicKey, newTargetAddress,1);
+        this._txi.sendTx(sendIns, wallet.publicKey)
         break;
       default:
         break;

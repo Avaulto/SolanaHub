@@ -1,23 +1,13 @@
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
-
-<p>
-  burn-nft-modal works!
-</p>
-
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
-<p>
-  burn-nft-modal works!
-</p>
+<div id="send-nft-modal">
+  <div class="control-group">
+    <address-input (onValidAddress)="onValidAddress($event)"/>
+  </div>
+  <div class="ion-margin-bottom">
+    <alert type="regular" text="Once you transfer your nfts you will completely loss the authority on it" />
+  </div>
+  <div id="nfts-list">
+    @for (nft of nfts; track $index) {
+      <nft-modal-item [nft]="nft"/>
+    }
+  </div>
+</div>

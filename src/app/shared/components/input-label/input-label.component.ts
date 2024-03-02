@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, computed, effect } from '@angular/core';
-import { PortfolioService } from 'src/app/services';
+import { PortfolioService, UtilService } from 'src/app/services';
 import {  IonButton, IonImg,IonSkeletonText } from '@ionic/angular/standalone';
 import { DecimalPipe } from '@angular/common';
 import { Token } from 'src/app/models';
@@ -17,7 +17,7 @@ export class InputLabelComponent  implements OnInit, OnChanges  {
   @Input() showBtns: boolean = true;
   @Input() asset: Token;
   @Output() onSetSize = new EventEmitter()
-  constructor(private _portfolioService: PortfolioService) {
+  constructor(private _portfolioService: PortfolioService, public utils: UtilService) {
     effect(()=>{
 
       if(this.walletTokens()){

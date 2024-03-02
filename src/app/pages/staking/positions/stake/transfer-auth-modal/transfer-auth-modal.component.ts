@@ -11,6 +11,7 @@ import {
 import { DecimalPipe } from '@angular/common';
 import { UtilService } from 'src/app/services';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
+import { AddressInputComponent } from 'src/app/shared/components/address-input/address-input.component';
 @Component({
   selector: 'transfer-auth-modal',
   templateUrl: './transfer-auth-modal.component.html',
@@ -24,13 +25,14 @@ import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
     IonImg,
     IonInput,
     IonCheckbox,
-    DecimalPipe
+    DecimalPipe,
+    AddressInputComponent
   ]
 })
 export class TransferAuthModalComponent implements OnInit {
   @Input() stake: Stake;
   @Output() onAuthSet = new EventEmitter();
-  @ViewChild('targetAddress') targetAddress: IonInput;
+  public targetAddress: string = '';
   public authoritiesChecked = signal({ withdraw: false, stake: false })
   public utils = inject(UtilService)
 
@@ -40,14 +42,25 @@ export class TransferAuthModalComponent implements OnInit {
     this.stake.stakeAuth = this.utils.addrUtil(this.stake.stakeAuth).addrShort
 
    }
+   updateTargetAddress(address){
+    this.targetAddress = address
+   }
   updateTransferAuth(ev) {
-    if(ev !=='addr'){
+    console.log(ev);
+    if(typeof ev !== 'string'){
       this.authoritiesChecked.update(update => ({ ...update, [ev.value]: ev.checked }))
+    }else{
+      this.targetAddress = ev
     }
+    
+    console.log(this.authoritiesChecked(),  this.targetAddress);
+    
     let payload = null;
-    if ((this.authoritiesChecked().stake || this.authoritiesChecked().withdraw) && this.targetAddress.value) {
-      payload = {authorities: this.authoritiesChecked(), targetAddress: this.targetAddress.value}
+    if ((this.authoritiesChecked().stake || this.authoritiesChecked().withdraw) && this.targetAddress) {
+      payload = {authorities: this.authoritiesChecked(), targetAddress: this.targetAddress}
     }
+    console.log(payload);
+    
     this.onAuthSet.emit(payload)
   }
 }

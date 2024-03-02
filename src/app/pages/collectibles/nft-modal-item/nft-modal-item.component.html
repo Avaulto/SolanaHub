@@ -1,0 +1,10 @@
+<div class="nft-item">
+  <div class="nft-profile">
+    <ion-img [src]="nft.data?.imageUri  || 'assets/images/unknown.svg'" />
+    <div>
+      <ion-label>{{nft.data?.name}}</ion-label>
+      <ion-text>{{nft.data?.collection?.name}}</ion-text>
+    </div>
+  </div>
+  <div class="floor-price">32 SOL</div>
+</div>

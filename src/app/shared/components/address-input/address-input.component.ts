@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { PublicKey } from '@solana/web3.js';
 import { IonInput, IonIcon, IonLabel, IonText} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -10,6 +10,7 @@ import { UtilService } from 'src/app/services';
   templateUrl: './address-input.component.html',
   styleUrls: ['./address-input.component.scss'],
   standalone: true,
+  encapsulation: ViewEncapsulation.None,
   imports:[IonInput, IonIcon, IonLabel, IonText]
 })
 export class AddressInputComponent  implements OnInit {
@@ -35,16 +36,16 @@ export class AddressInputComponent  implements OnInit {
       this.validAddress = false
       this.addressInput.writeValue('')
       this.onValidAddress.emit('')
-      this.showAddressToggle = !this.showAddressToggle
+      this.showAddressToggle = false
     }
   }
   showAddress(){
       this.maskAddressInput.writeValue(this.addressInput.value)
-      this.showAddressToggle = !this.showAddressToggle
+      this.showAddressToggle = true
   }
   hideAddress(){
       this.maskAddressInput.value = this._util.addrUtil(this.addressInput.value.toString()).addrShort;
-      this.showAddressToggle = !this.showAddressToggle  
+      this.showAddressToggle = false
   }
   pkVerifyValidator(address) {
     try {

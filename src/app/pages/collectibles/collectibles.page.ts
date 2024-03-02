@@ -57,29 +57,18 @@ export class CollectiblesPage implements OnInit {
     
     this.searchTerm.set(term)
   }
-  selectNft(checkbox) {
-
+  selectNft(checkbox, event) {
+    console.log(event);
+    if(event.target.localName === "ion-button"){
+      return
+    }
     
     checkbox.checked = !checkbox.checked
-    const checkedItems = this.checkNfts.filter(box => box.checked)
-    console.log(checkedItems);
-    
+    const checkedItems = this.checkNfts.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
     this.bulkSelection.set(checkedItems)
 
-  
-    // console.log(this._bulkSelection(),checkbox,this.checkNfts);
-
 
     }
 
   
-    async openModal(nfts: NFT[]) {
-      // const modal = await this._modalCtrl.create({
-      //   component: FeatureToastComponent,
-      //   componentProps: { nfts },
-      //   mode: 'ios',
-      //   id: 'nft-toast',
-      // });
-      // modal.present();
-    }
 }

@@ -27,8 +27,9 @@
     </div>
   </div>
   <div class="control-group ion-margin-bottom">
-    <ion-label>Recipient’s address</ion-label>
-    <ion-input (ionInput)="updateTransferAuth('addr')" #targetAddress></ion-input>
+    <!-- <ion-label>Recipient’s address</ion-label>
+    <ion-input (ionInput)="updateTransferAuth('addr')" #targetAddress></ion-input> -->
+    <address-input (onValidAddress)="updateTransferAuth($event)"/>
   </div>
 
   <div id="authorities-selection" class="ion-margin-bottom">
@@ -36,12 +37,7 @@
     <div id="checkbox-wrapper" class="ion-margin-bottom">
       <ion-checkbox mode="md" class="stake-type wrapping-list" value="withdraw"
         (ionChange)="updateTransferAuth($event.detail)">
-        <!-- <div class="inliner">
-          <div class="icon-wrapper">
-            <ion-img src="assets/images/lock-icon.svg" /> 
-          </div>
-      
-        </div> -->
+
         <div>
 
           <div class="type-title">withdraw</div>
@@ -53,11 +49,6 @@
       </ion-checkbox>
       <ion-checkbox mode="md" class="stake-type wrapping-list" value="stake"
         (ionChange)="updateTransferAuth($event.detail)">
-        <!-- <div class="inliner">
-          <div class="icon-wrapper">
-             <ion-img src="assets/images/droplets-icon.svg" />
-          </div>
-        </div> -->
         <div>
 
           <div class="type-title">stake</div>

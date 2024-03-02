@@ -36,6 +36,13 @@
         justify-content: space-between;
     }
 }
+ion-button{
+    --box-shadow: transparent;
+    --background-hover: transparent;
+    --ripple-color: transparent;
+    --padding-end: 0;
+    --padding-start: 0;
+}
 ion-text {
     /* width: 212px; */
     display: block;

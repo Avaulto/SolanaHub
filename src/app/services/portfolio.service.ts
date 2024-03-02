@@ -31,8 +31,9 @@ export class PortfolioService {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if(wallet){
         this._shs.connection.onAccountChange(wallet.publicKey, () =>{
-            // console.log( 'init callback listen');
-            // this.getPortfolioAssets(wallet.publicKey.toBase58())
+      
+            let forceFetch = true;
+            this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
         })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
@@ -42,10 +43,10 @@ export class PortfolioService {
 
    private _portfolioData = this._sessionStorageService.getData('portfolioData') ? JSON.parse(this._sessionStorageService.getData('portfolioData')) : null
    
-  public async getPortfolioAssets(walletAddress: string) {
+  public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
-    let portfolioData = this._portfolioData?.owner == walletAddress ? this._portfolioData : null
+    let portfolioData = forceFetch === false && this._portfolioData?.owner == walletAddress ? this._portfolioData : null
     try {
       this._portfolioStaking(walletAddress)
       if(!portfolioData || !jupTokens){

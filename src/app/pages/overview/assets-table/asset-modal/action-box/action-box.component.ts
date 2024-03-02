@@ -1,14 +1,14 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {  FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { helpCircleOutline,eyeOffOutline,eyeOutline, add } from 'ionicons/icons';
 import { IonSegmentButton, IonSegment, IonLabel,IonText, IonInput, IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js';
 import { Token } from 'src/app/models';
-import { SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
+import { SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
-import { ViewEncapsulation } from '@angular/core';
+
 import { AmountInputComponent } from 'src/app/shared/components/amount-input/amount-input.component';
 import { AddressInputComponent } from 'src/app/shared/components/address-input/address-input.component';
 @Component({
@@ -16,7 +16,7 @@ import { AddressInputComponent } from 'src/app/shared/components/address-input/a
   templateUrl: './action-box.component.html',
   styleUrls: ['./action-box.component.scss'],
   standalone: true,
-  encapsulation: ViewEncapsulation.None,
+
   imports: [
     AmountInputComponent,
     InputLabelComponent,

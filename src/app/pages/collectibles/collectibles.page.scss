@@ -10,6 +10,7 @@ ion-grid{
     gap: 10px;
 
     nft-item {
+        cursor: pointer;
         border-radius: var(--radius-xl, 12px);
         border: 2px solid transparent;
         overflow: hidden;

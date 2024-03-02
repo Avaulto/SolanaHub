@@ -1,15 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
   IonText,
-  IonImg
+  IonImg,
+  IonIcon
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {  alertCircleOutline } from 'ionicons/icons';
 @Component({
   selector: 'alert',
   template: `
-  <div id="alert">
+  <div id="alert" [class]="type">
     <div>
 
-  <ion-img src="assets/images/info-icon.svg"/>
+    <ion-icon name="alert-circle-outline"></ion-icon>
 </div>
   <ion-text>
     {{text}}
@@ -20,12 +23,16 @@ import {
   standalone: true,
   imports: [
     IonText,
-    IonImg
+    IonImg,
+    IonIcon
   ]
 })
 export class AlertComponent implements OnInit {
   @Input() text: string;
-  constructor() { }
+  @Input() type: 'regular' | 'danger'
+  constructor() { 
+    addIcons({alertCircleOutline})
+  }
 
   ngOnInit() { }
 

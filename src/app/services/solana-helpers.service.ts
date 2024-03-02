@@ -14,8 +14,11 @@ import {
   createTransferCheckedInstruction,
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
-  TokenOwnerOffCurveError
+  TokenOwnerOffCurveError,
+  burnChecked,
+  createBurnCheckedInstruction,
 } from 'node_modules/@solana/spl-token';
+
 import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
 import { Validator, WalletExtended, StakeWizEpochInfo, Stake } from '../models';
 import { environment } from 'src/environments/environment';
@@ -33,9 +36,9 @@ import { SessionStorageService } from './session-storage.service';
 export class SolanaHelpersService {
   readonly SolanaHubVoteKey: string = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public connection: Connection;
- // create a single source of trute for wallet adapter
+  // create a single source of trute for wallet adapter
   private _walletExtended$: BehaviorSubject<WalletExtended> = new BehaviorSubject(null as WalletExtended);
- // add balance utility
+  // add balance utility
   public walletExtended$ = this._walletExtended$.asObservable().pipe(
     switchMap(async (wallet: any) => {
       if (wallet) {
@@ -53,7 +56,7 @@ export class SolanaHelpersService {
     private _connectionStore: ConnectionStore,
     // public popoverController: PopoverController,
     private _walletStore: WalletStore,
-    private _sessionStorageService:SessionStorageService,
+    private _sessionStorageService: SessionStorageService,
   ) {
 
     this._connectionStore.setEndpoint(environment.solanaCluster)
@@ -72,7 +75,7 @@ export class SolanaHelpersService {
       return this._validatorsList;
     } else {
       console.log('here');
-      
+
       let validatorsList: Validator[] = [];
       try {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
@@ -82,7 +85,7 @@ export class SolanaHelpersService {
         console.error(error);
       }
 
-      this._sessionStorageService.saveData('validators',JSON.stringify(validatorsList))
+      this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
       this._validatorsList = validatorsList;
       return validatorsList
     }
@@ -193,6 +196,31 @@ export class SolanaHelpersService {
   //     return tokensBalance;
 
   //   }
+
+  async burnNft(mintAddressPK: string, walletOwner: PublicKey) {
+    try {
+      const mintPubkey = new PublicKey(mintAddressPK);
+      // const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
+      const account = await getAssociatedTokenAddress(mintPubkey, walletOwner);
+      const decimals = await this.connection.getParsedAccountInfo(mintPubkey);
+
+      console.log(account, decimals);
+      
+      let txIns: TransactionInstruction = createBurnCheckedInstruction(
+        account, // PublicKey of Owner's Associated Token Account
+        mintPubkey, // Public Key of the Token Mint Address
+        walletOwner, // Public Key of Owner's Wallet
+        1, // amount, if your decimals is 8, 10^8 for 1 token
+        1
+      );
+      console.log(txIns,account);
+      
+      return txIns;
+    } catch (error) {
+      console.error(error);
+      return null
+    }
+  }
   async getOrCreateTokenAccountInstruction(mint: PublicKey, user: PublicKey, payer: PublicKey | null = null): Promise<TransactionInstruction | null> {
     try {
       const userTokenAccountAddress = await getAssociatedTokenAddress(mint, user, false);

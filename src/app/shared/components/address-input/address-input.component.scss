@@ -1,3 +1,12 @@
+
+
+#address-input{
+    min-height: 94px;
+    display: block;
+
+    .native-wrapper {
+        max-width: 85%;
+    }
 ion-label {
     display: block;
     text-transform: capitalize;
@@ -26,4 +35,6 @@ ion-text {
     font-size: 13px;
     line-height: 18px;
     /* 138.462% */
+}
+
 }

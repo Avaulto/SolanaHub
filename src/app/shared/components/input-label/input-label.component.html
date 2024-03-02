@@ -7,7 +7,7 @@
         <ion-img src="assets/images/wallet-icon.svg" />
       </div>
       @if(asset){
-        <span>{{asset?.balance || 0 | number: '1.4'}} {{asset?.symbol}}</span>
+        <span>{{utils.formatBigNumbers(asset?.balance)}} {{asset?.symbol}}</span>
 
       }@else{
           <ion-skeleton-text [animated]="true" />

@@ -39,10 +39,10 @@
       <list-nft-modal/>
     }
     @case ('send-nft-modal') {
-      <send-nft-modal/>
+      <send-nft-modal (toSendNFTs)="emittedValue.set($event)" [nfts]="data.nfts"/>
     }
     @case ('burn-nft-modal') {
-      <burn-nft-modal/>
+      <burn-nft-modal (toBurnNFTs)="emittedValue.set($event)" [nfts]="data.nfts"/>
     }
   }
   <ng-container #containerBeforeTemplate></ng-container>
