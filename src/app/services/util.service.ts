@@ -55,8 +55,6 @@ export class UtilService {
 
   public get RPC(): string{
     const config = JSON.parse(this._localStorage.getData('RPC'))?.value || environment.solanaCluster
-    console.log(config);
-    
     return config ;
   }
 
