@@ -53,20 +53,22 @@ export class UtilService {
   public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
 
-  public get RPC(): string | number{
-    const config: Config = JSON.parse(this._localStorage.getData('RPC')) || environment.solanaCluster
-    return config.value ;
+  public get RPC(): string{
+    const config = JSON.parse(this._localStorage.getData('RPC'))?.value || environment.solanaCluster
+    console.log(config);
+    
+    return config ;
   }
 
-  public get explorer(): string | number{
-    const config: Config = JSON.parse(this._localStorage.getData('explorer')) || 'https://solscan.io'
-    return config.value ;
+  public get explorer(): string{
+    const config = JSON.parse(this._localStorage.getData('explorer'))?.value || 'https://solscan.io'
+    return config ;
   }
   
   public get priorityFee()  {
     const baseFee = 5000
-    const config: Config = JSON.parse(this._localStorage.getData('priority-fee')) || baseFee
-    return Number(config.value);
+    const config = Number(JSON.parse(this._localStorage.getData('priority-fee'))?.value) || baseFee
+    return config;
   }
   
 

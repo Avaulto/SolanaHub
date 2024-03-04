@@ -46,7 +46,7 @@ export class SolanaHelpersService {
     private _sessionStorageService: SessionStorageService,
     private _utils: UtilService,
   ) {
-    const rpc:string = this._utils.RPC.toString()
+    const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)
     this._connectionStore.connection$.subscribe(conection => this.connection = conection);
     this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
