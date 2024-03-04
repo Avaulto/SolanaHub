@@ -1,0 +1,39 @@
+#app-settings{
+    padding: 3.5% 0;
+}
+.config-padding{
+    padding: 0 3.5%;
+    display: block;
+}
+.setting-head {
+    display: flex;
+    justify-content: space-between;
+}
+.divider {
+    height: 1px;
+    background: rgba(54, 65, 82, 0.10);
+    margin-block: 20px;
+}
+.title {
+    color: var(--colors-text-text-primary-900, #101828);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+    text-transform: capitalize;
+    letter-spacing: 0.16px;
+}
+.sub {
+    text-transform: capitalize;
+    color: var(--gray-modern-500, #697586);
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+}
+#close-modal {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}

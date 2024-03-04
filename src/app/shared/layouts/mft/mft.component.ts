@@ -57,7 +57,7 @@ export class MftComponent implements OnInit {
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
-    if(this._platform.width() < 1200){
+    if(this._platform.width() < 992){
       this.configuration.horizontalScroll = true;
     }
     // this.configuration.isLoading = true;

@@ -1,0 +1,37 @@
+#menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+#logo {
+    display: flex;
+    align-items: center;
+
+    ion-img{
+        margin-inline-end: 12px;
+        width: 32px;
+    }
+    span{
+        color:  #0D121C;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+    }
+}
+
+
+#menu-btn {
+    position: relative;
+    ion-img{
+        width: 24px;
+        height: 24px;
+    }
+    ion-buttons {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
+}
+

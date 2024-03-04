@@ -4,7 +4,7 @@ import { IonImg, IonButton,IonSkeletonText, IonLabel,IonText,IonChip,IonIcon,   
 import { addIcons } from 'ionicons';
 import { ModalController } from '@ionic/angular';
 import {  ellipsisHorizontal } from 'ionicons/icons';
-import { NftModalComponent } from '../nft-modal/nft-modal.component';
+import { NftPreviewComponent } from '../nft-preview/nft-preview.component';
 @Component({
   selector: 'nft-item',
   templateUrl: './nft-item.component.html',
@@ -30,10 +30,10 @@ export class NftItemComponent  implements OnInit {
   async openNftPreview(){
 
       const modal = await this._modalCtrl.create({
-        component: NftModalComponent,
+        component: NftPreviewComponent,
         componentProps: { nft: this.nft },
         mode: 'ios',
-        id: 'nft-modal',
+        cssClass: 'nft-modal',
       });
       modal.present();
     

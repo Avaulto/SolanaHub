@@ -1,0 +1,17 @@
+<div id="app-settings">
+  <div class="setting-head ion-margin-bottom config-padding">
+    <div>
+      <div class="title">Your Settings</div>
+      <div class="sub">set your app experience across solanahub entire product suite.</div>
+    </div>
+    <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg"></ion-img>
+</div>
+<div id="setting-body">
+  <select-group-config class="config-padding" title="Select your RPC" configType="RPC" [configs]="RPCs"></select-group-config>
+  <div class="divider"></div>
+  <select-group-config class="config-padding" title="Select your Explorer" configType="explorer" [configs]="explorers"></select-group-config>
+  <div class="divider"></div>
+  <select-group-config class="config-padding" title="Priority fee"configType="priority-fee"  [configs]="PriorityFee"></select-group-config>
+
+</div>
+</div>

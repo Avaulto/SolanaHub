@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { NftModalComponent } from './nft-modal.component';
+import { SelectGroupConfigComponent } from './select-group-config.component';
 
-describe('NftModalComponent', () => {
-  let component: NftModalComponent;
-  let fixture: ComponentFixture<NftModalComponent>;
+describe('SelectGroupConfigComponent', () => {
+  let component: SelectGroupConfigComponent;
+  let fixture: ComponentFixture<SelectGroupConfigComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NftModalComponent ],
+      declarations: [ SelectGroupConfigComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NftModalComponent);
+    fixture = TestBed.createComponent(SelectGroupConfigComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

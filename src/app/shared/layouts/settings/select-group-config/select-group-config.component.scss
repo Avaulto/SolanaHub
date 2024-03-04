@@ -1,13 +1,12 @@
-.light-title {
-    text-transform: capitalize;
-    color: #344054;
+.config-label{
+    margin-block-end: 10px;
+    color:  #344054;
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
-    margin-block-end: 8px;
-    /* 138.462% */
+    display: block;
+    text-transform: capitalize;
 }
-
 ion-avatar {
     margin: 0 auto;
     display: flex;
@@ -24,38 +23,10 @@ ion-segment {
     --background: #F8FAFC;
 }
 
-.tooltip-icon {
-    width: 16px !important;
-    height: 16px !important;
-    position: absolute;
-    left: 0;
-    top: 0;
-}
-
-ion-label {
-    color: #121926;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 18px;
-    /* 138.462% */
-}
-
-ion-text {
-    color:  #697586;
-    text-align: center;
-    font-size: 12px;
-    margin-block-end: 8px;
-}
-ion-chip{
-    font-weight: 600;
-    border: 1px solid #F1D5EB;
-    margin: 0;
-    scale: 0.71;
-}
 ion-segment-button {
     flex: 1;
     --border-color: transparent;
-    --padding-bottom: 0;
+    --padding-bottom: 12px;
     --padding-end: 12px;
     --padding-start: 12px;
     --padding-top: 12px;
@@ -73,6 +44,10 @@ ion-segment-button {
         display: flex;
         text-transform: capitalize;
         flex-direction: column;
+        color: var(--colors-text-text-primary-900, #121926);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
     }
     ion-img {
         width: 36px;
@@ -80,17 +55,4 @@ ion-segment-button {
         margin-block-end: 8px;
     }
 
-}
-
-@media only screen and (max-width: 992px) {
-    ion-segment-button {
-        flex: 100% !important;
-    }
-    .pool-profile{
-        flex-direction: row !important;
-        justify-content: space-between;
-    }
-    ion-avatar{
-        margin: 0;
-    }
 }

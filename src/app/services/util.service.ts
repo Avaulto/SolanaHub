@@ -6,6 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
 import { JupStoreService } from "./jup-store.service";
 import { SessionStorageService } from "./session-storage.service";
+import { Config } from "../models/settings.model";
 // import { PriorityFee } from "../models/priorityFee.model";
 // import * as moment from "moment";
 // import { v4 as uuidv4 } from "uuid";
@@ -45,29 +46,23 @@ export class UtilService {
   constructor(
     // private _jupStore:JupStoreService,
     private _sessionStorageService: SessionStorageService,
-    private localStore: LocalStorageService
+    private _localStorage: LocalStorageService
   ) {
   }
   public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
-  private _systemExplorer = new BehaviorSubject<string>(this.localStore.getData('explorer') || 'https://solscan.io' as string);
-  public explorer$ = this._systemExplorer.asObservable();
-  public changeExplorer(name: string): void {
-    this.localStore.saveData('explorer', name);
-    this._systemExplorer.next(name);
-  }
-  get explorer(): string {
-    return this._systemExplorer.value;
-  }
-  private _PriorityFee = PriorityFee.None;
-  public get priorityFee(): PriorityFee {
-    return this._PriorityFee;
-  }
 
-
-  public set priorityFee(v: PriorityFee) {
-    this._PriorityFee = v;
+  public get explorer(): string | number{
+    const config: Config = JSON.parse(this._localStorage.getData('explorer')) || 'https://solscan.io'
+    return config.value ;
   }
+  
+  public get priorityFee()  {
+    const baseFee = 5000
+    const config: Config = JSON.parse(this._localStorage.getData('priority-fee')) || baseFee
+    return Number(config.value);
+  }
+  
 
   public formatBigNumbers = (n: number) => {
     if (n < 1e3) return this.decimalPipe.transform(n, '1.2-2');

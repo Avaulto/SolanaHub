@@ -1,0 +1,23 @@
+<div class="settings-group">
+  <ion-label class="config-label">{{title}}</ion-label>
+  <div class="group-config">
+    <ion-segment mode="ios" (ionChange)="selectConfig($event)" [value]="defaultSelection">
+    @for (setup of configs; track $index) {
+      <ion-segment-button [value]="setup">
+        <div class="pool-profile">
+          <ion-avatar>
+            <ion-img [src]="setup?.imageURL" />
+          </ion-avatar>
+          <div class="pool-name">
+            <ion-label>{{setup?.name}}</ion-label>
+          </div>
+        </div>
+      </ion-segment-button>
+      }
+      </ion-segment>
+  </div>
+  @if(configType === 'RPC' && defaultSelection?.name == 'Custom RPC'){
+    <ion-label class="config-label ion-margin-top">your custom RPC URL</ion-label>
+    <ion-input debounce="1000" [value]="defaultSelection?.value" (ionInput)="customRPC($event)"/>
+  }
+</div>

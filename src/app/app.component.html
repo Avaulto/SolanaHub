@@ -1,39 +1,61 @@
+<ion-header mode="md" [translucent]="true">
+  <app-menu/>
+
+</ion-header>
 <ion-app>
+
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
         <ion-list id="inbox-list">
           <div id="logo">
-
             <ion-img [src]="SolanaHubLogo"></ion-img>
             <span>SolanaHub</span>
           </div>
-          <app-wallet-connect/>
+          <app-wallet-connect />
           <ion-menu-toggle auto-hide="false" *ngFor="let g of appPages; let i = index">
             <ion-list-header *ngIf="g.group">{{g.group}}</ion-list-header>
+            @for (p of g.pages; track $index) {
+            @if (p.title != 'Settings') {
+            <ion-item [disabled]="!p.active" style="opacity: 1;" routerDirection="root" [routerLink]="[p.url]"
+              lines="none" detail="false" routerLinkActive="selected">
+              <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
 
-            <ion-item [disabled]="!p.active" style="opacity: 1;"  *ngFor="let p of g.pages; let i = index" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
-              routerLinkActive="selected">
-            <animated-icon  aria-hidden="true" slot="start"  [icon]="p.icon"/>
-      
               <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
               <ion-label>{{ p.title }}</ion-label>
               @if (!p.active) {
-                <ion-chip color="secondary">Soon</ion-chip>
+              <ion-chip color="secondary">Soon</ion-chip>
               }
+
             </ion-item>
+            }@else{
+            <ion-item [disabled]="!p.active" style="opacity: 1;" 
+            (click)="openSettingsModal()"
+              lines="none" detail="false">
+              <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
+
+              <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
+              <ion-label>{{ p.title }}</ion-label>
+              @if (!p.active) {
+              <ion-chip color="secondary">Soon</ion-chip>
+              }
+
+            </ion-item>
+            }
+            }
+
           </ion-menu-toggle>
         </ion-list>
 
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content">
-    @if (isReady$ | async) {
-      <ion-router-outlet ></ion-router-outlet>
-    }@else {
-      <not-connected/>
-    }
+      @if (isReady$ | async) {
+      <ion-router-outlet></ion-router-outlet>
+      }@else {
+      <not-connected />
+      }
     </ion-content>
-   
+
   </ion-split-pane>
 </ion-app>

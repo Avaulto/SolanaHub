@@ -1,0 +1,180 @@
+#nft-preview {
+    padding: 3.5%;
+    overflow: auto;
+}
+
+#nft-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    ion-label {
+        color: var(--colors-text-text-primary-900, #101828);
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 28px;
+        /* 155.556% */
+        letter-spacing: 0.18px;
+    }
+}
+
+#close-modal {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+}
+
+#nft-identity {
+    border-radius: 6px;
+    border: 1px solid #E3E8EF;
+    padding: 10px 12px;
+    margin-block-end: 20px;
+}
+
+.identity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:not(:last-child) {
+        margin-block-end: 10px;
+    }
+
+    ion-label {
+        text-transform: capitalize;
+        color: var(--colors-text-text-primary-900, #121926);
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        /* 145.455% */
+    }
+
+    ion-chip {
+        scale: 0.9;
+        margin: 0;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        color: #364152;
+
+        border: 1px solid #E3E8EF;
+        background: #F8FAFC;
+
+        div {
+            margin-inline-end: 4px;
+            height: 10px;
+        }
+
+        &.ion-color-warning {
+            border-color: #F9DBAF;
+            background: #FEF6EE;
+            color: #B93815;
+        }
+    }
+}
+
+#nft-data {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+}
+
+#img-wrapper {
+    width: 400px;
+    height: 100%;
+    overflow: hidden;
+
+    ion-img {
+        width: 100%;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+}
+
+#nft-attr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.attr {
+    border-radius: 6px;
+    border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
+    background: var(--Colors-Background-bg-secondary, #F8FAFC);
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+    min-width: 30%;
+
+    ion-label {
+        text-transform: capitalize;
+        color: #4B5565;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 16px;
+        margin-block-end: 2px;
+    }
+
+    ion-text {
+        color: #121926;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+    }
+}
+
+
+#nft-features {
+    align-items: center;
+    justify-content: right;
+    display: flex;
+
+    span {
+        color: #697586;
+        font-size: 13px;
+        margin-inline-end: 6px
+    }
+
+    ion-button {
+        text-transform: capitalize;
+        color: #364152;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 18px;
+        border-radius: var(--radius-sm, 6px);
+        --border-color: #CDD5DF;
+        --background: #FFF;
+        --border-width: 1px;
+        --border-style: solid;
+        --border-radius: 6px;
+        --padding-bottom: 0;
+        --padding-top: 0;
+
+        &:not(:last-child) {
+            margin-inline-end: 6px;
+        }
+
+        ion-text {
+            margin-inline-start: 6px;
+        }
+
+        &#burn-nfts {
+            color: white;
+            --ion-color-contrast: white !important;
+            --border-color: #B42318;
+        }
+
+
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    #img-wrapper {
+        width: 300px;
+        height: auto;
+        margin-block-end: 16px;
+    }
+}

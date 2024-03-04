@@ -17,10 +17,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/overview/overview.page').then( m => m.OverviewPage),
   },
   {
-    path: 'settings',
-    loadComponent: () => import('./pages/settings/settings.page').then( m => m.SettingsPage)
-  },
-  {
     path: 'collectibles',
     loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage)
   },

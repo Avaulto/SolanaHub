@@ -21,6 +21,7 @@ import { forkJoin, map, take } from 'rxjs';
 import { PositionsComponent } from './positions/positions.component';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
+import { MenuComponent } from 'src/app/shared/components/menu/menu.component';
 interface ValidatorsStats {
   numberOfValidators: number,
   clusterAPY: number,
@@ -33,6 +34,7 @@ interface ValidatorsStats {
   styleUrls: ['./staking.page.scss'],
   standalone: true,
   imports: [
+    MenuComponent,
     PageHeaderComponent,
     IonGrid,
     IonRow,

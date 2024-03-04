@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class TxInterceptorService {
     private _util: UtilService,
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
-    if (priorityFee != '0') {
-      const units = Number(priorityFee) * 1000000;
+    if (priorityFee > 5000) {
+      const units = Number(priorityFee);
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
         units
       });
@@ -38,8 +39,8 @@ export class TxInterceptorService {
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
     const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
     let transaction: Transaction = new Transaction(txArgs).add(...txParam);
-    // const priorityFeeInst = this._addPriorityFee(this._utilService.priorityFee)
-    // if (priorityFeeInst?.length > 0) transaction.add(...priorityFeeInst)
+    const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
+    if (priorityFeeInst?.length > 0) transaction.add(...priorityFeeInst)
     let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
     // let signedTx = await firstValueFrom(this._shs.getCurrentWallet().signTransaction(transaction)) as Transaction;
     if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
@@ -129,28 +130,28 @@ export class TxInterceptorService {
 
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
       const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
-      // const url = `${this._utilService.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
-      // const txSend: toastData = {
-      //   message: `Transaction Submitted`,
-      //   btnText: `view on explorer`,
-      //   segmentClass: "toastInfo",
-      //   duration: 5000,
-      //   cb: () => window.open(url)
-      // }
-      // this.toasterService.msg.next(txSend)
+      const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
+      const txSend: toastData = {
+        message: `Transaction Submitted`,
+        btnText: `view on explorer`,
+        segmentClass: "toastInfo",
+        duration: 5000,
+        cb: () => window.open(url)
+      }
+      this._toasterService.msg.next(txSend)
       const config: BlockheightBasedTransactionConfirmationStrategy = {
         signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
       }
       await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
-      // const txCompleted: toastData = {
-      //   message: 'Transaction Completed',
-      //   segmentClass: "toastInfo"
-      // }
+      const txCompleted: toastData = {
+        message: 'Transaction Completed',
+        segmentClass: "toastInfo"
+      }
 
       // if(record){
       //   va.track(record.message, record.data)
       // }
-      // this.toasterService.msg.next(txCompleted)
+      this._toasterService.msg.next(txCompleted)
 
       return signature
 

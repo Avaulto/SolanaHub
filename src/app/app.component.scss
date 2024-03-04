@@ -93,9 +93,11 @@ ion-chip{
   }
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 992px) {
   ion-menu {
     width: auto;
   }
-
+#main-content{
+  top: 72px;
+}
 }

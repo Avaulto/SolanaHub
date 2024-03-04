@@ -53,12 +53,11 @@ export class CollectiblesPage implements OnInit {
   ngOnInit() {
   }
   searchNft(term){
-    console.log(term);
-    
+
     this.searchTerm.set(term)
   }
   selectNft(checkbox, event) {
-    console.log(event);
+
     if(event.target.localName === "ion-button"){
       return
     }

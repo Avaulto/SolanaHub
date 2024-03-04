@@ -1,0 +1,95 @@
+<ion-grid id="nft-preview">
+  <div id="nft-head" class="ion-margin-bottom">
+    <div id="nft-profile">
+      <ion-label>{{nft.data.name}}</ion-label>
+    </div>
+    <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg"></ion-img>
+  </div>
+  <ion-row id="nft-body" class="ion-justify-content-between">
+    <ion-col size="12" sizeLg="5.9" id="img-wrapper">
+      <ion-img [src]="nft.data.imageUri" alt="nft img" />
+    </ion-col>
+    <ion-col size="12" sizeLg="5.9" id="nft-data">
+      <!-- add wrapper for split top and bottom -->
+      <span>
+        <div id="nft-identity">
+          <div class="identity">
+            <ion-label>royalties</ion-label>
+            <ion-chip color="warning">4.44%</ion-chip>
+          </div>
+          <div class="identity">
+            <ion-label>owner</ion-label>
+            <ion-chip>
+              <div>
+                <ion-icon appCopyText [copyText]="'sadawd'" name="copy-outline" />
+              </div>
+
+              adwa
+
+            </ion-chip>
+          </div>
+          <div class="identity">
+            <ion-label>Addresses (Authority)</ion-label>
+            <div style="    display: flex;">
+              <ion-chip>
+                <div>
+                  <ion-icon appCopyText [copyText]="'sadawd'" name="copy-outline" />
+                </div>
+                adwa
+              </ion-chip>
+              <ion-chip>
+                <div>
+                  <ion-icon appCopyText [copyText]="'sadawd'" name="copy-outline" />
+                </div>
+                dwawd
+              </ion-chip>
+              <ion-chip>
+                <div>
+                  <ion-icon appCopyText [copyText]="'sadawd'" name="copy-outline" />
+                </div>
+                wawd
+              </ion-chip>
+            </div>
+          </div>
+        </div>
+        <div id="nft-attr" class="ion-margin-bottom">
+          @for (attr of nft.data.attributes; track $index) {
+          <div class="attr">
+            <ion-label>{{attr.trait_type}}</ion-label>
+            <ion-text>{{attr.value}}</ion-text>
+          </div>
+          }
+        </div>
+      </span>
+      <div id="nft-features">
+         
+    <ion-button id="list-nft" (click)="openModal('list-nft-modal')">
+      <ion-img src="assets/images/list-icon.svg" />
+      <ion-text >
+
+        List 
+      </ion-text>
+    </ion-button>
+    
+        <ion-button id="send-nfts" (click)="openModal('send-nft-modal')">
+          <ion-img src="assets/images/send-icon.svg" />
+          <ion-text >
+    
+          send
+          </ion-text>
+        </ion-button>
+        <span>or</span>
+        <ion-button color="danger" id="burn-nfts" (click)="openModal('burn-nft-modal')">
+          <ion-img src="assets/images/trash-white-icon.svg" />
+          <ion-text >
+          burn
+          </ion-text>
+        </ion-button>
+        <!-- <ion-button id="list-btn" fill="clear">list</ion-button>
+        <ion-button id="send-btn" fill="clear">send</ion-button>
+        <span>or</span>
+        <ion-button id="burn-btn" color="danger">burn</ion-button> -->
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-grid>
