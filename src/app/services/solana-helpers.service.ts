@@ -1,14 +1,7 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
-import { AccountInfo, Connection, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, StakeActivationData, TransactionInstruction } from '@solana/web3.js';
-// import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
-// import { AccountInfo, clusterApiUrl, ConfirmedSignatureInfo, Connection, GetProgramAccountsFilter, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, StakeActivationData, Transaction } from '@solana/web3.js';
-// import { BehaviorSubject, firstValueFrom, Observable, Subject, throwError } from 'rxjs';
-// import { catchError, combineLatestWith, map, shareReplay, switchMap, tap } from 'rxjs/operators';
-// import { TOKEN_PROGRAM_ID } from 'node_modules/@solana/spl-token';
-// import { ApiService, UtilsService } from './';
-// import { Validator, StakeAccountExtended, TokenBalance, WalletExtended } from '../models';
-// import { PopoverController } from '@ionic/angular';
+import { AccountInfo, Connection, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, TransactionInstruction } from '@solana/web3.js';
+
 import {
   TOKEN_PROGRAM_ID,
   createTransferCheckedInstruction,
@@ -21,13 +14,10 @@ import {
 
 import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
 import { Validator, WalletExtended, StakeWizEpochInfo, Stake } from '../models';
-import { environment } from 'src/environments/environment';
 import { ApiService } from './api.service';
-import { UtilService } from './util.service';
-import { PortfolioService } from './portfolio.service';
-import { JupStoreService } from './jup-store.service';
-import { LocalStorageService } from './local-storage.service';
+
 import { SessionStorageService } from './session-storage.service';
+import { UtilService } from './util.service';
 ;
 
 @Injectable({
@@ -51,19 +41,19 @@ export class SolanaHelpersService {
 
   constructor(
     private _apiService: ApiService,
-    // private _portfolioService:PortfolioService,
-    // private _toasterService: ToasterService,
     private _connectionStore: ConnectionStore,
-    // public popoverController: PopoverController,
     private _walletStore: WalletStore,
     private _sessionStorageService: SessionStorageService,
+    private _utils: UtilService,
   ) {
-
-    this._connectionStore.setEndpoint(environment.solanaCluster)
+    const rpc:string = this._utils.RPC.toString()
+    this._connectionStore.setEndpoint(rpc)
     this._connectionStore.connection$.subscribe(conection => this.connection = conection);
     this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
   }
-
+  public updateRPC(rpcURL){
+    this._connectionStore.setEndpoint(rpcURL)
+  }
   public getCurrentWallet(): WalletExtended {
     return this._walletExtended$.value
   }

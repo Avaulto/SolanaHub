@@ -10,6 +10,7 @@ import {
 import { Config, PriorityFee } from '../../../models/settings.model';
 import { SelectGroupConfigComponent } from './select-group-config/select-group-config.component';
 import { ModalController } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -33,12 +34,12 @@ export class SettingsComponent implements OnInit {
     {
       name: 'Triton',
       imageURL: '/assets/images/triton-icon.svg',
-      value: 'https://mb-avaulto-cc28.mainnet.rpcpool.com'
+      value: environment.solanaCluster
     },
     {
-      name: 'Helius',
-      imageURL: '/assets/images/helius-icon.svg',
-      value: ''
+      name: 'QuickNode',
+      imageURL: '/assets/images/quicknode-icon.png',
+      value: 'https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro/a9aa5c76f9878b168043cc3452d267e0bda9dfdb'
     },
     {
       name: 'Custom RPC',
@@ -81,16 +82,6 @@ export class SettingsComponent implements OnInit {
       value: PriorityFee.Supercharger
     }
   ];
-  //   public setPriorityFee(rank: string) {
-  //   this._utilsService.priorityFee = PriorityFee[rank];
-  //   this.currentPrioretyFee = PriorityFee[rank];
-
-  //   const toasterMessage: toastData = {
-  //     message: 'Priority fee updated',
-  //     segmentClass: "toastInfo"
-  //   }
-  //   this._toasterService.msg.next(toasterMessage)
-  // }
   constructor() { }
 
   ngOnInit() { }

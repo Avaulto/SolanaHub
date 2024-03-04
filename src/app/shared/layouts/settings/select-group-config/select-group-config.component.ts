@@ -8,7 +8,7 @@ import {
    IonText, IonInput } from '@ionic/angular/standalone';
 import { Config } from '../../../../models/settings.model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { ToasterService } from 'src/app/services';
+import { SolanaHelpersService, ToasterService } from 'src/app/services';
 @Component({
   selector: 'select-group-config',
   templateUrl: './select-group-config.component.html',
@@ -31,7 +31,8 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
   public defaultSelection: Config = null;
   constructor(
     private _toastService: ToasterService,
-    private _localStorage: LocalStorageService
+    private _localStorage: LocalStorageService,
+    private _shs: SolanaHelpersService
     ) { }
 
   ngAfterViewInit() {
@@ -45,9 +46,12 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
    this.defaultSelection = config
     if(config.name != 'Custom RPC'){
       this.storeSelection(config);
-
       // update for UI purposes
       this._toastService.msg.next({message:`${this.configType} updated`, segmentClass:'toastInfo'})
+    }
+    if(this.configType === 'RPC'){
+      const rpcURL = this.defaultSelection.value
+      this._shs.updateRPC(rpcURL)
     }
   }
   storeSelection(selection: Config): void{
@@ -65,6 +69,7 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
     this.storeSelection(this.defaultSelection)
 
     this._toastService.msg.next({message:`${this.configType} updated`, segmentClass:'toastInfo'})
+    this._shs.updateRPC(rpcURL)
     }
 
   }

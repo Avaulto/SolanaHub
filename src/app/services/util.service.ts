@@ -7,6 +7,7 @@ import { JupToken } from "../models/jup-token.model";
 import { JupStoreService } from "./jup-store.service";
 import { SessionStorageService } from "./session-storage.service";
 import { Config } from "../models/settings.model";
+import { environment } from 'src/environments/environment';
 // import { PriorityFee } from "../models/priorityFee.model";
 // import * as moment from "moment";
 // import { v4 as uuidv4 } from "uuid";
@@ -51,6 +52,11 @@ export class UtilService {
   }
   public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
 
+
+  public get RPC(): string | number{
+    const config: Config = JSON.parse(this._localStorage.getData('RPC')) || environment.solanaCluster
+    return config.value ;
+  }
 
   public get explorer(): string | number{
     const config: Config = JSON.parse(this._localStorage.getData('explorer')) || 'https://solscan.io'
