@@ -37,7 +37,12 @@ ion-label {
     font-weight: 500;
     line-height: 18px;
 }
-
+ion-label,ion-text{
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 ion-text {
     color: #4B5565;
     font-size: 11px;
