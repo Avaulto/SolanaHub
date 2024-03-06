@@ -234,8 +234,9 @@ export class SolanaHelpersService {
       const tokenAccountSourcePubkey = await getAssociatedTokenAddress(mintAddressPK, walletOwner);
       const tokenAccountTargetPubkey = await getAssociatedTokenAddress(mintAddressPK, toWalletPK);
 
-      const decimals = await (await this.connection.getParsedAccountInfo(mintAddressPK)).value.data['parsed'].info.decimals;
-
+      const decimals = await (await this.connection.getParsedAccountInfo(mintAddressPK))?.value?.data['parsed']?.info?.decimals || 0;
+      console.log(decimals);
+      
       const transferSplOrNft = createTransferCheckedInstruction(
         tokenAccountSourcePubkey,
         mintAddressPK,

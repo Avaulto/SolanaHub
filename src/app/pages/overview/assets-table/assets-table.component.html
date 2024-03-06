@@ -54,8 +54,8 @@
     </div>
     <div class="item-info">
       @if (!row.status) {
-      <div class="item-bold">{{row.symbol}}</div>
-      <div class="item-light">{{row.name}}</div>
+      <div class="item-bold">{{row.symbol || 'unknown'}}</div>
+      <div class="item-light">{{row.name }}</div>
       } @else {
       <div class="item-bold">{{row.name}}</div>
       }
