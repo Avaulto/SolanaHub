@@ -35,7 +35,7 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
         const tokenChartData = await this.priceDataService.getCoinChartHistory(this.token.address, 'USD', 7)
         this.createGroupCategory(tokenChartData.chartData)
 
-        this.onPriceChangePercentage.emit(tokenChartData.market_data.price_change_percentage_24h)
+        this.onPriceChangePercentage.emit(tokenChartData?.market_data?.price_change_percentage_24h || 0)
     }
     private createGroupCategory(priceDataHistory) {
 
