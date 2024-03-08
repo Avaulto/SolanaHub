@@ -64,7 +64,8 @@ export class PortfolioService {
       
        
       const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
-      const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio.elements);
+      const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(portfolio?.elements);
+      console.log(mergeDuplications);
       
       // console.log(portfolio.elements);
       
