@@ -25,7 +25,7 @@ export class SendNftModalComponent  implements OnInit {
   }
   onValidAddress(address: string){
     if(address){
-      this.toSendNFTs.emit({nftsToSend: this.nfts, targetAddress:address})
+      this.toSendNFTs.emit({nftsToTransfer: this.nfts, targetAddress:address})
     }
   }
 }

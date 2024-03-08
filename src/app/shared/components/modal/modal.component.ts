@@ -4,7 +4,7 @@ import { NFT, Stake, Validator } from 'src/app/models';
 import { IonButton, IonImg } from '@ionic/angular/standalone'
 
 import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
 import { ValidatorsModalComponent } from 'src/app/pages/staking/form/validators-modal/validators-modal.component';
 import { InstantUnstakeModalComponent } from 'src/app/pages/staking/positions/stake/instant-unstake-modal/instant-unstake-modal.component';
 import { MergeModalComponent } from 'src/app/pages/staking/positions/stake/merge-modal/merge-modal.component';
@@ -16,6 +16,7 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { SendNftModalComponent } from 'src/app/pages/collectibles/send-nft-modal/send-nft-modal.component';
 import { ListNftModalComponent } from 'src/app/pages/collectibles/list-nft-modal/list-nft-modal.component';
 import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal/burn-nft-modal.component';
+import { NftsService } from 'src/app/services/nfts.service';
 
 @Component({
   selector: 'app-modal',
@@ -52,6 +53,7 @@ export class ModalComponent implements AfterViewInit {
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
+    private _nfts: NftsService,
     private _nss: NativeStakeService,
     private _lss: LiquidStakeService,
     private _txi: TxInterceptorService
@@ -88,14 +90,19 @@ export class ModalComponent implements AfterViewInit {
 
       case 'burn-nft-modal':
         const nftsToBurn: NFT[] = this.emittedValue().nftsToBurn;
-        let burnIns = await this._shs.burnNft(nftsToBurn[0].data.address, wallet.publicKey);
-        this._txi.sendTx([burnIns], wallet.publicKey)
+        let burnIns = await this._nfts.burnNft(nftsToBurn, wallet.publicKey.toBase58());
+
+        this._txi.sendMultipleTxn(burnIns, wallet.publicKey)
         break;
       case 'send-nft-modal':
-        const nftsToSend: NFT[] = this.emittedValue().nftsToSend;
-        const newTargetAddress = this.emittedValue().targetAddress
-        let sendIns = await this._shs.sendSplOrNft(new PublicKey(nftsToSend[0].data.address), wallet.publicKey, newTargetAddress,1);
-        this._txi.sendTx(sendIns, wallet.publicKey)
+        const nftsToTransfer: NFT[] = this.emittedValue().nftsToTransfer;
+        const from_Address = wallet.publicKey.toBase58()
+        const to_address = this.emittedValue().targetAddress;
+        // console.log(nftsToTransfer, fromAddress, toAddress);
+        
+        let transferIns = await this._nfts.transferNft(nftsToTransfer, from_Address, to_address);
+        // let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transferIns);
+        this._txi.sendMultipleTxn(transferIns, wallet.publicKey)
         break;
       default:
         break;

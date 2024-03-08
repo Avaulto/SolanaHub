@@ -8,4 +8,19 @@
       <nft-modal-item [nft]="nft"/>
     }
   </div>
+
+  <div id="burn-summary">
+    <ion-label>Burn summary</ion-label>
+    <div id="burn-calc">
+      <div class="item">
+        <div class="item-id">items selected</div>
+        <div class="item-value">{{nfts.length}}</div>
+      </div>
+      <div class="item">
+        <div class="item-id">get from burning</div>
+        <div class="item-value">{{nfts.length * 0.01 | number: '1.2'}} SOL</div>
+      </div>
+     
+    </div>
+  </div>
 </div>

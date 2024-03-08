@@ -49,24 +49,27 @@
         /* 145.455% */
     }
 
-    ion-chip {
-        scale: 0.9;
-        margin: 0;
+    
+    .tip {
         text-align: center;
+        padding: 4px;
+        border-radius: 6px;
+        color: #364152;
+        border: 1px solid #E3E8EF;
+        background: #F8FAFC;
+        height: 20px;
         font-size: 11px;
         font-weight: 500;
         line-height: 16px;
-        color: #364152;
-
-        border: 1px solid #E3E8EF;
-        background: #F8FAFC;
-
+        display: flex;
+        align-items: center;
+        margin-inline-start: 5px;
         div {
             margin-inline-end: 4px;
             height: 10px;
         }
 
-        &.ion-color-warning {
+        &.warning {
             border-color: #F9DBAF;
             background: #FEF6EE;
             color: #B93815;
@@ -146,6 +149,7 @@
         line-height: 18px;
         border-radius: var(--radius-sm, 6px);
         --border-color: #CDD5DF;
+        --background-hover: #fff;
         --background: #FFF;
         --border-width: 1px;
         --border-style: solid;

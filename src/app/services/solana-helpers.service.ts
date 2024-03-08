@@ -13,7 +13,7 @@ import {
 } from 'node_modules/@solana/spl-token';
 
 import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, Stake } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT } from '../models';
 import { ApiService } from './api.service';
 
 import { SessionStorageService } from './session-storage.service';
@@ -187,30 +187,29 @@ export class SolanaHelpersService {
 
   //   }
 
-  async burnNft(mintAddressPK: string, walletOwner: PublicKey) {
-    try {
-      const mintPubkey = new PublicKey(mintAddressPK);
-      // const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
-      const account = await getAssociatedTokenAddress(mintPubkey, walletOwner);
-      const decimals = await this.connection.getParsedAccountInfo(mintPubkey);
+    // try {
+    //   const mintPubkey = new PublicKey(mintAddressPK);
+    //   // const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
+    //   const account = await getAssociatedTokenAddress(mintPubkey, walletOwner);
+    //   const decimals = await this.connection.getParsedAccountInfo(mintPubkey);
 
-      console.log(account, decimals);
+    //   console.log(account, decimals);
       
-      let txIns: TransactionInstruction = createBurnCheckedInstruction(
-        account, // PublicKey of Owner's Associated Token Account
-        mintPubkey, // Public Key of the Token Mint Address
-        walletOwner, // Public Key of Owner's Wallet
-        1, // amount, if your decimals is 8, 10^8 for 1 token
-        1
-      );
-      console.log(txIns,account);
+    //   let txIns: TransactionInstruction = createBurnCheckedInstruction(
+    //     account, // PublicKey of Owner's Associated Token Account
+    //     mintPubkey, // Public Key of the Token Mint Address
+    //     walletOwner, // Public Key of Owner's Wallet
+    //     1, // amount, if your decimals is 8, 10^8 for 1 token
+    //     1
+    //   );
+    //   console.log(txIns,account);
       
-      return txIns;
-    } catch (error) {
-      console.error(error);
-      return null
-    }
-  }
+    //   return txIns;
+    // } catch (error) {
+    //   console.error(error);
+    //   return null
+    // }
+  
   async getOrCreateTokenAccountInstruction(mint: PublicKey, user: PublicKey, payer: PublicKey | null = null): Promise<TransactionInstruction | null> {
     try {
       const userTokenAccountAddress = await getAssociatedTokenAddress(mint, user, false);

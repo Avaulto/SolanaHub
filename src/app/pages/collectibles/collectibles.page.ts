@@ -45,7 +45,7 @@ export class CollectiblesPage implements OnInit {
   @ViewChildren('checkNfts') checkNfts: QueryList<IonCheckbox>
   public nfts = this._portfolio.nfts;
   
-  public filterNft = computed(() =>this.nfts()?.filter(t => t.data.name.toLowerCase().startsWith(this.searchTerm().toLowerCase())))
+  public filterNft = computed(() =>this.nfts()?.filter(t => t.name?.toLowerCase().startsWith(this.searchTerm().toLowerCase())))
   public searchTerm = signal('')
   public bulkSelection = signal([])
   constructor(private _portfolio:PortfolioService,    private _modalCtrl: ModalController) { }

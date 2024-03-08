@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { IonButton, IonImg, IonText } from "@ionic/angular/standalone";
 import { NFT } from 'src/app/models';
 import { ModalController } from '@ionic/angular';
@@ -11,6 +11,7 @@ import { ModalComponent } from 'src/app/shared/components/modal/modal.component'
   imports:[IonButton, IonImg, IonText]
 })
 export class FeatureToastComponent  implements OnInit {
+  @Output() onActionSelected = new EventEmitter()
   @Input() nfts:NFT[] = []
   
   private _modalCtrl = inject(ModalController)
@@ -54,6 +55,7 @@ export class FeatureToastComponent  implements OnInit {
       cssClass: 'modal-style'
     });
     modal.present();
+    this.onActionSelected.emit(true)
     // const { data, role } = await modal.onWillDismiss();
 
   }

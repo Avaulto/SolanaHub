@@ -83,6 +83,66 @@ export class TxInterceptorService {
 
 
   }
+    public async sendMultipleTxn(transactions:Transaction[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
+
+      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+      const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
+      // let transaction: Transaction = new Transaction(txArgs).add(...txParam);
+      const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
+      if (priorityFeeInst?.length > 0) transactions.map(t => t.add(...priorityFeeInst))
+      let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
+      // let signedTx = await firstValueFrom(this._shs.getCurrentWallet().signTransaction(transaction)) as Transaction;
+      if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
+  
+      //LMT: check null signatures
+      // for (let i = 0; i < signedTx.signatures.length; i++) {
+      //   if (!signedTx.signatures[i].signature) {
+      //     throw Error(`missing signature for ${signedTx.signatures[i].publicKey.toString()}. Check .isSigner=true in tx accounts`)
+      //   }
+      // }
+
+      // const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
+
+      var signatures = [];
+    for await(const tx of signedTx)
+    {
+      const confirmTransaction = await this._shs.connection.sendRawTransaction(
+        tx.serialize({ requireAllSignatures: false })
+      );
+      signatures.push(confirmTransaction);
+    }
+
+      const url = `${this._util.explorer}/tx/${signatures[0]}?cluster=${environment.solanaEnv}`
+      
+      const txSend: toastData = {
+        message: `Transaction Submitted`,
+        btnText: `view on explorer`,
+        segmentClass: "toastInfo",
+        duration: 5000,
+        cb: () => window.open(url)
+      }
+      this._toasterService.msg.next(txSend)
+      const config: BlockheightBasedTransactionConfirmationStrategy = {
+        signature: signatures[0], blockhash, lastValidBlockHeight//.lastValidBlockHeight
+      }
+      console.log(url);
+  
+      await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
+      const txCompleted: toastData = {
+        message: 'Transaction Completed',
+        segmentClass: "toastInfo"
+      }
+      if (record) {
+        console.log(record);
+  
+        va.track(record.message, record.data)
+      }
+      this._toasterService.msg.next(txCompleted)
+  
+      return signatures
+  
+  
+    }
   // public async verifyBalance(lamportToSend: number, walletPubkey: PublicKey, transaction: Transaction) {
   //   const balance = await this.solanaUtilsService.connection.getBalance(walletPubkey);
   //   const txFee = (await this.solanaUtilsService.connection.getFeeForMessage(

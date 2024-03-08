@@ -19,31 +19,84 @@ export interface Token extends JupToken{
     extraData?: any
 }
 export interface NFT{
-  type: string
-  checked?: boolean
-  attributes: {
-    tags: Array<string>
-  }
-  data: {
+  name: string
+  symbol: string
+  royalty: number
+  image_uri: string
+  cached_image_uri: string
+  animation_url: string
+  cached_animation_url: string
+  metadata_uri: string
+  description: string
+  mint: string
+  owner: string
+  update_authority: string
+  creators: Array<{
     address: string
-    amount: number
-    price: any
-    name: string
-    dataUri: string
-    imageUri: string
-    attributes: Array<{
-      value: string
-      trait_type: string
-    }>
-    collection: {
-      floorPrice: any
-      id: string
-      name: string
-    }
+    share: number
+    verified: boolean
+  }>
+  collection: {
+    address: string
+    verified: boolean
   }
-  networkId: string
+  attributes: {
+    Gender: string
+    Type: string
+    Expression: string
+    Hair: string
+    Eyes: string
+    Clothing: string
+    Hand: string
+    Glove: string
+    Background: string
+  }
+  attributes_array: Array<{
+    trait_type: string
+    value: string
+  }>
+  files: Array<{
+    uri: string
+    type: string
+  }>
+  external_url: string
+  is_loaded_metadata: boolean
+  primary_sale_happened: boolean
+  is_mutable: boolean
+  token_standard: string
+  is_compressed: boolean
+  merkle_tree: string
+  is_burnt: boolean
+  type: string
   value: any
 }
+
+// export interface NFT{
+//   type: string
+//   checked?: boolean
+//   attributes: {
+//     tags: Array<string>
+//   }
+//   data: {
+//     address: string
+//     amount: number
+//     price: any
+//     name: string
+//     dataUri: string
+//     imageUri: string
+//     attributes: Array<{
+//       value: string
+//       trait_type: string
+//     }>
+//     collection: {
+//       floorPrice: any
+//       id: string
+//       name: string
+//     }
+//   }
+//   networkId: string
+//   value: any
+// }
 export interface LiquidityProviding{
     token: Token[]
     platform: string,

@@ -1,5 +1,48 @@
 #nfts-list {
-    height: 275px;
+    height: 200px;
     overflow: auto;
-    margin-bottom: 70px;
+}
+
+#burn-summary{
+    height: 200px;
+    padding-block: 10px;
+    ion-label {
+        color: var(--Gray-700, #344054);
+        font-size: 13px;
+        font-weight: 500;
+        margin-block-end: 8px;
+        display: block;
+        text-transform: capitalize;
+    }
+}
+#burn-calc {
+    border-radius: 8px;
+    border: 1px solid #E3E8EF;
+    background: #F8FAFC;
+    padding: 16px;
+    font-size: 12px;
+    text-transform: capitalize;
+    color: #101828;
+
+    .item {
+        &:not(:last-child){
+            margin-block-end: 8px;
+        }
+        font-weight: 400;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .item-id,
+    .item-address {
+        flex: 1;
+    }
+
+    .item-id {
+        font-weight: 600;
+    }
+
+    .item-value {
+        color: #475467;
+    }
 }
