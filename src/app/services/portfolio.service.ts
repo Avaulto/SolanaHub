@@ -41,12 +41,27 @@ export class PortfolioService {
 
    }
 
-   private _portfolioData = this._sessionStorageService.getData('portfolioData') ? JSON.parse(this._sessionStorageService.getData('portfolioData')) : null
-   
+   private _portfolioData = () => {
+     const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
+     
+    if(portfolioLocalRecord){
+      const portfolioJson = JSON.parse(portfolioLocalRecord)
+      const currentTime =  Math.floor(new Date().getTime() / 1000)
+      const expiredRecord = portfolioJson.lastSave + 600
+      // if expired timestamp is bigger than current time frame, return it.
+      if(expiredRecord > currentTime ){
+        return portfolioJson.portfolioData
+      }else {
+        return null
+      }
+    }
+    return null
+   }
+  
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
-    let portfolioData = forceFetch === false && this._portfolioData?.owner == walletAddress ? this._portfolioData : null
+    let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
       this._portfolioStaking(walletAddress)
       if(!portfolioData || !jupTokens){
@@ -57,7 +72,7 @@ export class PortfolioService {
         ])
         jupTokens = res[0];
         portfolioData = res[1]
-        this._sessionStorageService.saveData('portfolioData', JSON.stringify(portfolioData))
+        this._sessionStorageService.saveData('portfolioData', JSON.stringify({portfolioData, lastSave: Math.floor(new Date().getTime() / 1000)}))
       }
   
 

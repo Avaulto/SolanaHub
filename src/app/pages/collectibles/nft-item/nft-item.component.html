@@ -1,7 +1,7 @@
 
 <div class="nft">
   <div class="nft-img-wrapper">
-    <ion-img (ionImgDidLoad)="loadImage()" [src]="nft?.image_uri || 'assets/images/unknown.svg'" />
+    <ion-img (ionImgDidLoad)="loadImage()" (ionError)="img.src = 'assets/images/unknown.svg'" #img [src]="nft?.image_uri" />
     @if (!imagesLoaded) {
       <ion-skeleton-text [animated]="true" />
     }
