@@ -38,7 +38,9 @@ export class WalletConnectComponent implements OnInit {
     effect(() => {
     //@ts-ignore
     if(this._portfolioService.nfts()){
-      this.profilePic = this._portfolioService.nfts()[0]?.image_uri;
+      
+      // get the first nft that has img
+      this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri).image_uri
     }
     })
   }
