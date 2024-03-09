@@ -27,5 +27,15 @@
 
     span {
         color: var(--colors-text-text-tertiary-600, #475467);
+        display: flex;
+        align-items: center;
+        line-height: 12px;
+    }
+    a{
+        text-decoration: none;
+    }
+    ion-icon{
+        font-size: 14px;
+        margin-inline: 4px;
     }
 }

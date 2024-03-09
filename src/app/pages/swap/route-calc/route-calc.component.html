@@ -15,4 +15,8 @@
     <div>Solana transaction fee</div>
     <span>0.000005 SOL</span>
   </div>
+  <div class="route-calc">
+    <div>assets contract</div>
+    <span><a target="_blank" [href]="utils.explorer + '/token/' +routeInfo.inputMint">{{utils.addrUtil(routeInfo.inputMint).addrShort}}</a><ion-icon name="swap-horizontal-outline"></ion-icon><a target="_blank" [href]="utils.explorer + '/token/' +routeInfo.outputMint">{{utils.addrUtil(routeInfo.outputMint).addrShort}}</a></span>
+  </div>
 </div>

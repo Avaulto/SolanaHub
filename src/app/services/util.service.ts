@@ -103,7 +103,7 @@ export class UtilService {
       return this.jupTokens
     } else {
       try {
-        this.jupTokens = await (await fetch('https://token.jup.ag/strict')).json();
+        this.jupTokens = await (await fetch('https://token.jup.ag/all')).json();
         this.jupTokens.forEach(t => t.logoURI = t.logoURI ? t.logoURI : 'assets/images/unknown.svg');
       } catch (error) {
         console.error(error);
