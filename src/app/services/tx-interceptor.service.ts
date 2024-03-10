@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
-import { PriorityFee, toastData } from '../models';
+import { PriorityFee, Record, toastData } from '../models';
 import va from '@vercel/analytics';
 import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
@@ -34,7 +34,7 @@ export class TxInterceptorService {
     }
     return null
   }
-  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string> {
+  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
 
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
     const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
@@ -79,25 +79,14 @@ export class TxInterceptorService {
 
 
   }
-    public async sendMultipleTxn(transactions:Transaction[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
+    public async sendMultipleTxn(transactions:Transaction[], extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
 
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-      const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
-      // let transaction: Transaction = new Transaction(txArgs).add(...txParam);
       const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
       if (priorityFeeInst?.length > 0) transactions.map(t => t.add(...priorityFeeInst))
       let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
-      // let signedTx = await firstValueFrom(this._shs.getCurrentWallet().signTransaction(transaction)) as Transaction;
       if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
   
-      //LMT: check null signatures
-      // for (let i = 0; i < signedTx.signatures.length; i++) {
-      //   if (!signedTx.signatures[i].signature) {
-      //     throw Error(`missing signature for ${signedTx.signatures[i].publicKey.toString()}. Check .isSigner=true in tx accounts`)
-      //   }
-      // }
-
-      // const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
 
       var signatures = [];
     for await(const tx of signedTx)

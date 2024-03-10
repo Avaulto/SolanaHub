@@ -5,7 +5,7 @@ import { helpCircleOutline,eyeOffOutline,eyeOutline, add } from 'ionicons/icons'
 import { IonSegmentButton, IonSegment, IonLabel,IonText, IonInput, IonIcon, IonButton, IonToggle } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js';
-import { Token } from 'src/app/models';
+import { Record, Token } from 'src/app/models';
 import { SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 
@@ -78,7 +78,8 @@ export class ActionBoxComponent implements OnInit {
           targetAddress,
           amount
         )
-        await this._txi.sendTx(instructions, publicKey)
+        const record:Record = {message: 'send asset', data: {symbol, amount}}
+        await this._txi.sendTx(instructions, publicKey,null,record)
       } else {
 
         const SOL = amount * LAMPORTS_PER_SOL;

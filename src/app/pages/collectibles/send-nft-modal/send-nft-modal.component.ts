@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { NFT } from 'src/app/models';
 import { IonImg, IonLabel, IonText } from "@ionic/angular/standalone";
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
@@ -17,7 +17,6 @@ export class SendNftModalComponent  implements OnInit {
 
   @Output() toSendNFTs = new EventEmitter();
   constructor() { }
-
   ngOnInit() {
 
     console.log(this.nfts);

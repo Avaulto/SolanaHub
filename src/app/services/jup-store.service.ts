@@ -47,8 +47,7 @@ export class JupStoreService {
     // const arrayOfTx: Transaction[] = []
     try {
       const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
-      console.log(routeInfo);
-      
+
       const { swapTransaction } = await (
         await fetch('https://quote-api.jup.ag/v6/swap', {
           method: 'POST',
@@ -73,7 +72,8 @@ export class JupStoreService {
       
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
-      const record = { message: 'jupiter', data: { type: `simple swap` } }
+      
+      const record = { message: 'swap', data: { symbol:routeInfo.inputMint, amount: routeInfo.inAmount  } }
       await this._txIntercept.sendTxV2(transaction, record);
 
     } catch (error) {

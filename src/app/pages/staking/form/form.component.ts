@@ -157,9 +157,6 @@ export class FormComponent implements OnInit {
         const participantAddress = walletOwner.publicKey.toBase58()
         this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
       }
-      // const sendTx = await this._tis.sendTx(txIns.stakeIx, walletOwner,[txIns.stakeAcc])
-
-
     } else if (stakingPath === 'liquid') {
 
       

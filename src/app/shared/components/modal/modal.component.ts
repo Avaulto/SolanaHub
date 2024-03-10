@@ -91,18 +91,17 @@ export class ModalComponent implements AfterViewInit {
       case 'burn-nft-modal':
         const nftsToBurn: NFT[] = this.emittedValue().nftsToBurn;
         let burnIns = await this._nfts.burnNft(nftsToBurn, wallet.publicKey.toBase58());
-
-        this._txi.sendMultipleTxn(burnIns, wallet.publicKey)
+        const record = { message: 'nfts', data: { action:'burn', numberOfNfts:  nftsToBurn.length } }
+        this._txi.sendMultipleTxn(burnIns, null,record)
         break;
       case 'send-nft-modal':
         const nftsToTransfer: NFT[] = this.emittedValue().nftsToTransfer;
         const from_Address = wallet.publicKey.toBase58()
         const to_address = this.emittedValue().targetAddress;
-        // console.log(nftsToTransfer, fromAddress, toAddress);
-        
+
         let transferIns = await this._nfts.transferNft(nftsToTransfer, from_Address, to_address);
-        // let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transferIns);
-        this._txi.sendMultipleTxn(transferIns, wallet.publicKey)
+        const record2 = { message: 'nfts', data: { action:'burn', numberOfNfts:  nftsToBurn.length } }
+        this._txi.sendMultipleTxn(transferIns,null,record2)
         break;
       default:
         break;

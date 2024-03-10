@@ -69,6 +69,7 @@ export class LiquidStakeService {
   public async stake(pool: StakePool, lamports: number, walletOwner: WalletExtended, validatorVoteAccount?: string) {
 
     const record = { message: 'liquid staking', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
+    
     const lamportsBN = new BN(lamports);
     if (pool.poolName.toLowerCase() === 'marinade') {
       if (!this.marinadeSDK) {
@@ -90,7 +91,7 @@ export class LiquidStakeService {
         ixs.push(directStakeIx)
       }
 
-      console.log([...ixs], walletOwner.publicKey, null, record);
+
       
       return await this._txi.sendTx([...ixs], walletOwner.publicKey, null, record)
     } catch (error) {
@@ -160,8 +161,7 @@ export class LiquidStakeService {
     } }
     const validatorVoteAccount = new PublicKey(stakeAccount.validator.vote_identity);
     const stakeAccountPK = new PublicKey(stakeAccount.address);
-    console.log(pool);
-    
+
     try {
       if (pool.poolName.toLowerCase() == 'marinade') {
         if (!this.marinadeSDK) {
@@ -171,7 +171,7 @@ export class LiquidStakeService {
         const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
        
         const txIns: Transaction = depositAccount.transaction
-        await this._txi.sendTx([txIns], publicKey);
+        await this._txi.sendTx([txIns], publicKey,null,record);
       } else {
 
         let ix = await depositStake(

@@ -38,8 +38,8 @@ export class NativeStakeService {
     account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> },
     validators: Validator[],
     inflationReward: InflationReward
-    ): Promise<Stake>  {
-      const marinadeStakeAuth = 'stWirqFCf2Uts1JBL1Jsd3r6VBWhgnpdPxCTe1MFjrq'
+  ): Promise<Stake> {
+    const marinadeStakeAuth = 'stWirqFCf2Uts1JBL1Jsd3r6VBWhgnpdPxCTe1MFjrq'
     const pk = account.pubkey;
     const address = pk.toBase58()
     const parsedData = account.account.data.parsed.info || null//.delegation.stake
@@ -55,7 +55,7 @@ export class NativeStakeService {
     const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : validator.image
 
     const stakeAccountInfo: Stake = {
-      link: this._utils.explorer + '/account/' + address ,
+      link: this._utils.explorer + '/account/' + address,
       type: 'native',
       symbol: 'SOL',
       lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
@@ -81,19 +81,19 @@ export class NativeStakeService {
 
   public async getOwnerNativeStake(walletAddress: string): Promise<Stake[]> {
     // try {
-      const validators: Validator[] = await this._shs.getValidatorsList()
-      const stakeAccounts = await this._shs.getStakeAccountsByOwner(walletAddress);
-      const stakeAccountsPk = stakeAccounts.map(acc => acc.pubkey)
-      const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk);
+    const validators: Validator[] = await this._shs.getValidatorsList()
+    const stakeAccounts = await this._shs.getStakeAccountsByOwner(walletAddress);
+    const stakeAccountsPk = stakeAccounts.map(acc => acc.pubkey)
+    const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk);
 
-      const extendStakeAccount = stakeAccounts.map(async (acc,i) => {
-        return await this._extendStakeAccount(acc, validators, infReward[i])
-      })
-      const extendStakeAccountRes = await Promise.all(extendStakeAccount);
-      // this.getInflationReward(extendStakeAccountRes)
-      
-      // this._stakeAccounts$.next(extendStakeAccountRes);
-      return extendStakeAccountRes
+    const extendStakeAccount = stakeAccounts.map(async (acc, i) => {
+      return await this._extendStakeAccount(acc, validators, infReward[i])
+    })
+    const extendStakeAccountRes = await Promise.all(extendStakeAccount);
+    // this.getInflationReward(extendStakeAccountRes)
+
+    // this._stakeAccounts$.next(extendStakeAccountRes);
+    return extendStakeAccountRes
     // } catch (error) {
     //   console.log(error);
     // }
@@ -106,7 +106,8 @@ export class NativeStakeService {
         stakePubkey: new PublicKey(stakeAccountAddress),
         authorizedPubkey: walletOwner.publicKey,
       });
-      return await this._txi.sendTx([deactivateTx], walletOwner.publicKey)
+      const record = { message: 'account', data: { action: 'deactivate account' } }
+      return await this._txi.sendTx([deactivateTx], walletOwner.publicKey, null, record)
 
     } catch (error) {
       console.log(error);
@@ -119,12 +120,11 @@ export class NativeStakeService {
     stakePubkey: PublicKey,
     walletOwnerPk: PublicKey,
     newAuthorizedPubkey: PublicKey,
-    authToTransfer: { stake: boolean, withdraw: boolean },
-    record?
+    authToTransfer: { stake: boolean, withdraw: boolean }
   ) {
     try {
       const transferAuthTx = [];
-      if (authToTransfer.stake){
+      if (authToTransfer.stake) {
         const authWithdraw: AuthorizeStakeParams = {
           stakePubkey,
           authorizedPubkey: walletOwnerPk,
@@ -133,7 +133,7 @@ export class NativeStakeService {
         }
         transferAuthTx.push(StakeProgram.authorize(authWithdraw))
       }
-      if(authToTransfer.withdraw){
+      if (authToTransfer.withdraw) {
         const authStake: AuthorizeStakeParams = {
           stakePubkey,
           authorizedPubkey: walletOwnerPk,
@@ -143,8 +143,8 @@ export class NativeStakeService {
         transferAuthTx.push(StakeProgram.authorize(authStake))
       }
 
-      console.log("instructions:", authToTransfer, "should transfer: ",transferAuthTx);
-      
+      const record = { message: 'account', data: { action: 'transfer account' } }
+
       return await this._txi.sendTx(transferAuthTx, walletOwnerPk, null, record)
     } catch (error) {
       console.log(error);
@@ -152,7 +152,7 @@ export class NativeStakeService {
     return null
   }
 
-  public async splitStakeAccounts(walletOwnerPk: PublicKey, targetStakePubKey: PublicKey, newStakeAccount: Keypair, lamports: number, record?) {
+  public async splitStakeAccounts(walletOwnerPk: PublicKey, targetStakePubKey: PublicKey, newStakeAccount: Keypair, lamports: number) {
     try {
 
       // const newStakeAccount = (await this.createStakeAccount(0,walletOwnerPk)).newStakeAccount
@@ -167,14 +167,14 @@ export class NativeStakeService {
           lamports
         });
 
-
+      const record = { message: 'account', data: { action: 'split account' } }
       return await this._txi.sendTx([splitAccount], walletOwnerPk, [newStakeAccount], record)
     } catch (error) {
       console.log(error);
     }
     return null
   }
-  public async mergeStakeAccounts(walletOwnerPk: PublicKey, targetStakePubkey: PublicKey, sourceStakePubKey: PublicKey[], record?) {
+  public async mergeStakeAccounts(walletOwnerPk: PublicKey, targetStakePubkey: PublicKey, sourceStakePubKey: PublicKey[]) {
 
     try {
       const mergeAccounts: Transaction[] = sourceStakePubKey.map(sourceAcc => {
@@ -184,7 +184,7 @@ export class NativeStakeService {
           stakePubkey: targetStakePubkey,
         });
       })
-
+      const record = { message: 'account', data: { action: 'merge accounts' } }
       return await this._txi.sendTx(mergeAccounts, walletOwnerPk, null, record)
     } catch (error) {
       console.log(error);
@@ -201,10 +201,8 @@ export class NativeStakeService {
       lamports: stakeAccount.accountLamport, // Withdraw the full balance at the time of the transaction
     });
     try {
-      //   const validTx = await this.prepTx(lamports, withdrawTx, walletOwnerPk)
-      //   if (validTx) {
-      return await this._txi.sendTx([withdrawTx], walletOwner.publicKey)
-      // }
+      const record = { message: 'account', data: { action: 'withdraw stake' } }
+      return await this._txi.sendTx([withdrawTx], walletOwner.publicKey, null, record)
     } catch (error) {
       console.error(error)
     }
@@ -260,7 +258,7 @@ export class NativeStakeService {
   public reStake(stakeAccount: Stake, walletOwner: WalletExtended) {
     try {
       const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, stakeAccount.validator.vote_identity, walletOwner)
-      const record = { message: `native reStake` }
+      const record = { message: 'account', data: { action:'reStake'  } }
 
       return this._txi.sendTx([delegateTX], walletOwner.publicKey, null, record)
 
