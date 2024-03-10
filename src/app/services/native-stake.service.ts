@@ -55,6 +55,7 @@ export class NativeStakeService {
     const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : validator.image
 
     const stakeAccountInfo: Stake = {
+      link: this._utils.explorer + '/account/' + address ,
       type: 'native',
       symbol: 'SOL',
       lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),

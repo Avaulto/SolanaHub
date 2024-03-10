@@ -10,7 +10,7 @@ import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
-import {tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder} from './table-options-helper'
+import { tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder } from './table-options-helper'
 import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 
@@ -60,7 +60,12 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('holdingsTpl', { static: true }) holdingsTpl: TemplateRef<any> | any;
   //@ts-ignore
   public solPrice = this._jupStore.solPrice;
-  tableMenuOptions: string[] = ['Tokens', 'NFTs', 'Staking', 'DeFi'];
+  tableMenuOptions: string[] = [
+    'Tokens',
+    //  'NFTs', 
+    'Staking',
+    'DeFi'
+  ];
 
 
   constructor(
@@ -81,17 +86,17 @@ export class AssetsTableComponent implements OnInit {
     // if(tableType === 'tokens'){
     //   return tokenDummyPlaceholder
     // }
-    console.log(tableType, this._portfolioService[tableType]());
-    if (tableType === 'nfts') {
-      return nftDummyPlaceholder
+    // console.log(tableType, this._portfolioService[tableType]());
+    // if (tableType === 'nfts') {
+    //   return nftDummyPlaceholder
 
-    }
-    
-    return  this._portfolioService[tableType]()
+    // }
+
+    return this._portfolioService[tableType]()
   })
 
   private _columnsOptions = {}
-  public _groupNftCollections(nfts){
+  public _groupNftCollections(nfts) {
 
   }
   async ngOnInit() {
@@ -100,33 +105,33 @@ export class AssetsTableComponent implements OnInit {
       tokens: [
         { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '40%' },
         { key: 'balance', title: 'Balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'price', title: 'Price',cellTemplate:this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'value', title: 'Value',cellTemplate:this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
-        { key: 'last-seven-days', title: 'Last 7 Days',cellTemplate:this.priceChart, width: '15%', cssClass: { name: 'ion-hide-md-down', includeHeader: true } }
+        { key: 'price', title: 'Price', cellTemplate: this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'value', title: 'Value', cellTemplate: this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
+        { key: 'last-seven-days', title: 'Last 7 Days', cellTemplate: this.priceChart, width: '15%', cssClass: { name: 'ion-hide-md-down', includeHeader: true } }
       ],
-      staking:  [
+      staking: [
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
-        { key: 'apy', title: 'APY', width: '7%',cellTemplate: this.validatorApy,  cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl,width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'apy', title: 'APY', width: '7%', cellTemplate: this.validatorApy, cssClass: { name: 'ion-text-center', includeHeader: false } },
+        { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'status', title: 'Account Status',cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
-        { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl}
+        { key: 'status', title: 'Account Status', cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
+        { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl }
       ],
-      nfts: [
-        { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
-        { key: 'nfts', title: 'NFT', cellTemplate: this.nftListTpl, cssClass: { name: 'ion-text-left', includeHeader: true }, width: '30%' },
-        { key: 'floor', title: 'Floor(SOL)', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'offers', title: 'Offers', cellTemplate: this.nftOffersTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'totalValue', title: 'Total Value', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } }
-      ],
+      // nfts: [
+      //   { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
+      //   { key: 'nfts', title: 'NFT', cellTemplate: this.nftListTpl, cssClass: { name: 'ion-text-left', includeHeader: true }, width: '30%' },
+      //   { key: 'floor', title: 'Floor(SOL)', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'offers', title: 'Offers', cellTemplate: this.nftOffersTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'totalValue', title: 'Total Value', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } }
+      // ],
       defi: [
         { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '40%' },
-        { key: 'type', title: 'Type',cellTemplate: this.typeDefiTpl, width: '10%' },
-        { key: 'platform', title: 'Platform',cellTemplate: this.platformIconTpl, width: '5%' },
-        { key: 'balance', title: 'Balance', cellTemplate:this.holdingsTpl, width: '10%' },
-        { key: 'value', title: 'Value', cellTemplate:this.simpleUsdValue, width: '10%' },
-        { key: 'website', title: 'Website', width: '5%',cellTemplate:this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
+        { key: 'type', title: 'Type', cellTemplate: this.typeDefiTpl, width: '10%' },
+        { key: 'platform', title: 'Platform', cellTemplate: this.platformIconTpl, width: '5%' },
+        { key: 'balance', title: 'Balance', cellTemplate: this.holdingsTpl, width: '10%' },
+        { key: 'value', title: 'Value', cellTemplate: this.simpleUsdValue, width: '10%' },
+        { key: 'website', title: 'Website', width: '5%', cellTemplate: this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
       ]
 
     }
@@ -135,7 +140,7 @@ export class AssetsTableComponent implements OnInit {
 
   eventEmitted($event: { event: string; value: any }): void {
     const token: Token = $event.value.row
-    if(this.selectedTab().toLowerCase() === 'tokens'){
+    if (this.selectedTab().toLowerCase() === 'tokens') {
       if ($event.event === 'onClick') {
         this.openModal(token)
       }
@@ -153,41 +158,6 @@ export class AssetsTableComponent implements OnInit {
   }
 
 
-  public colorPicker(assetClass: string) {
-    let color = ''
-    
-    switch (assetClass) {
-      case 'Wallet':
-        color = '#341663'
-        break;
-      case 'LiquidityPool':
-        color = '#560BAD'
-        break;
-      case 'Staked':
-        color = '#7209B7'
-        break;
-      case 'Lending':
-        color = '#B5179E'
-        break;
-      case 'Rewards':
-        color = '#F72585'
-        break;
-      case 'Deposit':
-        color = '#E9CDC2'
-        break;
-      case 'Farming':
-        color = '#341663'
-        break;
-      case 'Vesting':
-        color = '#b58ef2'
-        break;
-      case 'Leverage':
-        color = '#8ea3f2'
-        break;
-      default:
-        break;
-    }
-    return color
-  }
-  
+
+
 }

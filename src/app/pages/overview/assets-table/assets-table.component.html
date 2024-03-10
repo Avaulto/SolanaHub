@@ -1,6 +1,11 @@
-<app-mft [tableId]="'assets'" [label]="'your assets'"
-  [desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions"
-  (onTabSelected)="selectedTab.set($event)" (onRowClicked)="eventEmitted($event)" [tableColumns]="columns"
+<app-mft 
+[tableId]="'assets'" 
+[label]="'your assets'"
+  [desc]="'Obtain a comprehensive and detailed overview of your assets'" 
+  [tableMenuOptions]="tableMenuOptions"
+  (onTabSelected)="selectedTab.set($event)" 
+  (onRowClicked)="eventEmitted($event)" 
+  [tableColumns]="columns"
   [tableData]="tableData">
 </app-mft>
 
