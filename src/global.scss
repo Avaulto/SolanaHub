@@ -43,8 +43,13 @@ input[type=number]::-webkit-outer-spin-button {
     background: var(--ion-color-primary);
     color: white;
 }
+ion-grid {
+    padding-block-start: 20px;
+    padding-block-end:66px ;
+    padding-inline: 3vw;
+    margin: 0;
+}
 
-ion-grid,
 ion-col {
     margin: 0;
     padding: 0;

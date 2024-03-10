@@ -1,27 +1,24 @@
-
 <ion-content [fullscreen]="true">
-  <ion-grid style="position: relative; padding: 2vw;">
+  <ion-grid style="position: relative;">
     <div id="head-bg"></div>
-
-
-<ion-row class="ion-justify-content-between">
-  <ion-col id="net-worth"  class="gap data-set" size="12" sizeXl="4.3">
-    <app-net-worth/>
-  </ion-col>
-  <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
-    <app-portfolio-breakdown/>
-  </ion-col>
-</ion-row>
-<ion-row class="ion-margin-vertical" >
-  <ion-col   class=" data-set" size="12">
-    <app-assets-table/>
-  </ion-col>
-</ion-row>
-<!-- <ion-row style="margin-top:20px">
+    <ion-row class="ion-justify-content-between">
+      <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
+        <app-net-worth />
+      </ion-col>
+      <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
+        <app-portfolio-breakdown />
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-vertical">
+      <ion-col class=" data-set" size="12">
+        <app-assets-table />
+      </ion-col>
+    </ion-row>
+    <!-- <ion-row style="margin-top:20px">
   <ion-col class=" data-set" size="12">
     
     <app-transactions-history-table [tableData]="walletHistory"/>
   </ion-col>
 </ion-row> -->
-</ion-grid>
+  </ion-grid>
 </ion-content>

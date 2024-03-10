@@ -53,14 +53,16 @@ export class MftComponent implements OnInit {
     paginationEnabled: true,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
-    isLoading: true,
+    // isLoading: true,
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
     if(this._platform.width() < 992){
       this.configuration.horizontalScroll = true;
     }
-    // this.configuration.isLoading = true;
+    if(this.tableData() === null){
+      this.configuration.isLoading = true;
+    }
   }
   previousPage() {
   
