@@ -12,8 +12,12 @@
     <span>{{routeInfo.otherAmountThreshold | number: '1.4'}}</span>
   </div>
   <div class="route-calc">
-    <div>Solana transaction fee</div>
-    <span>0.000005 SOL</span>
+    <div>transaction fee</div>
+    <span>{{0.000005 | number: '1.6'}} SOL</span>
+  </div>
+  <div class="route-calc">
+    <div>priority fees</div>
+    <span>{{fees | number: '1.6'}} SOL</span>
   </div>
   <div class="route-calc">
     <div>assets contract</div>

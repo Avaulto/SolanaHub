@@ -77,6 +77,11 @@
         align-items: center;
         display: flex;
         text-transform: capitalize;
+
+        div{
+            display: flex;
+            flex-wrap: wrap;
+        }
         /* 190.909% */
         ion-button {
             margin-inline-end: 4px;

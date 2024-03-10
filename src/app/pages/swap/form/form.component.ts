@@ -51,7 +51,8 @@ export class FormComponent implements OnInit {
     "symbol": "SOL",
     "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
   }
-  public waitForBestRoute = signal(false);
+  public loading = signal(false);
+
   public jupTokens = signal(null as JupToken[])
   public slippage = signal(0.5);
   public getInTokenPrice = signal(null);
@@ -106,7 +107,7 @@ export class FormComponent implements OnInit {
     this.bestRoute.set(null)
     // const inputAmount = values.inputAmount
     if (this.tokenSwapForm.valid) {
-      this.waitForBestRoute.set(true)
+      this.loading.set(true)
       const route = await this._jupStore.computeBestRoute(inputAmount, inputToken, outputToken, slippage)
       const outAmount = (Number(route.outAmount) / 10 ** outputToken.decimals).toString()
       const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** outputToken.decimals).toString()
@@ -122,13 +123,17 @@ export class FormComponent implements OnInit {
       this.bestRoute.set(route)
       //  const minimumReceived = Number(route.outAmount) / 10 **  values.outputToken.decimals
       //  this.toReceive.set(minimumReceived)
-      this.waitForBestRoute.set(false)
+      this.loading.set(false)
       // console.log(this.bestRoute());
 
     }
   }
 
+  public swapState = signal('Swap')
   public async submitSwap(): Promise<void> {
+    this.loading.set(true)
+    this.swapState.set('preparing transaction');
+    
     const route = { ...this.bestRoute() }
     const outAmount = (Number(route.outAmount) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toFixed(0).toString()
     const minOutAmount = (Number(route.otherAmountThreshold) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toFixed(0).toString()
@@ -138,6 +143,9 @@ export class FormComponent implements OnInit {
     route.otherAmountThreshold = minOutAmount
 
     await this._jupStore.swapTx(route);
+    this.swapState.set('swap');
+    this.loading.set(false)
+    
   }
 
 

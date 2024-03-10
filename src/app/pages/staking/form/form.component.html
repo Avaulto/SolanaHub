@@ -30,13 +30,13 @@
         }
       </custom-validator>
     }
-    <ion-button id="stake-btn" (click)="submitNewStake()" class="ion-text-capitalize" [disabled]="stakeForm.invalid" expand="block">
+    <ion-button id="stake-btn" (click)="submitNewStake()" class="ion-text-capitalize" [disabled]="loading() || stakeForm.invalid" expand="block">
      @if (!stakeForm.controls['amount'].value) {
        enter stake amount
      } @else if ((!stakeForm.controls['validatorVoteIdentity'].value && stakePath() === 'native') || (!stakeForm.controls['pool']?.value  && stakePath() === 'liquid')) {
       select {{stakePath() === 'native' ? 'validator' : 'pool'}}
      } @else {
-      stake
+      {{stakeState()}}
      }
     </ion-button>
   </form>

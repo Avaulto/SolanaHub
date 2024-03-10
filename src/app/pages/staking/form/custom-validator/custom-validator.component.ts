@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import {
   IonToggle
 } from '@ionic/angular/standalone';
@@ -11,11 +11,15 @@ import { SelectValidatorComponent } from '../select-validator/select-validator.c
   standalone: true,
   imports: [IonToggle,SelectValidatorComponent]
 })
-export class CustomValidatorComponent  implements OnInit {
+export class CustomValidatorComponent  implements AfterViewInit {
+  @ViewChild('customValidator') customValidator:IonToggle
 @Output() onShowCustomValidator = new EventEmitter()
   constructor() { }
 
-  ngOnInit() {}
+  ngAfterViewInit() {
+    this.customValidator.checked = true
+    this.setCustomValidator({detail: {checked: true}})
+  }
   public setCustomValidator(ev){
     this.onShowCustomValidator.emit(ev.detail.checked)
   }

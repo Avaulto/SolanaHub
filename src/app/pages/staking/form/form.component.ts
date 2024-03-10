@@ -59,6 +59,7 @@ export class FormComponent implements OnInit {
   @Input() stakePools: WritableSignal<StakePool[]>
   public stakeAPY = signal(null);
   public stakePath = signal('native');
+  public loading = signal(false)
   public showCustomValidator: any = false;
   public stakeForm: FormGroup;
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
@@ -136,12 +137,17 @@ export class FormComponent implements OnInit {
   //   const sol = new BN(amount * LAMPORTS_PER_SOL);
   //   return await this._stakePoolStore.stakeSOL(poolName.toLowerCase(), sol, validatorVoteAccount)
   // }
+  public stakeState = signal('stake');
   public async submitNewStake(): Promise<void> {
+    this.loading.set(true)
+    this.stakeState.set('preparing transaction');
     let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
     const lamportsToDelegate = amount * LAMPORTS_PER_SOL
     const walletOwner = this._shs.getCurrentWallet();
     const stakeReferer = this._localStorage.getData('refWallet')
-
+    console.log(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity);
+    try {
+      
     if (stakingPath === 'native') {
 
       const stake = await this._nss.stake(lamportsToDelegate, walletOwner, validatorVoteIdentity, lockupDuration);
@@ -155,6 +161,8 @@ export class FormComponent implements OnInit {
 
 
     } else if (stakingPath === 'liquid') {
+
+      
       const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
       // add stakers to loyalty league referee program
       if (liquidStake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
@@ -162,6 +170,11 @@ export class FormComponent implements OnInit {
         this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
       }
     }
+  } catch (error) {
+      console.error(error);
+  }
+    this.loading.set(false)
+    this.stakeState.set('stake');
   }
   setValidator(validator: Validator) {
     this.stakeForm.controls['validatorVoteIdentity'].setValue(validator.vote_identity);

@@ -15,7 +15,7 @@
     [jupTokens]="jupTokens" 
     [outValue]="bestRoute()?.outAmount" 
     [readonly]="true"
-    [waitForBestRoute]="waitForBestRoute"
+    [waitForBestRoute]="loading"
     />
 
     @if(bestRoute()){
@@ -27,15 +27,18 @@
           </div>
           <ion-img src="assets/images/route-icon.svg"/>
         </ion-button>
-        <span style="margin-inline-end: 3px;color: rgba(0, 0, 0, 0.25)">using </span>
-        @for (lp of bestRoute().routePlan; track $index) {
-          <span> {{lp.swapInfo.label}}  @if ($index +1 < bestRoute().routePlan.length) {,}</span>
-          
-        }
+        <div>
+
+          <span style="margin-inline-end: 3px;color: rgba(0, 0, 0, 0.25)">using </span>
+          @for (lp of bestRoute().routePlan; track $index) {
+            <span> {{lp.swapInfo.label}}  @if ($index +1 < bestRoute().routePlan.length) {,}</span>
+            
+          }
+        </div>
       </div>
     }
-    <ion-button id="swap-button" (click)="submitSwap()" [disabled]="tokenSwapForm.invalid || !bestRoute()">
-      Swap
+    <ion-button id="swap-button" (click)="submitSwap()" [disabled]="loading() || tokenSwapForm.invalid || !bestRoute()">
+      {{swapState()}}
     </ion-button>
   </div>
 </form>

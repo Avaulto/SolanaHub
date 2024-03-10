@@ -7,7 +7,6 @@ import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
-import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,16 +20,17 @@ export class TxInterceptorService {
     private _util: UtilService,
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
-    if (priorityFee > 5000) {
-      const units = Number(priorityFee);
-      const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-        units
-      });
-
+    const PRIORITY_RATE = priorityFee;
+    if (PRIORITY_RATE > 100000) {
+      // const units = Number(PRIORITY_RATE / 100);
+      // const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+      //   units 
+      // });
+      
       const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 1
+        microLamports: PRIORITY_RATE
       });
-      return [modifyComputeUnits, addPriorityFee]
+      return [ addPriorityFee]
     }
     return null
   }
@@ -42,7 +42,7 @@ export class TxInterceptorService {
     const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
     if (priorityFeeInst?.length > 0) transaction.add(...priorityFeeInst)
     let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
-    // let signedTx = await firstValueFrom(this._shs.getCurrentWallet().signTransaction(transaction)) as Transaction;
+
     if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
 
     //LMT: check null signatures
@@ -65,16 +65,12 @@ export class TxInterceptorService {
     const config: BlockheightBasedTransactionConfirmationStrategy = {
       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
     }
-    console.log(url);
-
     await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
     const txCompleted: toastData = {
       message: 'Transaction Completed',
       segmentClass: "toastInfo"
     }
     if (record) {
-      console.log(record);
-
       va.track(record.message, record.data)
     }
     this._toasterService.msg.next(txCompleted)
