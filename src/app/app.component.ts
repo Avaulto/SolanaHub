@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
@@ -20,7 +20,8 @@ import { PublicKey } from '@solana/web3.js';
 import { AnimatedIconComponent } from './shared/components/animated-icon/animated-icon.component';
 import { SettingsComponent } from './shared/layouts/settings/settings.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
-
+import { inject } from '@vercel/analytics';
+inject({mode: "auto"});
 
 
 @Component({

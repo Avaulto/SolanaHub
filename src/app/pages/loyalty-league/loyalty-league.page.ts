@@ -59,7 +59,6 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),
     this._utilService.isNotNullOrUndefined,
     map(([wallet, lllb, prizePool]) => {
-      console.log(wallet, lllb, prizePool);
 
       if (wallet) {
 
@@ -70,7 +69,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
           //@ts-ignore
   
           
-          const airdrop = this._utilService.formatBigNumbers(prizePool.rebates * loyalMember?.prizePoolShare)
+          const airdrop = prizePool.rebates * loyalMember?.prizePoolShare
 
           const pointsBreakDown = loyalMember.pointsBreakDown
           const loyalMemberRes = {
