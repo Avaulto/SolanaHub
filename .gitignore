@@ -39,6 +39,7 @@ yarn-error.log
 .project
 .classpath
 .c9/
+.env
 *.launch
 .settings/
 *.sublime-project
