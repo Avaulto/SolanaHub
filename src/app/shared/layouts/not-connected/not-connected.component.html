@@ -2,23 +2,25 @@
   <page-header
   title="Welcome to SolanaHub"
   description="At SolanaHub you can effortlessly view and manage all your assets, take part in staking, explore Open DeFi Positions, handle your NFTs, oversee your DAOs, enjoy an enhanced environment, and stay updated with Solana's latest and greatest opportunities."/>
+<ion-grid>
 
-    <div id="container">
-      <div id="not-connected-box">
-
-        <div id="img-wrapper">
-          <ion-img src="/assets/images/bg-wallet-no-connected.svg"/>
-        </div>
-        <ion-label>
-          Connect Wallet
-        </ion-label>
-        <ion-text>
-          Please connect your Solana wallet to use SolanaHub
-        </ion-text>
-        <div id="btn-wrapper">
-          <app-wallet-connect/>
-        </div>
+  <div id="container">
+    <div id="not-connected-box">
+      
+      <div id="img-wrapper">
+        <ion-img src="/assets/images/bg-wallet-no-connected.svg"/>
+      </div>
+      <ion-label>
+        Connect Wallet
+      </ion-label>
+      <ion-text>
+        Please connect your Solana wallet to use SolanaHub
+      </ion-text>
+      <div id="btn-wrapper">
+        <app-wallet-connect/>
       </div>
     </div>
-
+  </div>
+  
+</ion-grid>
 </div>

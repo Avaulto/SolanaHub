@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
-import { IonImg, IonRow, IonCol, IonLabel, IonText } from '@ionic/angular/standalone';
+import { IonImg, IonRow, IonCol, IonLabel, IonText, IonGrid } from '@ionic/angular/standalone';
 import { WalletModule } from '../wallet/wallet.module';
 
 @Component({
@@ -9,6 +9,7 @@ import { WalletModule } from '../wallet/wallet.module';
   styleUrls: ['./not-connected.component.scss'],
   standalone: true,
   imports: [
+    IonGrid, 
     IonText, 
     WalletModule,
     IonLabel, 
