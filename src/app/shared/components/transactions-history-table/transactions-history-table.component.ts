@@ -36,6 +36,5 @@ export class TransactionsHistoryTableComponent implements OnInit {
   }
   public columns = signal([] as Columns[])
   @Input() tableData = signal([])
-  t = computed(() => console.log(this.tableData()))
   eventEmitted(ev: any) { }
 }

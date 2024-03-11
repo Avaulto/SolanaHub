@@ -1,24 +1,11 @@
-<div class="table-info">
-  <div>
-
-    <div class="table-title">
-      {{label}}
-    </div>
-    <div class="table-sub">
-      {{desc}}
-    </div>
-  </div>
-</div>
-
-
+<table-head [label]="label" [desc]="desc"></table-head>
 
 <ion-row class="ion-align-items-center ">
 
   @if(tableMenuOptions.length){
     <div class="ion-margin-start ion-hide-lg-down"></div>
   <ion-col >
-    <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)">
-    </app-table-menu>
+    <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"/>
   </ion-col>
   }
   @if(searchBoxEnable){
@@ -32,8 +19,6 @@
 
 
 
-
-@if(mftOnlyHeader === false){
 
 
 <div id="table-wrapper">
@@ -58,8 +43,6 @@
   </div>
   }
 </div>
-
-}
 
 
 <ng-template #loadingTemplate>

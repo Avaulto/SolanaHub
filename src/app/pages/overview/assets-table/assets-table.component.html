@@ -141,7 +141,7 @@
 
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-center">
-    {{row.balance | number: '1.2'}} {{row.symbol}}
+    {{utils.formatBigNumbers(row.balance)}} {{row.symbol}}
   </div>
 </ng-template>
 

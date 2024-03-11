@@ -41,10 +41,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/liquidity-pools/liquidity-pools.page').then( m => m.LiquidityPoolsPage)
   },
   {
-    path: 'vaults',
-    loadComponent: () => import('./pages/vaults/vaults.page').then( m => m.VaultsPage)
+    path: 'dao',
+    loadComponent: () => import('./pages/dao/dao.page').then( m => m.DaoPage)
   },
 
+  {
+    path:"**",
+    redirectTo:'overview'
+  },
 
 
 ];

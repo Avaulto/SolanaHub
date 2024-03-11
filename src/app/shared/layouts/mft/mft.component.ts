@@ -18,7 +18,6 @@ import { Platform } from '@ionic/angular';
 })
 // multi functional table
 export class MftComponent implements OnInit {
-  @Input() mftOnlyHeader = false 
   @Input() label:string;
   @Input() desc:string;
   @Input() tableId: string;
@@ -60,9 +59,7 @@ export class MftComponent implements OnInit {
     if(this._platform.width() < 992){
       this.configuration.horizontalScroll = true;
     }
-    if(this.tableData() === null){
-      this.configuration.isLoading = true;
-    }
+
   }
   previousPage() {
   
@@ -77,9 +74,10 @@ export class MftComponent implements OnInit {
 
   }
   nextPage() {
+    const itemsPerPage = this.tableRows
     let lastPage = this.table.apiEvent({
       type: API.getPaginationTotalItems,
-    });
+    }) / itemsPerPage;
     const currentPage = this.table.apiEvent({
       type: API.getPaginationCurrentPage,
     });
@@ -95,10 +93,12 @@ export class MftComponent implements OnInit {
   }
   constructor(private _platform: Platform) { 
     effect(() =>{
-      // console.log('mft loaded', this.tableData(), this.tableRows);
+      console.log('mft loaded', this.tableData(), this.table);
       if(this.tableData()){
         
         this.configuration.isLoading = false;
+      } else{
+        this.configuration.isLoading = true;
       }
       if(this.tableData && this.tableData()?.length < this.tableRows){
         this.configuration.paginationEnabled = false

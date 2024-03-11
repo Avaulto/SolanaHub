@@ -9,6 +9,7 @@ import { NFT } from 'src/app/models';
 import { CommonModule, NgClass } from '@angular/common';
 import { FeatureToastComponent } from './feature-toast/feature-toast.component';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { TableHeadComponent } from 'src/app/shared/layouts/mft/table-head/table-head.component';
 
 @Component({
   selector: 'app-collectibles',
@@ -22,6 +23,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ]),
   ],
   imports: [
+    TableHeadComponent,
     NgClass,
     IonGrid, 
     IonButton,
@@ -40,6 +42,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
   ]
 })
 export class CollectiblesPage implements OnInit {
+  tableData = signal([])
   tableMenuOptions: string[] = ['all collections', 'listed'];
   showToast: boolean = false
   @ViewChildren('checkNfts') checkNfts: QueryList<IonCheckbox>

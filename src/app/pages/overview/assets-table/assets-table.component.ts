@@ -72,6 +72,7 @@ export class AssetsTableComponent implements OnInit {
     private _jupStore: JupStoreService,
     private _portfolioService: PortfolioService,
     private _modalCtrl: ModalController,
+    public utils:UtilService
   ) {
     addIcons({ arrowBack, arrowForward });
   }
@@ -107,7 +108,7 @@ export class AssetsTableComponent implements OnInit {
         { key: 'balance', title: 'Balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price', cellTemplate: this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value', cellTemplate: this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },
-        { key: 'last-seven-days', title: 'Last 7 Days', cellTemplate: this.priceChart, width: '15%', cssClass: { name: 'ion-hide-md-down', includeHeader: true } }
+        { key: 'last-seven-days', title: 'Last 7 Days', cellTemplate: this.priceChart, width: '15%', cssClass: { name: '', includeHeader: true } }
       ],
       staking: [
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
