@@ -17,14 +17,8 @@ import { loyalMember } from 'src/app/models';
   templateUrl: './wallet-connect.component.html',
   styleUrls: ['./wallet-connect.component.scss'],
 })
-export class WalletConnectComponent implements OnInit {
+export class WalletConnectComponent  {
   showSkeleton = true
-
-  loadImg(ev) {
-
-  }
-
-
   constructor(
     private _utilsService: UtilService,
     private _walletStore: WalletStore,
@@ -87,9 +81,6 @@ export class WalletConnectComponent implements OnInit {
       return this._utilsService.addrUtil(publicKey.toBase58()).addrShort
     })
   )
-
-  ngOnInit() {
-  }
 
   public async showWalletAdapters() {
     const popover = await this.popoverController.create({
