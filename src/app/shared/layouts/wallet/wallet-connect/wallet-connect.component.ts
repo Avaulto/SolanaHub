@@ -20,7 +20,7 @@ import { loyalMember } from 'src/app/models';
 export class WalletConnectComponent implements OnInit {
   showSkeleton = true
 
-  loadImg(ev){
+  loadImg(ev) {
 
   }
 
@@ -30,18 +30,18 @@ export class WalletConnectComponent implements OnInit {
     private _walletStore: WalletStore,
     private _toasterService: ToasterService,
     public popoverController: PopoverController,
-    private _shs:SolanaHelpersService,
+    private _shs: SolanaHelpersService,
     private _loyaltyLeagueService: LoyaltyLeagueService,
-    private _portfolioService:PortfolioService
+    private _portfolioService: PortfolioService
   ) {
     addIcons({ chevronDownOutline });
     effect(() => {
-    //@ts-ignore
-    if(this._portfolioService.nfts()){
-      
-      // get the first nft that has img
-      this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri).image_uri
-    }
+      //@ts-ignore
+      if (this._portfolioService.nfts()) {
+
+        // get the first nft that has img
+        this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri).image_uri
+      }
     })
   }
   public profilePic;
@@ -51,29 +51,29 @@ export class WalletConnectComponent implements OnInit {
     combineLatestWith(this._loyaltyLeagueService.llb$),
     map(([wallet, lllb]) => {
 
-      
-        const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-        if(loyalMember){
-          return loyalMember
-        }
-        console.log(loyalMember);
-        
 
-          return {} as loyalMember
-        
-  })) 
+      const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+      if (loyalMember) {
+        return loyalMember
+      }
+      console.log(loyalMember);
 
-  
-  readonly wallets$ =this._walletStore.wallets$.pipe(shareReplay(1));
-  readonly isReady$ =  this._walletStore.connected$.pipe(switchMap(async isReady => {
+
+      return {} as loyalMember
+
+    }))
+
+
+  readonly wallets$ = this._walletStore.wallets$.pipe(shareReplay(1));
+  readonly isReady$ = this._walletStore.connected$.pipe(switchMap(async isReady => {
     if (isReady) {
-  
-      // trackEvent('wallet connected')
+
+      va.track('wallet connected');
       this._toasterService.msg.next({
-          message: `Wallet connected`,
-          segmentClass: "toastInfo",
-          duration: 2000
-        })
+        message: `Wallet connected`,
+        segmentClass: "toastInfo",
+        duration: 2000
+      })
 
     }
     return isReady;
@@ -82,7 +82,7 @@ export class WalletConnectComponent implements OnInit {
     this._utilsService.isNotNull,
     this._utilsService.isNotUndefined,
     distinctUntilChanged(),
-    map(  publicKey => {
+    map(publicKey => {
 
       return this._utilsService.addrUtil(publicKey.toBase58()).addrShort
     })
@@ -103,14 +103,14 @@ export class WalletConnectComponent implements OnInit {
     const walletAddress = this._shs.getCurrentWallet().publicKey.toBase58()
     const popover = await this.popoverController.create({
       component: WalletConnectedDropdownComponent,
-      componentProps:{walletAddress},
+      componentProps: { walletAddress },
       event: e,
       alignment: 'start',
       side: 'bottom',
       cssClass: 'wallet-connect-dropdown',
       showBackdrop: false,
       mode: "md",
-      size:'cover'
+      size: 'cover'
     });
     await popover.present();
   }
