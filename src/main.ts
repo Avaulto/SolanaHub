@@ -14,7 +14,7 @@ import {
   provideAnimations,
 } from '@angular/platform-browser/animations';
 import { inject } from '@vercel/analytics';
-inject({mode: "auto"});
+inject({mode: "production"});
 
 if (environment.production) {
   enableProdMode();

@@ -151,7 +151,7 @@
     <div class="ion-text-center" [ngStyle]="{
       'color': asset?.condition === 'credit' ? '#17B26A' : asset?.condition === 'debt' ? '#F04438' : '' 
       }">
-      {{asset.balance | number: '1.2'}} {{asset.symbol}}
+      {{utils.formatBigNumbers(asset.balance)}} {{asset.symbol}}
     </div>
   }
 </ng-template>
