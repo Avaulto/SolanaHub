@@ -5,23 +5,11 @@
   <ion-grid>
     <div  class="data-set ion-margin-bottom">
       <table-head label="Manage your NFTs" desc="Unlock exclusive access to your NFTs with premium features from 1 spot"></table-head>
-
-        <!-- <app-mft 
-        [tableMenuOptions]="tableMenuOptions" 
-        [searchBoxEnable]="true" 
-        [mftOnlyHeader]="true"
-        [tableData]="tableData"
-        (onSearch)="searchTerm.set($event)"
-          [tableId]="'collectibles'" [label]="'Manage your NFTs'"
-          desc="Manage and Analyze Wallet Transactions for Your Crypto Portfolio" /> -->
     </div>
     <div id="nft-gallery">
 
       @for (nft of filterNft(); track $index) {
-      <!-- <ion-checkbox mode="md" class="wrapping-list" value="withdraw"> -->
-
-  
-        <nft-item 
+          <nft-item 
         
         [class.checked]="checkNfts.checked" 
         (click)="selectNft(checkNfts,$event)" 
