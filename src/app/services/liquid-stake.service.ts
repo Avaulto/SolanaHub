@@ -41,7 +41,7 @@ export class LiquidStakeService {
       const poolIncludes = ['jito', 'marinade', 'solblaze']
       stakePools = result.filter(s => poolIncludes.includes(s.poolName));
       console.log(stakePools);
-      
+
       this.stakePools = stakePools;
     }
     catch (error) {
@@ -69,7 +69,7 @@ export class LiquidStakeService {
   public async stake(pool: StakePool, lamports: number, walletOwner: WalletExtended, validatorVoteAccount?: string) {
 
     const record = { message: 'liquid staking', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
-    
+
     const lamportsBN = new BN(lamports);
     if (pool.poolName.toLowerCase() === 'marinade') {
       if (!this.marinadeSDK) {
@@ -86,13 +86,13 @@ export class LiquidStakeService {
       const { transaction } = await this.marinadeSDK.deposit(lamports);
       let ixs: any = [transaction]
       const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
-      if(directToValidatorVoteAddress){
+      if (directToValidatorVoteAddress) {
         const directStakeIx = await this.marinadeSDK.createDirectedStakeVoteIx(directToValidatorVoteAddress)
         ixs.push(directStakeIx)
       }
 
 
-      
+
       return await this._txi.sendTx([...ixs], walletOwner.publicKey, null, record)
     } catch (error) {
       console.log(error);
@@ -152,13 +152,15 @@ export class LiquidStakeService {
   }
 
   async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
-    const {publicKey} = this._shs.getCurrentWallet()
+    const { publicKey } = this._shs.getCurrentWallet()
     // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
-    const record = { message: 'liquid staking', data: { 
-      pool: pool.poolName,
-       amount: stakeAccount.balance,
-     validatorVoteAccount: stakeAccount.validator.vote_identity 
-    } }
+    const record = {
+      message: 'liquid staking', data: {
+        pool: pool.poolName,
+        amount: stakeAccount.balance,
+        validatorVoteAccount: stakeAccount.validator.vote_identity
+      }
+    }
     const validatorVoteAccount = new PublicKey(stakeAccount.validator.vote_identity);
     const stakeAccountPK = new PublicKey(stakeAccount.address);
 
@@ -167,11 +169,9 @@ export class LiquidStakeService {
         if (!this.marinadeSDK) {
           this._initMarinade(publicKey)
         }
-        
         const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
-       
         const txIns: Transaction = depositAccount.transaction
-        await this._txi.sendTx([txIns], publicKey,null,record);
+        await this._txi.sendTx([txIns], publicKey, null, record);
       } else {
 
         let ix = await depositStake(
@@ -183,21 +183,21 @@ export class LiquidStakeService {
         );
         let ixs: any = [ix]
 
-          const ix2 = this.stakeCLS(validatorVoteAccount.toBase58(), publicKey);
-          ixs.push(ix2)
+        const ix2 = this.stakeCLS(validatorVoteAccount.toBase58(), publicKey);
+        ixs.push(ix2)
 
-    
+
         const txId = await this._txi.sendTx(ixs, publicKey, ix.signers, record);
         if (validatorVoteAccount) {
           await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAccount}&txid=${txId}`);
         }
         return txId
-        
+
 
       }
     } catch (error) {
       console.error(error);
-      
+
       // const toasterMessage: toastData = {
       //   message: error.toString().substring(6),
       //   segmentClass: "merinadeErr"

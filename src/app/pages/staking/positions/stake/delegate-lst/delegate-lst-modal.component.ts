@@ -9,7 +9,7 @@ import {
   IonSkeletonText,
    IonText
  } from '@ionic/angular/standalone';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, PercentPipe } from '@angular/common';
 import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
@@ -25,18 +25,17 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
     DecimalPipe,
     IonChip,
     IonSkeletonText,
-     IonText
+     IonText,
+     PercentPipe
   ]
 })
 export class DelegateLSTModalComponent implements OnInit{
   @Input() stake:Stake;
   @Input() targetStake: Stake;
-  public stakePools: StakePool[]
   @Output() onSelectPool = new EventEmitter()
-  public util = inject(UtilService);
+  public stakePools: StakePool[]
   public selectedPool: StakePool;
 
-  public amount:number = 0
 constructor(private _lss: LiquidStakeService){
 
 }
@@ -52,7 +51,5 @@ constructor(private _lss: LiquidStakeService){
     this.selectedPool = pool;
     this.onSelectPool.emit({pool})
   }
-  public calcAccountNewValue(balance, amount){
-    return balance - amount
-  }
+
 }

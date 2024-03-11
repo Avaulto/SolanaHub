@@ -90,7 +90,7 @@ export class PortfolioService {
 
       
       const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
-      console.log('extends', extendNftData);
+
       this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
