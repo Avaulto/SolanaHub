@@ -133,7 +133,10 @@ export class FormComponent implements OnInit {
   public async submitSwap(): Promise<void> {
     this.loading.set(true)
     this.swapState.set('preparing transaction');
-    
+    setTimeout(() => {
+      this.loading.set(false)
+      this.swapState.set('Swap');
+    }, 5000);
     const route = { ...this.bestRoute() }
     const outAmount = (Number(route.outAmount) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toFixed(0).toString()
     const minOutAmount = (Number(route.otherAmountThreshold) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toFixed(0).toString()
