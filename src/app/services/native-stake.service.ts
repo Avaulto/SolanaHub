@@ -247,7 +247,7 @@ export class NativeStakeService {
       const delegateTX: Transaction = this._delegateStakeAccount(stakeAcc.publicKey.toBase58(), validatorVoteKey, walletOwner)
 
       const stakeIx: Transaction[] = [stakeAccIns, delegateTX]
-      const record = { message: `native stake`, data: { validator: validatorVoteKey, amount: Number(lamportsToDelegate.toString()) * LAMPORTS_PER_SOL } }
+      const record = { message: `native stake`, data: { validator: validatorVoteKey, amount: Number(lamportsToDelegate) / LAMPORTS_PER_SOL } }
       return this._txi.sendTx(stakeIx, walletOwner.publicKey, [stakeAcc], record)
 
     } catch (error) {
