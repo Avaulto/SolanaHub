@@ -64,7 +64,6 @@ export class SolanaHelpersService {
 
       return this._validatorsList;
     } else {
-      console.log('here');
 
       let validatorsList: Validator[] = [];
       try {

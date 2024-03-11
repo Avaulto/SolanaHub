@@ -93,7 +93,6 @@ export class MftComponent implements OnInit {
   }
   constructor(private _platform: Platform) { 
     effect(() =>{
-      console.log('mft loaded', this.tableData(), this.table);
       if(this.tableData()){
         
         this.configuration.isLoading = false;
