@@ -47,15 +47,10 @@ export class InputComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges) {
     this.readonly ? this.visibleValue.set(this.outValue) : this.visibleValue.set(this.amountControl.value);
-    // console.log(changes);
+
     this.getTokenPrice();
-    console.log(changes);
-    
-    // if(this.amountControl){
-    //   console.log(this.amountControl);
-      
-    //   this.valueChange(this.amountControl.value)
-    // }
+
+
     
   }
 

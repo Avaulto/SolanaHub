@@ -21,7 +21,7 @@ export class TxInterceptorService {
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
-    if (PRIORITY_RATE > 100000) {
+    if (PRIORITY_RATE > 100) {
       // const units = Number(PRIORITY_RATE / 100);
       // const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
       //   units 
@@ -65,7 +65,7 @@ export class TxInterceptorService {
     const config: BlockheightBasedTransactionConfirmationStrategy = {
       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
     }
-    await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
+    await this._shs.connection.confirmTransaction(config) 
     const txCompleted: toastData = {
       message: 'Transaction Completed',
       segmentClass: "toastInfo"
@@ -108,11 +108,11 @@ export class TxInterceptorService {
       }
       this._toasterService.msg.next(txSend)
       const config: BlockheightBasedTransactionConfirmationStrategy = {
-        signature: signatures[0], blockhash, lastValidBlockHeight//.lastValidBlockHeight
+        signature: signatures[0], blockhash, lastValidBlockHeight
       }
       console.log(url);
   
-      await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
+      await this._shs.connection.confirmTransaction(config) 
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"
@@ -187,7 +187,7 @@ export class TxInterceptorService {
       const config: BlockheightBasedTransactionConfirmationStrategy = {
         signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
       }
-      await this._shs.connection.confirmTransaction(config) //.confirmTransaction(txid, 'confirmed');
+      await this._shs.connection.confirmTransaction(config)
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"

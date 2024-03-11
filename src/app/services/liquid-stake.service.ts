@@ -40,8 +40,6 @@ export class LiquidStakeService {
       const result = await (await fetch(`${this.restAPI}/api/get-stake-pools`)).json();
       const poolIncludes = ['jito', 'marinade', 'solblaze']
       stakePools = result.filter(s => poolIncludes.includes(s.poolName));
-      console.log(stakePools);
-
       this.stakePools = stakePools;
     }
     catch (error) {

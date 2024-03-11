@@ -31,7 +31,6 @@ export class PortfolioService {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if(wallet){
         this._shs.connection.onAccountChange(wallet.publicKey, () =>{
-      
             let forceFetch = true;
             this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
         })

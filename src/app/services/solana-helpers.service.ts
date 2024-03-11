@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
+import { ConnectionStore, WalletStore, connectionConfigProviderFactory } from '@heavy-duty/wallet-adapter';
 import { AccountInfo, Connection, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, TransactionInstruction } from '@solana/web3.js';
 
 import {

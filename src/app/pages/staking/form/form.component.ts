@@ -141,11 +141,7 @@ export class FormComponent implements OnInit {
   public async submitNewStake(): Promise<void> {
     this.loading.set(true)
     this.stakeState.set('preparing transaction');
-    setTimeout(() => {
-      this.loading.set(false)
-      this.stakeState.set('stake');
-    },5000);
-  
+
     let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
     const lamportsToDelegate = amount * LAMPORTS_PER_SOL
     const walletOwner = this._shs.getCurrentWallet();

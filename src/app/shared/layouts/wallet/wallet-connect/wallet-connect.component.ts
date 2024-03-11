@@ -34,7 +34,7 @@ export class WalletConnectComponent  {
       if (this._portfolioService.nfts()) {
 
         // get the first nft that has img
-        this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri).image_uri
+        this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri)?.image_uri || 'assets/images/unknown.svg'
       }
     })
   }

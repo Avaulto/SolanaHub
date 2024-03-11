@@ -67,9 +67,6 @@ export class JupStoreService {
           })
         })
       ).json();
-
-      console.log(swapTransaction);
-      
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
       
