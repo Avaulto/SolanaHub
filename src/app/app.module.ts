@@ -23,12 +23,14 @@ import { OptionsPopupComponent } from './settings/options-popup/options-popup.co
 import { SettingsComponent } from './settings/settings.component';
 import { WalletModule } from './shared/wallet.module';
 import { LoyaltyModule } from './pages/stake-with-us/loyalty/loyalty.module';
+import { V2PopupComponent } from './v2-popup/v2-popup.component';
 
 inject({mode: "auto"});
 
 @NgModule({
     schemas: [ CUSTOM_ELEMENTS_SCHEMA],
     declarations: [
+        V2PopupComponent,
         AppComponent,
         LogoComponent,
         SideMenuPage,

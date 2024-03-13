@@ -1,0 +1,26 @@
+#v2-popup{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background: #f3f4f6;
+}
+ion-icon{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #9b3678;
+    font-size: 26px;
+    cursor: pointer;
+}
+p{
+    color: #804FB3;
+    padding: 14px;
+    font-size: 18px;
+    text-align: center;
+}
+ion-button {
+    --border-color: #CDD5DF;
+    --background: #9B3678;
+}

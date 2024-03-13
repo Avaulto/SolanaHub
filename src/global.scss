@@ -35,7 +35,12 @@
     padding: 0;
     font-size: 14px;
 }
-
+.v2-modal{
+    --width: 340px;
+    --border-radius: 12px;
+    --height: 240px;
+    --overflow: auto;
+}
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
