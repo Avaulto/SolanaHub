@@ -15,7 +15,7 @@
     </div>
 
     <div class="gap data-set stat">
-      <div class="key ion-text-capitalize">Stake Boost</div>
+      <div class="key ion-text-capitalize">Avg Stake Boost</div>
       @if(prizePool$ | async; as prizePool){
         <div class="value">{{prizePool.APR_boost  | percent:'1.0-2' }}</div>
       }@else{
