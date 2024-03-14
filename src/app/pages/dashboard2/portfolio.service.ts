@@ -41,7 +41,7 @@ export class PortfolioService {
   private async _getPlatformsData(): Promise<Platform[]> {
     let platformInfo = []
     try {
-      platformInfo = await (await fetch(`${this._utilsService.serverlessAPI}/api/platforms`)).json();
+      platformInfo = await (await fetch(`${this._utilsService.serverlessAPI}/api/portfolio/platforms`)).json();
     } catch (error) {
       console.warn(error)
     }
