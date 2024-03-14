@@ -48,7 +48,7 @@ export class PortfolioService {
     return platformInfo
   }
   public getPortfolio(walletAddress: string): Observable<PortfolioElementMultiple[]> {
-    return this._apiService.get(`${this._utilsService.serverlessAPI}/api/portfolio?address=${walletAddress}`).pipe(
+    return this._apiService.get(`${this._utilsService.serverlessAPI}/api/portfolio/portfolio?address=${walletAddress}`).pipe(
       switchMap(async (data: FetchersResult | any) => {
 
         // merge duplications
