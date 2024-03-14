@@ -107,7 +107,7 @@
 
           <ng-template #airdropTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="airdrop">
-              {{row.weeklyAirdrop}}
+              {{row.weeklyAirdrop | number: '1.3'}}
               <ion-img src="assets/images/sol.svg" />
               <!-- @if(row.liquidStake.msol) -->
             </div>

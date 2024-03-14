@@ -7,7 +7,7 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { addIcons } from 'ionicons';
 import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline, wallet } from 'ionicons/icons';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, DecimalPipe, NgStyle } from '@angular/common';
 import { PoolStatsComponent } from './pool-stats/pool-stats.component';
 import { MemberStatsComponent } from './member-stats/member-stats.component';
 import { PointsStatsComponent } from './points-stats/points-stats.component';
@@ -30,7 +30,8 @@ import { RouterLink } from '@angular/router';
     MemberStatsComponent,
     PointsStatsComponent,
     CopyTextDirective,
-    AsyncPipe
+    AsyncPipe,
+    DecimalPipe
   ]
 })
 export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
@@ -131,7 +132,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
         hubDomainHolder: staker.hubDomainHolder,
         totalPoints: this._utilService.formatBigNumbers(staker.loyaltyPoints),
-        weeklyAirdrop: this._utilService.formatBigNumbers(prizePool.rebates * staker?.prizePoolShare)
+        weeklyAirdrop: prizePool.rebates * staker?.prizePoolShare
       }
     })
     if(wallet){
