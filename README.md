@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-   <img width="200" src="https://github.com/Avaulto/SolanaHub/blob/main/src/assets/Logo-text.jpg?raw=true" alt="SolanaHub logo"/>
+   <img width="200" src="https://github.com/Avaulto/SolanaHub/blob/main/src/assets/Logo-text.png?raw=true" alt="SolanaHub logo"/>
   <br>
 </h1>
 
