@@ -5,7 +5,6 @@ import { addIcons } from 'ionicons';
 import { chevronDownSharp, options,refresh } from 'ionicons/icons';
 
 import {  IonButton, IonImg } from '@ionic/angular/standalone';
-import { TradingFeeModalComponent } from './trading-fee-modal/trading-fee-modal.component';
 import { SlippageModalComponent } from './slippage-modal/slippage-modal.component';
 
 
@@ -50,16 +49,5 @@ export class SettingComponent  implements OnInit {
       this.slippageControl.patchValue(data);
     }
   }
-  async openTradingFeeModal() {
-    const modal = await this._modalCtrl.create({
-      component: TradingFeeModalComponent,
-      mode: "ios",
-      // cssClass:'modal-style'
-    });
-    modal.present();
 
-    const { data, role } = await modal.onWillDismiss();
- 
-
-  }
 }
