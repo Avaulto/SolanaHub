@@ -25,7 +25,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/loyalty-league/loyalty-league.page').then( m => m.LoyaltyLeaguePage)
   },
   {
-    path: 'swap',
+    path: 'swap/:pair',
+
     loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage)
   },
   {

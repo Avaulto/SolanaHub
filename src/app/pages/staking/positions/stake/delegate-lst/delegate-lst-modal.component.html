@@ -28,7 +28,7 @@
           </div>
           <div class="pool-stats">
             <div>
-              <ion-chip>{{pool?.apy  | percent : '1.2-2'}}</ion-chip>
+              <ion-chip>{{pool?.apy || 0.07  | percent : '1.2-2'}}</ion-chip>
             </div>
      
             <div class="exchange-rate">

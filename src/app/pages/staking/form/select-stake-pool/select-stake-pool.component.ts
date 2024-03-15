@@ -1,5 +1,5 @@
 import { DecimalPipe, PercentPipe } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, WritableSignal, effect } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, WritableSignal, computed, effect } from '@angular/core';
 
 import {
   IonLabel,
@@ -41,6 +41,8 @@ export class SelectStakePoolComponent implements AfterViewInit {
   @ViewChild('popoverTpl', { static: true }) popoverTpl: TemplateRef<any> | any;
   @Output() onSelectPool = new EventEmitter();
   @Input() stakePools: WritableSignal<StakePool[]> = null
+  private _listedPools = ['hub', 'solblaze', 'marinade']
+  stakePoolFiltered = computed(() => this.stakePools()?.filter(p => this._listedPools.includes(p.poolName.toLowerCase())))
   position: TooltipPosition = TooltipPosition.BELOW;
   public defaultPool:StakePool =null;
   selectPool(ev){
@@ -51,10 +53,10 @@ export class SelectStakePoolComponent implements AfterViewInit {
 
 constructor(){
   effect(() => {
-    if (this.stakePools()) {
-      const ev: any = { detail: { value: this.stakePools()[0] } }
+    if (this.stakePoolFiltered()) {
+      const ev: any = { detail: { value: this.stakePoolFiltered()[0] } }
       setTimeout(() => { 
-        this.defaultPool = this.stakePools()[0];
+        this.defaultPool = this.stakePoolFiltered()[0];
         this.selectPool(ev)
       });
     }

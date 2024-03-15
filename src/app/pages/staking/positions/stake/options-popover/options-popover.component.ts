@@ -10,12 +10,13 @@ import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { ModalController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
+import { Router, RouterLink } from '@angular/router';
 @Component({
   selector: 'options-popover',
   templateUrl: './options-popover.component.html',
   styleUrls: ['./options-popover.component.scss'],
   standalone: true,
-  imports: [IonButton, IonIcon]
+  imports: [IonButton, IonIcon,RouterLink]
 })
 export class OptionsPopoverComponent implements OnInit {
   @Input() stake: Stake;

@@ -12,8 +12,9 @@ import { IonInput, IonIcon, IonButton, IonImg, IonSkeletonText } from '@ionic/an
 import { DecimalPipe } from '@angular/common';
 import { RouteCalcComponent } from '../route-calc/route-calc.component';
 import { SettingComponent } from './setting/setting.component';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { InputComponent } from './input/input.component';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'swap-form',
   templateUrl: './form.component.html',
@@ -62,12 +63,19 @@ export class FormComponent implements OnInit {
   public tokenSwapForm: FormGroup;
   constructor(
     private _portfolioService: PortfolioService,
+    private _activeRoute:ActivatedRoute,
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
     private _jupStore: JupStoreService,
     private _util: UtilService
   ) {
+    
     addIcons({ swapVertical })
+    effect(() => {
+      if(this.jupTokens()){
+        this._setDefaultPairs()
+      }
+    })
   }
   flipTokens() {
     const temp = this.tokenSwapForm.controls['inputToken'].value
@@ -78,6 +86,19 @@ export class FormComponent implements OnInit {
     
   }
 
+  private _setDefaultPairs(): void{
+    this._activeRoute.params.pipe(take(1)).subscribe((data: {pair: string}) =>{
+      const pair = data.pair.split("-");
+      const tokenOne = pair[0];
+      const tokenTwo = pair[1];
+      this.tokenIn = this.jupTokens().find(t => t.symbol === tokenOne);
+      this.tokenOut = this.jupTokens().find(t => t.symbol === tokenTwo);
+
+      this.tokenSwapForm.controls['inputToken'].setValue(this.tokenIn);
+      this.tokenSwapForm.controls['outputToken'].setValue(this.tokenOut);
+    })
+
+  }
   async ngOnInit() {
 
     this.tokenSwapForm = this._fb.group({

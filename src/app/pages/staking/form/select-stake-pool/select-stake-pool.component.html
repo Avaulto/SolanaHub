@@ -4,7 +4,7 @@
 
 
     <ion-segment mode="ios" #loaded (ionChange)="selectPool($event)" [value]="defaultPool">
-      @for (pool of stakePools(); track $index) {
+      @for (pool of stakePoolFiltered(); track $index) {
       <ion-segment-button [value]="pool">
         <div class="pool-profile">
           <ion-avatar>
@@ -15,7 +15,7 @@
             <ion-label>{{pool?.poolName}}</ion-label>
             <ion-text>{{ pool?.totalStake | number: '1.2-2'}} SOL</ion-text>
           </div>
-          <ion-chip color="primary">{{pool?.apy | percent : '1.2-2'}}</ion-chip>
+          <ion-chip color="primary">{{pool?.apy || 0.07 | percent : '1.2-2'}}</ion-chip>
         </div>
       </ion-segment-button>
       }@empty {

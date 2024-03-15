@@ -22,15 +22,15 @@ export class TxInterceptorService {
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
     if (PRIORITY_RATE > 100) {
-      // const units = Number(PRIORITY_RATE / 100);
-      // const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-      //   units 
-      // });
+      const units = Number(PRIORITY_RATE / 100);
+      const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+        units 
+      });
       
       const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: PRIORITY_RATE
       });
-      return [ addPriorityFee]
+      return [ addPriorityFee, modifyComputeUnits]
     }
     return null
   }

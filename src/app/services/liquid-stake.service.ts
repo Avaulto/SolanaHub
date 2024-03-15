@@ -3,12 +3,13 @@ import { UtilService } from './util.service';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { ApiService } from './api.service';
 import { StakePool, WalletExtended, DirectStake, Validator, Stake } from '../models';
-import { LAMPORTS_PER_SOL, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js';
 import { BN, Marinade, MarinadeConfig, getRefNativeStakeSOLTx } from '@marinade.finance/marinade-ts-sdk';
-import { depositSol, withdrawStake, stakePoolInfo, depositStake } from '@solana/spl-stake-pool';
+import { depositSol, withdrawStake, stakePoolInfo, depositStake, DepositSolParams } from '@solana/spl-stake-pool';
 import { TxInterceptorService } from './tx-interceptor.service';
 import { NativeStakeService } from './native-stake.service';
 import { MarinadeResult } from '@marinade.finance/marinade-ts-sdk/dist/src/marinade.types';
+import { depositSolIntoSanctum } from './sanctum';
 
 @Injectable({
   providedIn: 'root'
@@ -38,9 +39,8 @@ export class LiquidStakeService {
     let stakePools: StakePool[] = [];
     try {
       const result = await (await fetch(`${this.restAPI}/api/get-stake-pools`)).json();
-      const poolIncludes = ['jito', 'marinade', 'solblaze']
-      stakePools = result.filter(s => poolIncludes.includes(s.poolName));
-      this.stakePools = stakePools;
+      stakePools = result //result.filter(s => poolIncludes.includes(s.poolName.toLowerCase()));
+      this.stakePools = result;
     }
     catch (error) {
       console.error(error);
@@ -128,6 +128,20 @@ export class LiquidStakeService {
 
   }
 
+  public async depositHUBPOOL(walletOwner: PublicKey, lamports:number){
+ 
+  
+  let depositTx = await depositSolIntoSanctum(
+    this._shs.connection,
+    new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'), // pool address
+    walletOwner,
+    lamports,
+    undefined,
+    undefined,
+    undefined
+);
+   this._txi.sendTx(depositTx.instructions, walletOwner,depositTx.signers)
+  }
 
   public async getDirectStake(walletAddress): Promise<DirectStake> {
     let directStake: DirectStake = { mSOL: null, bSOL: null };

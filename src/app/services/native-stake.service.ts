@@ -207,7 +207,7 @@ export class NativeStakeService {
       console.error(error)
     }
   }
-  private _createStakeAccount(lamportToSend: number, walletOwner: WalletExtended, lockupDuration: number = 0) {
+  public _createStakeAccount(lamportToSend: number, walletOwner: WalletExtended, lockupDuration: number = 0) {
 
     const fromPubkey = walletOwner.publicKey;
     const newStakeAccount = new Keypair();
