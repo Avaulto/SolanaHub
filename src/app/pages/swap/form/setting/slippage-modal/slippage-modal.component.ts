@@ -24,8 +24,7 @@ export class SlippageModalComponent  implements OnInit {
     this._modalCtrl.dismiss()
   }
   setSlippage(slippage, bpDivider = 1){
-    console.log(slippage);
-    
+
     this.emittedValue.set(Number(slippage * bpDivider))
   }
   async submit() {

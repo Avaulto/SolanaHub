@@ -137,8 +137,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     })
     if(wallet){
       loyaltyLeagueExtended.sort((x, y) => { return x.walletOwner.addr === wallet.publicKey.toBase58() ? -1 : y.walletOwner === wallet.publicKey.toBase58() ? 1 : 0; });
-      console.log(loyaltyLeagueExtended);
-      
+
     }
     return loyaltyLeagueExtended
   }))

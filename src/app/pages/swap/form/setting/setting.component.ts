@@ -42,8 +42,7 @@ export class SettingComponent  implements OnInit {
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
-    console.log(data);
-    
+
     if(data){
       this.selectedSlippage.set(data)
       this.slippageControl.patchValue(data);

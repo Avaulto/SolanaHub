@@ -19,7 +19,6 @@ export class BurnNftModalComponent  implements OnInit {
 
   ngOnInit() {
     this.toBurnNFTs.emit({nftsToBurn: this.nfts})
-    console.log(this.nfts);
     
   }
 

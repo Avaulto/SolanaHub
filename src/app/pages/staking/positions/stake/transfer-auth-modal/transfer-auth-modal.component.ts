@@ -46,21 +46,19 @@ export class TransferAuthModalComponent implements OnInit {
     this.targetAddress = address
    }
   updateTransferAuth(ev) {
-    console.log(ev);
+
     if(typeof ev !== 'string'){
       this.authoritiesChecked.update(update => ({ ...update, [ev.value]: ev.checked }))
     }else{
       this.targetAddress = ev
     }
     
-    console.log(this.authoritiesChecked(),  this.targetAddress);
-    
+
     let payload = null;
     if ((this.authoritiesChecked().stake || this.authoritiesChecked().withdraw) && this.targetAddress) {
       payload = {authorities: this.authoritiesChecked(), targetAddress: this.targetAddress}
     }
-    console.log(payload);
-    
+
     this.onAuthSet.emit(payload)
   }
 }

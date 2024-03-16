@@ -19,7 +19,6 @@ export class MemberStatsComponent implements OnChanges{
   @Input() loyalMember
 
 ngOnChanges(changes: SimpleChanges): void {
-  console.log(this.loyalMember());
-  
+
 }
 }

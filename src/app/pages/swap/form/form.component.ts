@@ -112,7 +112,6 @@ export class FormComponent implements OnInit {
     })
 
     this.tokenSwapForm.valueChanges.subscribe(async (values: { inputToken, outputToken, inputAmount, slippage }) => {
-      console.log('value change', values);
 
       this.calcBestRoute()
       if (!values.inputAmount) {

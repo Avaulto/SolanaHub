@@ -83,8 +83,7 @@ export class InputComponent implements OnInit, OnChanges {
 
     const { data, role } = await modal.onWillDismiss();
     let jupToken: JupToken = data
-    console.log(jupToken);
-    
+
     if (data) {
       this.tokenControl.setValue(jupToken);
       this.getTokenPrice();

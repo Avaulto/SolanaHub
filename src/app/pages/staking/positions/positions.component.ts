@@ -48,11 +48,9 @@ export class PositionsComponent implements OnInit, OnChanges {
 
         return stake
         .map(lst => {
-          console.log(lst);
-          
+
           const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
-          console.log(pool,lst);
-          
+
           const stake: Stake = {
             type: 'liquid',
             address: lst.address,
@@ -83,11 +81,10 @@ export class PositionsComponent implements OnInit, OnChanges {
     effect(() => {
 
       if (this.positionGroup() === 'liquid' && this._portfolio.tokens()) {
-        console.log( this._portfolio.tokens());
+
         const stakePoolsSymbols = this.stakePools().map(p => p.tokenSymbol.toLowerCase());
         const LSTs = this._portfolio.tokens().filter(t => stakePoolsSymbols.includes(t.symbol.toLowerCase()))
-        console.log(stakePoolsSymbols, LSTs);
-        
+
         this._stake$.next(LSTs)
       }
       if (this.positionGroup() === 'native' && this._portfolio.staking()) {
