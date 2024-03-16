@@ -96,7 +96,7 @@ export async function depositSolIntoSanctum(
 
     const stakePoolAccount = await getStakePoolAccount(connection, stakePoolAddress);
     const stakePool = stakePoolAccount.account.data;
-console.log(stakePool);
+
     // Ephemeral SOL account just to do the transfer
     const userSolTransfer = new Keypair();
     const signers = [userSolTransfer];
@@ -211,9 +211,7 @@ export async function depositStakeIntoSanctum(
         stakeAuthorizationType: StakeAuthorizationLayout.Withdrawer,
       }).instructions,
     );
-  
-    instructions.push(
-      StakePoolInstruction.depositStake({
+    let depositInstruction = StakePoolInstruction.depositStake({
         stakePool: stakePoolAddress,
         validatorList: stakePool.account.data.validatorList,
         depositAuthority: stakePool.account.data.stakeDepositAuthority,
@@ -225,7 +223,10 @@ export async function depositStakeIntoSanctum(
         depositStake,
         validatorStake,
         poolMint,
-      }),
+      })
+    depositInstruction.programId = STAKE_POOL_PROGRAM_ID;
+    instructions.push(
+        depositInstruction
     );
   
     return {

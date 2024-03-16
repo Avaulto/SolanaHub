@@ -21,14 +21,15 @@ export class TxInterceptorService {
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
-    if (PRIORITY_RATE > 100) {
-      const units = Number(PRIORITY_RATE / 100);
+    if (PRIORITY_RATE > 1000) {
+      console.log(priorityFee);
+      
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-        units 
+        units: PRIORITY_RATE
       });
       
       const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: PRIORITY_RATE
+        microLamports: PRIORITY_RATE * 5
       });
       return [ addPriorityFee, modifyComputeUnits]
     }
@@ -52,6 +53,8 @@ export class TxInterceptorService {
       }
     }
     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
+
+    
     const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
     const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
     const txSend: toastData = {

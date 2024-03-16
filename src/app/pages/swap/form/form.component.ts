@@ -88,14 +88,17 @@ export class FormComponent implements OnInit {
 
   private _setDefaultPairs(): void{
     this._activeRoute.params.pipe(take(1)).subscribe((data: {pair: string}) =>{
-      const pair = data.pair.split("-");
-      const tokenOne = pair[0];
-      const tokenTwo = pair[1];
-      this.tokenIn = this.jupTokens().find(t => t.symbol === tokenOne);
-      this.tokenOut = this.jupTokens().find(t => t.symbol === tokenTwo);
+      if(data){
 
-      this.tokenSwapForm.controls['inputToken'].setValue(this.tokenIn);
-      this.tokenSwapForm.controls['outputToken'].setValue(this.tokenOut);
+        const pair = data.pair.split("-");
+        const tokenOne = pair[0];
+        const tokenTwo = pair[1];
+        this.tokenIn = this.jupTokens().find(t => t.symbol === tokenOne);
+        this.tokenOut = this.jupTokens().find(t => t.symbol === tokenTwo);
+        
+        this.tokenSwapForm.controls['inputToken'].setValue(this.tokenIn);
+        this.tokenSwapForm.controls['outputToken'].setValue(this.tokenOut);
+      }
     })
 
   }

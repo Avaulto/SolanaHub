@@ -5,7 +5,7 @@ export interface Config {
     value: string | number,
 }
 export enum PriorityFee {
-    None = 100,
-    Fast = 1000,
-    Supercharger = 100000,
+    None = 1000,
+    Fast = 75000,
+    Supercharger = 300000,
   }

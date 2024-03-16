@@ -137,7 +137,6 @@ export class LiquidStakeService {
       validatorVoteAccount,
       stakeAccountPK
     );
-    console.log(depositTx);
     
     await this._txi.sendTx(depositTx.instructions, walletOwner,depositTx.signers)
   }

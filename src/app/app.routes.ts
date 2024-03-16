@@ -26,7 +26,10 @@ export const routes: Routes = [
   },
   {
     path: 'swap/:pair',
-
+    loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage)
+  },
+  {
+    path: 'swap',
     loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage)
   },
   {
