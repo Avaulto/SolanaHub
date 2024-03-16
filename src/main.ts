@@ -30,7 +30,8 @@ bootstrapApplication(AppComponent, {
     provideWalletAdapter({
       autoConnect: true,
       adapters: [new UnsafeBurnerWalletAdapter()],
-    }
+
+    },{commitment: 'processed'}
     ),
   ],
 });

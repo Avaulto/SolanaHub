@@ -22,8 +22,7 @@ export class TxInterceptorService {
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
     if (PRIORITY_RATE > 1000) {
-      console.log(priorityFee);
-      
+
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
         units: PRIORITY_RATE
       });
@@ -131,34 +130,7 @@ export class TxInterceptorService {
   
   
     }
-  // public async verifyBalance(lamportToSend: number, walletPubkey: PublicKey, transaction: Transaction) {
-  //   const balance = await this.solanaUtilsService.connection.getBalance(walletPubkey);
-  //   const txFee = (await this.solanaUtilsService.connection.getFeeForMessage(
-  //     transaction.compileMessage(),
-  //     'confirmed',
-  //   )).value;
-  //   const balanceCheck = lamportToSend < balance + txFee ? true : false;
-  //   if (!balanceCheck) {
-  //     this._formatErrors({ message: 'not enogh balance' })
-  //     // throw new Error('not enogh balance')
-  //     return false;
-  //   }
-  //   return balanceCheck
-  // }
-  // private async prepTx(lamports: number, tx: Transaction | TransactionInstruction, walletOwnerPk: PublicKey) {
-  //   // verify tx fee
-  //   const { blockhash } = await this._shs.connection.getLatestBlockhash();
-  //   const txVerify = new Transaction().add(tx)
-  //   txVerify.recentBlockhash = blockhash;
-  //   txVerify.feePayer = walletOwnerPk
 
-  //   const hasBalance = await this.verifyBalance(lamports, walletOwnerPk, txVerify)
-  //   if (hasBalance) {
-  //     return true
-  //   } else {
-  //     return false
-  //   }
-  // }
   public async sendSol(lamportsToSend: number, toAddress: PublicKey, walletOwnerPk: PublicKey): Promise<any> {
     const transfer: TransactionInstruction =
       SystemProgram.transfer({
