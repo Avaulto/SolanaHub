@@ -7,3 +7,4 @@ export * from './tx-interceptor.service'
 export * from './price-history.service';
 export * from './portfolio.service'
 export * from './toaster.service'
+export * from './sanctum'

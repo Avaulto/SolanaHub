@@ -9,7 +9,7 @@ import { depositSol, withdrawStake, stakePoolInfo, depositStake, DepositSolParam
 import { TxInterceptorService } from './tx-interceptor.service';
 import { NativeStakeService } from './native-stake.service';
 import { MarinadeResult } from '@marinade.finance/marinade-ts-sdk/dist/src/marinade.types';
-import { depositSolIntoSanctum } from './sanctum';
+import { depositSolIntoSanctum, depositStakeIntoSanctum } from './sanctum';
 
 @Injectable({
   providedIn: 'root'
@@ -128,7 +128,20 @@ export class LiquidStakeService {
 
   }
 
-  public async depositHUBPOOL(walletOwner: PublicKey, lamports:number){
+  public async depositStakeHubSolPool(walletOwner: PublicKey, stakeAccountPK:PublicKey){
+    const validatorVoteAccount = new PublicKey('7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh');
+    let depositTx = await depositStakeIntoSanctum(
+      this._shs.connection,
+      new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'),
+      walletOwner,
+      validatorVoteAccount,
+      stakeAccountPK
+    );
+    console.log(depositTx);
+    
+    await this._txi.sendTx(depositTx.instructions, walletOwner,depositTx.signers)
+  }
+  public async depositSolHubSolPool(walletOwner: PublicKey, lamports:number){
  
   
   let depositTx = await depositSolIntoSanctum(
@@ -140,7 +153,7 @@ export class LiquidStakeService {
     undefined,
     undefined
 );
-   this._txi.sendTx(depositTx.instructions, walletOwner,depositTx.signers)
+   await this._txi.sendTx(depositTx.instructions, walletOwner,depositTx.signers)
   }
 
   public async getDirectStake(walletAddress): Promise<DirectStake> {
@@ -184,7 +197,11 @@ export class LiquidStakeService {
         const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
         const txIns: Transaction = depositAccount.transaction
         await this._txi.sendTx([txIns], publicKey, null, record);
-      } else {
+      } else if(pool.poolName.toLowerCase() == 'hub'){
+        this.depositStakeHubSolPool(publicKey,stakeAccountPK)
+      }
+      
+      else {
 
         let ix = await depositStake(
           this._shs.connection,

@@ -1,17 +1,24 @@
 import {StakePoolInstruction, getStakePoolAccount} from "@solana/spl-stake-pool";
-import {Connection, Keypair, PublicKey, Signer, SystemProgram, TransactionInstruction} from "@solana/web3.js";
+import {Connection, Keypair, PublicKey, Signer, StakeAuthorizationLayout, StakeProgram, SystemProgram, TransactionInstruction} from "@solana/web3.js";
 import {getAssociatedTokenAccountAddress} from "@marinade.finance/marinade-ts-sdk/dist/src/util";
-import {ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID} from "@solana/spl-token";
-// import {createAssociatedTokenAccountIdempotentInstruction} from "@jup-ag/core";
-
-// import {createAssociatedTokenAccountIdempotentInstruction, getAssociatedTokenAccountAddress } from "@solana/spl-token/";
+import {ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync} from 'node_modules/@solana/spl-token';
 
 const STAKE_POOL_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
 
 export function lamportsToSol(amount) {
     return amount / 10 ** 9
 }
-
+export async function findStakeProgramAddress(
+    programId: PublicKey,
+    voteAccountAddress: PublicKey,
+    stakePoolAddress: PublicKey,
+  ) {
+    const [publicKey] = await PublicKey.findProgramAddress(
+      [voteAccountAddress.toBuffer(), stakePoolAddress.toBuffer()],
+      programId,
+    );
+    return publicKey;
+  }
 export async function findWithdrawAuthorityProgramAddress(
     programId,
     stakePoolAddress,
@@ -146,3 +153,84 @@ console.log(stakePool);
         signers,
     };
 }
+
+export async function depositStakeIntoSanctum(
+    connection: Connection,
+    stakePoolAddress: PublicKey,
+    authorizedPubkey: PublicKey,
+    validatorVote: PublicKey,
+    depositStake: PublicKey,
+    poolTokenReceiverAccount?: PublicKey,
+  ) {
+    const stakePool = await getStakePoolAccount(connection, stakePoolAddress);
+  
+    const withdrawAuthority = await findWithdrawAuthorityProgramAddress(
+      STAKE_POOL_PROGRAM_ID,
+      stakePoolAddress,
+    );
+  
+    const validatorStake = await findStakeProgramAddress(
+      STAKE_POOL_PROGRAM_ID,
+      validatorVote,
+      stakePoolAddress,
+    );
+  
+    const instructions: TransactionInstruction[] = [];
+    const signers: Signer[] = [];
+  
+    const poolMint = stakePool.account.data.poolMint;
+  
+    // Create token account if not specified
+    if (!poolTokenReceiverAccount) {
+      const associatedAddress = getAssociatedTokenAddressSync(poolMint, authorizedPubkey);
+      instructions.push(
+        createAssociatedTokenAccountIdempotentInstruction(
+          authorizedPubkey,
+          associatedAddress,
+          authorizedPubkey,
+          poolMint,
+        ),
+      );
+      poolTokenReceiverAccount = associatedAddress;
+    }
+  
+    instructions.push(
+      ...StakeProgram.authorize({
+        stakePubkey: depositStake,
+        authorizedPubkey,
+        newAuthorizedPubkey: stakePool.account.data.stakeDepositAuthority,
+        stakeAuthorizationType: StakeAuthorizationLayout.Staker,
+      }).instructions,
+    );
+  
+    instructions.push(
+      ...StakeProgram.authorize({
+        stakePubkey: depositStake,
+        authorizedPubkey,
+        newAuthorizedPubkey: stakePool.account.data.stakeDepositAuthority,
+        stakeAuthorizationType: StakeAuthorizationLayout.Withdrawer,
+      }).instructions,
+    );
+  
+    instructions.push(
+      StakePoolInstruction.depositStake({
+        stakePool: stakePoolAddress,
+        validatorList: stakePool.account.data.validatorList,
+        depositAuthority: stakePool.account.data.stakeDepositAuthority,
+        reserveStake: stakePool.account.data.reserveStake,
+        managerFeeAccount: stakePool.account.data.managerFeeAccount,
+        referralPoolAccount: poolTokenReceiverAccount,
+        destinationPoolAccount: poolTokenReceiverAccount,
+        withdrawAuthority,
+        depositStake,
+        validatorStake,
+        poolMint,
+      }),
+    );
+  
+    return {
+      instructions,
+      signers,
+    };
+  }
+  

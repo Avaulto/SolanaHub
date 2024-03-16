@@ -40,7 +40,7 @@ constructor(private _lss: LiquidStakeService){
 
 }
   async ngOnInit() {
-    const _listedPools = ['solblaze', 'marinade']
+    const _listedPools = ['hub','solblaze', 'marinade']
     this.stakePools = (await this._lss.getStakePoolList()).filter(p => _listedPools.includes(p.poolName.toLowerCase()))
     
    }

@@ -160,7 +160,7 @@ export class FormComponent implements OnInit {
       }
     } else if (stakingPath === 'liquid') {
       if(pool.poolName === 'hub'){
-        this._lss.depositHUBPOOL(walletOwner.publicKey,lamportsToDelegate)
+        this._lss.depositSolHubSolPool(walletOwner.publicKey,lamportsToDelegate)
       }else{ 
         const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
         // add stakers to loyalty league referee program

@@ -1,7 +1,7 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, TransactionHistoryTemp } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
 import { PriceHistoryService } from './price-history.service';
@@ -25,47 +25,47 @@ export class PortfolioService {
   constructor(
     private _utils: UtilService,
     private _nss: NativeStakeService,
-    private _shs:SolanaHelpersService,
+    private _shs: SolanaHelpersService,
     private _sessionStorageService: SessionStorageService
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
-      if(wallet){
-        this._shs.connection.onAccountChange(wallet.publicKey, () =>{
-            let forceFetch = true;
-            this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+      if (wallet) {
+        this._shs.connection.onAccountChange(wallet.publicKey, () => {
+          let forceFetch = true;
+          this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
         })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
     })
 
-   }
+  }
 
-   private _portfolioData = () => {
-     const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
-     
-    if(portfolioLocalRecord){
+  private _portfolioData = () => {
+    const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
+
+    if (portfolioLocalRecord) {
       const portfolioJson = JSON.parse(portfolioLocalRecord)
-      const currentTime =  Math.floor(new Date().getTime() / 1000)
+      const currentTime = Math.floor(new Date().getTime() / 1000)
       const expiredRecord = portfolioJson.lastSave + 600
       // if expired timestamp is bigger than current time frame, return it.
-      if(expiredRecord > currentTime ){
+      if (expiredRecord > currentTime) {
         return portfolioJson.portfolioData
-      }else {
+      } else {
         return null
       }
     }
     return null
-   }
-  
+  }
+
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
       this._portfolioStaking(walletAddress)
-      if(!portfolioData || !jupTokens){
+      if (!portfolioData || !jupTokens) {
 
-         let res = await Promise.all([
+        let res = await Promise.all([
           this._utils.getJupTokens(),
           await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
         ])
@@ -73,21 +73,21 @@ export class PortfolioService {
         portfolioData = res[1]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
         const storageCap = 4073741824 // 5 mib
-        if(this._utils.memorySizeOf(portfolioData) < storageCap){
-          this._sessionStorageService.saveData('portfolioData', JSON.stringify({portfolioData, lastSave: Math.floor(new Date().getTime() / 1000)}))
+        if (this._utils.memorySizeOf(portfolioData) < storageCap) {
+          this._sessionStorageService.saveData('portfolioData', JSON.stringify({ portfolioData, lastSave: Math.floor(new Date().getTime() / 1000) }))
         }
 
       }
 
-      const portfolio =  portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+      const portfolio = portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const excludeNFTv2 = portfolio.elements.filter(e => e.platformId !== 'wallet-nfts-v2')
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
-      
+
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
       this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
       this._portfolioDeFi(portfolio.elements, jupTokens)
 
-      
+
       const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
 
       this.nfts.set(extendNftData.data.assets)
@@ -147,113 +147,134 @@ export class PortfolioService {
     }
     return platformInfo
   }
-  private async _portfolioDeFi(editedDataExtended, tokensInfo){
-     // add more data for platforms
-     const getPlatformsData = await this._getPlatformsData();
+  private async _portfolioDeFi(editedDataExtended, tokensInfo) {
+    // add more data for platforms
+    const getPlatformsData = await this._getPlatformsData();
 
-     
-    const excludeList = ['wallet-tokens','wallet-nfts', 'native-stake' ]
+
+    const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
     const defiHolding = await Promise.all(editedDataExtended
-    .filter(g => !excludeList.includes(g.platformId) && g.value > 0.01)
-    .sort((a:defiHolding, b:defiHolding) => a.value > b.value ? -1 : 1)
-    .map(async group => {
-  
-        
-         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
+      .filter(g => !excludeList.includes(g.platformId) && g.value > 0.01)
+      .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
+      .map(async group => {
+
+
+        const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
         //  group.platformUrl = this._addPlatformUrl(platformData.id)
-         Object.assign(group, platformData);
-         let assets = []
-         let poolTokens, holdings;
-         if(group.type === "liquidity" ){
-           if(group.data.liquidities){
+        Object.assign(group, platformData);
+        let assets = []
+        let poolTokens, holdings;
+        if (group.type === "liquidity") {
+          if (group.data.liquidities) {
 
-             group.data.liquidities.forEach(async liquid => {
-              this._utils.addTokenData(liquid.assets,  tokensInfo)
+            group.data.liquidities.forEach(async liquid => {
+              this._utils.addTokenData(liquid.assets, tokensInfo)
               assets.push(liquid.assets)
-             })
-             assets = assets.flat()
-           }
-         }
-         if(group.type === "multiple" ){
-          this._utils.addTokenData(group.data.assets,  tokensInfo)
-          assets.push(group.data.assets)
-   
-          assets = assets.flat()
-         }
-         
-         if(group.type === "borrowlend" ){
-           group.data.suppliedAssets ? this._utils.addTokenData(group.data.suppliedAssets,  tokensInfo) : null;
-           group.data.borrowedAssets ? this._utils.addTokenData(group.data.borrowedAssets,  tokensInfo) : null;
-           group.data.suppliedAssets.map(a => a.condition = 'credit')
-           group.data.borrowedAssets.map(a => a.condition = 'debt')
-
-           assets.push(group.data.suppliedAssets)
-           assets.push(group.data.borrowedAssets)
-           assets = assets.flat()
+            })
+            assets = assets.flat()
           }
-          holdings =  assets?.map(a => { return {balance: a.balance,symbol: a.symbol, condition: a.condition }}) || []
-          poolTokens = assets?.map(a => { return {imgURL: a.imgUrl,symbol: a.symbol }}) || []
+        }
+        if (group.type === "multiple") {
+          this._utils.addTokenData(group.data.assets, tokensInfo)
+          assets.push(group.data.assets)
 
-         let defiHolding: defiHolding = {
-          value:group.value,
-          imgURL:group.image,
+          assets = assets.flat()
+        }
+
+        if (group.type === "borrowlend") {
+          group.data.suppliedAssets ? this._utils.addTokenData(group.data.suppliedAssets, tokensInfo) : null;
+          group.data.borrowedAssets ? this._utils.addTokenData(group.data.borrowedAssets, tokensInfo) : null;
+          group.data.suppliedAssets.map(a => a.condition = 'credit')
+          group.data.borrowedAssets.map(a => a.condition = 'debt')
+
+          assets.push(group.data.suppliedAssets)
+          assets.push(group.data.borrowedAssets)
+          assets = assets.flat()
+        }
+        holdings = assets?.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || []
+        poolTokens = assets?.map(a => { return { imgURL: a.imgUrl, symbol: a.symbol } }) || []
+
+        let defiHolding: defiHolding = {
+          value: group.value,
+          imgURL: group.image,
           poolTokens,
           holdings,
-          type:       group.label,
-          link:       group.website
-         };
+          type: group.label,
+          link: group.website
+        };
 
-         return defiHolding
-     })
-    
-     )
-     this.defi.set(defiHolding)
-     
+        return defiHolding
+      })
+
+    )
+    this.defi.set(defiHolding)
+
   }
   public async getWalletHistory(walletAddress: string): Promise<WritableSignal<TransactionHistory[]>> {
 
-      try {
-        const walletTxHistory = await (await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)).json()
-        let txHistory = walletTxHistory.map((tx: TransactionHistory) => {
-          if (tx.contractLabel?.name === 'Jupiter V6') {
-            tx.mainAction = 'swap'
-          }
-          if (tx.mainAction === 'createAssociatedAccount') {
-            tx.mainAction = 'create account'
-          }
-          if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
-            tx.mainAction = 'farm'
-          }
-          tx.fromShort = this._utils.addrUtil(tx.from).addrShort
-          tx.toShort = this._utils.addrUtil(tx.to).addrShort
-          tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
-          return { ...tx }
-        })
-        
-        
-        this.walletHistory.set(txHistory)
-        return this.walletHistory
-      } catch (error) {
-        console.error(error);
-      }
-      return this.walletHistory
-    
-  }
+    try {
+      const getTxHistory = await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)
+      let txHistory: any = await getTxHistory.json()
 
-  public async _portfolioStaking(walletAddress:string){
-   const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);          
-        
-   this.staking.set(stakeAccounts)
-  }
 
-  public filteredTxHistory = (filterByAddress?: string, filterByAction?:string) =>{
-    const filterResults = this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress) || tx.mainAction === filterByAction)
-    console.log(filterResults);
+      console.log(txHistory);
+
+      // mainActionColor?: string
+      // balanceChange: BalanceChange[]
+      // contractLabel?: ContractLabel
+      const aggregateTxHistory: TransactionHistory[] = txHistory.result.map((txRecord: TransactionHistoryTemp) => {
+  
+          let tx = {
+            txHash: txRecord.signatures[0],
+            from: txRecord.fee_payer,
+            to: txRecord.signatures[0],
+            blockTime: txRecord.timestamp,
+            fee: txRecord.fee,
+            mainAction: txRecord.type,
+            balanceChange: txRecord.actions[0].info
+          };
+          
+          
+          // if (tx.contractLabel?.name === 'Jupiter V6') {
+          //   tx.mainAction = 'swap'
+          // }
+          // if (tx.mainAction === 'createAssociatedAccount') {
+          //   tx.mainAction = 'create account'
+          // }
+          // if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
+          //   tx.mainAction = 'farm'
+          // }
+          // tx.fromShort = this._utils.addrUtil(tx.from).addrShort
+          // tx.toShort = this._utils.addrUtil(tx.to).addrShort
+          // tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
+          return tx
      
-     return filterResults
+      })
+      console.log(txHistory, aggregateTxHistory);
+
+      this.walletHistory.set(aggregateTxHistory)
+      return this.walletHistory
+    } catch (error) {
+      console.error(error);
+    }
+    return this.walletHistory
+
   }
 
-  public clearWallet(){
+  public async _portfolioStaking(walletAddress: string) {
+    const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
+
+    this.staking.set(stakeAccounts)
+  }
+
+  public filteredTxHistory = (filterByAddress?: string, filterByAction?: string) => {
+    const filterResults = null//this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress) || tx.mainAction === filterByAction)
+    console.log(filterResults);
+
+    return filterResults
+  }
+
+  public clearWallet() {
     this.tokens.set(null)
     this.nfts.set(null)
     this.defi.set(null)
