@@ -88,7 +88,7 @@ export class FormComponent implements OnInit {
 
   private _setDefaultPairs(): void{
     this._activeRoute.params.pipe(take(1)).subscribe((data: {pair: string}) =>{
-      if(data){
+      if(data?.pair){
 
         const pair = data.pair.split("-");
         const tokenOne = pair[0];
