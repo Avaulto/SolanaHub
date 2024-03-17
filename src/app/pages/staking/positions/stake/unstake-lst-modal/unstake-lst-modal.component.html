@@ -1,0 +1,32 @@
+<div id="split-stake-account">
+  <ion-label>from target account</ion-label>
+  <stake-position [stake]="stake" />
+  <div id="input-control">
+    <div>
+      <ion-label>Amount to unstake</ion-label>
+      <div id="balance">
+        <span id="balance-label">Balance</span>
+        <span>{{stake.balance | number: '1.3'}} SOL</span>
+      </div>
+    </div>
+    <ion-input (ionInput)="setAmount($event)" type="number" />
+  </div>
+  <div id="splitting-summary">
+    <ion-label>unstake summary</ion-label>
+    <div id="splitting-calc" class="ion-margin-bottom">
+      <div class="account">
+        <div class="account-id">account</div>
+        <div class="account-value">{{amount * (1 -(stake.pool?.exchangeRate -1 )) || 0 | number: '1.3'}} SOL</div>
+      </div>
+    </div>
+    <alert type="warning" text="
+    Please follow these steps to successfully unstake.
+    <ol>
+      <li>Initiate Delayed Unstake and get a stake account in return </li> 
+      <li>Unstake & deactivate the Stake Account from the native staking tab</li> 
+      <li>Wait for Epoch Completion</li> 
+      <li>Withdraw SOL from deactiviated account  </li>  
+    </ol>
+    "></alert>
+  </div>
+</div>

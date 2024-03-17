@@ -14,8 +14,7 @@ import {  alertCircleOutline } from 'ionicons/icons';
 
     <ion-icon name="alert-circle-outline"></ion-icon>
 </div>
-  <ion-text>
-    {{text}}
+  <ion-text [innerHTML]="text">
   </ion-text>
 </div>
 `,
@@ -29,7 +28,7 @@ import {  alertCircleOutline } from 'ionicons/icons';
 })
 export class AlertComponent implements OnInit {
   @Input() text: string;
-  @Input() type: 'regular' | 'danger'
+  @Input() type: 'regular' | 'warning' | 'danger'
   constructor() { 
     addIcons({alertCircleOutline})
   }

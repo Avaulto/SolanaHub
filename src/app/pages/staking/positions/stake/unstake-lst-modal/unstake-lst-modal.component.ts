@@ -5,26 +5,29 @@ import {
   IonLabel,
   IonInput
 } from '@ionic/angular/standalone';
-import { DecimalPipe } from '@angular/common';
-import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { UtilService } from 'src/app/services';
+import { DecimalPipe } from '@angular/common';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
+
 @Component({
-  selector: 'split-modal',
-  templateUrl: './split-modal.component.html',
-  styleUrls: ['./split-modal.component.scss'],
+  selector: 'unstake-lst-modal',
+  templateUrl: './unstake-lst-modal.component.html',
+  styleUrls: ['./unstake-lst-modal.component.scss'],
   standalone: true,
   imports: [
     StakeComponent, 
     IonLabel,
     IonInput,
-    DecimalPipe
+    DecimalPipe,
+    AlertComponent
   ]
 })
-export class SplitModalComponent implements OnInit{
+export class UnstakeLstModalComponent  implements OnInit {
   @Input() stake:Stake;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
-  public newStakeAccount = new Keypair();
+
   public amount:number = 0
 
   ngOnInit() {
@@ -35,12 +38,10 @@ export class SplitModalComponent implements OnInit{
 
   setAmount(event){
     this.amount = event.detail.value 
-  
     let payload = null
     if(this.amount > 0){
-       payload = {amount: this.amount * LAMPORTS_PER_SOL , newStakeAccount: this.newStakeAccount}
+       payload = {pool: this.stake.pool,amount: Number(this.amount)}
     }
-
     this.onAmountSet.emit(payload)
 
   }

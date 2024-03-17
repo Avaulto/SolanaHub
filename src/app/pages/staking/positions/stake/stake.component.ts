@@ -66,7 +66,7 @@ export class StakeComponent implements OnInit{
     },
     directStake:{
       title: "Direct stake",
-      desc: 'This stake is partially or fully staked with a specific validator in the stake pool',
+      desc: 'This stake is fully staked with a specific validator in the stake pool',
       statusColor:'#B84794'
     },
     delegationStrategyPool:{

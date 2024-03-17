@@ -46,8 +46,7 @@ export class PositionsComponent implements OnInit, OnChanges {
       if (this.positionGroup() === 'liquid') {
 
 
-        return stake
-        .map(lst => {
+        return stake.map(lst => {
 
           const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
 
@@ -56,7 +55,7 @@ export class PositionsComponent implements OnInit, OnChanges {
             address: lst.address,
             balance: Number(lst.balance),
             value: Number(lst.value),
-            state: lst.extraData ? 'directStake' : 'delegationStrategyPool',
+            state: pool.poolName ===  "jito" || pool.poolName === "solblaze" || pool.poolName === 'marinade' ? 'delegationStrategyPool' : 'directStake'  ,
             symbol: lst.symbol,
             imgUrl: pool.tokenImageURL,
             // validatorName: lst[directStake[lst.symbol]] ? lst?.extraData?.validator?.name : null,

@@ -117,6 +117,7 @@ export interface Stake {
   startEpoch?: string
   lastReward?: any
   withdrawAuth?: string
+  delegatedLamport?: number,
   validator?: Validator
   imgUrl?: string,
   apy?: number,

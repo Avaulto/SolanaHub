@@ -21,7 +21,6 @@ export class TxInterceptorService {
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
-    if (PRIORITY_RATE > 1000) {
 
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
         units: PRIORITY_RATE
@@ -31,8 +30,7 @@ export class TxInterceptorService {
         microLamports: PRIORITY_RATE * 5
       });
       return [ addPriorityFee, modifyComputeUnits]
-    }
-    return null
+
   }
   public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
 

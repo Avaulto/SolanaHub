@@ -5,12 +5,13 @@ import {
 } from '@ionic/angular/standalone';
 import { Stake } from 'src/app/models';
 import { addIcons } from 'ionicons';
-import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water } from 'ionicons/icons';
+import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water, swapVertical } from 'ionicons/icons';
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { ModalController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { Router, RouterLink } from '@angular/router';
+import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 @Component({
   selector: 'options-popover',
   templateUrl: './options-popover.component.html',
@@ -24,9 +25,10 @@ export class OptionsPopoverComponent implements OnInit {
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
-    private _nss: NativeStakeService
+    private _nss: NativeStakeService,
+    private _lss: LiquidStakeService
   ) {
-    addIcons({ arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water });
+    addIcons({swapVertical, arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water });
   }
 
   ngOnInit() {
@@ -37,15 +39,15 @@ export class OptionsPopoverComponent implements OnInit {
     await this._nss.deactivateStakeAccount(this.stake.address, walletOwner)
   }
   public async reStake() {
-    const walletOwner = this._shs.getCurrentWallet()
+    const walletOwner = this._shs.getCurrentWallet().publicKey
     await this._nss.reStake(this.stake, walletOwner)
   }
   public async withdraw() {
-    const walletOwner = this._shs.getCurrentWallet()
+    const walletOwner = this._shs.getCurrentWallet().publicKey
     await this._nss.withdraw(this.stake, walletOwner)
   }
 
-  async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
+  async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'unstake-lst-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
     let config = {
       imgUrl: null,
       title: null,
@@ -77,6 +79,12 @@ export class OptionsPopoverComponent implements OnInit {
         config.desc = 'you can split your accounts into 2 separate accounts'
         config.btnText = 'split stake account'
         break;
+        case 'unstake-lst-modal':
+          config.imgUrl = 'assets/images/hourglass-icon.svg'
+          config.title = 'unstake liquid SOL'
+          config.desc = 'remove your SOL from the liquid stake pool'
+          config.btnText = 'delayed unstake'
+          break;
       case 'transfer-auth-modal':
         config.imgUrl = 'assets/images/transfer-auth-icon.svg'
         config.title = 'transfer account authority'

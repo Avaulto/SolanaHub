@@ -17,6 +17,7 @@ import { SendNftModalComponent } from 'src/app/pages/collectibles/send-nft-modal
 import { ListNftModalComponent } from 'src/app/pages/collectibles/list-nft-modal/list-nft-modal.component';
 import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal/burn-nft-modal.component';
 import { NftsService } from 'src/app/services/nfts.service';
+import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/unstake-lst-modal/unstake-lst-modal.component';
 
 @Component({
   selector: 'app-modal',
@@ -35,7 +36,8 @@ import { NftsService } from 'src/app/services/nfts.service';
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    BurnNftModalComponent
+    BurnNftModalComponent,
+    UnstakeLstModalComponent
   ]
 
 })
@@ -48,7 +50,7 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
+  @Input() componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,
@@ -71,6 +73,9 @@ export class ModalComponent implements AfterViewInit {
         const pool = this.emittedValue().pool;
         this._lss.stakePoolStakeAccount(this.data.stake, pool)
         break;
+      case 'unstake-lst-modal':
+        this._lss.unstake(this.emittedValue().pool, this.emittedValue().amount)
+        break;
       case 'split-modal':
 
         this._nss.splitStakeAccounts(wallet.publicKey, new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
@@ -90,8 +95,8 @@ export class ModalComponent implements AfterViewInit {
       case 'burn-nft-modal':
         const nftsToBurn: NFT[] = this.emittedValue().nftsToBurn;
         let burnIns = await this._nfts.burnNft(nftsToBurn, wallet.publicKey.toBase58());
-        const record = { message: 'nfts', data: { action:'burn', numberOfNfts:  nftsToBurn.length } }
-        this._txi.sendMultipleTxn(burnIns, null,record)
+        const record = { message: 'nfts', data: { action: 'burn', numberOfNfts: nftsToBurn.length } }
+        this._txi.sendMultipleTxn(burnIns, null, record)
         break;
       case 'send-nft-modal':
         const nftsToTransfer: NFT[] = this.emittedValue().nftsToTransfer;
@@ -99,8 +104,8 @@ export class ModalComponent implements AfterViewInit {
         const to_address = this.emittedValue().targetAddress;
 
         let transferIns = await this._nfts.transferNft(nftsToTransfer, from_Address, to_address);
-        const record2 = { message: 'nfts', data: { action:'burn', numberOfNfts:  nftsToBurn.length } }
-        this._txi.sendMultipleTxn(transferIns,null,record2)
+        const record2 = { message: 'nfts', data: { action: 'burn', numberOfNfts: nftsToBurn.length } }
+        this._txi.sendMultipleTxn(transferIns, null, record2)
         break;
       default:
         break;

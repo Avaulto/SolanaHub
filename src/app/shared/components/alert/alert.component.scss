@@ -17,9 +17,14 @@
         background: #FEF3F2;
         color: var(--ion-color-danger);
     }
+    &.warning{
+        border-color: #f7900912;
+        background: #f790090f;
+        color: var(--ion-color-warning);
+    }
     ion-icon {
-        width: 14px;
-        height: 14px;
+        width: 18px;
+        height: 18px;
         margin-inline-end: 6px;
     }
 }

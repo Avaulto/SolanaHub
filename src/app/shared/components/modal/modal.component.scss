@@ -78,12 +78,13 @@
   :host ::ng-deep split-modal stake-position,
   :host ::ng-deep delegate-lst-modal stake-position,
   :host ::ng-deep instant-unstake-modal stake-position,
+  :host ::ng-deep unstake-lst-modal stake-position,
   :host ::ng-deep transfer-auth-modal stake-position {
     margin-block-end: 16px;
 
     .stake-info {
         width: 100%;
-
+        align-items: center !important;
         ion-img,
         ion-skeleton-text {
             width: 36px !important;
