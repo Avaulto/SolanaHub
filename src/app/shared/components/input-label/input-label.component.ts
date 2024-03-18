@@ -37,10 +37,12 @@ ngOnInit(): void {
 }
 
   setSize(size: 'half' | 'max'){
-    let amount = Number(this.asset.balance).toFixedNoRounding(3)
+    let amount = Number(this.asset.balance).toFixedNoRounding(2)
+    
     if(size === 'half'){
       amount = amount / 2
     }
+
     this.onSetSize.emit(amount)
   }
 

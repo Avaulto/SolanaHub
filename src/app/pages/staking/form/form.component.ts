@@ -105,7 +105,7 @@ export class FormComponent implements OnInit {
     // if(size === 'half'){
     //   balance = balance / 2
     // }
-    amount = Number(this._util.decimalPipe.transform(amount, '1.4'))
+    // amount = Number(this._util.decimalPipe.transform(amount, '1.4'))
     this.stakeForm.controls['amount'].setValue(amount)
   }
 

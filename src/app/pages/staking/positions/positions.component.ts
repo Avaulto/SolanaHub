@@ -35,11 +35,7 @@ export class PositionsComponent implements OnInit, OnChanges {
   // private _LSTs = ['msol', 'bsol', 'jitosol']
 
   public stakePosition = signal(null);
-  // public loading = computed(() => {
-  //   console.log('loading check:', this.stakePosition());
 
-  //   return this.stakePosition() ? false : true
-  // });
   _stake$ = new Subject()
   stake$: Observable<Stake[]> = this._stake$.asObservable()
     .pipe(switchMap(async (stake: Token[] | Stake[]) => {
@@ -87,6 +83,8 @@ export class PositionsComponent implements OnInit, OnChanges {
         this._stake$.next(LSTs)
       }
       if (this.positionGroup() === 'native' && this._portfolio.staking()) {
+        console.log(this._portfolio.staking());
+        
         this._stake$.next(this._portfolio.staking())
       }
 
