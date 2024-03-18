@@ -179,7 +179,7 @@ export class FormComponent implements OnInit {
   setValidator(validator: Validator) {
     this.stakeForm.controls['validatorVoteIdentity'].setValue(validator.vote_identity);
     if (this.stakePath() === 'native') {
-      this.stakeAPY.set(validator.apy_estimate)
+      this.stakeAPY.set(validator.apy_estimate / 100)
     }
   }
   setPool(pool) {
