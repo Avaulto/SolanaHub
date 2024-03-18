@@ -9,7 +9,7 @@ import { depositSol, withdrawStake, stakePoolInfo, depositStake, DepositSolParam
 import { TxInterceptorService } from './tx-interceptor.service';
 import { NativeStakeService } from './native-stake.service';
 import { MarinadeResult } from '@marinade.finance/marinade-ts-sdk/dist/src/marinade.types';
-import { depositSolIntoSanctum, depositStakeIntoSanctum } from './sanctum';
+import { depositSolIntoSanctum, depositStakeIntoSanctum, withdrawStakeFromSanctum } from './sanctum';
 
 @Injectable({
   providedIn: 'root'
@@ -268,10 +268,17 @@ export class LiquidStakeService {
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey,null,record)
     } else if(pool.poolName.toLowerCase() == 'hub'){
+      let transaction = await withdrawStakeFromSanctum(
+        this._shs.connection,
+        new PublicKey(pool.poolPublicKey),
+        publicKey,
+        Number(sol),
+        false
+      );
 
+      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record)
     } else {
-      console.log(pool, sol);
-      
+
       let transaction = await withdrawStake(
         this._shs.connection,
         new PublicKey(pool.poolPublicKey),

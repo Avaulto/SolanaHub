@@ -56,7 +56,7 @@
   </div>
   <div class="stake-details">
     <div>
-      @if(stake?.state === 'active' || stake?.state === 'delegationStrategyPool'){
+      @if(stake?.state === 'active' || stake?.state === 'directStake' || stake?.state === 'delegationStrategyPool'){
 
         <ion-chip class="stake-apy">
           @if(stake){

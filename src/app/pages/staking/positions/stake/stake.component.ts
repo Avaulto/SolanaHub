@@ -51,7 +51,7 @@ export class StakeComponent implements OnInit{
     },
     activating:{
       title: 'activating',
-      desc: 'activating state means you need to want till end of epoch before you start earn stake rewards',
+      desc: 'activating state means you need to wait till end of epoch before you start earn stake rewards',
       statusColor:'#17B26A'
     },
     deactivating:{

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ConnectionStore, WalletStore, connectionConfigProviderFactory } from '@heavy-duty/wallet-adapter';
-import { AccountInfo, Connection, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, TransactionInstruction } from '@solana/web3.js';
+import { AccountInfo, Connection, GetProgramAccountsFilter, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, TokenBalance, TransactionInstruction } from '@solana/web3.js';
 
 import {
   TOKEN_PROGRAM_ID,
@@ -151,40 +151,40 @@ export class SolanaHelpersService {
     );
   }
 
-  //   public async getTokenAccountsBalance(wallet: string, getType?: 'token' | 'nft'): Promise<TokenBalance[]> {
-  //     const filters: GetProgramAccountsFilter[] = [
-  //       {
-  //         dataSize: 165,    //size of account (bytes)
-  //       },
-  //       {
-  //         memcmp: {
-  //           offset: 32,     //location of our query in the account (bytes)
-  //           bytes: wallet,  //our search criteria, a base58 encoded string
-  //         }
-  //       }
-  //     ];
-  //     const accounts = await this.connection.getParsedProgramAccounts(
-  //       TOKEN_PROGRAM_ID,   //SPL Token Program, new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
-  //       { filters }
-  //     );
-  //     let tokensBalance: TokenBalance[] = accounts.map((account, i) => {
-  //       //Parse the account data
-  //       const parsedAccountInfo: any = account.account.data;
-  //       const mintAddress: string = parsedAccountInfo["parsed"]["info"]["mint"];
-  //       const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
-  //       const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
-  //       return { tokenPubkey: account.pubkey.toString(), mintAddress, balance, decimals }
-  //     })
-  //     if (getType) {
-  //       if (getType == 'nft') {
-  //         tokensBalance = tokensBalance.filter(token => token.decimals == 0)
-  //       } else if (getType == 'token') {
-  //         tokensBalance = tokensBalance.filter(token => token.decimals != 0)
-  //       }
-  //     }
-  //     return tokensBalance;
+    public async getTokenAccountsBalance(wallet: string, getType?: 'token' | 'nft'): Promise<any[]> {
+      const filters: GetProgramAccountsFilter[] = [
+        {
+          dataSize: 165,    //size of account (bytes)
+        },
+        {
+          memcmp: {
+            offset: 32,     //location of our query in the account (bytes)
+            bytes: wallet,  //our search criteria, a base58 encoded string
+          }
+        }
+      ];
+      const accounts = await this.connection.getParsedProgramAccounts(
+        TOKEN_PROGRAM_ID,   //SPL Token Program, new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+        { filters }
+      );
+      let tokensBalance = accounts.map((account, i) => {
+        //Parse the account data
+        const parsedAccountInfo: any = account.account.data;
+        const mintAddress: string = parsedAccountInfo["parsed"]["info"]["mint"];
+        const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
+        const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
+        return { tokenPubkey: account.pubkey.toString(), mintAddress, balance, decimals }
+      })
+      if (getType) {
+        if (getType == 'nft') {
+          tokensBalance = tokensBalance.filter(token => token.decimals == 0)
+        } else if (getType == 'token') {
+          tokensBalance = tokensBalance.filter(token => token.decimals != 0)
+        }
+      }
+      return tokensBalance;
 
-  //   }
+    }
 
     // try {
     //   const mintPubkey = new PublicKey(mintAddressPK);
