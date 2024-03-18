@@ -50,7 +50,7 @@ export class UtilService {
     private _localStorage: LocalStorageService
   ) {
   }
-  public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://dev-api.SolanaHub.app'
+  public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : 'https://api.SolanaHub.app'
 
 
   public get RPC(): string{
