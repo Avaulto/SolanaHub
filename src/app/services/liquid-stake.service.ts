@@ -257,6 +257,9 @@ export class LiquidStakeService {
   }
 
   public async unstake(pool:StakePool, sol: number) {
+    // single validator pools
+    const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
+
     const { publicKey } = this._shs.getCurrentWallet()
     const lamportsBN = new BN(sol);
     const record = {message:`${pool.poolName} unstake` , data:{amount: sol }};
@@ -267,7 +270,8 @@ export class LiquidStakeService {
       const { transaction } = await this.marinadeSDK.liquidUnstake(lamportsBN)
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey,null,record)
-    } else if(pool.poolName.toLowerCase() == 'hub'){
+    } else if(SVP.includes(pool.poolName)){
+
       let transaction = await withdrawStakeFromSanctum(
         this._shs.connection,
         new PublicKey(pool.poolPublicKey),

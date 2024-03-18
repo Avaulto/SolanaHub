@@ -59,7 +59,7 @@ export class PositionsComponent implements OnInit, OnChanges {
             pool: pool,
             apy: pool.apy * 100
           }
-          console.log(pool,stake);
+   
           return stake
         });
       } else {
@@ -111,11 +111,10 @@ export class PositionsComponent implements OnInit, OnChanges {
           LSTs.push(hubSOLToken)
           this._stake$.next(LSTs)
 
-          console.log(LSTs, hubSOLToken);
+
         }
       }
       if (this.positionGroup() === 'native' && this._portfolio.staking()) {
-        console.log(this._portfolio.staking());
 
         this._stake$.next(this._portfolio.staking())
       }
