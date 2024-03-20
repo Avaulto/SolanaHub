@@ -1,7 +1,7 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, TransactionHistoryTemp } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding,  BalanceChange } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
 import { PriceHistoryService } from './price-history.service';
@@ -10,6 +10,7 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
+import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -62,7 +63,7 @@ export class PortfolioService {
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
-     
+
       if (!portfolioData || !jupTokens) {
 
         let res = await Promise.all([
@@ -214,41 +215,91 @@ export class PortfolioService {
 
     try {
       const getTxHistory = await fetch(`${this.restAPI}/api/portfolio/transaction-history?address=${walletAddress}`)
-      let txHistory: any = await getTxHistory.json()
+      const txHistory: TransactionHistoryShyft = await getTxHistory.json()
 
+      // console.log(txHistory);
+      const excludeConditions = (txRecord:historyResultShyft) => txRecord.status != "Fail" && txRecord.type != 'COMPRESSED_NFT_MINT' && !(txRecord.type == "SOL_TRANSFER" && txRecord.actions[0].info.amount === 0)
+      const aggregateTxHistory: TransactionHistory[] = txHistory.result.filter(txRecord => excludeConditions(txRecord)).map((txRecord: historyResultShyft) => {
 
-      console.log(txHistory);
+        console.log(txRecord);
+        
+        let actionData = txRecord.actions[0]
+        let tx: TransactionHistory = {
+          txHash: txRecord.signatures[0],
+          from: this._utils.addrUtil(txRecord.fee_payer).addrShort,
+          to: this._utils.addrUtil(txRecord.signatures[0]).addrShort,
+          timestamp: txRecord.timestamp,
+          fee: txRecord.fee,
+          mainAction: txRecord.type.replaceAll('_',' ').toLowerCase(),
+          case:'native',
+          balanceChange: null
+        };
+        switch (actionData.type) {
+          case "SWAP":
+            tx.case = 'defi'
+            const tokenIn = actionData.info.tokens_swapped.in
+            const tokenOut = actionData.info.tokens_swapped.out
+            let BalanceChange: BalanceChange[] = [
+              {
+                amount: tokenIn.amount,
+                symbol: tokenIn.symbol,
+                name: tokenIn.name,
+                decimals: null,
+                address: tokenIn.token_address,
+                logoURI: tokenIn.image_uri,
+              },
+              {
+                amount: tokenOut.amount,
+                symbol: tokenOut.symbol,
+                name: tokenOut.name,
+                decimals: 9,
+                address: tokenOut.token_address,
+                logoURI: tokenOut.image_uri,
+              }
+            ]
+            tx.balanceChange = BalanceChange
+            break;
+            case "SOL_TRANSFER":
+           
+              // let BalanceChange: BalanceChange[] = [
+              //   {
+              //     amount: tokenIn.amount,
+              //     symbol: tokenIn.symbol,
+              //     name: tokenIn.name,
+              //     decimals: null,
+              //     address: tokenIn.token_address,
+              //     logoURI: tokenIn.image_uri,
+              //   },
+              //   {
+              //     amount: tokenOut.amount,
+              //     symbol: tokenOut.symbol,
+              //     name: tokenOut.name,
+              //     decimals: 9,
+              //     address: tokenOut.token_address,
+              //     logoURI: tokenOut.image_uri,
+              //   }
+              // ]
+              // tx.balanceChange = BalanceChange
+              break;
+          default:
+            break;
+            // tx.balanceChange = BalanceChange
+        }
 
-      // mainActionColor?: string
-      // balanceChange: BalanceChange[]
-      // contractLabel?: ContractLabel
-      const aggregateTxHistory: TransactionHistory[] = txHistory.result.map((txRecord: TransactionHistoryTemp) => {
-  
-          let tx = {
-            txHash: txRecord.signatures[0],
-            from: txRecord.fee_payer,
-            to: txRecord.signatures[0],
-            blockTime: txRecord.timestamp,
-            fee: txRecord.fee,
-            mainAction: txRecord.type,
-            balanceChange: txRecord.actions[0].info
-          };
-          
-          
-          // if (tx.contractLabel?.name === 'Jupiter V6') {
-          //   tx.mainAction = 'swap'
-          // }
-          // if (tx.mainAction === 'createAssociatedAccount') {
-          //   tx.mainAction = 'create account'
-          // }
-          // if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
-          //   tx.mainAction = 'farm'
-          // }
-          // tx.fromShort = this._utils.addrUtil(tx.from).addrShort
-          // tx.toShort = this._utils.addrUtil(tx.to).addrShort
-          // tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
-          return tx
-     
+        // if (tx.contractLabel?.name === 'Jupiter V6') {
+        //   tx.mainAction = 'swap'
+        // }
+        // if (tx.mainAction === 'createAssociatedAccount') {
+        //   tx.mainAction = 'create account'
+        // }
+        // if (tx.to === 'FarmuwXPWXvefWUeqFAa5w6rifLkq5X6E8bimYvrhCB1') {
+        //   tx.mainAction = 'farm'
+        // }
+        // tx.fromShort = this._utils.addrUtil(tx.from).addrShort
+        // tx.toShort = this._utils.addrUtil(tx.to).addrShort
+        // tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
+        return tx
+
       })
       console.log(txHistory, aggregateTxHistory);
 

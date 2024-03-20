@@ -124,15 +124,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     div {
         display: flex;
         align-items: center;
         margin-inline: 4px;
     }
     ion-img{
-        width: 12px;
-        height: 12px;
+        width: 13px;
+        height: 13px;
         margin-inline: 4px;
+        border-radius: 50%;
+        overflow: hidden;
     }
     ion-icon{
         margin-inline: 4px;
@@ -141,3 +144,8 @@
 
 }
 
+@media only screen and (max-width: 992px) {
+    .token-pts, .airdrop, .bonuses {
+    justify-content: flex-start;
+    }
+}

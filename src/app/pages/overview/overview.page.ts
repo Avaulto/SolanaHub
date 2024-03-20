@@ -31,11 +31,11 @@ export class OverviewPage implements OnInit {
   constructor() { }
 
   async ngOnInit() {
-    this._shs.walletExtended$.pipe(this._utilService.isNotNullOrUndefined).subscribe(wallet =>{
+    // this._shs.walletExtended$.pipe(this._utilService.isNotNullOrUndefined).subscribe(wallet =>{
 
-       this._portfolioService.getWalletHistory(wallet.publicKey.toBase58())
-    })
+    //    this._portfolioService.getWalletHistory(wallet.publicKey.toBase58())
+    // })
     
   }
-  public walletHistory: WritableSignal<TransactionHistory[]> = this._portfolioService.walletHistory
+  // public walletHistory: WritableSignal<TransactionHistory[]> = this._portfolioService.walletHistory
 }

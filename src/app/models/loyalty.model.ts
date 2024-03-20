@@ -2,6 +2,7 @@
 export interface LoyaltyScore {
     nativeStake: number;
     nativeStakeLongTermBoost: number;
+    hubSOL_DirectStakeBoost:    number;
     mSOL_DirectStakeBoost:    number;
     bSOL_DirectStakeBoost:    number;
     veMNDE_Boost:             number;

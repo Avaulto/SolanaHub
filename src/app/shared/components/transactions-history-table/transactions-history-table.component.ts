@@ -29,8 +29,8 @@ export class TransactionsHistoryTableComponent implements OnInit {
   ngOnInit() {
     this.columns.set([
       { key: 'date', title: 'Date/Time', width: '12%', cellTemplate: this.dateTpl, cssClass: { name: 'ion-text-left ', includeHeader: true } },
-      { key: 'fromShort', title: 'From', width: '12%', cssClass: { name: 'ion-text-left bold-text', includeHeader: true } },
-      { key: 'toShort', title: 'To', width: '12%', cssClass: { name: 'ion-text-left bold-text', includeHeader: true } },
+      { key: 'from', title: 'From', width: '12%', cssClass: { name: 'ion-text-left bold-text', includeHeader: true } },
+      { key: 'to', title: 'To', width: '12%', cssClass: { name: 'ion-text-left bold-text', includeHeader: true } },
       { key: 'assets', title: 'Assets', width: '25%', cellTemplate: this.opr1Tpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'type', title: 'Type', width: '15%', cssClass: { name: 'ion-text-center ', includeHeader: true }, cellTemplate: this.typeTpl },
       { key: 'transaction', title: 'Transaction', width: '10%', cellTemplate: this.redirectTpl }

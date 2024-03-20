@@ -67,14 +67,24 @@
                   {{row.liquidStake.mSOL}}
                 </span>
               </div>
-              +
+              <span class="ion-hide-lg-down">
+                +
+              </span> 
               <div class="token-pts">
                 <ion-img src="assets/images/bsol-small.webp" />
                 <span>
                   {{row.liquidStake.bSOL}}
                 </span>
-              </div>
+              </div>  
+              <!-- +
+              <div class="token-pts">
+                <ion-img src="assets/images/hubsol-small.webp" />
+                <span>
+                  123
+                </span>
+              </div> -->
             </div>
+            
           </ng-template>
           <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="token-pts">
@@ -84,7 +94,9 @@
                   {{row.dao.veMNDE}}
                 </span>
               </div>
-              +
+              <span class="ion-hide-lg-down">
+                +
+              </span> 
               <div>
                 <ion-img src="assets/images/blze-small.webp" />
                 <span>

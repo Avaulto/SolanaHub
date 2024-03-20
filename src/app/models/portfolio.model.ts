@@ -133,36 +133,7 @@ export interface Stake {
   extraData?: any
   link?: string
 }
-export interface TransactionHistoryTemp {
 
-    timestamp: string
-    fee: number
-    fee_payer: string
-    signers: Array<string>
-    signatures: Array<string>
-    protocol: {
-      address: string
-      name: string
-    }
-    type: string
-    status: string
-    actions: Array<{
-      info: {
-        token_address?: string
-        amount: number
-        receiver_address?: string
-        sender?: string
-        receiver?: string
-      }
-      source_protocol: {
-        address: string
-        name: string
-      }
-      type: string
-      parent_protocol?: string
-    }>
-    
-}
 export interface TransactionHistory{
     txHash: string
     timestamp: string
@@ -172,7 +143,8 @@ export interface TransactionHistory{
     mainAction: string
     mainActionColor?: string
     balanceChange: BalanceChange[]
-    contractLabel?: ContractLabel
+    contractLabel?: ContractLabel;
+    case: string;
   }
   
   export interface BalanceChange {

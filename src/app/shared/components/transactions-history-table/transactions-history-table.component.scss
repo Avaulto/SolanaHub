@@ -39,24 +39,18 @@ ion-chip {
     border-radius: var(--radius-full, 1000px);
     border: 1px solid #D5D9EB;
     background: #F8F9FC;
-
+    padding: 2px 9px;
     &.defi {
-        border: 1px solid #FDD1EE;
-        background: #FFF3FB;
-        color: var(--ion-color-primary);
-    }
-
-
-    &.send {
-        border: 1px solid #F9DBAF;
-        background: #FEF6EE;
-        color:rgba(185, 56, 21, 1);
-    }
-
-    &.received {
         border: 1px solid #B2DDFF;
         background: #EFF8FF;
         color: rgba(23, 92, 211, 1);
+    }
+
+    &.native {
+        border: 1px solid #FDD1EE;
+        background: #FFF3FB;
+        color: var(--ion-color-primary); 
+
     }
 }
 

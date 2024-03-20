@@ -11,42 +11,43 @@ import { LoyaltyScore } from 'src/app/models';
   templateUrl: './points-stats.component.html',
   styleUrls: ['./points-stats.component.scss'],
   standalone: true,
-  imports: [AsyncPipe,JsonPipe, NgClass,IonSkeletonText]
+  imports: [AsyncPipe, JsonPipe, NgClass, IonSkeletonText]
 })
 export class PointsStatsComponent implements OnInit {
   public utilService = inject(UtilService)
   public ptsScore$: Observable<LoyaltyScore> = inject(LoyaltyLeagueService).getLoyaltyScore()
-  .pipe(
-    map((score: LoyaltyScore) => {
-      let scoreExtended = {} as LoyaltyScore
-      for (const m in score) {
-        //@ts-ignore
-        switch (m) {
-          case 'nativeStake':
-          case 'mSOL_DirectStakeBoost':
-          case 'bSOL_DirectStakeBoost':
-          case 'nativeStakeLongTermBoost':
-            //@ts-ignore
-            scoreExtended[m] = this.utilService.decimalPipe.transform(score[m], '1.2-2')
-            break;
-          case 'veMNDE_Boost':
-          case 'veBLZE_Boost':
-            //@ts-ignore
-            scoreExtended[m] = this.utilService.decimalPipe.transform(score[m], '1.4')
-            break;
-          case 'referral_Boost':
-          case 'hubDomain_Boost':
-            //@ts-ignore
-            scoreExtended[m] = this.utilService.percentPipe.transform(score[m])
-            break;
+    .pipe(
+      map((score: LoyaltyScore) => {
+        let scoreExtended = {} as LoyaltyScore
+        for (const m in score) {
+          //@ts-ignore
+          switch (m) {
+            case 'nativeStake':
+            case 'hubSOL_DirectStakeBoost':
+            case 'mSOL_DirectStakeBoost':
+            case 'bSOL_DirectStakeBoost':
+            case 'nativeStakeLongTermBoost':
+              //@ts-ignore
+              scoreExtended[m] = this.utilService.decimalPipe.transform(score[m], '1.2-2')
+              break;
+            case 'veMNDE_Boost':
+            case 'veBLZE_Boost':
+              //@ts-ignore
+              scoreExtended[m] = this.utilService.decimalPipe.transform(score[m], '1.4')
+              break;
+            case 'referral_Boost':
+            case 'hubDomain_Boost':
+              //@ts-ignore
+              scoreExtended[m] = this.utilService.percentPipe.transform(score[m])
+              break;
+          }
+
         }
+        return scoreExtended
 
-      }
-      return scoreExtended
-
-    },
-    shareReplay(),
-    ))
+      },
+        shareReplay(),
+      ))
   constructor() { }
 
   ngOnInit() { }

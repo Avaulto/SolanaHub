@@ -32,13 +32,12 @@
 
   <ng-template #typeTpl let-row let-rowIndex="rowIndex" let-column="column">
     <ion-chip class="ion-text-capitalize" [ngClass]="{
-      'defi': row.type.toLowerCase() !== 'unknown',
-      'send': row.type.toLowerCase() === 'send',
-      'received': row.type.toLowerCase() === 'received',
-  }">{{row.type}}</ion-chip>
+      'defi': row?.case?.toLowerCase() === 'defi',
+      'native': row?.case?.toLowerCase() === 'native'
+  }">{{row.mainAction}}</ion-chip>
   </ng-template>
   <ng-template #redirectTpl let-row let-rowIndex="rowIndex" let-column="column">
     <div class="tx-out">
-      <a target="_blank" [href]="'https://solscan.io/tx/'+row.signatures[0]"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
+      <a target="_blank" [href]="'https://solscan.io/tx/'+row.txHash"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
     </div>
   </ng-template>

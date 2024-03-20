@@ -271,7 +271,8 @@ export class LiquidStakeService {
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey,null,record)
     } else if(SVP.includes(pool.poolName)){
-
+      console.log(pool);
+      
       let transaction = await withdrawStakeFromSanctum(
         this._shs.connection,
         new PublicKey(pool.poolPublicKey),
