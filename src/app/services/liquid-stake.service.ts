@@ -137,12 +137,19 @@ export class LiquidStakeService {
       validatorVoteAccount,
       stakeAccountPK
     );
-    
-    await this._txi.sendTx(depositTx.instructions, walletOwnerPK,depositTx.signers)
+    const record = {
+      message: 'liquid staking', data: {pool: 'hub'}
+    }
+    await this._txi.sendTx(depositTx.instructions, walletOwnerPK,depositTx.signers,record)
   }
   public async depositSolHubSolPool(walletOwnerPK: PublicKey, lamports:number){
  
-  
+    const record = {
+      message: 'liquid staking', data: {
+        pool: 'hub',
+        amount: lamports / LAMPORTS_PER_SOL
+      }
+    }
   let depositTx = await depositSolIntoSanctum(
     this._shs.connection,
     new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'), // pool address
@@ -152,7 +159,7 @@ export class LiquidStakeService {
     undefined,
     undefined
 );
-   await this._txi.sendTx(depositTx.instructions, walletOwnerPK,depositTx.signers)
+   await this._txi.sendTx(depositTx.instructions, walletOwnerPK,depositTx.signers,record)
   }
 
   public async getDirectStake(walletAddress): Promise<DirectStake> {
