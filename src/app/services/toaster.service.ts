@@ -27,7 +27,8 @@ async presentToastWithOptions(message: string,btnText: string, segmentClass: str
     duration: duration | 2000,
     animated: true,
     message,
-    layout: "stacked"
+    layout: "stacked",
+    
   };
   const buttons: (string | ToastButton)[] =  [
     {

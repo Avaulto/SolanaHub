@@ -65,7 +65,7 @@ export class TxInterceptorService {
     const config: BlockheightBasedTransactionConfirmationStrategy = {
       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
     }
-    await this._shs.connection.confirmTransaction(config, 'confirmed') 
+    await this._shs.connection.confirmTransaction(config, 'processed') 
     const txCompleted: toastData = {
       message: 'Transaction Completed',
       segmentClass: "toastInfo"
@@ -112,7 +112,7 @@ export class TxInterceptorService {
       }
       console.log(url);
   
-      await this._shs.connection.confirmTransaction(config, 'confirmed') 
+      await this._shs.connection.confirmTransaction(config, 'processed') 
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"
@@ -160,7 +160,7 @@ export class TxInterceptorService {
       const config: BlockheightBasedTransactionConfirmationStrategy = {
         signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
       }
-      await this._shs.connection.confirmTransaction(config, 'confirmed') 
+      await this._shs.connection.confirmTransaction(config, 'processed') 
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"

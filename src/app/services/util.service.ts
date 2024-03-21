@@ -6,11 +6,8 @@ import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
 import { JupStoreService } from "./jup-store.service";
 import { SessionStorageService } from "./session-storage.service";
-import { Config } from "../models/settings.model";
+import { Config, PriorityFee } from "../models/settings.model";
 import { environment } from 'src/environments/environment';
-// import { PriorityFee } from "../models/priorityFee.model";
-// import * as moment from "moment";
-// import { v4 as uuidv4 } from "uuid";
 
 declare global {
  
@@ -30,11 +27,7 @@ Number.prototype.toFixedNoRounding = function (n) {
 }
 
 
-export enum PriorityFee {
-  None = "0",
-  Fast = "1",
-  Supercharger = "3",
-}
+
 
 @Injectable({
   providedIn: "root",
@@ -64,8 +57,10 @@ export class UtilService {
   }
   
   public get priorityFee()  {
-    const baseFee = 5000
+    const baseFee = PriorityFee.Fast
     const config = Number(JSON.parse(this._localStorage.getData('priority-fee'))?.value) || baseFee
+    console.log(config);
+    
     return config;
   }
   

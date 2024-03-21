@@ -10,8 +10,6 @@ import {
 import { Config, PriorityFee } from '../../../models/settings.model';
 import { SelectGroupConfigComponent } from './select-group-config/select-group-config.component';
 import { ModalController } from '@ionic/angular';
-import { environment } from 'src/environments/environment';
-
 
 @Component({
   selector: 'app-settings',
@@ -32,14 +30,14 @@ export class SettingsComponent implements OnInit {
   private _modalCtrl = inject(ModalController)
   public RPCs: Config[] = [
     {
-      name: 'Triton',
-      imageURL: '/assets/images/triton-icon.svg',
-      value: environment.solanaCluster
-    },
-    {
       name: 'QuickNode',
       imageURL: '/assets/images/quicknode-icon.png',
-      value: 'https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro/a9aa5c76f9878b168043cc3452d267e0bda9dfdb'
+      value: 'https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro'
+    },
+    {
+      name: 'Triton',
+      imageURL: '/assets/images/triton-icon.svg',
+      value: 'https://mb-avaulto-cc28.mainnet.rpcpool.com'
     },
     {
       name: 'Custom RPC',
