@@ -8,7 +8,7 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
-import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 import {
   BrowserAnimationsModule,
   provideAnimations,

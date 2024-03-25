@@ -10,6 +10,7 @@ export interface Proposal{
     status: 'voting' | 'voted' | 'cool off'
     expiryDate: Date
     votes: {
+        total: number
         for: number
         against:number
     }
