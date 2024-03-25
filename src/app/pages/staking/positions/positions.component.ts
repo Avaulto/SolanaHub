@@ -88,31 +88,7 @@ export class PositionsComponent implements OnInit, OnChanges {
         this._stake$.next(LSTs)
 
 
-        // temp solution support for hubSOL
-        const wallet = this._shs.getCurrentWallet().publicKey.toBase58()
-        const hubSOLMintAddress = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'
-        const hubSOLAccount = (await this._shs.getTokenAccountsBalance(wallet, 'token')).filter(t => t.mintAddress === hubSOLMintAddress)[0]
-       if(hubSOLAccount){
-        const pool: StakePool = this.stakePools().find(p => p.tokenMint === hubSOLMintAddress)
-        const hubSOLPrice = this._jupStore.solPrice() * pool.exchangeRate
-         const hubSOLToken: any = {
-           address: hubSOLMintAddress,
-           balance: hubSOLAccount.balance,
-           decimals: hubSOLAccount.decimal,
-           imgUrl: "https://isgq47gyhaw5t6kfc5hkpwke5nbwuutmdynne4ixsn6cmnj7mneq.arweave.net/RI0OfNg4Ldn5RRdOp9lE60NqUmweGtJxF5N8JjU_Y0k",
-           name: "SolanaHub staked SOL",
-           networkId: "solana",
-           price: hubSOLPrice,
-           symbol: "hubSOL",
-           type: "token",
-           value: hubSOLAccount.balance * hubSOLPrice
-           
-          }
-          LSTs.push(hubSOLToken)
-          this._stake$.next(LSTs)
-
-
-        }
+      
       }
       if (this.positionGroup() === 'native' && this._portfolio.staking()) {
 

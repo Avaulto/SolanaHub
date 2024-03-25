@@ -1,0 +1,25 @@
+:host{
+    display: block;
+    margin-block-end: 10px;
+}
+
+.dao-group-head {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #E3E8EF;
+}
+ion-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-inline-end: 12px;
+}
+
+ion-label {
+    text-transform: capitalize;
+    color: var(--colors-text-text-primary-900, #101828);
+    font-weight: 500;
+    line-height: 24px;
+    /* 150% */
+}

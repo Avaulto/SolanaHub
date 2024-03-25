@@ -221,8 +221,6 @@ export class PortfolioService {
       const excludeConditions = (txRecord:historyResultShyft) => txRecord.status != "Fail" && txRecord.type != 'COMPRESSED_NFT_MINT' && !(txRecord.type == "SOL_TRANSFER" && txRecord.actions[0].info.amount === 0)
       const aggregateTxHistory: TransactionHistory[] = txHistory.result.filter(txRecord => excludeConditions(txRecord)).map((txRecord: historyResultShyft) => {
 
-        console.log(txRecord);
-        
         let actionData = txRecord.actions[0]
         let tx: TransactionHistory = {
           txHash: txRecord.signatures[0],

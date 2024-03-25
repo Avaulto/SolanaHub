@@ -1,0 +1,26 @@
+<div class="proposal ion-padding">
+  <div class="prop-head ion-padding">
+    <div class="prop-info">
+
+      {{proposal?.title}}
+      {{proposal?.description}}
+    </div>
+    <ion-chip color="primary">{{proposal.status}}</ion-chip>
+  </div>
+  <div class="prop-body ion-padding">
+    <div class="total-votes">
+
+      <div class="for-votes">
+        <ion-text>Yes votes</ion-text>
+        <ion-text>{{proposal.votes.for}}</ion-text>
+      </div>
+      <div class="against-votes">
+        <ion-text>no votes</ion-text>
+        <ion-text>{{proposal.votes.against}}</ion-text>
+      </div>
+    </div>
+    <div class="vote-bar">
+
+    </div>
+  </div>
+</div>

@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
         { title: 'Lending', url: '/lending', icon: 'https://cdn.lordicon.com/jkgunhbs.json', active: false },
         { title: 'Liquidity pools', url: '/liquidity-pools', icon: 'https://cdn.lordicon.com/rlrlhrme.json', active: false },
         // { title: 'Vaults', url: '/vaults', icon: 'barcode' },
-        { title: 'DAO', url: '/dao', icon: 'https://cdn.lordicon.com/ivugxnop.json', active: false },
+        { title: 'DAO', url: '/dao', icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
       ],
     },
 

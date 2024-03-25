@@ -1,0 +1,13 @@
+<div class="dao-group data-set">
+  <div class="dao-group-head ion-padding">
+    <ion-img [src]="DAO.imgURL"/>
+    <ion-label>{{DAO.name}}</ion-label>
+  </div>
+  <div class="dao-group-body">
+    
+      @for (proposal of DAO.proposals; track $index) {
+        <proposal-preview [proposal]="proposal"/> <proposal-preview/>
+      }
+    
+  </div>
+</div>
