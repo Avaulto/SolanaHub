@@ -20,7 +20,9 @@ import { PublicKey } from '@solana/web3.js';
 import { AnimatedIconComponent } from './shared/components/animated-icon/animated-icon.component';
 import { SettingsComponent } from './shared/layouts/settings/settings.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
-import { importTurnStile } from './services/turnStile';
+import importTurnStile from './services/turnStile';
+
+
 
 
 

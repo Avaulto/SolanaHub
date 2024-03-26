@@ -1,6 +1,6 @@
 declare var turnstile: any
 declare var globalToken: any
-export const importTurnStile = async () =>{
+export default async function importTurnStile(){
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     document.head.appendChild(script)
