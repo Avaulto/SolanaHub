@@ -59,6 +59,7 @@ export class PortfolioService {
   }
 
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
+    
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -68,7 +69,7 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&token=0x4AAAAAAAVqd3Q0Le6TMHMl`)).json()
         ])
         jupTokens = res[0];
         portfolioData = res[1]
