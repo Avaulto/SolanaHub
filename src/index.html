@@ -46,7 +46,7 @@
   <link rel="apple-touch-icon" href="/apple-icon-57x57.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+
   <script>
 window.onloadTurnstileCallback = function () {
     turnstile.render('#ts-container', {
@@ -63,6 +63,6 @@ window.onloadTurnstileCallback = function () {
 <body>
   <app-root></app-root>
   <div id="ts-container"></div>
-
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"></script>
 </body>
 </html>
