@@ -46,18 +46,23 @@
   <link rel="apple-touch-icon" href="/apple-icon-57x57.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
   <script>
-    function tokenCB(ts){
-      console.log(ts);
-    }
+window.onloadTurnstileCallback = function () {
+    turnstile.render('#ts-container', {
+        sitekey: '0x4AAAAAAAVqd3Q0Le6TMHMl',
+        callback: function(token) {
+            console.log(`Challenge Success ${token}`);
+        },
+    });
+};
     </script>
 
 </head>
 
 <body>
   <app-root></app-root>
-  <div class="cf-turnstile" data-sitekey="0x4AAAAAAAVqd3Q0Le6TMHMl"></div>
+  <div id="ts-container"></div>
 
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=tokenCB"></script>
 </body>
 </html>
