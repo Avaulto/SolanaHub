@@ -11,6 +11,7 @@ import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
+declare var globalToken: any
 @Injectable({
   providedIn: 'root'
 })
@@ -59,6 +60,7 @@ export class PortfolioService {
   }
 
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
+    console.log(globalToken);
     
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage

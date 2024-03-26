@@ -27,7 +27,8 @@
     content="SolanaHub: The best place to handle all your everyday Solana task. Built for degens & maxis." />
   <meta property="og:url" content="https://solanahub.app" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://shdw-drive.genesysgo.net/AHzrxKBP6fkj6sozaZ2uzv6nniJLRFnZNZQ6rEPfZM5E/banner.jpeg" />
+  <meta property="og:image"
+    content="https://shdw-drive.genesysgo.net/AHzrxKBP6fkj6sozaZ2uzv6nniJLRFnZNZQ6rEPfZM5E/banner.jpeg" />
   <meta property="og:image:alt" content="SolanaHub" />
   <meta property="og:locale" content="en" />
   <meta property="og:site_name" content="SolanaHub" />
@@ -47,22 +48,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 
-  <script>
-window.onloadTurnstileCallback = function () {
-    turnstile.render('#ts-container', {
-        sitekey: '0x4AAAAAAAVqd3Q0Le6TMHMl',
-        callback: function(token) {
-            console.log(`Challenge Success ${token}`);
-        },
-    });
-};
-    </script>
 
 </head>
 
 <body>
   <app-root></app-root>
   <div id="ts-container"></div>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback"></script>
+
+  <!-- <script>
+
+    turnstile.ready(function () {
+      turnstile.render('#ts-container', {
+        sitekey: '0x4AAAAAAAVqd3Q0Le6TMHMl',
+        callback: function (token) {
+          console.log(`Challenge Success ${token}`);
+        },
+      });
+    });
+  </script> -->
 </body>
+
 </html>

@@ -20,6 +20,7 @@ import { PublicKey } from '@solana/web3.js';
 import { AnimatedIconComponent } from './shared/components/animated-icon/animated-icon.component';
 import { SettingsComponent } from './shared/layouts/settings/settings.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { importTurnStile } from './services/turnStile';
 
 
 
@@ -70,18 +71,19 @@ export class AppComponent implements OnInit {
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
-
-  ngOnInit(): void {
+  
+  async ngOnInit() {
     this._activeRoute.queryParams
-      .subscribe((params) => {
-        const refWallet = params['refWallet']
-        if (refWallet && PublicKey.isOnCurve(refWallet)) {
-
-          this._localStorage.saveData('refWallet', refWallet)
-        }
-
+    .subscribe((params) => {
+      const refWallet = params['refWallet']
+      if (refWallet && PublicKey.isOnCurve(refWallet)) {
+        
+        this._localStorage.saveData('refWallet', refWallet)
       }
-      );
+      
+    }
+    );
+    await importTurnStile()
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
