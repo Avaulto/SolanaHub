@@ -15,6 +15,7 @@ import { BehaviorSubject, Subject, combineLatestWith, firstValueFrom, map, switc
 import { PrizePool } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { RouterLink } from '@angular/router';
+import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 
 @Component({
   selector: 'app-loyalty-league',
@@ -23,6 +24,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [
     RouterLink,
+    TooltipModule,
     IonicModule,
     NgStyle,
     MftModule,
@@ -127,7 +129,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(staker.walletOwner),
         nativeStake: this._utilService.formatBigNumbers(staker.pointsBreakDown.nativeStakePts),
-        liquidStake: { mSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.mSOLpts), bSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.bSOLpts) },
+        liquidStake: { hubSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.hubSOLpts),mSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.mSOLpts), bSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.bSOLpts) },
         dao: { veMNDE: this._utilService.formatBigNumbers(staker.pointsBreakDown.veMNDEpts), veBLZE: this._utilService.formatBigNumbers(staker.pointsBreakDown.veBLZEpts) },
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
         hubDomainHolder: staker.hubDomainHolder,

@@ -18,6 +18,7 @@ inject({mode: "production"});
 
 if (environment.production) {
   enableProdMode();
+
 }
 
 bootstrapApplication(AppComponent, {

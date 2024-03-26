@@ -61,8 +61,20 @@
           </ng-template>
           <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="token-pts">
+
+              <div class="token-pts">
+                <ion-img [tooltip]="hubSOLtoolTipTpl" src="assets/images/hubsol-small.webp" />
+                <span>
+                  {{row.liquidStake.hubSOL}}
+                </span>
+              </div>
+
+              <span class="ion-hide-lg-down">
+                +
+              </span> 
+
               <div>
-                <ion-img src="assets/images/msol-small.webp" />
+                <ion-img  [tooltip]="mSOLtoolTipTpl" src="assets/images/msol-small.webp" />
                 <span>
                   {{row.liquidStake.mSOL}}
                 </span>
@@ -71,25 +83,20 @@
                 +
               </span> 
               <div class="token-pts">
-                <ion-img src="assets/images/bsol-small.webp" />
+                <ion-img  [tooltip]="bSOLtoolTipTpl" src="assets/images/bsol-small.webp" />
                 <span>
                   {{row.liquidStake.bSOL}}
                 </span>
               </div>  
-              <!-- +
-              <div class="token-pts">
-                <ion-img src="assets/images/hubsol-small.webp" />
-                <span>
-                  123
-                </span>
-              </div> -->
+        
+          
             </div>
             
           </ng-template>
           <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="token-pts">
               <div>
-                <ion-img src="assets/images/mnde-small.webp" />
+                <ion-img [tooltip]="mndetoolTipTpl" src="assets/images/mnde-small.webp" />
                 <span>
                   {{row.dao.veMNDE}}
                 </span>
@@ -98,7 +105,7 @@
                 +
               </span> 
               <div>
-                <ion-img src="assets/images/blze-small.webp" />
+                <ion-img [tooltip]="blzetoolTipTpl" src="assets/images/blze-small.webp" />
                 <span>
                   {{row.dao.veBLZE}}
                 </span>
@@ -132,3 +139,27 @@
   </ion-grid>
 
 </ion-content>
+
+
+
+<ng-template #hubSOLtoolTipTpl>
+  hubSOL
+</ng-template>
+
+
+<ng-template #mSOLtoolTipTpl>
+  mSOL
+</ng-template>
+
+
+<ng-template #bSOLtoolTipTpl>
+  bSOL
+</ng-template>
+
+<ng-template #mndetoolTipTpl>
+  MNDE
+</ng-template>
+
+<ng-template #blzetoolTipTpl>
+  BLZE
+</ng-template>

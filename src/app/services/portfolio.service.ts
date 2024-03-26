@@ -11,13 +11,13 @@ import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
-import { globalToken } from './turnStile';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
-  // todo - refactor to signal
+
   public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
   public nfts: WritableSignal<NFT[]> = signal(null);
@@ -61,8 +61,7 @@ export class PortfolioService {
   }
 
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
-    console.log(globalToken);
-    
+
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -72,7 +71,7 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&token=${globalToken}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
         ])
         jupTokens = res[0];
         portfolioData = res[1]
