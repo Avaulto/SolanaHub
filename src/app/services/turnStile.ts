@@ -8,9 +8,9 @@ export const importTurnStile = async () =>{
 
             turnstile.render('#ts-container', {
                 sitekey: '0x4AAAAAAAVqd3Q0Le6TMHMl',
-                callback: function(token) {
-                    globalToken = token
+                callback: (token) => {
                     console.log(`Challenge Success ${token}`);
+                    globalToken = token
                 },
             });
 
