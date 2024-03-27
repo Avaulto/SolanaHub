@@ -105,6 +105,8 @@ export class PortfolioService {
   }
 
   private async _portfolioTokens(tokens: any, jupTokens: JupToken[], walletAddress): Promise<void> {
+
+    
     if (tokens) {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
@@ -316,7 +318,7 @@ export class PortfolioService {
   public async _portfolioStaking(walletAddress: string) {
 
     const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
-
+    console.log(stakeAccounts);
     this.staking.set(stakeAccounts)
   }
 

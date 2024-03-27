@@ -7,7 +7,7 @@ export interface DAO{
 export interface Proposal{
     title: string
     description: string
-    status: 'voting' | 'voted' | 'cool off'
+    status: 'voting' | 'voted' | 'ended' |'cool off'
     expiryDate: Date
     votes: {
         total: number

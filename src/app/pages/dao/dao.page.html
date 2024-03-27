@@ -37,9 +37,10 @@
 
     </div>
     <div id="group-proposals-wrapper">
-      @for (DaoProposals of DAOs; track $index) {
+      @for (dao of DAOs; track $index) {
   
-      <dao-group [DAO]="DaoProposals" />
+      <dao-group  [DAO]="dao" />
+      
       } @empty {
         <dao-group></dao-group>
         <dao-group></dao-group>

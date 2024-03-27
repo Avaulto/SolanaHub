@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { Proposal } from 'src/app/models/dao.model';
 import { IonText, IonChip, IonButton, IonLabel,IonProgressBar, IonSkeletonText } from "@ionic/angular/standalone";
 import { DatePipe, DecimalPipe, PercentPipe } from '@angular/common';
 import { TimeDiffPipe } from 'src/app/shared/pipes/timeDiff.pipe';
-
 @Component({
   selector: 'proposal-preview',
   templateUrl: './proposal-preview.component.html',
@@ -15,6 +14,9 @@ export class ProposalPreviewComponent  implements OnInit {
   @Input() proposal: Proposal = null
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log('runs');
+    
+  }
 
 }

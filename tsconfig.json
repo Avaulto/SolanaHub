@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "strictPropertyInitialization": false,
+    "resolveJsonModule": true,   
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": false,
     "skipLibCheck": true,

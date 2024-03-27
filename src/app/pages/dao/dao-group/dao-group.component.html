@@ -13,8 +13,7 @@
 
     @for (proposal of DAO?.proposals; track $index) {
     <ion-col size="12" sizeLg="6">
-      {{proposal | json}} runs
-      <proposal-preview [proposal]="proposal" /> <proposal-preview />
+      <proposal-preview (click)="openProposal(proposal)" [proposal]="proposal" /> 
     </ion-col>
     }@empty {
     <ion-col size="12" sizeLg="6">

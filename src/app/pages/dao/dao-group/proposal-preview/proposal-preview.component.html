@@ -37,9 +37,9 @@
           @if(!proposal){
             <ion-skeleton-text style="width: 40px;" [animated]="true" />
           }
-          <small>{{proposal?.votes?.for / proposal?.votes?.total  }}</small></ion-text>
+          <small>{{proposal?.votes?.for / proposal?.votes?.total | percent }}</small></ion-text>
       </div>
-      <div class="votes">
+      <div class="votes ion-text-right">
         <ion-label>no votes</ion-label>
         <ion-text>
           {{proposal?.votes?.against | number}} 
@@ -47,14 +47,16 @@
             <ion-skeleton-text style="width: 40px;" [animated]="true" />
 
           }
-          <small>{{proposal?.votes?.total / proposal?.votes?.against }}</small></ion-text>
+          <small>{{proposal?.votes?.against / proposal?.votes?.total  | percent}}</small></ion-text>
       </div>
     </div>
     <div class="vote-bar">
       @if(!proposal){
         <ion-skeleton-text [animated]="true" />
+      }@else {
+
+        <ion-progress-bar [value]=" proposal?.votes?.for / proposal?.votes?.total"></ion-progress-bar>
       }
-      <!-- <ion-progress-bar [value]=" proposal?.votes?.against / proposal?.votes?.for"></ion-progress-bar> -->
     </div>
   </div>
 </div>

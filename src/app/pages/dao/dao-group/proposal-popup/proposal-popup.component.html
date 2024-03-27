@@ -1,0 +1,10 @@
+<ion-grid>
+  <ion-row class="ion-justify-content-between"> 
+    <div>
+      <ion-img [src]="daoInfo.imgURL"/> <ion-label>{{daoInfo.name}}</ion-label>
+    </div>
+    <div>
+      <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+    </div>
+  </ion-row>
+</ion-grid>
