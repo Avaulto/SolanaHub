@@ -8,14 +8,19 @@
     align-items: center;
     border-bottom: 1px solid #E3E8EF;
 }
-ion-img {
+.dao-group-body {
+    display: flex;
+}
+ion-img,ion-skeleton-text.temp-img {
     width: 30px;
     height: 30px;
     border-radius: 2px;
     overflow: hidden;
     margin-inline-end: 12px;
 }
-
+ion-skeleton-text#text {
+    width: 40%;
+}
 ion-label {
     text-transform: capitalize;
     color: var(--colors-text-text-primary-900, #101828);

@@ -11,11 +11,13 @@ import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
-  // todo - refactor to signal
+
   public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
   public nfts: WritableSignal<NFT[]> = signal(null);
@@ -59,6 +61,7 @@ export class PortfolioService {
   }
 
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
+
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -102,6 +105,8 @@ export class PortfolioService {
   }
 
   private async _portfolioTokens(tokens: any, jupTokens: JupToken[], walletAddress): Promise<void> {
+
+    
     if (tokens) {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
@@ -313,7 +318,7 @@ export class PortfolioService {
   public async _portfolioStaking(walletAddress: string) {
 
     const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
-
+    console.log(stakeAccounts);
     this.staking.set(stakeAccounts)
   }
 

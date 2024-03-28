@@ -3,6 +3,7 @@ export interface LoyaltyScore {
     nativeStake: number;
     nativeStakeLongTermBoost: number;
     hubSOL_DirectStakeBoost:    number;
+    hubSOL_DeFiBoost:    number;
     mSOL_DirectStakeBoost:    number;
     bSOL_DirectStakeBoost:    number;
     veMNDE_Boost:             number;
@@ -30,6 +31,7 @@ export interface PointsBreakDown {
     nativeStakePts: number;
     bSOLpts:        number;
     mSOLpts:        number;
+    hubSOLpts:       number;
     veMNDEpts:      number;
     veBLZEpts:      number;
     referralPts:    number;

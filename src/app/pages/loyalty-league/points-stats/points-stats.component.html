@@ -10,14 +10,14 @@
   }
 </div>
 
-<!-- <div class="m">
-  <div class="key ">hubSOL direct stake</div>
+<div class="m">
+  <div class="key ">hubSOL</div>
   @if(ptsScore$ | async; as ptsScore){
     <div class="value">x{{ptsScore.hubSOL_DirectStakeBoost}}</div>
   }@else{
     <ion-skeleton-text [animated]="true" />
   }
-</div> -->
+</div>
 <div class="m">
   <div class="key ">mSOL direct stake</div>
   @if(ptsScore$ | async; as ptsScore){
@@ -46,6 +46,14 @@
   <div class="key ">veBLZE votes</div>
   @if(ptsScore$ | async; as ptsScore){
     <div class="value">x{{ptsScore.veBLZE_Boost}}</div>
+  }@else{
+    <ion-skeleton-text [animated]="true" />
+  }
+</div>
+<div class="m">
+  <div class="key bonus">hubSOL DeFi Boost</div>
+  @if(ptsScore$ | async; as ptsScore){
+    <div class="value">x{{ptsScore.hubSOL_DeFiBoost}}</div>
   }@else{
     <ion-skeleton-text [animated]="true" />
   }

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { ProposalComponent } from './proposal.component';
+import { TurnstileComponent } from './turnstile.component';
 
-describe('ProposalComponent', () => {
-  let component: ProposalComponent;
-  let fixture: ComponentFixture<ProposalComponent>;
+describe('TurnstileComponent', () => {
+  let component: TurnstileComponent;
+  let fixture: ComponentFixture<TurnstileComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProposalComponent ],
+      declarations: [ TurnstileComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ProposalComponent);
+    fixture = TestBed.createComponent(TurnstileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

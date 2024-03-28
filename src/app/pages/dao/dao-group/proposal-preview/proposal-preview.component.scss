@@ -1,0 +1,125 @@
+.proposal {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.prop-head,
+.prop-body {
+    cursor: pointer;
+    background-color: #F8FAFC;
+    border: 1px solid #E3E8EF;
+}
+
+.prop-body {
+    border-top: 0;
+}
+
+.prop-info {
+    justify-content: space-between;
+    display: flex;
+    color: #101828;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+
+    div {
+        width: 85%;
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    span {
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-block-end: 8px;
+    }
+}
+
+ion-chip {
+    scale: 0.95;
+    --border-radius: 0;
+    margin: 0;
+    text-transform: capitalize;
+    height: 22px;
+    border: 1px solid #E9D7FE;
+    background: #F9F5FF;
+    color: var(--ion-color-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 18px;
+}
+
+ion-button {
+    width: fit-content;
+    text-transform: capitalize;
+    --border-radius: 6px;
+    --border-color: #CDD5DF;
+    --background: #FFF;
+    --border-width: 1px;
+    --border-style: solid;
+    --color: #364152;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 16px;
+    min-height: 20px;
+    --padding-bottom: 0;
+    --padding-top: 0;
+    height: 20px;
+}
+
+.total-votes {
+    display: flex;
+    justify-content: space-between;
+}
+
+.votes {
+    display: flex;
+    flex-direction: column;
+    margin-block-end: 8px;
+    ion-label {
+
+        color: #4B5565;
+        font-size: 13px;
+
+        font-weight: 500;
+        line-height: 18px;
+    }
+
+    ion-text {
+        color: #364152;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 18px;
+    }
+
+    small {
+        color: #697586;
+        margin-inline-start: 2px;
+        font-size: 11px;
+
+        font-weight: 500;
+        line-height: 16px;
+
+    }
+}
+
+.vote-bar {
+    // height: 10px;
+    // background-color: #E8B5DE;
+    // border-radius: 10px;
+    // &::after{
+    //     content: "";
+    //     background-color: var(--ion-color-primary);
+    // }
+    ion-progress-bar{
+        height: 10px;
+        border-radius: 10px;
+        --background:#E8B5DE;
+        --progress-background: var(--ion-color-primary);
+    }
+}

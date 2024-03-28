@@ -23,12 +23,15 @@ import { MenuComponent } from './shared/components/menu/menu.component';
 
 
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
+
     MenuComponent,
     IonHeader,
     IonImg,
@@ -70,18 +73,18 @@ export class AppComponent implements OnInit {
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
-
-  ngOnInit(): void {
+  
+  async ngOnInit() {
     this._activeRoute.queryParams
-      .subscribe((params) => {
-        const refWallet = params['refWallet']
-        if (refWallet && PublicKey.isOnCurve(refWallet)) {
-
-          this._localStorage.saveData('refWallet', refWallet)
-        }
-
+    .subscribe((params) => {
+      const refWallet = params['refWallet']
+      if (refWallet && PublicKey.isOnCurve(refWallet)) {
+        
+        this._localStorage.saveData('refWallet', refWallet)
       }
-      );
+      
+    }
+    );
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
@@ -125,4 +128,6 @@ export class AppComponent implements OnInit {
     });
     modal.present();
   }
+
+  
 }

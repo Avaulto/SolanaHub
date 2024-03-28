@@ -1,26 +1,62 @@
 <div class="proposal ion-padding">
   <div class="prop-head ion-padding">
     <div class="prop-info">
+      <div>
 
-      {{proposal?.title}}
-      {{proposal?.description}}
+        <span>
+          {{proposal?.title}}
+          @if(!proposal){
+            <ion-skeleton-text style="width: 60%;" [animated]="true" />
+          }
+        </span>
+
+        <ion-button>
+          {{proposal?.expiryDate | timeDiff}}
+          @if(!proposal){
+            <ion-skeleton-text style="width: 30px;" [animated]="true" />
+          }
+        </ion-button>
+      </div>
+      <ion-chip color="secondary">
+        {{proposal?.status}}
+        @if(!proposal){
+          <ion-skeleton-text style="width: 30px;" [animated]="true" />
+        }
+      </ion-chip>
     </div>
-    <ion-chip color="primary">{{proposal.status}}</ion-chip>
+   
   </div>
   <div class="prop-body ion-padding">
     <div class="total-votes">
 
-      <div class="for-votes">
-        <ion-text>Yes votes</ion-text>
-        <ion-text>{{proposal.votes.for}}</ion-text>
+      <div class="votes">
+        <ion-label>Yes votes</ion-label>
+
+        <ion-text>
+          {{proposal?.votes?.for | number}} 
+          @if(!proposal){
+            <ion-skeleton-text style="width: 40px;" [animated]="true" />
+          }
+          <small>{{proposal?.votes?.for / proposal?.votes?.total | percent }}</small></ion-text>
       </div>
-      <div class="against-votes">
-        <ion-text>no votes</ion-text>
-        <ion-text>{{proposal.votes.against}}</ion-text>
+      <div class="votes ion-text-right">
+        <ion-label>no votes</ion-label>
+        <ion-text>
+          {{proposal?.votes?.against | number}} 
+          @if(!proposal){
+            <ion-skeleton-text style="width: 40px;" [animated]="true" />
+
+          }
+          <small>{{proposal?.votes?.against / proposal?.votes?.total  | percent}}</small></ion-text>
       </div>
     </div>
     <div class="vote-bar">
+      @if(!proposal){
+        <ion-skeleton-text [animated]="true" />
+      }@else {
 
+        <ion-progress-bar [value]=" proposal?.votes?.for / proposal?.votes?.total"></ion-progress-bar>
+      }
     </div>
   </div>
 </div>

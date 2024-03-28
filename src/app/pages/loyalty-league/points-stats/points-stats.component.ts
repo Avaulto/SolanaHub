@@ -24,6 +24,7 @@ export class PointsStatsComponent implements OnInit {
           switch (m) {
             case 'nativeStake':
             case 'hubSOL_DirectStakeBoost':
+            case 'hubSOL_DeFiBoost':
             case 'mSOL_DirectStakeBoost':
             case 'bSOL_DirectStakeBoost':
             case 'nativeStakeLongTermBoost':
