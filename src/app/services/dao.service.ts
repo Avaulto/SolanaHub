@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import {PublicKey, Connection, Keypair, clusterApiUrl, Transaction, sendAndConfirmTransaction} from "@solana/web3.js";
 import {Governance} from "./realms/index";
-
+import realms from "./realms/realms.json"
 @Injectable({
   providedIn: 'root'
 })
 export class DaoService {
 
-  constructor() { }
+  constructor() {
+    console.log(realms);
+    
+   }
   private _governance:Governance;
   public initGovSDK(connection: Connection){
     this._governance = new Governance(connection);
