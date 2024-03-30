@@ -1,8 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { ProposalPreviewComponent } from './proposal-preview/proposal-preview.component';
 import { IonImg, IonLabel, IonRow, IonCol, IonSkeletonText } from '@ionic/angular/standalone';
-import { DAO, Proposal } from 'src/app/models/dao.model';
-
+import { Gov, Proposal } from 'src/app/models/dao.model';
 import { ModalController } from '@ionic/angular';
 import {  ProposalPopupComponent } from './proposal-popup/proposal-popup.component';
 @Component({
@@ -21,18 +20,18 @@ import {  ProposalPopupComponent } from './proposal-popup/proposal-popup.compone
   ]
 })
 export class DaoGroupComponent implements OnInit {
-  @Input() DAO: DAO = null
+  @Input() gov: Gov = null
   private _modalCtrl= inject(ModalController);
   constructor() { }
 
   ngOnInit() {
-    console.log(this.DAO);
+    console.log(this.gov);
 
   }
   async openProposal(proposal: Proposal){
     const modal = await this._modalCtrl.create({
       component: ProposalPopupComponent,
-      componentProps: {proposal, daoInfo:{name:this.DAO.name, imgURL: this.DAO.imgURL}},
+      componentProps: {proposal, govInfo:{name:this.gov.name, imgURL: this.gov.imgURL}},
       cssClass: 'modal-style'
     });
     modal.present();

@@ -1,19 +1,19 @@
-<div class="dao-group data-set">
-  <div class="dao-group-head ion-padding">
+<div class="gov-group data-set">
+  <div class="gov-group-head ion-padding">
 
-    @if(!DAO){
+    @if(!gov){
     <ion-skeleton-text class="temp-img" [animated]="true" />
     <ion-skeleton-text id="text" [animated]="true" />
     }@else{
-    <ion-img [src]="DAO?.imgURL" />
-    <ion-label>{{DAO?.name}}</ion-label>
+    <ion-img [src]="gov?.imgURL" />
+    <ion-label>{{gov?.name}}</ion-label>
     }
   </div>
-  <ion-row class="dao-group-body">
+  <ion-row class="gov-group-body">
 
-    @for (proposal of DAO?.proposals; track $index) {
+    @for (proposal of gov?.proposals; track $index) {
     <ion-col size="12" sizeLg="6">
-      <proposal-preview (click)="openProposal(proposal)" [proposal]="proposal" /> 
+      <proposal-preview [proposal]="proposal" /> 
     </ion-col>
     }@empty {
     <ion-col size="12" sizeLg="6">

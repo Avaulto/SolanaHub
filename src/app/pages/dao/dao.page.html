@@ -37,14 +37,20 @@
 
     </div>
     <div id="group-proposals-wrapper">
-      @for (dao of DAOs; track $index) {
-  
-      <dao-group  [DAO]="dao" />
-      
-      } @empty {
-        <dao-group></dao-group>
-        <dao-group></dao-group>
+      @for (gov of filterDAOs(); track $index) {
+
+      <dao-group [gov]="gov" />
+      }@empty {
+
+      @if(filterDAOs() === undefined){
+      <dao-group></dao-group>
+      <dao-group></dao-group>
+      }@else {
+
+      No DAO found
       }
+      }
+
     </div>
 
 

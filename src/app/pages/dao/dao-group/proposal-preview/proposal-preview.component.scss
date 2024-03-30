@@ -24,7 +24,7 @@
     line-height: 24px;
 
     div {
-        width: 85%;
+        width: 75%;
         display: flex;
         flex-direction: column;
 
@@ -81,6 +81,7 @@ ion-button {
     display: flex;
     flex-direction: column;
     margin-block-end: 8px;
+    text-transform: capitalize;
     ion-label {
 
         color: #4B5565;

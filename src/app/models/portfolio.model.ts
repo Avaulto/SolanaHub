@@ -171,6 +171,7 @@ export interface TransactionHistory{
   
   export interface defiHolding {
     poolTokens: PoolToken[];
+    platform?:  string;
     imgURL:     string;
     type:       string;
     value:      number;
@@ -181,6 +182,7 @@ export interface TransactionHistory{
 export interface PoolToken {
     imgURL: string;
     symbol: string;
+    address:string;
 }
 export interface holding {
   balance: string;

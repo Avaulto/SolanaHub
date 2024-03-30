@@ -22,7 +22,7 @@ export class PortfolioService {
   public tokens = signal<Token[]>(null);
   public nfts: WritableSignal<NFT[]> = signal(null);
   public staking: WritableSignal<Stake[]> = signal(null);
-  public defi: WritableSignal<LiquidityProviding[]> = signal(null);
+  public defi: WritableSignal<defiHolding[]> = signal(null);
   public walletHistory: WritableSignal<TransactionHistory[]> = signal(null);
   readonly restAPI = this._utils.serverlessAPI
   constructor(
@@ -198,7 +198,7 @@ export class PortfolioService {
           assets = assets.flat()
         }
         holdings = assets?.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || []
-        poolTokens = assets?.map(a => { return { imgURL: a.imgUrl, symbol: a.symbol } }) || []
+        poolTokens = assets?.map(a => { return { address:a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || []
 
         let defiHolding: defiHolding = {
           value: group.value,
@@ -206,7 +206,8 @@ export class PortfolioService {
           poolTokens,
           holdings,
           type: group.label,
-          link: group.website
+          link: group.website,
+          platform: group.platformId
         };
 
         return defiHolding
@@ -318,7 +319,6 @@ export class PortfolioService {
   public async _portfolioStaking(walletAddress: string) {
 
     const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
-    console.log(stakeAccounts);
     this.staking.set(stakeAccounts)
   }
 
