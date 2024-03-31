@@ -1,8 +1,24 @@
-ion-grid{
+ion-grid {
     padding-inline: 2vw;
     top: -70px;
     position: relative;
 }
-.data-set{
+
+.data-set {
     margin-block-end: 30px;
+}
+
+#no-daos {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: var(--colors-text-text-primary-900, #101828);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+
+    ion-img {
+        margin-block-end: 20px;
+        width: 130px;
+    }
 }

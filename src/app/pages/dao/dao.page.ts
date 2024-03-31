@@ -9,7 +9,7 @@ import { DaoGroupComponent } from './dao-group/dao-group.component';
 import { DAOInfo, Gov, Proposal } from 'src/app/models/dao.model';
 import { PortfolioService, SolanaHelpersService } from 'src/app/services';
 import { DaoService } from 'src/app/services/dao.service';
-import { PublicKey } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { defiHolding } from 'src/app/models';
 @Component({
   selector: 'app-dao',
@@ -36,10 +36,10 @@ import { defiHolding } from 'src/app/models';
 })
 export class DaoPage implements OnInit {
   public tableMenuOptions = ['voting', 'ended'];
-  public DAOs: WritableSignal<Gov[]> = signal(null)
-  public filterDAOs = computed(() =>this.DAOs()?.filter(t =>  t.name.toLowerCase().startsWith(this.searchTerm().toLowerCase()))
+  public Govs: WritableSignal<Gov[]> = signal(null)
+  public filterGovs = computed(() => this.Govs()?.filter(t => t.name.toLowerCase().startsWith(this.searchTerm().toLowerCase()))
     // .sort((a, b) => a.value > b.value ? -1 : 1)
-)
+  )
   constructor(
     private _dao: DaoService,
     private _portfolio: PortfolioService,
@@ -61,43 +61,42 @@ export class DaoPage implements OnInit {
   private async initiateFetchProposals(defiPositions: defiHolding[]) {
     const { publicKey } = this._shs.getCurrentWallet()
     // get users realms deposit
-    const realmsPositions = defiPositions.find(position => position.platform === 'realms')
-    console.log(realmsPositions);
+    const realmsPositions = defiPositions?.find(position => position.platform === 'realms')
+    if (realmsPositions) {
 
-    // extract token address
-    const communityMintHoldings = realmsPositions.poolTokens.map(token => token.address)
-    // get off chain data
-    const daoInfo = await this._dao.getOffChainDAOsInfo()
-    // filter relevant dao data
-    const findDAOCommunityToken = this.daosToFetch(daoInfo, communityMintHoldings);
-    console.log(daoInfo, communityMintHoldings, findDAOCommunityToken);
-    
-    // prepare array of community token address
-    const daoProgramId: string[] = findDAOCommunityToken.filter(dao => dao?.programId).map(dao => dao?.programId)
+      console.log(realmsPositions);
 
-    console.log(communityMintHoldings, daoProgramId);
+      // extract token address
+      const communityMintHoldings = realmsPositions.poolTokens.map(token => token.address)
+      // get off chain data
+      const daoInfo = await this._dao.getOffChainDAOsInfo()
+      // filter relevant dao data
+      const findDAOCommunityToken = this.daosToFetch(daoInfo, communityMintHoldings);
+      console.log(daoInfo, communityMintHoldings, findDAOCommunityToken);
 
-    // fetch onchain data
-    this.aggregateDAO(publicKey, findDAOCommunityToken)
+      // prepare array of community token address
+      const daoProgramId: string[] = findDAOCommunityToken.filter(dao => dao?.programId).map(dao => dao?.programId)
 
+      console.log(communityMintHoldings, daoProgramId);
+
+      // fetch onchain data
+      this.aggregateDAO(publicKey, findDAOCommunityToken)
+
+    }else{
+      setTimeout(() => {
+        this.Govs.set([])
+      });
+      
+    }
   }
-  async ngOnInit() {
-
-
-
-
-
-
-  }
-  public tabSelected(ev) {
-
-  }
+  async ngOnInit() {}
+  public tabSelected(ev) {}
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
   }
   public async aggregateDAO(walletOwner: PublicKey, daosToFetch: DAOInfo[]) {
-    const DAOs: Gov[] = []
+    const Govs: Gov[] = []
     // prepare array of community token address
     // const daoProgramId: string[] = daosToFetch.filter(dao => dao?.programId).map(dao => dao?.programId)
     await Promise.all(daosToFetch.map(async (dao: DAOInfo) => {
@@ -126,31 +125,41 @@ export class DaoPage implements OnInit {
           for (let i = 0; i < governanceAccounts.length; i++) {
             const proposals = await this._dao.fetchProposal(govSDK, governanceAccounts[i].pubkey)
             const aggregateProposals: Proposal[] = proposals.map(proposal => {
+          
+                const forr = Number(proposal.options[0].voteWeight.toString()) / LAMPORTS_PER_SOL || 0;
+                const against =  Number(proposal?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
+                const total = forr + against
+              
               return {
+                ...proposal,
                 title: proposal.name,
                 description: proposal.descriptionLink,
-                status: proposal.options[0].label, // 'voting' | 'voted' | 'ended' |'cool off',
+                status: Object.keys(proposal.state)[0], // 'voting' | 'voted' | 'ended' |'cool off',
                 expiryDate: new Date(proposal.unixTimestamp * 1000),
                 votes: {
-                  total: 345,
-                  for: Number(proposal.options[0].transactionsCount),
-                  against: Number(proposal?.denyVoteWeight?.toString()) || 0
+                  total,
+                  for: forr,
+                  against
                 }
               }
             });
-            // const 
+            // push into array of proposals 
             gov.proposals.push(...aggregateProposals)
+            // sort by date
+            gov.proposals.sort((a,b) => a.expiryDate < b.expiryDate ? 1 : -1)
+
+            //get last 2 proposals
             gov.proposals.splice(2, aggregateProposals.length)
             console.log(`Found ${proposals.length} proposals for governance account: ${governanceAccounts[i].pubkey.toBase58()}`, proposals)
           }
           console.log("----------------------")
         }
-        DAOs.push(gov)
+        Govs.push(gov)
       }
     }));
-    console.log('all my daos:', DAOs);
+    console.log('all my daos:', Govs);
 
-    this.DAOs.set(DAOs)
+    this.Govs.set(Govs)
   }
 
 }

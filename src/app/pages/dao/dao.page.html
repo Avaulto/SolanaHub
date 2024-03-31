@@ -37,17 +37,22 @@
 
     </div>
     <div id="group-proposals-wrapper">
-      @for (gov of filterDAOs(); track $index) {
+      @for (gov of filterGovs(); track $index) {
 
       <dao-group [gov]="gov" />
       }@empty {
 
-      @if(filterDAOs() === undefined){
+      @if(filterGovs() === undefined){
       <dao-group></dao-group>
       <dao-group></dao-group>
       }@else {
+        <div id="no-daos">
 
-      No DAO found
+          <ion-img src="assets/images/no-dao.png"/>
+          <span>
+            No DAO proposals for now..
+          </span>
+        </div>
       }
       }
 

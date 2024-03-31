@@ -9,7 +9,7 @@ export class DaoService {
 
   constructor() {
    }
-  private _governance:Governance;
+
   public async getOffChainDAOsInfo(): Promise<DAOInfo[]> {
     try {
       const daosRes: DAOInfo[] = await (await fetch("https://app.realms.today/realms/mainnet-beta.json")).json();
@@ -56,7 +56,15 @@ export class DaoService {
           "realmId": "7vrFDrK9GRNX7YZXbo7N3kvta7Pbn6W1hCXQ6C7WBxG9",
           "ogImage": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1/logo.png",
           "communityMint": "BLZEEuZUBVqFhj8adcCFPJvPVCiCyVmh3hkJMrU8KuJA"
-        }
+        },
+        {
+          "symbol": "MNDE",
+          "displayName": "Marinade",
+          "programId": "GovMaiHfpVPw8BAM1mbdzgmSZYDw2tdP32J2fapoQoYs",
+          "realmId": "899YG3yk4F66ZgbNWLHriZHTXSKk9e1kvsKEquW7L6Mo",
+          "ogImage": "https://app.realms.today/realms/MNDE/img/mnde_logo.png",
+          "communityMint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
+          },
     ]
   }
 }
