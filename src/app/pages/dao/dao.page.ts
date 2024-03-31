@@ -129,13 +129,24 @@ export class DaoPage implements OnInit {
                 const forr = Number(proposal.options[0].voteWeight.toString()) / LAMPORTS_PER_SOL || 0;
                 const against =  Number(proposal?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
                 const total = forr + against
-              
-              return {
+                const now = Math.floor(new Date().getTime() / 1000)
+                // const expiryDate = new Date((Number(proposal?.votingAt?.toString()) + governanceAccounts[i].config.votingBaseTime) * 1000)
+                // console.log(now,proposal.votingAt ,expiryDate);
+                const expiryDate = new Date(
+                  (Number(proposal?.votingAt?.toString()) + 
+                  governanceAccounts[i].config.votingBaseTime + governanceAccounts[i].config.votingCoolOffTime)  
+                  * 1000)
+                  
+                  const secTillExpiry = (Number(proposal?.votingAt?.toString()) + 
+                  governanceAccounts[i].config.votingBaseTime - now) 
+                  * 1000
+                return {
                 ...proposal,
+                governingTokenMint: proposal.governingTokenMint.toBase58(),
                 title: proposal.name,
                 description: proposal.descriptionLink,
                 status: Object.keys(proposal.state)[0], // 'voting' | 'voted' | 'ended' |'cool off',
-                expiryDate: new Date(proposal.unixTimestamp * 1000),
+                expiryDate: expiryDate,//new Date(proposal.unixTimestamp * 1000),
                 votes: {
                   total,
                   for: forr,
@@ -145,12 +156,14 @@ export class DaoPage implements OnInit {
             });
             // push into array of proposals 
             gov.proposals.push(...aggregateProposals)
+            const removeCouncilProp = gov.proposals.filter(p => p.status.toLowerCase() !== 'draft' && p.governingTokenMint === dao.communityMint)
+            gov.proposals = removeCouncilProp
             // sort by date
             gov.proposals.sort((a,b) => a.expiryDate < b.expiryDate ? 1 : -1)
 
             //get last 2 proposals
             gov.proposals.splice(2, aggregateProposals.length)
-            console.log(`Found ${proposals.length} proposals for governance account: ${governanceAccounts[i].pubkey.toBase58()}`, proposals)
+            // console.log(`Found ${proposals.length} proposals for governance account: ${governanceAccounts[i].pubkey.toBase58()}`, proposals)
           }
           console.log("----------------------")
         }

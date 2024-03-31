@@ -45,12 +45,22 @@ ion-chip {
     margin: 0;
     text-transform: capitalize;
     height: 22px;
-    border: 1px solid #E9D7FE;
-    background: #F9F5FF;
-    color: var(--ion-color-secondary);
     font-size: 11px;
     font-weight: 500;
     line-height: 18px;
+    &.voting {
+        border: 1px solid #E9D7FE;
+        background: #F9F5FF;
+        color: var(--ion-color-secondary);
+    }
+
+
+    &.succeeded {
+        border-radius: var(--radius-full, 1000px);
+        border: 1px solid #D5D9EB;
+        background: #F8F9FC;
+    }
+
 }
 
 ion-button {

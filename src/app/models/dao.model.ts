@@ -11,6 +11,7 @@ export interface Proposal{
     description: string
     status: string
     expiryDate: Date
+    governingTokenMint: string,
     votes: {
         total: number
         for: number

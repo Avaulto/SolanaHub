@@ -17,7 +17,12 @@
           }
         </ion-button>
       </div>
-      <ion-chip color="secondary">
+      <ion-chip 
+      [ngClass]="{
+        'voting': proposal?.status.toLowerCase() === 'voting',
+        'succeeded': proposal?.status.toLowerCase() === 'succeeded'
+    }"
+      >
         {{proposal?.status}}
         @if(!proposal){
           <ion-skeleton-text style="width: 30px;" [animated]="true" />
