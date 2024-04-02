@@ -31,15 +31,7 @@ export class PortfolioService {
     private _shs: SolanaHelpersService,
     private _sessionStorageService: SessionStorageService
   ) {
-    this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
-      if (wallet) {
-        this._shs.connection.onAccountChange(wallet.publicKey, () => {
-          let forceFetch = true;
-          this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
-        })
-        this.getPortfolioAssets(wallet.publicKey.toBase58())
-      }
-    })
+
 
   }
 
@@ -60,8 +52,8 @@ export class PortfolioService {
     return null
   }
 
-  public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
-    let turnStileToken = this._utils.turnStileToken
+  public async getPortfolioAssets(walletAddress: string,token: string, forceFetch = false) {
+
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -71,7 +63,7 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${turnStileToken}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${token}`)).json()
         ])
         jupTokens = res[0];
         portfolioData = res[1]

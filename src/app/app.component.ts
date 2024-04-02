@@ -5,7 +5,8 @@ import {
   IonButton,
   IonButtons,
   IonMenuButton,
-  IonApp, IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader } from '@ionic/angular/standalone';
+  IonApp, IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader
+} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
@@ -22,7 +23,9 @@ import { SettingsComponent } from './shared/layouts/settings/settings.component'
 import { MenuComponent } from './shared/components/menu/menu.component';
 import { environment } from 'src/environments/environment';
 import { NgxTurnstileModule } from 'ngx-turnstile';
-import { UtilService } from './services';
+import { PortfolioService, SolanaHelpersService, UtilService } from './services';
+import { WalletExtended } from './models';
+import { combineLatestWith } from 'rxjs';
 
 
 
@@ -74,26 +77,44 @@ export class AppComponent implements OnInit {
     private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
-    private _utils: UtilService
+    private _utilService: UtilService,
+    private _shs: SolanaHelpersService,
+    private portfolioService: PortfolioService,
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
-  sendCaptchaResponse(token){
-    this._utils.turnStileToken = token;
+  sendCaptchaResponse(token) {
+    this._utilService.turnStileToken = token;
     console.log(token);
-    
+
   }
   async ngOnInit() {
+
+    this._shs.walletExtended$
+      .pipe(
+        combineLatestWith(this._utilService.turnStileToken),
+        this._utilService.isNotNullOrUndefined,
+      )
+      .subscribe(([wallet, token]: [WalletExtended, string]) => {
+        if (wallet && token) {
+          this._shs.connection.onAccountChange(wallet.publicKey, () => {
+            let forceFetch = true;
+            this.portfolioService.getPortfolioAssets(wallet.publicKey.toBase58(), token, forceFetch)
+          })
+          this.portfolioService.getPortfolioAssets(wallet.publicKey.toBase58(), token)
+        }
+      })
+
     this._activeRoute.queryParams
-    .subscribe((params) => {
-      const refWallet = params['refWallet']
-      if (refWallet && PublicKey.isOnCurve(refWallet)) {
-        
-        this._localStorage.saveData('refWallet', refWallet)
+      .subscribe((params) => {
+        const refWallet = params['refWallet']
+        if (refWallet && PublicKey.isOnCurve(refWallet)) {
+
+          this._localStorage.saveData('refWallet', refWallet)
+        }
+
       }
-      
-    }
-    );
+      );
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
@@ -138,5 +159,5 @@ export class AppComponent implements OnInit {
     modal.present();
   }
 
-  
+
 }
