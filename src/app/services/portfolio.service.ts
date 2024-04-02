@@ -11,6 +11,7 @@ import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
+import { ToasterService } from './toaster.service';
 
 
 @Injectable({
@@ -29,6 +30,7 @@ export class PortfolioService {
     private _utils: UtilService,
     private _nss: NativeStakeService,
     private _shs: SolanaHelpersService,
+    private _toastService: ToasterService,
     private _sessionStorageService: SessionStorageService
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
@@ -102,6 +104,8 @@ export class PortfolioService {
       // this.getWalletHistory(walletAddress)
     } catch (error) {
       console.error(error);
+      this.walletAssets.set([])
+      this._toastService.msg.next({segmentClass:'toastError',message:'fail to import wallet info, please contact support'})
     }
   }
 
