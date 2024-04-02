@@ -6,7 +6,7 @@
   "homepage": "https://www.solanahub.app",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration=production",
+    "start": "ng serve --configuration=development",
     "build:main": "ng build --configuration=production",
     "build:dev": "ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
