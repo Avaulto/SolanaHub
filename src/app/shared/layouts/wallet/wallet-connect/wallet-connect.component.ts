@@ -83,6 +83,8 @@ export class WalletConnectComponent  {
   )
 
   public async showWalletAdapters() {
+    console.log('click');
+    
     const popover = await this.popoverController.create({
       component: WalletAdapterOptionsComponent,
       cssClass: 'wallet-adapter-options',
