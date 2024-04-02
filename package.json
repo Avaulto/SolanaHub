@@ -1,12 +1,12 @@
 {
   "name": "SolanaHub-v2",
   "description": "Solana DeFi project",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author": "amir",
   "homepage": "https://www.solanahub.app",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration=development",
+    "start": "ng serve --configuration=production",
     "build:main": "ng build --configuration=production",
     "build:dev": "ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
