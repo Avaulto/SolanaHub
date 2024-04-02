@@ -1,7 +1,7 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding,  BalanceChange } from '../models/portfolio.model';
+import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
 import { PriceHistoryService } from './price-history.service';
@@ -61,7 +61,7 @@ export class PortfolioService {
   }
 
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
-
+    let turnStileToken = this._utils.turnStileToken
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -71,7 +71,7 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${turnStileToken}`)).json()
         ])
         jupTokens = res[0];
         portfolioData = res[1]
@@ -106,7 +106,7 @@ export class PortfolioService {
 
   private async _portfolioTokens(tokens: any, jupTokens: JupToken[], walletAddress): Promise<void> {
 
-    
+
     if (tokens) {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
@@ -198,7 +198,7 @@ export class PortfolioService {
           assets = assets.flat()
         }
         holdings = assets?.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || []
-        poolTokens = assets?.map(a => { return { address:a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || []
+        poolTokens = assets?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || []
 
         let defiHolding: defiHolding = {
           value: group.value,
@@ -224,9 +224,10 @@ export class PortfolioService {
       const txHistory: TransactionHistoryShyft = await getTxHistory.json()
 
       // console.log(txHistory);
-      const excludeConditions = (txRecord:historyResultShyft) => txRecord.status != "Fail" && txRecord.type != 'COMPRESSED_NFT_MINT' && !(txRecord.type == "SOL_TRANSFER" && txRecord.actions[0].info.amount === 0)
+      const excludeConditions = (txRecord: historyResultShyft) => txRecord.status != "Fail" && txRecord.type != 'COMPRESSED_NFT_MINT' && txRecord.type !=  "UNKNOWN" && !(txRecord.type == "SOL_TRANSFER" && txRecord.actions[0].info.amount === 0)
       const aggregateTxHistory: TransactionHistory[] = txHistory.result.filter(txRecord => excludeConditions(txRecord)).map((txRecord: historyResultShyft) => {
-
+        console.log(txRecord);
+        
         let actionData = txRecord.actions[0]
         let tx: TransactionHistory = {
           txHash: txRecord.signatures[0],
@@ -234,8 +235,8 @@ export class PortfolioService {
           to: this._utils.addrUtil(txRecord.signatures[0]).addrShort,
           timestamp: txRecord.timestamp,
           fee: txRecord.fee,
-          mainAction: txRecord.type.replaceAll('_',' ').toLowerCase(),
-          case:'native',
+          mainAction: txRecord.type.replaceAll('_', ' ').toLowerCase(),
+          case: 'native',
           balanceChange: null
         };
         switch (actionData.type) {
@@ -243,8 +244,9 @@ export class PortfolioService {
             tx.case = 'defi'
             const tokenIn = actionData.info.tokens_swapped.in
             const tokenOut = actionData.info.tokens_swapped.out
-            let BalanceChange: BalanceChange[] = [
+            let swapBalance: BalanceChange[] = [
               {
+                type: 'in',
                 amount: tokenIn.amount,
                 symbol: tokenIn.symbol,
                 name: tokenIn.name,
@@ -253,6 +255,7 @@ export class PortfolioService {
                 logoURI: tokenIn.image_uri,
               },
               {
+                type: 'out',
                 amount: tokenOut.amount,
                 symbol: tokenOut.symbol,
                 name: tokenOut.name,
@@ -261,33 +264,49 @@ export class PortfolioService {
                 logoURI: tokenOut.image_uri,
               }
             ]
-            tx.balanceChange = BalanceChange
+            tx.balanceChange = swapBalance
             break;
-            case "SOL_TRANSFER":
-           
-              // let BalanceChange: BalanceChange[] = [
-              //   {
-              //     amount: tokenIn.amount,
-              //     symbol: tokenIn.symbol,
-              //     name: tokenIn.name,
-              //     decimals: null,
-              //     address: tokenIn.token_address,
-              //     logoURI: tokenIn.image_uri,
-              //   },
-              //   {
-              //     amount: tokenOut.amount,
-              //     symbol: tokenOut.symbol,
-              //     name: tokenOut.name,
-              //     decimals: 9,
-              //     address: tokenOut.token_address,
-              //     logoURI: tokenOut.image_uri,
-              //   }
-              // ]
-              // tx.balanceChange = BalanceChange
-              break;
-          default:
-            break;
+          case "SOL_TRANSFER":
+            let sendBalance: BalanceChange[] = [
+              {
+                type: 'in',
+                amount: tokenIn.amount,
+                symbol: tokenIn.symbol,
+                name: tokenIn.name,
+                decimals: null,
+                address: tokenIn.token_address,
+                logoURI: tokenIn.image_uri,
+              }
+            ]
+            tx.balanceChange = sendBalance
+
+            // let BalanceChange: BalanceChange[] = [
+            //   {
+            //     amount: tokenIn.amount,
+            //     symbol: tokenIn.symbol,
+            //     name: tokenIn.name,
+            //     decimals: null,
+            //     address: tokenIn.token_address,
+            //     logoURI: tokenIn.image_uri,
+            //   },
+            //   {
+            //     amount: tokenOut.amount,
+            //     symbol: tokenOut.symbol,
+            //     name: tokenOut.name,
+            //     decimals: 9,
+            //     address: tokenOut.token_address,
+            //     logoURI: tokenOut.image_uri,
+            //   }
+            // ]
             // tx.balanceChange = BalanceChange
+            break;
+          case "SOL_TRANSFER":
+
+            break;
+          default:
+            // tx.balanceChange = BalanceChange
+            break;
+
         }
 
         // if (tx.contractLabel?.name === 'Jupiter V6') {
@@ -302,6 +321,7 @@ export class PortfolioService {
         // tx.fromShort = this._utils.addrUtil(tx.from).addrShort
         // tx.toShort = this._utils.addrUtil(tx.to).addrShort
         // tx.balanceChange.forEach(b => b.amount = b.amount / 10 ** b.decimals)
+
         return tx
 
       })

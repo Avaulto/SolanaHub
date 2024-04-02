@@ -1,6 +1,6 @@
 import { CurrencyPipe, DecimalPipe, DatePipe, PercentPipe } from "@angular/common";
 import { Injectable, signal } from "@angular/core";
-import { BehaviorSubject, filter, Observable } from "rxjs";
+import { BehaviorSubject, filter, Observable, Subject } from "rxjs";
 import { LocalStorageService } from "./local-storage.service";
 import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
@@ -45,7 +45,7 @@ export class UtilService {
   }
   private  _subDomain = location.host.split(".")[0] === 'dev' ? 'dev-api' : 'api';
   public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : `https://${this._subDomain}.SolanaHub.app`
-
+  public turnStileToken = null
   
 
   public get RPC(): string{

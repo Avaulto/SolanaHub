@@ -8,6 +8,7 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { TransactionsHistoryTableComponent } from 'src/app/shared/components/transactions-history-table/transactions-history-table.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { TransactionHistory } from 'src/app/models';
+import { NgxTurnstileModule } from 'ngx-turnstile';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { TransactionHistory } from 'src/app/models';
   styleUrls: ['./overview.page.scss'],
   standalone: true,
   imports: [
+    NgxTurnstileModule,
     IonicModule,
     NetWorthComponent,
     PortfolioBreakdownComponent,

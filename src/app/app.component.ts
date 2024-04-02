@@ -20,6 +20,9 @@ import { PublicKey } from '@solana/web3.js';
 import { AnimatedIconComponent } from './shared/components/animated-icon/animated-icon.component';
 import { SettingsComponent } from './shared/layouts/settings/settings.component';
 import { MenuComponent } from './shared/components/menu/menu.component';
+import { environment } from 'src/environments/environment';
+import { NgxTurnstileModule } from 'ngx-turnstile';
+import { UtilService } from './services';
 
 
 
@@ -31,7 +34,7 @@ import { MenuComponent } from './shared/components/menu/menu.component';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
-
+    NgxTurnstileModule,
     MenuComponent,
     IonHeader,
     IonImg,
@@ -64,16 +67,22 @@ import { MenuComponent } from './shared/components/menu/menu.component';
 
 })
 export class AppComponent implements OnInit {
+  public turnStileKey = environment.turnStile
   readonly isReady$ = this._walletStore.connected$
   constructor(
     private _modalCtrl: ModalController,
     private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,
-    private _localStorage: LocalStorageService
+    private _localStorage: LocalStorageService,
+    private _utils: UtilService
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
-  
+  sendCaptchaResponse(token){
+    this._utils.turnStileToken = token;
+    console.log(token);
+    
+  }
   async ngOnInit() {
     this._activeRoute.queryParams
     .subscribe((params) => {

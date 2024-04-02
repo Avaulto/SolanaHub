@@ -21,7 +21,7 @@
         <div class="balance-change">
           
           <ion-img [src]="token.logoURI || 'assets/images/unknown.svg'"/>
-          <span  class="asset-value" [class.negative]="token.amount < 0" >{{token.amount | number: '1.1-5'}}</span>
+          <span  class="asset-value" [class.negative]="token.type === 'in'" >{{token.amount | number: '1.1-5'}}</span>
           <span>{{token.symbol || 'unknown'}}</span>
           
         </div>

@@ -65,14 +65,15 @@ export class TxInterceptorService {
     const config: BlockheightBasedTransactionConfirmationStrategy = {
       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
     }
+    if (record) {
+      va.track(record.message, record.data)
+    }
     await this._shs.connection.confirmTransaction(config, 'processed') 
     const txCompleted: toastData = {
       message: 'Transaction Completed',
       segmentClass: "toastInfo"
     }
-    if (record) {
-      va.track(record.message, record.data)
-    }
+ 
     this._toasterService.msg.next(txCompleted)
 
     return signature

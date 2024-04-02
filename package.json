@@ -47,6 +47,7 @@
     "ionicons": "^7.2.1",
     "lottie-web": "^5.12.2",
     "ngx-easy-table": "^15.5.0",
+    "ngx-turnstile": "^0.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

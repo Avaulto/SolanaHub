@@ -64,21 +64,12 @@ export class DaoPage implements OnInit {
     const realmsPositions = defiPositions?.find(position => position.platform === 'realms')
     if (realmsPositions) {
 
-      console.log(realmsPositions);
-
       // extract token address
       const communityMintHoldings = realmsPositions.poolTokens.map(token => token.address)
       // get off chain data
       const daoInfo = await this._dao.getOffChainDAOsInfo()
       // filter relevant dao data
       const findDAOCommunityToken = this.daosToFetch(daoInfo, communityMintHoldings);
-      console.log(daoInfo, communityMintHoldings, findDAOCommunityToken);
-
-      // prepare array of community token address
-      const daoProgramId: string[] = findDAOCommunityToken.filter(dao => dao?.programId).map(dao => dao?.programId)
-
-      console.log(communityMintHoldings, daoProgramId);
-
       // fetch onchain data
       this.aggregateDAO(publicKey, findDAOCommunityToken)
 
@@ -156,6 +147,7 @@ export class DaoPage implements OnInit {
             });
             // push into array of proposals 
             gov.proposals.push(...aggregateProposals)
+            // filter invalid props
             const removeCouncilProp = gov.proposals.filter(p => p.status.toLowerCase() !== 'draft' && p.governingTokenMint === dao.communityMint)
             gov.proposals = removeCouncilProp
             // sort by date

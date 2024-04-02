@@ -148,6 +148,7 @@ export interface TransactionHistory{
   }
   
   export interface BalanceChange {
+    type: 'in' | 'out',
     amount: number
     symbol?: string
     name?: string
