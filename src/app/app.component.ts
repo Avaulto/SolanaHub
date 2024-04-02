@@ -85,25 +85,11 @@ export class AppComponent implements OnInit {
   }
   sendCaptchaResponse(token) {
     this._utilService.turnStileToken = token;
-    console.log(token);
 
   }
   async ngOnInit() {
 
-    this._shs.walletExtended$
-      .pipe(
-        combineLatestWith(this._utilService.turnStileToken),
-        this._utilService.isNotNullOrUndefined,
-      )
-      .subscribe(([wallet, token]: [WalletExtended, string]) => {
-        if (wallet && token) {
-          this._shs.connection.onAccountChange(wallet.publicKey, () => {
-            let forceFetch = true;
-            this.portfolioService.getPortfolioAssets(wallet.publicKey.toBase58(), token, forceFetch)
-          })
-          this.portfolioService.getPortfolioAssets(wallet.publicKey.toBase58(), token)
-        }
-      })
+
 
     this._activeRoute.queryParams
       .subscribe((params) => {

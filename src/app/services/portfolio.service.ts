@@ -11,6 +11,7 @@ import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
+import { combineLatestWith } from 'rxjs';
 
 
 @Injectable({
@@ -31,7 +32,22 @@ export class PortfolioService {
     private _shs: SolanaHelpersService,
     private _sessionStorageService: SessionStorageService
   ) {
-
+    this._shs.walletExtended$
+      .pipe(
+        combineLatestWith(this._utils.turnStileToken),
+        this._utils.isNotNullOrUndefined,
+      )
+      .subscribe(([wallet, token]: [WalletExtended, string]) => {
+        if (wallet && token) {
+          console.log(wallet, token);
+          
+          this._shs.connection.onAccountChange(wallet.publicKey, () => {
+            let forceFetch = true;
+            this.getPortfolioAssets(wallet.publicKey.toBase58(), token, forceFetch)
+          })
+          this.getPortfolioAssets(wallet.publicKey.toBase58(), token)
+        }
+      })
 
   }
 
