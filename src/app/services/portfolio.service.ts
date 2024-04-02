@@ -105,7 +105,7 @@ export class PortfolioService {
     } catch (error) {
       console.error(error);
       this.walletAssets.set([])
-      this._toastService.msg.next({segmentClass:'toastError',message:'fail to import wallet info, please contact support'})
+      this._toastService.msg.next({segmentClass:'toastError',message:'fail to import wallet info, please contact support', duration:5000})
     }
   }
 
