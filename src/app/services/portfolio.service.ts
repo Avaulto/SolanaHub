@@ -11,7 +11,6 @@ import { NativeStakeService } from './native-stake.service';
 import { LiquidStakeService } from './liquid-stake.service';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
-import { combineLatestWith } from 'rxjs';
 
 
 @Injectable({
@@ -32,22 +31,15 @@ export class PortfolioService {
     private _shs: SolanaHelpersService,
     private _sessionStorageService: SessionStorageService
   ) {
-    this._shs.walletExtended$
-      .pipe(
-        combineLatestWith(this._utils.turnStileToken),
-        this._utils.isNotNullOrUndefined,
-      )
-      .subscribe(([wallet, token]: [WalletExtended, string]) => {
-        if (wallet && token) {
-          console.log(wallet, token);
-          
-          this._shs.connection.onAccountChange(wallet.publicKey, () => {
-            let forceFetch = true;
-            this.getPortfolioAssets(wallet.publicKey.toBase58(), token, forceFetch)
-          })
-          this.getPortfolioAssets(wallet.publicKey.toBase58(), token)
-        }
-      })
+    this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
+      if (wallet) {
+        this._shs.connection.onAccountChange(wallet.publicKey, () => {
+          let forceFetch = true;
+          this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+        })
+        this.getPortfolioAssets(wallet.publicKey.toBase58())
+      }
+    })
 
   }
 
@@ -68,8 +60,9 @@ export class PortfolioService {
     return null
   }
 
-  public async getPortfolioAssets(walletAddress: string,token: string, forceFetch = false) {
+  public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
 
+    while(!this._utils.turnStileToken) await this._utils.sleep(500);
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -79,7 +72,7 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${token}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
         ])
         jupTokens = res[0];
         portfolioData = res[1]
