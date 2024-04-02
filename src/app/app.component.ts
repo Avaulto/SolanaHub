@@ -24,10 +24,6 @@ import { MenuComponent } from './shared/components/menu/menu.component';
 import { environment } from 'src/environments/environment';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, UtilService } from './services';
-import { WalletExtended } from './models';
-import { combineLatestWith } from 'rxjs';
-
-
 
 
 
@@ -88,7 +84,8 @@ export class AppComponent implements OnInit {
 
   }
   async ngOnInit() {
-
+    console.log(this.turnStileKey);
+    
 
 
     this._activeRoute.queryParams
