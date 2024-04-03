@@ -77,8 +77,6 @@ export class TxInterceptorService {
     this._toasterService.msg.next(txCompleted)
 
     return signature
-
-
   }
     public async sendMultipleTxn(transactions:Transaction[], extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
 

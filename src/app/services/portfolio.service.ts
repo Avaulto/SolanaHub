@@ -35,10 +35,10 @@ export class PortfolioService {
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if (wallet) {
-        this._shs.connection.onAccountChange(wallet.publicKey, () => {
-          let forceFetch = true;
-          this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
-        })
+        // this._shs.connection.onAccountChange(wallet.publicKey, () => {
+        //   let forceFetch = true;
+        //   this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+        // })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
     })
@@ -46,19 +46,19 @@ export class PortfolioService {
   }
 
   private _portfolioData = () => {
-    const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
+    // const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
 
-    if (portfolioLocalRecord) {
-      const portfolioJson = JSON.parse(portfolioLocalRecord)
-      const currentTime = Math.floor(new Date().getTime() / 1000)
-      const expiredRecord = portfolioJson.lastSave + 600
-      // if expired timestamp is bigger than current time frame, return it.
-      if (expiredRecord > currentTime) {
-        return portfolioJson.portfolioData
-      } else {
-        return null
-      }
-    }
+    // if (portfolioLocalRecord) {
+    //   const portfolioJson = JSON.parse(portfolioLocalRecord)
+    //   const currentTime = Math.floor(new Date().getTime() / 1000)
+    //   const expiredRecord = portfolioJson.lastSave + 600
+    //   // if expired timestamp is bigger than current time frame, return it.
+    //   if (expiredRecord > currentTime) {
+    //     return portfolioJson.portfolioData
+    //   } else {
+    //     return null
+    //   }
+    // }
     return null
   }
 

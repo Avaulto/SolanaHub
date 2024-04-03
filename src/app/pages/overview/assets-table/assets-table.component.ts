@@ -100,6 +100,8 @@ export class AssetsTableComponent implements OnInit {
   public _groupNftCollections(nfts) {
 
   }
+  showLong: boolean=false
+
   async ngOnInit() {
 
     this._columnsOptions = {

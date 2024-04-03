@@ -89,7 +89,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
               },
               {
                 label: 'liquid stake:',
-                value: this._utilService.formatBigNumbers(pointsBreakDown.mSOLpts + pointsBreakDown.bSOLpts)
+                value: this._utilService.formatBigNumbers(pointsBreakDown.hubSOLpts + pointsBreakDown.mSOLpts + pointsBreakDown.bSOLpts)
               },
               {
                 label: 'DAO votes:',
