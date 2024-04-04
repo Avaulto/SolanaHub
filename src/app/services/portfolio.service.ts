@@ -4,11 +4,10 @@ import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiple
 import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
-import { PriceHistoryService } from './price-history.service';
-import { SolanaHelpersService } from './solana-helpers.service';
+import va from '@vercel/analytics';
 
-import { NativeStakeService } from './native-stake.service';
-import { LiquidStakeService } from './liquid-stake.service';
+import { NativeStakeService, SolanaHelpersService } from './';
+
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
@@ -76,6 +75,7 @@ export class PortfolioService {
           this._utils.getJupTokens(),
           await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
         ])
+        va.track('fetch portfolio', {status: 'success', wallet: walletAddress})
         jupTokens = res[0];
         portfolioData = res[1]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
@@ -105,6 +105,7 @@ export class PortfolioService {
     } catch (error) {
       console.error(error);
       this.walletAssets.set([])
+      va.track('fetch portfolio', {status: 'failed', wallet: walletAddress})
       this._toastService.msg.next({segmentClass:'toastError',message:'fail to import wallet info, please contact support', duration:5000})
     }
   }
