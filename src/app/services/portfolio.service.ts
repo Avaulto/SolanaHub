@@ -73,7 +73,7 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
         ])
         va.track('fetch portfolio', {status: 'success', wallet: walletAddress})
         jupTokens = res[0];
