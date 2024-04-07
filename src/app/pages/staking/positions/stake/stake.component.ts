@@ -1,6 +1,6 @@
 import { AfterContentInit, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { copyOutline, ellipsisVertical } from 'ionicons/icons';
+import { copyOutline, ellipsisVertical, lockClosedOutline } from 'ionicons/icons';
 import {
   IonSkeletonText,
   IonAvatar,
@@ -9,7 +9,7 @@ import {
   IonIcon,
   IonPopover
 } from '@ionic/angular/standalone';
-import { CurrencyPipe, DecimalPipe, JsonPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe, JsonPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { JupStoreService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
 import { OptionsPopoverComponent } from './options-popover/options-popover.component';
@@ -34,7 +34,7 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
     NgTemplateOutlet,
     CopyTextDirective,
     TooltipModule,
-    JsonPipe
+    DatePipe
   ]
 })
 export class StakeComponent implements OnInit{
@@ -79,10 +79,11 @@ export class StakeComponent implements OnInit{
     private _jupStore: JupStoreService,
     private _popoverController: PopoverController
     ) {
-    addIcons({ copyOutline, ellipsisVertical });
+    addIcons({ lockClosedOutline, copyOutline, ellipsisVertical });
   }
 ngOnInit(): void {
-
+  console.log(this.stake);
+  
   
 }
   async presentPopover(e: Event) {

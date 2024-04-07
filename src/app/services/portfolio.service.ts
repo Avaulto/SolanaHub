@@ -11,6 +11,7 @@ import { NativeStakeService, SolanaHelpersService } from './';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
+import { Subject } from 'rxjs';
 
 
 @Injectable({
@@ -34,36 +35,41 @@ export class PortfolioService {
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if (wallet) {
-        // this._shs.connection.onAccountChange(wallet.publicKey, () => {
-        //   let forceFetch = true;
-        //   this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
-        // })
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
+      this._refetchPortfolio.subscribe(() => {
+        console.log('reFetchPortfolio');
+        
+        let forceFetch = true;
+        this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+      })
     })
 
   }
-
+  private _refetchPortfolio: Subject<any> = new Subject()
+  public triggerFetch() {
+    this._refetchPortfolio.next(true)
+  }
   private _portfolioData = () => {
-    // const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
+    const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
 
-    // if (portfolioLocalRecord) {
-    //   const portfolioJson = JSON.parse(portfolioLocalRecord)
-    //   const currentTime = Math.floor(new Date().getTime() / 1000)
-    //   const expiredRecord = portfolioJson.lastSave + 600
-    //   // if expired timestamp is bigger than current time frame, return it.
-    //   if (expiredRecord > currentTime) {
-    //     return portfolioJson.portfolioData
-    //   } else {
-    //     return null
-    //   }
-    // }
+    if (portfolioLocalRecord) {
+      const portfolioJson = JSON.parse(portfolioLocalRecord)
+      const currentTime = Math.floor(new Date().getTime() / 1000)
+      const expiredRecord = portfolioJson.lastSave + 600
+      // if expired timestamp is bigger than current time frame, return it.
+      if (expiredRecord > currentTime) {
+        return portfolioJson.portfolioData
+      } else {
+        return null
+      }
+    }
     return null
   }
 
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
 
-    while(!this._utils.turnStileToken) await this._utils.sleep(500);
+    while (!this._utils.turnStileToken) await this._utils.sleep(500);
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -75,7 +81,7 @@ export class PortfolioService {
           this._utils.getJupTokens(),
           await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
         ])
-        va.track('fetch portfolio', {status: 'success', wallet: walletAddress})
+        va.track('fetch portfolio', { status: 'success', wallet: walletAddress })
         jupTokens = res[0];
         portfolioData = res[1]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
@@ -105,8 +111,8 @@ export class PortfolioService {
     } catch (error) {
       console.error(error);
       this.walletAssets.set([])
-      va.track('fetch portfolio', {status: 'failed', wallet: walletAddress})
-      this._toastService.msg.next({segmentClass:'toastError',message:'fail to import wallet info, please contact support', duration:5000})
+      va.track('fetch portfolio', { status: 'failed', wallet: walletAddress })
+      this._toastService.msg.next({ segmentClass: 'toastError', message: 'fail to import wallet info, please contact support', duration: 5000 })
     }
   }
 
@@ -163,64 +169,88 @@ export class PortfolioService {
     // add more data for platforms
     const getPlatformsData = await this._getPlatformsData();
 
-
     const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
     const defiHolding = await Promise.all(editedDataExtended
       .filter(g => !excludeList.includes(g.platformId) && g.value > 0.01)
       .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
       .map(async group => {
-
-
+        let records: defiHolding[] = [];
         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
-        //  group.platformUrl = this._addPlatformUrl(platformData.id)
         Object.assign(group, platformData);
-        let assets = []
-        let poolTokens, holdings;
+
         if (group.type === "liquidity") {
           if (group.data.liquidities) {
+            group.data.liquidities.map(async position => {
 
-            group.data.liquidities.forEach(async liquid => {
-              this._utils.addTokenData(liquid.assets, tokensInfo)
-              assets.push(liquid.assets)
+              const extendTokenData = this._utils.addTokenData(position.assets, tokensInfo)
+
+              records.push({
+                value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
+                imgURL: group.image,
+                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || [],
+                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+                type: group.label,
+                link: group.website,
+                platform: group.platformId
+              })
+
+
+              // return record
             })
-            assets = assets.flat()
+
           }
         }
         if (group.type === "multiple") {
-          this._utils.addTokenData(group.data.assets, tokensInfo)
-          assets.push(group.data.assets)
-
-          assets = assets.flat()
+          group.data.assets.map(async asset => {
+            const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
+            records.push({
+              value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
+              imgURL: group.image,
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || [],
+              poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+              type: group.label,
+              link: group.website,
+              platform: group.platformId
+            })
+          })
+          // assets = assets.flat()
         }
 
         if (group.type === "borrowlend") {
-          group.data.suppliedAssets ? this._utils.addTokenData(group.data.suppliedAssets, tokensInfo) : null;
-          group.data.borrowedAssets ? this._utils.addTokenData(group.data.borrowedAssets, tokensInfo) : null;
-          group.data.suppliedAssets.map(a => a.condition = 'credit')
-          group.data.borrowedAssets.map(a => a.condition = 'debt')
+          group.data.suppliedAssets.map(async asset => {
+            const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
+            records.push({
+              value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
+              imgURL: group.image,
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: 'credit' } }) || [],
+              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+              type: group.label,
+              link: group.website,
+              platform: group.platformId
+            })
+          })
+          group.data.borrowedAssets.map(async asset => {
 
-          assets.push(group.data.suppliedAssets)
-          assets.push(group.data.borrowedAssets)
-          assets = assets.flat()
+            const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
+            records.push({
+              value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
+              imgURL: group.image,
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: 'debt' } }) || [],
+              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+              type: group.label,
+              link: group.website,
+              platform: group.platformId
+            })
+          })
+
         }
-        holdings = assets?.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || []
-        poolTokens = assets?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || []
 
-        let defiHolding: defiHolding = {
-          value: group.value,
-          imgURL: group.image,
-          poolTokens,
-          holdings,
-          type: group.label,
-          link: group.website,
-          platform: group.platformId
-        };
 
-        return defiHolding
+        return records
       })
 
     )
-    this.defi.set(defiHolding)
+    this.defi.set(defiHolding.flat())
 
   }
   public async getWalletHistory(walletAddress: string): Promise<WritableSignal<TransactionHistory[]>> {
@@ -230,10 +260,10 @@ export class PortfolioService {
       const txHistory: TransactionHistoryShyft = await getTxHistory.json()
 
       // console.log(txHistory);
-      const excludeConditions = (txRecord: historyResultShyft) => txRecord.status != "Fail" && txRecord.type != 'COMPRESSED_NFT_MINT' && txRecord.type !=  "UNKNOWN" && !(txRecord.type == "SOL_TRANSFER" && txRecord.actions[0].info.amount === 0)
+      const excludeConditions = (txRecord: historyResultShyft) => txRecord.status != "Fail" && txRecord.type != 'COMPRESSED_NFT_MINT' && txRecord.type != "UNKNOWN" && !(txRecord.type == "SOL_TRANSFER" && txRecord.actions[0].info.amount === 0)
       const aggregateTxHistory: TransactionHistory[] = txHistory.result.filter(txRecord => excludeConditions(txRecord)).map((txRecord: historyResultShyft) => {
         console.log(txRecord);
-        
+
         let actionData = txRecord.actions[0]
         let tx: TransactionHistory = {
           txHash: txRecord.signatures[0],

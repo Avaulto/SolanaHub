@@ -59,7 +59,7 @@ export class NativeStakeService {
       link: this._utils.explorer + '/account/' + address,
       type: 'native',
       symbol: 'SOL',
-      lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000).toLocaleDateString("en-US"),
+      lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000),
       locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
       address,
       shortAddress: this._utils.addrUtil(address).addrShort,

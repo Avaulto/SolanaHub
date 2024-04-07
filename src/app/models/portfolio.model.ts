@@ -110,7 +110,7 @@ export interface LendingOrBorrow{
 
 export interface Stake {
   type: 'native' | 'liquid'
-  lockedDue?: string
+  lockedDue?: Date
   locked?: boolean
   excessLamport?: number
   stakeAuth?: string

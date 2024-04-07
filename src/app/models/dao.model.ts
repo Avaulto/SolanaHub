@@ -18,22 +18,49 @@ export interface Proposal{
         against:number
     }
 }
-
-export interface DAOonChain {
-    pubkey: PublicKey
-    accountType: {
-      tokenOwnerRecordV2: {}
-    }
-    realm: PublicKey
-    governingTokenMint: PublicKey
-    governingTokenOwner: PublicKey
-    governingTokenDepositAmount: string
-    unrelinquishedVotesCount: PublicKey
-    outstandingProposalCount: number
-    version: number
-    reserved: Array<number>
-    governanceDelegate: any
-    reservedV2: Array<number>
+export interface IndexDaoProposals{
+  Proposals: IndexProposal[]
+}
+export interface IndexProposal {
+  abstainVoteWeight: any
+  closedAt: number
+  denyVoteWeight: number
+  descriptionLink: string
+  draftAt: number
+  executingAt?: number
+  executionFlags: number
+  governance: string
+  governingTokenMint: string
+  lamports: number
+  maxVoteWeight?: number
+  maxVotingTime: any
+  name: string
+  options: Array<{
+    label: string
+    voteWeight: string
+    voteResult: number
+    instructionsExecutedCount: number
+    instructionsCount: number
+    instructionsNextIndex: number
+  }>
+  reserved1: number
+  signatoriesCount: number
+  signatoriesSignedOffCount: number
+  signingOffAt: number
+  startVotingAt: any
+  state: number
+  tokenOwnerRecord: string
+  vetoVoteWeight: number
+  voteThreshold?: {
+    type: number
+    value: number
+  }
+  voteType: {
+    type: number
+  }
+  votingAt: number
+  votingAtSlot: number
+  votingCompletedAt?: number
   }
   export interface GovOnChain{
     pubkey: PublicKey

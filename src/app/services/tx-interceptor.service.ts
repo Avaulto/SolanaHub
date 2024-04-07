@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
+import { PortfolioService } from './portfolio.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class TxInterceptorService {
     private _toasterService:ToasterService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
+    private _portfolio: PortfolioService
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
@@ -76,6 +78,7 @@ export class TxInterceptorService {
  
     this._toasterService.msg.next(txCompleted)
 
+    this._portfolio.triggerFetch()
     return signature
   }
     public async sendMultipleTxn(transactions:Transaction[], extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
@@ -122,7 +125,8 @@ export class TxInterceptorService {
         va.track(record.message, record.data)
       }
       this._toasterService.msg.next(txCompleted)
-  
+
+      this._portfolio.triggerFetch()
       return signatures
   
   
@@ -169,7 +173,8 @@ export class TxInterceptorService {
       //   va.track(record.message, record.data)
       // }
       this._toasterService.msg.next(txCompleted)
-
+      
+      this._portfolio.triggerFetch()
       return signature
 
     } catch (error) {

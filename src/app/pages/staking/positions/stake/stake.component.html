@@ -36,7 +36,12 @@
 
                 {{stake.shortAddress}}
                 <ion-icon appCopyText [copyText]="stake?.address" name="copy-outline" />
-          
+                @if(stake.locked){
+                  <ion-icon  [tooltip]="lockTipTpl" name="lock-closed-outline"></ion-icon>
+                  <ng-template #lockTipTpl let-row >
+                      Locked til: {{stake.lockedDue | date: 'dd/MM/yyyy'}}
+                  </ng-template>
+                }
             </div>
           }
          
@@ -88,3 +93,4 @@
     <div class="tool-tip-desc">{{stakeAccountStatus[stake?.state]?.desc}}</div>
   </div>
 </ng-template>
+

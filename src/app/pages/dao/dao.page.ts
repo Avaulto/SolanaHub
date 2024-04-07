@@ -59,7 +59,6 @@ export class DaoPage implements OnInit {
     return findDAOsToFetch
   }
   private async initiateFetchProposals(defiPositions: defiHolding[]) {
-    const { publicKey } = this._shs.getCurrentWallet()
     // get users realms deposit
     const realmsPositions = defiPositions?.find(position => position.platform === 'realms')
     if (realmsPositions) {
@@ -71,100 +70,142 @@ export class DaoPage implements OnInit {
       // filter relevant dao data
       const findDAOCommunityToken = this.daosToFetch(daoInfo, communityMintHoldings);
       // fetch onchain data
-      this.aggregateDAO(publicKey, findDAOCommunityToken)
+      this.aggregateDAO(findDAOCommunityToken)
 
-    }else{
+    } else {
       setTimeout(() => {
         this.Govs.set([])
       });
-      
+
     }
   }
-  async ngOnInit() {}
-  public tabSelected(ev) {}
+  async ngOnInit() { }
+  public tabSelected(ev) { }
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
   }
-  public async aggregateDAO(walletOwner: PublicKey, daosToFetch: DAOInfo[]) {
+  public async aggregateDAO(daosToFetch: DAOInfo[]) {
+    const { publicKey } = this._shs.getCurrentWallet()
     const Govs: Gov[] = []
     // prepare array of community token address
-    // const daoProgramId: string[] = daosToFetch.filter(dao => dao?.programId).map(dao => dao?.programId)
-    await Promise.all(daosToFetch.map(async (dao: DAOInfo) => {
-      if (dao?.programId) {
+    const daoProgramId: string[] = daosToFetch.filter(dao => dao?.programId).map(dao => dao?.programId)
+    const daoProposals = await this._dao.getWalletAllProposals(publicKey.toBase58(), daoProgramId);
 
+    daoProposals.map((daoProps, i) => {
+      console.log(daoProps);
+      if(daoProps.length > 0){
 
         const gov: Gov = {
-          name: dao?.displayName || 'unknown',
-          imgURL: dao?.ogImage || 'assets/images/unknown.svg',
-          proposals: []
-        }
-        const govSDK = this._dao.initGovSDK(this._shs.connection, new PublicKey(dao.programId))
-
-        console.log(govSDK, walletOwner.toBase58(), dao.programId);
-
-        const tors = await this._dao.fetchDAOs(govSDK, walletOwner)
-        console.log(`The user is currently the member of ${tors.length} DAOs.`, tors)
-        if (tors.length) {
-          console.log("Fetching all the governance accounts for the first DAO")
-          const governanceAccounts = await this._dao.fetchGovernance(govSDK, tors[0].realm)
-          console.log(`Fetched ${governanceAccounts.length} governance accounts`, governanceAccounts)
-
-          console.log("---------------------")
-
-          console.log("Fetching all the proposals for all the governances")
-          for (let i = 0; i < governanceAccounts.length; i++) {
-            const proposals = await this._dao.fetchProposal(govSDK, governanceAccounts[i].pubkey)
-            const aggregateProposals: Proposal[] = proposals.map(proposal => {
-          
-                const forr = Number(proposal.options[0].voteWeight.toString()) / LAMPORTS_PER_SOL || 0;
-                const against =  Number(proposal?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
-                const total = forr + against
-                const now = Math.floor(new Date().getTime() / 1000)
-                // const expiryDate = new Date((Number(proposal?.votingAt?.toString()) + governanceAccounts[i].config.votingBaseTime) * 1000)
-                // console.log(now,proposal.votingAt ,expiryDate);
-                const expiryDate = new Date(
-                  (Number(proposal?.votingAt?.toString()) + 
-                  governanceAccounts[i].config.votingBaseTime + governanceAccounts[i].config.votingCoolOffTime)  
-                  * 1000)
-                  
-                  const secTillExpiry = (Number(proposal?.votingAt?.toString()) + 
-                  governanceAccounts[i].config.votingBaseTime - now) 
-                  * 1000
-                return {
-                ...proposal,
-                governingTokenMint: proposal.governingTokenMint.toBase58(),
-                title: proposal.name,
-                description: proposal.descriptionLink,
-                status: Object.keys(proposal.state)[0], // 'voting' | 'voted' | 'ended' |'cool off',
-                expiryDate: expiryDate,//new Date(proposal.unixTimestamp * 1000),
-                votes: {
-                  total,
-                  for: forr,
-                  against
-                }
+          name: daosToFetch[i]?.displayName || 'unknown',
+          imgURL: daosToFetch[i]?.ogImage || 'assets/images/unknown.svg',
+          proposals: daoProps.map(prop => {
+            const propVoteForExtractValue = typeof prop.options[0].voteWeight === 'string' ? parseInt(prop.options[0].voteWeight) : prop.options[0].voteWeight
+            const forr = Number(propVoteForExtractValue) / LAMPORTS_PER_SOL || 0;
+            
+            console.log(propVoteForExtractValue);
+            
+            const against = Number(prop?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
+            const total = forr + against
+            const now = Math.floor(new Date().getTime() / 1000)
+            const expiryDate = new Date(2342344234234)// new Date( (Number(prop?.votingAt?.toString()) + prop.votingBaseTime + prop.votingCoolOffTime)  * 1000)
+            // const secTillExpiry = 2345789067//(Number(prop?.votingAt?.toString()) + prop.votingBaseTime - now) * 1000
+            return {
+              title: prop.name,
+              description: prop.descriptionLink,
+              status:  'voting' , //: prop.state,
+              expiryDate: expiryDate,
+              governingTokenMint: prop.governingTokenMint,
+              votes: {
+                total,
+                for: forr,
+                against,
               }
-            });
-            // push into array of proposals 
-            gov.proposals.push(...aggregateProposals)
-            // filter invalid props
-            const removeCouncilProp = gov.proposals.filter(p => p.status.toLowerCase() !== 'draft' && p.governingTokenMint === dao.communityMint)
-            gov.proposals = removeCouncilProp
-            // sort by date
-            gov.proposals.sort((a,b) => a.expiryDate < b.expiryDate ? 1 : -1)
-
-            //get last 2 proposals
-            gov.proposals.splice(2, aggregateProposals.length)
-            // console.log(`Found ${proposals.length} proposals for governance account: ${governanceAccounts[i].pubkey.toBase58()}`, proposals)
-          }
-          console.log("----------------------")
+            }
+            
+          })
         }
+        // gov.proposals.push(prop.Proposals)
         Govs.push(gov)
       }
-    }));
-    console.log('all my daos:', Govs);
-
+    })
     this.Govs.set(Govs)
+    console.log(daoProposals, Govs);
+
+    // await Promise.all(daosToFetch.map(async (dao: DAOInfo) => {
+    //   if (dao?.programId) {
+
+
+    //     const gov: Gov = {
+    //       name: dao?.displayName || 'unknown',
+    //       imgURL: dao?.ogImage || 'assets/images/unknown.svg',
+    //       proposals: []
+    //     }
+
+    //     console.log(govSDK, walletOwner.toBase58(), dao.programId);
+
+    //     const tors = await this._dao.fetchDAOs(govSDK, walletOwner)
+    //     console.log(`The user is currently the member of ${tors.length} DAOs.`, tors)
+    //     if (tors.length) {
+    //       console.log("Fetching all the governance accounts for the first DAO")
+    //       const governanceAccounts = await this._dao.fetchGovernance(govSDK, tors[0].realm)
+    //       console.log(`Fetched ${governanceAccounts.length} governance accounts`, governanceAccounts)
+
+    //       console.log("---------------------")
+
+    //       console.log("Fetching all the proposals for all the governances")
+    //       for (let i = 0; i < governanceAccounts.length; i++) {
+    //         const proposals = await this._dao.fetchProposal(govSDK, governanceAccounts[i].pubkey)
+    //         const aggregateProposals: Proposal[] = proposals.map(proposal => {
+
+    //             const forr = Number(proposal.options[0].voteWeight.toString()) / LAMPORTS_PER_SOL || 0;
+    //             const against =  Number(proposal?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
+    //             const total = forr + against
+    //             const now = Math.floor(new Date().getTime() / 1000)
+    //             // const expiryDate = new Date((Number(proposal?.votingAt?.toString()) + governanceAccounts[i].config.votingBaseTime) * 1000)
+    //             // console.log(now,proposal.votingAt ,expiryDate);
+    //             const expiryDate = new Date(
+    //               (Number(proposal?.votingAt?.toString()) + 
+    //               governanceAccounts[i].config.votingBaseTime + governanceAccounts[i].config.votingCoolOffTime)  
+    //               * 1000)
+
+    //               const secTillExpiry = (Number(proposal?.votingAt?.toString()) + 
+    //               governanceAccounts[i].config.votingBaseTime - now) 
+    //               * 1000
+    //             return {
+    //             ...proposal,
+    //             governingTokenMint: proposal.governingTokenMint.toBase58(),
+    //             title: proposal.name,
+    //             description: proposal.descriptionLink,
+    //             status: Object.keys(proposal.state)[0], // 'voting' | 'voted' | 'ended' |'cool off',
+    //             expiryDate: expiryDate,//new Date(proposal.unixTimestamp * 1000),
+    //             votes: {
+    //               total,
+    //               for: forr,
+    //               against
+    //             }
+    //           }
+    //         });
+    //         // push into array of proposals 
+    //         gov.proposals.push(...aggregateProposals)
+    //         // filter invalid props
+    //         const removeCouncilProp = gov.proposals.filter(p => p.status.toLowerCase() !== 'draft' && p.governingTokenMint === dao.communityMint)
+    //         gov.proposals = removeCouncilProp
+    //         // sort by date
+    //         gov.proposals.sort((a,b) => a.expiryDate < b.expiryDate ? 1 : -1)
+
+    //         //get last 2 proposals
+    //         gov.proposals.splice(2, aggregateProposals.length)
+    //         // console.log(`Found ${proposals.length} proposals for governance account: ${governanceAccounts[i].pubkey.toBase58()}`, proposals)
+    //       }
+    //       console.log("----------------------")
+    //     }
+    //     Govs.push(gov)
+    //   }
+    // }));
+    // console.log('all my daos:', Govs);
+
+    // this.Govs.set(Govs)
   }
 
 }
