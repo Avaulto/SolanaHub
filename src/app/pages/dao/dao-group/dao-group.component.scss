@@ -6,7 +6,17 @@
 .gov-group-head {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-bottom: 1px solid #E3E8EF;
+    text-transform: capitalize;
+    .gov-total-prop {
+        color: var(--colors-text-text-secondary-700, #364152);
+        font-weight: 500;
+    }
+    div{
+        display: flex;
+        align-items: center;
+    }
 }
 .gov-group-body {
     display: flex;

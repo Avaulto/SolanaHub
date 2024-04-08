@@ -12,7 +12,7 @@ import { DaoService } from 'src/app/services/dao.service';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { defiHolding } from 'src/app/models';
 import { Subject, map } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 @Component({
   selector: 'app-dao',
   templateUrl: './dao.page.html',
@@ -34,18 +34,16 @@ import { AsyncPipe } from '@angular/common';
     IonRow,
     IonCol,
     IonContent,
-    IonGrid
+    IonGrid,
+    JsonPipe
   ]
 })
 export class DaoPage implements OnInit {
   public tableMenuOptions = ['voting', 'succeeded'];
   public Govs: WritableSignal<Gov[]> = signal(null)
+  public govCopy: WritableSignal<Gov[]> = signal(null)
+  // public $govs: Subject<Gov[]> = new Subject();
 
-  public _$govs: Subject<Gov[]> = new Subject();
-  public $govs = this._$govs.asObservable().pipe(map(gov => gov.map(gov => {
-    gov.proposals = gov.proposals.splice(0,2)
-    return gov
-  })))
     // .sort((a, b) => a.value > b.value ? -1 : 1)
   
   constructor(
@@ -80,29 +78,35 @@ export class DaoPage implements OnInit {
     }
   }
   async ngOnInit() { }
-  public tabSelect = signal('voting')
-  public tabSelected(state) {
+  public proposalsStatus = signal('voting')
+  public tabSelected(status) {
     
+    this.proposalsStatus.set(status)
     let selectedStateProp = []
-    this.tabSelect.set(state)
+
+    console.log(this.Govs(), status);
+    
     this.Govs().forEach(gov => {
       let govv ={
         ...gov,
-        proposals: gov.proposals.filter(p => p.status.toLowerCase() === state)
+        proposals: gov.proposals.filter(p => p.status.toLowerCase() === status)
       }
       selectedStateProp.push(govv)
     })
     const removeEmptyGov = selectedStateProp.filter(gov => gov.proposals.length)
 
-    
-    this._$govs.next(removeEmptyGov)
+    console.log(removeEmptyGov);
+    setTimeout(() => {
+ 
+      this.govCopy.set(removeEmptyGov)
+    });
 
    }
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
     const filteredGovs = this.Govs().filter(t => t.name.toLowerCase().startsWith(this.searchTerm().toLowerCase())).filter(t => t.proposals.length)
-    this._$govs.next(filteredGovs)
+    this.govCopy.set(filteredGovs)
 
   }
   public async aggregateDAO(communityMintHoldings: string[]) {
@@ -120,7 +124,7 @@ export class DaoPage implements OnInit {
     })
     const removeEmptyGov = activeGOVprop.filter(gov => gov.proposals.length)
 
-    this._$govs.next(removeEmptyGov)
+    this.govCopy.set(removeEmptyGov)
     this.Govs.set(daoProposals)
  
 

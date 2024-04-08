@@ -5,16 +5,24 @@
     <ion-skeleton-text class="temp-img" [animated]="true" />
     <ion-skeleton-text id="text" [animated]="true" />
     }@else{
-    <ion-img [src]="gov?.imgURL" />
-    <ion-label>{{gov?.name}}</ion-label>
+      <div>
+
+        <ion-img [src]="gov?.imgURL" />
+        <ion-label>{{gov?.name}}</ion-label>
+
+      </div>
+      <div class="gov-total-prop">{{gov.proposals.length}} proposals available</div>
     }
   </div>
   <ion-row class="gov-group-body">
 
     @for (proposal of gov?.proposals; track $index) {
-    <ion-col size="12" sizeLg="6">
-      <proposal-preview [proposal]="proposal" /> 
-    </ion-col>
+      @if ($index < 2) {
+
+        <ion-col size="12" sizeLg="6">
+          <proposal-preview [proposal]="proposal" /> 
+        </ion-col>
+      }
     }@empty {
     <ion-col size="12" sizeLg="6">
       <proposal-preview></proposal-preview>

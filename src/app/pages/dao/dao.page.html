@@ -37,12 +37,12 @@
 
     </div>
     <div id="group-proposals-wrapper">
-      @for (gov of $govs | async; track $index) {
+      @for (gov of govCopy(); track $index) {
 
       <dao-group [gov]="gov" />
       }@empty {
 
-      @if(($govs | async) === null){
+      @if(govCopy() === null){
       <dao-group></dao-group>
       <dao-group></dao-group>
       }@else {
@@ -50,7 +50,7 @@
 
           <ion-img src="assets/images/no-dao.png"/>
           <span>
-            No DAO proposals for you...
+            No {{proposalsStatus()}} state proposals for you...
           </span>
         </div>
       }
