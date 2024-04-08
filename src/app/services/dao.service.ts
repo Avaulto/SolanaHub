@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {PublicKey, Connection, Keypair, clusterApiUrl, Transaction, sendAndConfirmTransaction} from "@solana/web3.js";
 import {Governance} from "./realms/index";
-import {  DAOInfo, IndexDaoProposals, IndexProposal, ProposalOnChain } from '../models/dao.model';
+import {   Gov } from '../models/dao.model';
 import { UtilService } from './util.service';
 @Injectable({
   providedIn: 'root'
@@ -12,30 +12,14 @@ export class DaoService {
   constructor(private _utils: UtilService){
    }
 
-  public async getOffChainDAOsInfo(): Promise<DAOInfo[]> {
-    try {
-      const DAOsRes: DAOInfo[] = await (await fetch("https://app.realms.today/realms/mainnet-beta.json")).json();
-      const addDaoURLPrefix = DAOsRes.map(dao => {
-        dao.bannerImage = 'https://app.realms.today/' + dao?.bannerImage
-        dao.ogImage = 'https://app.realms.today/' + dao?.ogImage
-        
-        return {
-          ...dao
-        }
-      });
-      addDaoURLPrefix.push(...this._manualDAOs())
-      return addDaoURLPrefix;
-    } catch (error) {
-      return []
-    }
-  }
-  public async getWalletAllProposals(walletOwner: string, daosToFetch: string[]):Promise<IndexProposal[][]>{
 
-      let allProposalsDao: IndexProposal[][] = [];
+  public async getWalletAllProposals(walletOwner: string, communityTokenAddress: string[]):Promise<Gov[]>{
+
+      let allProposalsDao: Gov[] = [];
       try {
         const result = await (await fetch(`${this.restAPI}/api/portfolio/dao`,{
           method:'POST',
-          body:JSON.stringify({address:walletOwner, daosToFetch})})).json();
+          body:JSON.stringify({address:walletOwner, communityTokenAddress})})).json();
         allProposalsDao = result //result.filter(s => poolIncludes.includes(s.poolName.toLowerCase()));
       }
       catch (error) {
@@ -44,26 +28,7 @@ export class DaoService {
       return allProposalsDao
     
   }
-  private _manualDAOs = () => {
-    return [
-      {
-        "symbol": "BLZE",
-        "displayName": "SolBlaze",
-        "programId": "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw",
-        "realmId": "7vrFDrK9GRNX7YZXbo7N3kvta7Pbn6W1hCXQ6C7WBxG9",
-        "ogImage": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1/logo.png",
-        "communityMint": "BLZEEuZUBVqFhj8adcCFPJvPVCiCyVmh3hkJMrU8KuJA"
-      },
-      {
-        "symbol": "MNDE",
-        "displayName": "Marinade",
-        "programId": "GovMaiHfpVPw8BAM1mbdzgmSZYDw2tdP32J2fapoQoYs",
-        "realmId": "899YG3yk4F66ZgbNWLHriZHTXSKk9e1kvsKEquW7L6Mo",
-        "ogImage": "https://app.realms.today/realms/MNDE/img/mnde_logo.png",
-        "communityMint": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
-        },
-  ]
-}
+    
   public initGovSDK(connection: Connection, programId?: PublicKey){
     return new Governance(connection,programId);
   }

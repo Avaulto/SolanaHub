@@ -6,17 +6,20 @@ import { TableMenuComponent } from 'src/app/shared/layouts/mft/table-menu/table-
 import { chevronDownOutline, chevronUpCircleOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { DaoGroupComponent } from './dao-group/dao-group.component';
-import { DAOInfo, Gov, Proposal } from 'src/app/models/dao.model';
+import {  Gov, Proposal } from 'src/app/models/dao.model';
 import { PortfolioService, SolanaHelpersService } from 'src/app/services';
 import { DaoService } from 'src/app/services/dao.service';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { defiHolding } from 'src/app/models';
+import { Subject, map } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 @Component({
   selector: 'app-dao',
   templateUrl: './dao.page.html',
   styleUrls: ['./dao.page.scss'],
   standalone: true,
   imports: [
+    AsyncPipe,
     DaoGroupComponent,
     IonImg,
     IonButton,
@@ -35,11 +38,16 @@ import { defiHolding } from 'src/app/models';
   ]
 })
 export class DaoPage implements OnInit {
-  public tableMenuOptions = ['voting', 'ended'];
+  public tableMenuOptions = ['voting', 'succeeded'];
   public Govs: WritableSignal<Gov[]> = signal(null)
-  public filterGovs = computed(() => this.Govs()?.filter(t => t.name.toLowerCase().startsWith(this.searchTerm().toLowerCase()))
+
+  public _$govs: Subject<Gov[]> = new Subject();
+  public $govs = this._$govs.asObservable().pipe(map(gov => gov.map(gov => {
+    gov.proposals = gov.proposals.splice(0,2)
+    return gov
+  })))
     // .sort((a, b) => a.value > b.value ? -1 : 1)
-  )
+  
   constructor(
     private _dao: DaoService,
     private _portfolio: PortfolioService,
@@ -53,24 +61,16 @@ export class DaoPage implements OnInit {
 
     })
   }
-  // private _daoTokens = computed(() => this._portfolio.defi().filter(platforms => console.log(platforms)))
-  private daosToFetch(daoData: DAOInfo[], daoPositions: string[]) {
-    const findDAOsToFetch = daoPositions.map((govToken: string) => daoData.find(dao => dao?.communityMint === govToken));
-    return findDAOsToFetch
-  }
+
   private async initiateFetchProposals(defiPositions: defiHolding[]) {
     // get users realms deposit
-    const realmsPositions = defiPositions?.find(position => position.platform === 'realms')
+    const realmsPositions = defiPositions?.filter(position => position.platform === 'realms')
     if (realmsPositions) {
-
+      
       // extract token address
-      const communityMintHoldings = realmsPositions.poolTokens.map(token => token.address)
-      // get off chain data
-      const daoInfo = await this._dao.getOffChainDAOsInfo()
-      // filter relevant dao data
-      const findDAOCommunityToken = this.daosToFetch(daoInfo, communityMintHoldings);
-      // fetch onchain data
-      this.aggregateDAO(findDAOCommunityToken)
+      const communityMintHoldings = realmsPositions.map(position => position.poolTokens.map(token => token.address)).flat()
+
+      this.aggregateDAO(communityMintHoldings)
 
     } else {
       setTimeout(() => {
@@ -80,132 +80,50 @@ export class DaoPage implements OnInit {
     }
   }
   async ngOnInit() { }
-  public tabSelected(ev) { }
+  public tabSelect = signal('voting')
+  public tabSelected(state) {
+    
+    let selectedStateProp = []
+    this.tabSelect.set(state)
+    this.Govs().forEach(gov => {
+      let govv ={
+        ...gov,
+        proposals: gov.proposals.filter(p => p.status.toLowerCase() === state)
+      }
+      selectedStateProp.push(govv)
+    })
+    const removeEmptyGov = selectedStateProp.filter(gov => gov.proposals.length)
+
+    
+    this._$govs.next(removeEmptyGov)
+
+   }
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
+    const filteredGovs = this.Govs().filter(t => t.name.toLowerCase().startsWith(this.searchTerm().toLowerCase())).filter(t => t.proposals.length)
+    this._$govs.next(filteredGovs)
+
   }
-  public async aggregateDAO(daosToFetch: DAOInfo[]) {
+  public async aggregateDAO(communityMintHoldings: string[]) {
     const { publicKey } = this._shs.getCurrentWallet()
-    const Govs: Gov[] = []
-    // prepare array of community token address
-    const daoProgramId: string[] = daosToFetch.filter(dao => dao?.programId).map(dao => dao?.programId)
-    const daoProposals = await this._dao.getWalletAllProposals(publicKey.toBase58(), daoProgramId);
 
-    daoProposals.map((daoProps, i) => {
-      console.log(daoProps);
-      if(daoProps.length > 0){
+    const daoProposals = await this._dao.getWalletAllProposals(publicKey.toBase58(), communityMintHoldings);
 
-        const gov: Gov = {
-          name: daosToFetch[i]?.displayName || 'unknown',
-          imgURL: daosToFetch[i]?.ogImage || 'assets/images/unknown.svg',
-          proposals: daoProps.map(prop => {
-            const propVoteForExtractValue = typeof prop.options[0].voteWeight === 'string' ? parseInt(prop.options[0].voteWeight) : prop.options[0].voteWeight
-            const forr = Number(propVoteForExtractValue) / LAMPORTS_PER_SOL || 0;
-            
-            console.log(propVoteForExtractValue);
-            
-            const against = Number(prop?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
-            const total = forr + against
-            const now = Math.floor(new Date().getTime() / 1000)
-            const expiryDate = new Date(2342344234234)// new Date( (Number(prop?.votingAt?.toString()) + prop.votingBaseTime + prop.votingCoolOffTime)  * 1000)
-            // const secTillExpiry = 2345789067//(Number(prop?.votingAt?.toString()) + prop.votingBaseTime - now) * 1000
-            return {
-              title: prop.name,
-              description: prop.descriptionLink,
-              status:  'voting' , //: prop.state,
-              expiryDate: expiryDate,
-              governingTokenMint: prop.governingTokenMint,
-              votes: {
-                total,
-                for: forr,
-                against,
-              }
-            }
-            
-          })
-        }
-        // gov.proposals.push(prop.Proposals)
-        Govs.push(gov)
+    let activeGOVprop = []
+    daoProposals.forEach(gov => {
+      let govv ={
+        ...gov,
+        proposals: gov.proposals.filter(p => p.status.toLowerCase() === 'voting')
       }
+      activeGOVprop.push(govv)
     })
-    this.Govs.set(Govs)
-    console.log(daoProposals, Govs);
+    const removeEmptyGov = activeGOVprop.filter(gov => gov.proposals.length)
 
-    // await Promise.all(daosToFetch.map(async (dao: DAOInfo) => {
-    //   if (dao?.programId) {
+    this._$govs.next(removeEmptyGov)
+    this.Govs.set(daoProposals)
+ 
 
-
-    //     const gov: Gov = {
-    //       name: dao?.displayName || 'unknown',
-    //       imgURL: dao?.ogImage || 'assets/images/unknown.svg',
-    //       proposals: []
-    //     }
-
-    //     console.log(govSDK, walletOwner.toBase58(), dao.programId);
-
-    //     const tors = await this._dao.fetchDAOs(govSDK, walletOwner)
-    //     console.log(`The user is currently the member of ${tors.length} DAOs.`, tors)
-    //     if (tors.length) {
-    //       console.log("Fetching all the governance accounts for the first DAO")
-    //       const governanceAccounts = await this._dao.fetchGovernance(govSDK, tors[0].realm)
-    //       console.log(`Fetched ${governanceAccounts.length} governance accounts`, governanceAccounts)
-
-    //       console.log("---------------------")
-
-    //       console.log("Fetching all the proposals for all the governances")
-    //       for (let i = 0; i < governanceAccounts.length; i++) {
-    //         const proposals = await this._dao.fetchProposal(govSDK, governanceAccounts[i].pubkey)
-    //         const aggregateProposals: Proposal[] = proposals.map(proposal => {
-
-    //             const forr = Number(proposal.options[0].voteWeight.toString()) / LAMPORTS_PER_SOL || 0;
-    //             const against =  Number(proposal?.denyVoteWeight?.toString()) / LAMPORTS_PER_SOL || 0;
-    //             const total = forr + against
-    //             const now = Math.floor(new Date().getTime() / 1000)
-    //             // const expiryDate = new Date((Number(proposal?.votingAt?.toString()) + governanceAccounts[i].config.votingBaseTime) * 1000)
-    //             // console.log(now,proposal.votingAt ,expiryDate);
-    //             const expiryDate = new Date(
-    //               (Number(proposal?.votingAt?.toString()) + 
-    //               governanceAccounts[i].config.votingBaseTime + governanceAccounts[i].config.votingCoolOffTime)  
-    //               * 1000)
-
-    //               const secTillExpiry = (Number(proposal?.votingAt?.toString()) + 
-    //               governanceAccounts[i].config.votingBaseTime - now) 
-    //               * 1000
-    //             return {
-    //             ...proposal,
-    //             governingTokenMint: proposal.governingTokenMint.toBase58(),
-    //             title: proposal.name,
-    //             description: proposal.descriptionLink,
-    //             status: Object.keys(proposal.state)[0], // 'voting' | 'voted' | 'ended' |'cool off',
-    //             expiryDate: expiryDate,//new Date(proposal.unixTimestamp * 1000),
-    //             votes: {
-    //               total,
-    //               for: forr,
-    //               against
-    //             }
-    //           }
-    //         });
-    //         // push into array of proposals 
-    //         gov.proposals.push(...aggregateProposals)
-    //         // filter invalid props
-    //         const removeCouncilProp = gov.proposals.filter(p => p.status.toLowerCase() !== 'draft' && p.governingTokenMint === dao.communityMint)
-    //         gov.proposals = removeCouncilProp
-    //         // sort by date
-    //         gov.proposals.sort((a,b) => a.expiryDate < b.expiryDate ? 1 : -1)
-
-    //         //get last 2 proposals
-    //         gov.proposals.splice(2, aggregateProposals.length)
-    //         // console.log(`Found ${proposals.length} proposals for governance account: ${governanceAccounts[i].pubkey.toBase58()}`, proposals)
-    //       }
-    //       console.log("----------------------")
-    //     }
-    //     Govs.push(gov)
-    //   }
-    // }));
-    // console.log('all my daos:', Govs);
-
-    // this.Govs.set(Govs)
   }
 
 }
