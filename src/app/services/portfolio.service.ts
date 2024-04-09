@@ -202,12 +202,13 @@ export class PortfolioService {
         }
         if (group.type === "multiple") {
           group.data.assets.map(async asset => {
+            
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
               holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || [],
-              poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+              poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId
