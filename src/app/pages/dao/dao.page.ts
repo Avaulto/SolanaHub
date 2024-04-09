@@ -66,7 +66,7 @@ export class DaoPage implements OnInit {
     if (realmsPositions) {
       
       // extract token address
-      const communityMintHoldings = realmsPositions.map(position => position.poolTokens.map(token => token.address)).flat()
+      const communityMintHoldings = [...new Set(realmsPositions.map(position => position.poolTokens.map(token => token.address)).flat())]
 
       this.aggregateDAO(communityMintHoldings)
 
@@ -84,8 +84,7 @@ export class DaoPage implements OnInit {
     this.proposalsStatus.set(status)
     let selectedStateProp = []
 
-    console.log(this.Govs(), status);
-    
+
     this.Govs().forEach(gov => {
       let govv ={
         ...gov,
