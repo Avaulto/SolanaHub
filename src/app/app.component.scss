@@ -9,7 +9,10 @@ ion-menu {
     --padding-top: 20px;
     --padding-bottom: 20px;
   }
-
+  app-wallet-connect {
+    margin-block-end: 12px;
+    display: block;
+}
   // ion-list {
   //   padding-inline: 8px;
   // }
@@ -26,7 +29,7 @@ ion-menu {
   }
 
   ion-menu-toggle {
-    padding-block: 24px;
+    padding-block-end: 22px;
     display: block;
 
     animated-icon {

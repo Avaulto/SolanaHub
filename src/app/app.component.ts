@@ -108,18 +108,18 @@ export class AppComponent implements OnInit {
       pages: [
         { title: 'Overview', url: '/overview', icon: 'https://cdn.lordicon.com/mixcgtqu.json', active: true },
         { title: 'Collectibles', url: '/collectibles', icon: 'https://cdn.lordicon.com/yvvkyhue.json', active: true },
-        // { title: 'Notifications', url: '/notifications', icon: 'https://cdn.lordicon.com/vspbqszr.json', active: false },
+        { title: 'Notifications', url: '/notifications', icon: 'https://cdn.lordicon.com/vspbqszr.json', active: false },
         { title: 'Settings', url: '/settings', icon: 'https://cdn.lordicon.com/ygumtulo.json', active: true },
       ],
     },
-    // {
-    //   group: 'Explore',
-    //   pages: [
-    //     { title: 'Bridge', url: '/bridge', icon: 'https://cdn.lordicon.com/whczgeys.json' , active: true },
-    //     { title: 'Airdrops finder', url: '/airdrops', icon: 'https://cdn.lordicon.com/xoaqvsym.json' , active: true },
-    //     { title: 'Events', url: '/events', icon: 'https://cdn.lordicon.com/jkgunhbs.json', active: false },
-    //   ],
-    // },
+    {
+      group: 'Explore',
+      pages: [
+        { title: 'Bridge', url: '/bridge', icon: 'https://cdn.lordicon.com/uvscndge.json', active: true },
+        { title: 'Airdrops finder', url: '/airdrop-finder', icon: 'https://cdn.lordicon.com/unukghxb.json' , active: true },
+        // { title: 'Events', url: '/events', icon: 'https://cdn.lordicon.com/jkgunhbs.json', active: false },
+      ],
+    },
     {
       group: 'DeFi',
       pages: [

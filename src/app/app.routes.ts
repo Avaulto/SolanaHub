@@ -21,6 +21,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage)
   },
   {
+    path: 'bridge',
+    loadComponent: () => import('./pages/bridge/bridge.page').then( m => m.BridgePage)
+  },
+  {
     path: 'loyalty-league',
     loadComponent: () => import('./pages/loyalty-league/loyalty-league.page').then( m => m.LoyaltyLeaguePage)
   },
@@ -48,11 +52,22 @@ export const routes: Routes = [
     path: 'dao',
     loadComponent: () => import('./pages/dao/dao.page').then( m => m.DaoPage)
   },
-
+  {
+    path: 'airdrop-finder',
+    loadComponent: () => import('./pages/airdrop-finder/airdrop-finder.page').then( m => m.AirdropFinderPage)
+  },
+  {
+    path: 'notifications',
+    loadComponent: () => import('./pages/notifications/notifications.page').then( m => m.NotificationsPage)
+  },
   {
     path:"**",
     redirectTo:'overview'
   },
+
+
+
+
 
 
 ];
