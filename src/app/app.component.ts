@@ -113,25 +113,23 @@ export class AppComponent implements OnInit {
       ],
     },
     {
-      group: 'Explore',
-      pages: [
-        { title: 'Bridge', url: '/bridge', icon: 'https://cdn.lordicon.com/uvscndge.json', active: true },
-        { title: 'Airdrops finder', url: '/airdrop-finder', icon: 'https://cdn.lordicon.com/unukghxb.json' , active: true },
-        // { title: 'Events', url: '/events', icon: 'https://cdn.lordicon.com/jkgunhbs.json', active: false },
-      ],
-    },
-    {
       group: 'DeFi',
       pages: [
         { title: 'Swap', url: '/swap', icon: 'https://cdn.lordicon.com/whczgeys.json', active: true },
         { title: 'Staking', url: '/staking', icon: 'https://cdn.lordicon.com/xoaqvsym.json', active: true },
         { title: 'Lending', url: '/lending', icon: 'https://cdn.lordicon.com/jkgunhbs.json', active: false },
         { title: 'Liquidity pools', url: '/liquidity-pools', icon: 'https://cdn.lordicon.com/rlrlhrme.json', active: false },
-        // { title: 'Vaults', url: '/vaults', icon: 'barcode' },
         { title: 'DAO', url: '/dao', icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
       ],
     },
-
+    {
+      group: 'Explore',
+      pages: [
+        { title: 'Bridge', url: '/bridge', icon: 'https://cdn.lordicon.com/uvscndge.json', active: true },
+        { title: 'Airdrops finder', url: '/airdrop-finder', icon: 'https://cdn.lordicon.com/unukghxb.json' , active: true },
+        // { title: 'Events', url: '/events', icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
+      ],
+    },
   ];
 
   async openSettingsModal() {

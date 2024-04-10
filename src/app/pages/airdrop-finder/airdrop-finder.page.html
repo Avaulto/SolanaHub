@@ -1,7 +1,63 @@
 <ion-content [fullscreen]="true">
   <page-header title="Airdrop finder"
-    description="Find airdrops and allocation you had and didnt know you had"></page-header>
- 
+    description="Discover hidden airdrops and allocations you never knew existed!</br> Powered by solworks"></page-header>
+  <ion-grid>
 
-  
+    <ion-row>
+      <ion-col size="12" class="data-set">
+        <app-mft [tableId]="'airdrops-checker'" [tableMenuOptions]="tableMenuOptions"
+          (onTabSelected)="selectedTab.set($event)" [label]="'Goodis'"
+          desc="Check your airdrops and points allocation across solana dApps" [tableRows]="10" [tableColumns]="columns"
+          [tableData]="tableData" />
+      </ion-col>
+    </ion-row>
+
+    <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+      <div class="item">
+        <div class="item-img-wrapper">
+          <ion-img [src]="row.logoUrl" alt="image" />
+        </div>
+        <div class="item-info">
+
+          <div class="item-bold">{{row.ticker || 'unknown'}}</div>
+          <div class="item-light">{{row.token }}</div>
+
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #eligibilityTpl let-row let-rowIndex="rowIndex" let-column="column">
+      @if(row.eligible){
+
+      <ion-icon style="font-size:20px;color:#079455;" name="checkmark-circle-outline"></ion-icon>
+      } @else{
+
+      <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
+      }
+    </ng-template>
+    <ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
+      <div class="ion-text-center">
+        {{row.amount | number: '1.1-3'}} {{row.ticker}}
+      </div>
+    </ng-template>
+
+    <ng-template #pointsTpl let-row let-rowIndex="rowIndex" let-column="column">
+      <div class="ion-text-center">
+        {{row.points | number: '1.1-3'}}
+      </div>
+    </ng-template>
+
+    <ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
+      <div class="ion-text-center">
+        {{row.potentialValueUsdc | currency}}
+      </div>
+    </ng-template>
+    <ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
+      <div class="platform-icon-wrapper ion-text-center">
+        <ion-img [tooltip]="platformToolTipTpl" [alt]="row.name" [src]="row.image || 'assets/images/unknown.svg'" alt="platform icon"></ion-img>
+        <ng-template #platformToolTipTpl>
+          {{row.protocol}}
+        </ng-template>
+      </div>
+    </ng-template>
+  </ion-grid>
 </ion-content>

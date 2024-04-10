@@ -13,9 +13,10 @@ ion-menu {
     margin-block-end: 12px;
     display: block;
 }
-  // ion-list {
-  //   padding-inline: 8px;
-  // }
+  ion-list {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
 
   ion-list-header {
     color: var(--gray-modern-500, #697586);
@@ -29,7 +30,9 @@ ion-menu {
   }
 
   ion-menu-toggle {
-    padding-block-end: 22px;
+    &:not(:last-child){
+      padding-block-end: 19px;
+    }
     display: block;
 
     animated-icon {

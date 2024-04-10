@@ -156,18 +156,22 @@ export class PortfolioService {
     }
 
   }
-  private async _getPlatformsData(): Promise<Platform[]> {
-    let platformInfo = []
+  private _platforms = []
+  public async getPlatformsData(): Promise<Platform[]> {
+    if(this._platforms.length){
+      return this._platforms
+    }
+    
     try {
-      platformInfo = await (await fetch(`${this.restAPI}/api/portfolio/platforms`)).json();
+      this._platforms = await (await fetch(`${this.restAPI}/api/portfolio/platforms`)).json();
     } catch (error) {
       console.warn(error)
     }
-    return platformInfo
+    return this._platforms
   }
   private async _portfolioDeFi(editedDataExtended, tokensInfo) {
     // add more data for platforms
-    const getPlatformsData = await this._getPlatformsData();
+    const getPlatformsData = await this.getPlatformsData();
 
     const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
     const defiHolding = await Promise.all(editedDataExtended
