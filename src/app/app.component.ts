@@ -14,18 +14,15 @@ import { ModalController } from '@ionic/angular';
 
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { PageHeaderComponent } from './shared/components/page-header/page-header.component';
+import { PageHeaderComponent, MenuComponent, AnimatedIconComponent } from './shared/components';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 import { LocalStorageService } from './services/local-storage.service';
 import { PublicKey } from '@solana/web3.js';
-import { AnimatedIconComponent } from './shared/components/animated-icon/animated-icon.component';
 import { SettingsComponent } from './shared/layouts/settings/settings.component';
-import { MenuComponent } from './shared/components/menu/menu.component';
 import { environment } from 'src/environments/environment';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, UtilService } from './services';
-
-
+import { RoutingPath } from "./shared/constants";
 
 @Component({
   selector: 'app-root',
@@ -63,7 +60,6 @@ import { PortfolioService, SolanaHelpersService, UtilService } from './services'
     IonRouterOutlet,
     IonImg
   ],
-
 })
 export class AppComponent implements OnInit {
   public turnStileKey = environment.turnStile
@@ -85,7 +81,7 @@ export class AppComponent implements OnInit {
   }
   async ngOnInit() {
     console.log(this.turnStileKey);
-    
+
 
 
     this._activeRoute.queryParams
@@ -106,28 +102,68 @@ export class AppComponent implements OnInit {
     {
       // group: 'Portfolio',
       pages: [
-        { title: 'Overview', url: '/overview', icon: 'https://cdn.lordicon.com/mixcgtqu.json', active: true },
-        { title: 'Collectibles', url: '/collectibles', icon: 'https://cdn.lordicon.com/yvvkyhue.json', active: true },
-        { title: 'Notifications', url: '/notifications', icon: 'https://cdn.lordicon.com/vspbqszr.json', active: false },
-        { title: 'Settings', url: '/settings', icon: 'https://cdn.lordicon.com/ygumtulo.json', active: true },
+        {
+          title: 'Overview',
+          url: `/${RoutingPath.OVERVIEW}`,
+          icon: 'https://cdn.lordicon.com/mixcgtqu.json',
+          active: true
+        },
+        {
+          title: 'Collectibles',
+          url: `/${RoutingPath.COLLECTIBLES}`,
+          icon: 'https://cdn.lordicon.com/yvvkyhue.json',
+          active: true
+        },
+        {
+          title: 'Notifications',
+          url: `/${RoutingPath.NOTIFICATIONS}`,
+          icon: 'https://cdn.lordicon.com/vspbqszr.json',
+          active: false
+        },
+        {
+          title: 'Settings',
+          url: `/${RoutingPath.SETTINGS}`,
+          icon: 'https://cdn.lordicon.com/ygumtulo.json',
+          active: true
+        },
       ],
     },
     {
       group: 'DeFi',
       pages: [
-        { title: 'Swap', url: '/swap', icon: 'https://cdn.lordicon.com/whczgeys.json', active: true },
-        { title: 'Staking', url: '/staking', icon: 'https://cdn.lordicon.com/xoaqvsym.json', active: true },
-        { title: 'Lending', url: '/lending', icon: 'https://cdn.lordicon.com/jkgunhbs.json', active: false },
-        { title: 'Liquidity pools', url: '/liquidity-pools', icon: 'https://cdn.lordicon.com/rlrlhrme.json', active: false },
-        { title: 'DAO', url: '/dao', icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
+        {title: 'Swap', url: `/${RoutingPath.SWAP}`, icon: 'https://cdn.lordicon.com/whczgeys.json', active: true},
+        {
+          title: 'Staking',
+          url: `/${RoutingPath.STAKING}`,
+          icon: 'https://cdn.lordicon.com/xoaqvsym.json',
+          active: true
+        },
+        {
+          title: 'Lending',
+          url: `/${RoutingPath.LENDING}`,
+          icon: 'https://cdn.lordicon.com/jkgunhbs.json',
+          active: false
+        },
+        {
+          title: 'Liquidity pools',
+          url: `/${RoutingPath.LIQUIDITY_POOLS}`,
+          icon: 'https://cdn.lordicon.com/rlrlhrme.json',
+          active: false
+        },
+        {title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true},
       ],
     },
     {
       group: 'Explore',
       pages: [
-        { title: 'Bridge', url: '/bridge', icon: 'https://cdn.lordicon.com/uvscndge.json', active: true },
-        { title: 'Airdrops finder', url: '/airdrop-finder', icon: 'https://cdn.lordicon.com/unukghxb.json' , active: true },
-        // { title: 'Events', url: '/events', icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
+        {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+        {
+          title: 'Airdrops finder',
+          url: `/${RoutingPath.AIRDROP_FINDER}`,
+          icon: 'https://cdn.lordicon.com/unukghxb.json',
+          active: true
+        },
+        // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
       ],
     },
   ];
