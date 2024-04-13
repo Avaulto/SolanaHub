@@ -17,7 +17,8 @@ SolanaHub is a platform for Solana users, offering a seamless experience with po
 ## Installation
 1. Clone the project: `git clone https://github.com/Avaulto/SolanaHub`
 2. Navigate to the directory: `cd SolanaHub && npm install`
-3. Start the project: `npm start`
+3. Start the project with the local configuration: `npm start`
+4. Start the project with the dev configuration: `npm run start:dev`
 
 Note: Find configuration options in the `package.json` file.
 
