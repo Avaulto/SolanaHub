@@ -43,10 +43,9 @@ export class UtilService {
     private _localStorage: LocalStorageService
   ) {
   }
-  private  _subDomain = location.host.split(".")[0] === 'dev' ? 'dev-api' : 'api';
-  public serverlessAPI = location.hostname === "localhost" ? 'http://localhost:3000' : `https://${this._subDomain}.SolanaHub.app`
+  public serverlessAPI = environment.apiUrl;
   public turnStileToken = null
-  
+
 
   public get RPC(): string{
     const config = JSON.parse(this._localStorage.getData('RPC'))?.value || environment.solanaCluster
