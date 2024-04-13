@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
-import { PortfolioService } from './portfolio.service';
+import { PortfolioFetchService } from "./portfolio-refetch.service";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class TxInterceptorService {
     private _toasterService:ToasterService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
-    private _portfolio: PortfolioService
+    private _fetchPortfolioService: PortfolioFetchService,
   ) { }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
@@ -27,7 +27,7 @@ export class TxInterceptorService {
       const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
         units: PRIORITY_RATE
       });
-      
+
       const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
         microLamports: PRIORITY_RATE * 5
       });
@@ -53,7 +53,7 @@ export class TxInterceptorService {
     }
     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
 
-    
+
     const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
     const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
     const txSend: toastData = {
@@ -70,15 +70,15 @@ export class TxInterceptorService {
     if (record) {
       va.track(record.message, record.data)
     }
-    await this._shs.connection.confirmTransaction(config, 'processed') 
+    await this._shs.connection.confirmTransaction(config, 'processed')
     const txCompleted: toastData = {
       message: 'Transaction Completed',
       segmentClass: "toastInfo"
     }
- 
+
     this._toasterService.msg.next(txCompleted)
 
-    this._portfolio.triggerFetch()
+    this._fetchPortfolioService.triggerFetch()
     return signature
   }
     public async sendMultipleTxn(transactions:Transaction[], extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
@@ -88,7 +88,7 @@ export class TxInterceptorService {
       if (priorityFeeInst?.length > 0) transactions.map(t => t.add(...priorityFeeInst))
       let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
       if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
-  
+
 
       var signatures = [];
     for await(const tx of signedTx)
@@ -100,7 +100,7 @@ export class TxInterceptorService {
     }
 
       const url = `${this._util.explorer}/tx/${signatures[0]}?cluster=${environment.solanaEnv}`
-      
+
       const txSend: toastData = {
         message: `Transaction Submitted`,
         btnText: `view on explorer`,
@@ -113,23 +113,23 @@ export class TxInterceptorService {
         signature: signatures[0], blockhash, lastValidBlockHeight
       }
       console.log(url);
-  
-      await this._shs.connection.confirmTransaction(config, 'processed') 
+
+      await this._shs.connection.confirmTransaction(config, 'processed')
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"
       }
       if (record) {
         console.log(record);
-  
+
         va.track(record.message, record.data)
       }
       this._toasterService.msg.next(txCompleted)
 
-      this._portfolio.triggerFetch()
+      this._fetchPortfolioService.triggerFetch()
       return signatures
-  
-  
+
+
     }
 
   public async sendSol(lamportsToSend: number, toAddress: PublicKey, walletOwnerPk: PublicKey): Promise<any> {
@@ -163,7 +163,7 @@ export class TxInterceptorService {
       const config: BlockheightBasedTransactionConfirmationStrategy = {
         signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
       }
-      await this._shs.connection.confirmTransaction(config, 'processed') 
+      await this._shs.connection.confirmTransaction(config, 'processed')
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"
@@ -173,8 +173,8 @@ export class TxInterceptorService {
       //   va.track(record.message, record.data)
       // }
       this._toasterService.msg.next(txCompleted)
-      
-      this._portfolio.triggerFetch()
+
+      this._fetchPortfolioService.triggerFetch()
       return signature
 
     } catch (error) {

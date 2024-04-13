@@ -11,7 +11,7 @@ import { NativeStakeService, SolanaHelpersService } from './';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
-import { Subject } from 'rxjs';
+import { PortfolioFetchService } from "./portfolio-refetch.service";
 
 
 @Injectable({
@@ -31,25 +31,22 @@ export class PortfolioService {
     private _nss: NativeStakeService,
     private _shs: SolanaHelpersService,
     private _toastService: ToasterService,
-    private _sessionStorageService: SessionStorageService
+    private _sessionStorageService: SessionStorageService,
+    private _fetchPortfolioService: PortfolioFetchService
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if (wallet) {
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
-      this._refetchPortfolio.subscribe(() => {
+      this._fetchPortfolioService.refetchPortfolio().subscribe((shouldRefresh) => {
         console.log('reFetchPortfolio');
-        
+
         let forceFetch = true;
-        this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+        shouldRefresh && this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
       })
     })
+  }
 
-  }
-  private _refetchPortfolio: Subject<any> = new Subject()
-  public triggerFetch() {
-    this._refetchPortfolio.next(true)
-  }
   private _portfolioData = () => {
     const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
 
@@ -161,7 +158,7 @@ export class PortfolioService {
     if(this._platforms.length){
       return this._platforms
     }
-    
+
     try {
       this._platforms = await (await fetch(`${this.restAPI}/api/portfolio/platforms`)).json();
     } catch (error) {
@@ -206,7 +203,7 @@ export class PortfolioService {
         }
         if (group.type === "multiple") {
           group.data.assets.map(async asset => {
-            
+
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
