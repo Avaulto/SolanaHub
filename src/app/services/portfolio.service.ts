@@ -39,10 +39,11 @@ export class PortfolioService {
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
       this._fetchPortfolioService.refetchPortfolio().subscribe((shouldRefresh) => {
+        const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
         console.log('reFetchPortfolio');
 
         let forceFetch = true;
-        shouldRefresh && this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+        shouldRefresh && this.getPortfolioAssets(walletOwner, forceFetch)
       })
     })
   }

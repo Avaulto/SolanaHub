@@ -76,13 +76,12 @@ export class AppComponent implements OnInit {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
   sendCaptchaResponse(token) {
+    console.log(token);
+    
     this._utilService.turnStileToken = token;
 
   }
   async ngOnInit() {
-    console.log(this.turnStileKey);
-
-
 
     this._activeRoute.queryParams
       .subscribe((params) => {
