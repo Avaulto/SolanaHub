@@ -32,7 +32,6 @@ import { environment } from 'src/environments/environment';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, UtilService } from './services';
 import { RoutingPath } from "./shared/constants";
-import { PortfolioFetchService } from './services/portfolio-refetch.service';
 
 @Component({
   selector: 'app-root',
@@ -80,13 +79,11 @@ export class AppComponent implements OnInit {
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
     private _utilService: UtilService,
-    private _shs: SolanaHelpersService,
     private portfolioService: PortfolioService,
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
   public refreshCode = this.portfolioService.turnStileRefresh
-  private $refreshCode = this.refreshCode.asObservable().subscribe(r => console.log('turnstile:', r));
   sendCaptchaResponse(token) {
     console.log(token);
     
@@ -129,7 +126,7 @@ export class AppComponent implements OnInit {
           title: 'Notifications',
           url: `/${RoutingPath.NOTIFICATIONS}`,
           icon: 'https://cdn.lordicon.com/vspbqszr.json',
-          active: true
+          active: false
         },
         {
           title: 'Settings',
