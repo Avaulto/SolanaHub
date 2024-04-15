@@ -1,4 +1,4 @@
-import { CurrencyPipe, DecimalPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DecimalPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
@@ -20,6 +20,7 @@ import { PriceChartComponent } from './asset-modal/price-chart/price-chart.compo
   styleUrls: ['./assets-table.component.scss'],
   standalone: true,
   imports: [
+    AsyncPipe,
     SkeletonPhDirective,
     MftModule,
     IonImg,
@@ -76,6 +77,7 @@ export class AssetsTableComponent implements OnInit {
   ) {
     addIcons({ arrowBack, arrowForward });
   }
+  public showBalance = this._portfolioService.privateMode
   selectedTab = signal('tokens');
   columns = computed(() => {
     //@ts-ignore

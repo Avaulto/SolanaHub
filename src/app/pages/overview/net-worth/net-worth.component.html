@@ -1,6 +1,8 @@
 <div id="nw-key" class="ion-text-capitalize">net worth</div>
     @if (portfolioTotalValue()) {
-        <div id="nw-val">{{portfolioTotalValue() | currency }}</div>
+        <div id="nw-bal">
+            <div id="nw-val"  [ngClass]="{'private-balance': showBalance | async }">{{portfolioTotalValue() | currency }}</div> <ion-icon (click)="toggleShowBalance()" [name]="hideBalance ?  'eye-off-outline' : 'eye-outline'"/>
+        </div>
     }@else {
         <ion-skeleton-text [animated]="true" />
     }

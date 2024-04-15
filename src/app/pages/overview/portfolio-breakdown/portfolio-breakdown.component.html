@@ -27,7 +27,7 @@
         <div class="asset-share">
           {{ utilService.percentPipe.transform(item.value / portfolioTotalValue(), '2.2')}}
         </div>
-        <div class="asset-usd-value">
+        <div class="asset-usd-value"  [ngClass]="{'private-balance': showBalance | async }">
           {{utilService.currencyPipe.transform(item.value)}}
         </div>
       </div>

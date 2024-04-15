@@ -1,4 +1,6 @@
-<ngx-turnstile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0"/>
+@if(refreshCode | async){
+  <ngx-turnstile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0"/>
+}
 
 <ion-header mode="md" [translucent]="true">
   <app-menu/>

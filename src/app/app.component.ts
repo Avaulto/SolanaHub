@@ -5,7 +5,16 @@ import {
   IonButton,
   IonButtons,
   IonMenuButton,
-  IonApp, IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader
+  IonApp,
+   IonImg,
+   IonSplitPane,
+    IonMenu,
+     IonContent,
+      IonList
+      , IonListHeader, 
+      IonNote, 
+      IonMenuToggle,
+       IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline } from 'ionicons/icons';
@@ -23,6 +32,7 @@ import { environment } from 'src/environments/environment';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, UtilService } from './services';
 import { RoutingPath } from "./shared/constants";
+import { PortfolioFetchService } from './services/portfolio-refetch.service';
 
 @Component({
   selector: 'app-root',
@@ -75,6 +85,8 @@ export class AppComponent implements OnInit {
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
+  public refreshCode = this.portfolioService.turnStileRefresh
+  private $refreshCode = this.refreshCode.asObservable().subscribe(r => console.log('turnstile:', r));
   sendCaptchaResponse(token) {
     console.log(token);
     
@@ -117,7 +129,7 @@ export class AppComponent implements OnInit {
           title: 'Notifications',
           url: `/${RoutingPath.NOTIFICATIONS}`,
           icon: 'https://cdn.lordicon.com/vspbqszr.json',
-          active: false
+          active: true
         },
         {
           title: 'Settings',

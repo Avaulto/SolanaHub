@@ -31,6 +31,8 @@
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/status-bar": "5.0.6",
     "@coral-xyz/anchor": "^0.29.0",
+    "@dialectlabs/blockchain-sdk-solana": "^1.1.1",
+    "@dialectlabs/sdk": "^1.7.7",
     "@heavy-duty/wallet-adapter": "^0.8.0",
     "@ionic/angular": "^7.5.0",
     "@lordicon/element": "^1.4.2",
