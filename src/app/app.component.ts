@@ -5,7 +5,16 @@ import {
   IonButton,
   IonButtons,
   IonMenuButton,
-  IonApp, IonImg, IonSplitPane, IonMenu, IonContent, IonList, IonListHeader, IonNote, IonMenuToggle, IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader
+  IonApp,
+   IonImg,
+   IonSplitPane,
+    IonMenu,
+     IonContent,
+      IonList
+      , IonListHeader, 
+      IonNote, 
+      IonMenuToggle,
+       IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline } from 'ionicons/icons';
@@ -70,19 +79,18 @@ export class AppComponent implements OnInit {
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
     private _utilService: UtilService,
-    private _shs: SolanaHelpersService,
     private portfolioService: PortfolioService,
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
+  public refreshCode = this.portfolioService.turnStileRefresh
   sendCaptchaResponse(token) {
+    console.log(token);
+    
     this._utilService.turnStileToken = token;
 
   }
   async ngOnInit() {
-    console.log(this.turnStileKey);
-
-
 
     this._activeRoute.queryParams
       .subscribe((params) => {

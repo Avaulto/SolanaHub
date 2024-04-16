@@ -2,16 +2,27 @@ import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild, com
 import { PortfolioService, UtilService } from 'src/app/services';
 import { ChartConfiguration } from 'chart.js';
 import Chart from 'chart.js/auto'
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
 import { IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-portfolio-breakdown',
   templateUrl: './portfolio-breakdown.component.html',
   styleUrls: ['./portfolio-breakdown.component.scss'],
   standalone: true,
-  imports: [NgStyle, IonGrid, IonRow, IonCol, IonSpinner]
+  imports: [AsyncPipe,NgClass, NgStyle, IonGrid, IonRow, IonCol, IonSpinner]
 })
 export class PortfolioBreakdownComponent implements AfterViewInit {
+  constructor(private _portfolioService:PortfolioService){
+    effect(() => {
+      if (this.walletAssets()) {
+        setTimeout(() => {
+
+          this.createGroupCategory()
+        }, 300);
+      }
+    })
+  }
+  public showBalance = this._portfolioService.privateMode
   public walletAssets = inject(PortfolioService).walletAssets
   public portfolioTotalValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
   public assetClassValue = computed(() => this.walletAssets()?.map(assetClass => {
@@ -72,16 +83,6 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   chartData: Chart;
 
   @ViewChild('breakdownChart', { static: false }) breakdownChart: ElementRef;
-  constructor() {
-    effect(() => {
-      if (this.walletAssets()) {
-        setTimeout(() => {
-
-          this.createGroupCategory()
-        }, 300);
-      }
-    })
-  }
 
   ngAfterViewInit(): void {
 

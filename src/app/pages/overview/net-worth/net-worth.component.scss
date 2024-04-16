@@ -7,7 +7,10 @@
     /* 155.556% */
     letter-spacing: 0.18px;
 }
-
+#nw-bal{
+    display: flex;
+    align-items: center;
+}
 #nw-val {
     color: #37264A;
     font-size: 40px;
@@ -16,7 +19,14 @@
     line-height: 48px;
     /* 120% */
 }
-
+ion-icon{
+    color: var(--ion-color-primary);
+    cursor: pointer;
+    font-size: 25px;
+    margin-inline-start: 8px;
+    margin-block-end: 8px;
+    line-height: 30px;
+}
 ion-skeleton-text{
     line-height: 48px;
     border-radius: 8px;

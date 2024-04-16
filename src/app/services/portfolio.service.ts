@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
 import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
@@ -12,6 +12,7 @@ import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
+import { BehaviorSubject, Subject } from 'rxjs';
 
 
 @Injectable({
@@ -25,6 +26,7 @@ export class PortfolioService {
   public staking: WritableSignal<Stake[]> = signal(null);
   public defi: WritableSignal<defiHolding[]> = signal(null);
   public walletHistory: WritableSignal<TransactionHistory[]> = signal(null);
+  public privateMode:BehaviorSubject<boolean>= new BehaviorSubject(false)
   readonly restAPI = this._utils.serverlessAPI
   constructor(
     private _utils: UtilService,
@@ -36,13 +38,16 @@ export class PortfolioService {
   ) {
     this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
       if (wallet) {
+        this.turnStileRefresh.next(true)
         this.getPortfolioAssets(wallet.publicKey.toBase58())
       }
       this._fetchPortfolioService.refetchPortfolio().subscribe((shouldRefresh) => {
+        this.turnStileRefresh.next(true)
+        const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
         console.log('reFetchPortfolio');
 
         let forceFetch = true;
-        shouldRefresh && this.getPortfolioAssets(wallet.publicKey.toBase58(), forceFetch)
+        shouldRefresh && this.getPortfolioAssets(walletOwner, forceFetch)
       })
     })
   }
@@ -63,7 +68,7 @@ export class PortfolioService {
     }
     return null
   }
-
+  public turnStileRefresh = new BehaviorSubject(true as boolean)
   public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
 
     while (!this._utils.turnStileToken) await this._utils.sleep(500);
@@ -78,6 +83,8 @@ export class PortfolioService {
           this._utils.getJupTokens(),
           await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
         ])
+        this.turnStileRefresh.next(false)
+        this._utils.turnStileToken = null
         va.track('fetch portfolio', { status: 'success', wallet: walletAddress })
         jupTokens = res[0];
         portfolioData = res[1]

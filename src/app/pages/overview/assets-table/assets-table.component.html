@@ -87,16 +87,16 @@
 
 
 <ng-template #simpleUsdValue let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item-light ion-text-center">{{row.value | currency}}</div>
+  <div class="item-light ion-text-center"  [ngClass]="{'private-balance': showBalance | async }">{{row.value | currency}}</div>
 </ng-template>
 
 <ng-template #simplePriceValue let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item-light">{{row.price | currency: 'USD':'symbol':'1.2-5'}}</div>
+  <div class="item-light" >{{row.price | currency: 'USD':'symbol':'1.2-5'}}</div>
 </ng-template>
 
 <ng-template #validatorBalanceTpl let-row let-rowIndex="rowIndex" let-column="column">
 
-  <div class="item-balance">
+  <div class="item-balance" [ngClass]="{'private-balance': showBalance | async }">
     <div class="item-bold">{{row.balance | number: '1.2'}} SOL</div>
     <div class="item-light">{{row.balance * solPrice() | currency}}</div>
   </div>
@@ -138,9 +138,8 @@
     <ion-img [src]="row.imgURL" alt="platform icon"></ion-img>
   </div>
 </ng-template>
-
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center" (mouseenter)="showLong =true" (mouseleave)="showLong=false">
+  <div class="ion-text-center" [ngClass]="{'private-balance': showBalance | async }"  (mouseenter)="showLong =true" (mouseleave)="showLong=false">
 
     @if (showLong) {
       {{row.balance | number: '1.1-3'}}
@@ -157,7 +156,9 @@
 
 <ng-template #holdingsTpl let-row let-rowIndex="rowIndex" let-column="column">
   @for (asset of row.holdings; track $index) {
-    <div class="ion-text-center" [ngStyle]="{
+    <div class="ion-text-center"
+    [ngClass]="{'private-balance': showBalance | async }"
+    [ngStyle]="{
       'color': asset?.condition === 'credit' ? '#17B26A' : asset?.condition === 'debt' ? '#F04438' : '' 
       }">
       {{utils.formatBigNumbers(asset.balance)}} {{asset.symbol}}
