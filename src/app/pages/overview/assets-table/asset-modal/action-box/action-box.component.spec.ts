@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 import { IonicModule } from '@ionic/angular';
 
 import { ActionBoxComponent } from './action-box.component';
+import {SolanaHelpersServiceMockProvider, TxInterceptorServiceMockProvider, JupStoreServiceMockProvider} from "../../../../../services/mocks";
+import {Token} from "../../../../../models";
 
 describe('ActionBoxComponent', () => {
   let component: ActionBoxComponent;
@@ -9,12 +12,14 @@ describe('ActionBoxComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ActionBoxComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [SolanaHelpersServiceMockProvider, TxInterceptorServiceMockProvider, JupStoreServiceMockProvider],
+      imports: [ActionBoxComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActionBoxComponent);
     component = fixture.componentInstance;
+    component.token = {} as Token;
     fixture.detectChanges();
   }));
 

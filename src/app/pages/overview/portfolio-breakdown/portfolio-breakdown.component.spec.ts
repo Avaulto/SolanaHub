@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PortfolioBreakdownComponent } from './portfolio-breakdown.component';
+import {PortfolioServiceMockProvider} from "../../../services/mocks";
 
 describe('PortfolioBreakdownComponent', () => {
   let component: PortfolioBreakdownComponent;
@@ -9,12 +10,13 @@ describe('PortfolioBreakdownComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PortfolioBreakdownComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [PortfolioServiceMockProvider],
+      imports: [IonicModule.forRoot(), PortfolioBreakdownComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PortfolioBreakdownComponent);
     component = fixture.componentInstance;
+    jest.spyOn(component as any, "createGroupCategory").mockImplementation(() => {})
     fixture.detectChanges();
   }));
 

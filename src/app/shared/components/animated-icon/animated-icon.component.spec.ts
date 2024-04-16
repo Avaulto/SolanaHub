@@ -9,8 +9,7 @@ describe('AnimatedIconComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnimatedIconComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), AnimatedIconComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AnimatedIconComponent);

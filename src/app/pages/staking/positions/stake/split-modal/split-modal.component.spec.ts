@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { SplitModalComponent } from './split-modal.component';
+import {JupStoreServiceMockProvider} from "../../../../../services/mocks";
+import {Stake} from "../../../../../models";
 
 describe('SplitModalComponent', () => {
   let component: SplitModalComponent;
@@ -9,13 +11,13 @@ describe('SplitModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SplitModalComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), SplitModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SplitModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.stake = {} as Stake;
   }));
 
   it('should create', () => {

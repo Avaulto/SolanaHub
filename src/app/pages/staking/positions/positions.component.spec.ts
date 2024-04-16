@@ -2,6 +2,12 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PositionsComponent } from './positions.component';
+import {
+  JupStoreServiceMockProvider,
+  LiquidStakeServiceMockProvider,
+  PortfolioServiceMockProvider,
+  SolanaHelpersServiceMockProvider
+} from "../../../services/mocks";
 
 describe('PositionsComponent', () => {
   let component: PositionsComponent;
@@ -9,8 +15,8 @@ describe('PositionsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PositionsComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [LiquidStakeServiceMockProvider, PortfolioServiceMockProvider, SolanaHelpersServiceMockProvider, JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), PositionsComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PositionsComponent);

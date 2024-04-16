@@ -9,8 +9,7 @@ describe('StakePathComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ StakePathComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [StakePathComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(StakePathComponent);

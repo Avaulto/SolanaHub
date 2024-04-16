@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { NetWorthComponent } from './net-worth.component';
+import {PortfolioServiceMockProvider} from "../../../services/mocks";
 
 describe('NetWorthComponent', () => {
   let component: NetWorthComponent;
@@ -9,8 +10,8 @@ describe('NetWorthComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NetWorthComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [PortfolioServiceMockProvider],
+      imports: [IonicModule.forRoot(), NetWorthComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NetWorthComponent);

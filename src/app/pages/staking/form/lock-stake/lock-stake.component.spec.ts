@@ -9,8 +9,7 @@ describe('LockStakeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LockStakeComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), LockStakeComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LockStakeComponent);

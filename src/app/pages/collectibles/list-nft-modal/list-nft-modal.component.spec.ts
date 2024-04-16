@@ -9,8 +9,7 @@ describe('ListNftModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ListNftModalComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), ListNftModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListNftModalComponent);

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { TransferAuthModalComponent } from './transfer-auth-modal.component';
+import {JupStoreServiceMockProvider} from "../../../../../services/mocks";
+import {Stake} from "../../../../../models";
 
 describe('TransferAuthModalComponent', () => {
   let component: TransferAuthModalComponent;
@@ -9,13 +11,13 @@ describe('TransferAuthModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransferAuthModalComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), TransferAuthModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TransferAuthModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.stake = {} as Stake;
   }));
 
   it('should create', () => {

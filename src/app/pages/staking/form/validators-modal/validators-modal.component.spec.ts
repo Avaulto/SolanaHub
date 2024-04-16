@@ -9,8 +9,7 @@ describe('ValidatorsModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ValidatorsModalComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), ValidatorsModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ValidatorsModalComponent);

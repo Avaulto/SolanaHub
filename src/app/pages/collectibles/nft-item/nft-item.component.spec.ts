@@ -9,8 +9,7 @@ describe('NftItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NftItemComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), NftItemComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NftItemComponent);

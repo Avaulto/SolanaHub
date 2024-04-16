@@ -11,7 +11,7 @@
     "build:main": "ng build --configuration=production",
     "build:dev": "ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
-    "test": "jest",
+    "test": "jest --runInBand",
     "lint": "ng lint"
   },
   "private": true,

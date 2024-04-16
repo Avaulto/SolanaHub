@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 import { IonicModule } from '@ionic/angular';
 
 import { MftComponent } from './mft.component';
@@ -9,13 +10,13 @@ describe('MftComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MftComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [MftComponent],
+      imports: [IonicModule.forRoot()],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MftComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {
