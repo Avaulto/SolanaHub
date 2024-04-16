@@ -9,13 +9,11 @@ describe('CustomValidatorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomValidatorComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), CustomValidatorComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CustomValidatorComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {

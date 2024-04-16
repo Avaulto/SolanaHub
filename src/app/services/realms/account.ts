@@ -3,12 +3,11 @@ import {BorshAccountsCoder} from "@coral-xyz/anchor/dist/cjs/coder/borsh/account
 import { GovernanceIdl } from "./idl/idl";
 import { PublicKey } from "@solana/web3.js";
 
-const coder = new BorshAccountsCoder(idl as GovernanceIdl);
-
 function deserialize(name: string, data: Buffer) {
     // Prepend 8-byte default discriminator
-    const modifiedData = Buffer.concat([Buffer.from("0".repeat(16), "hex"),data]);
-    return coder.decodeUnchecked(name, modifiedData)
+  const modifiedData = Buffer.concat([Buffer.from("0".repeat(16), "hex"),data]);
+  const coder = new BorshAccountsCoder(idl as GovernanceIdl);
+  return coder.decodeUnchecked(name, modifiedData)
 }
 
 export function voteRecordAccount(
@@ -16,7 +15,7 @@ export function voteRecordAccount(
     {proposal: PublicKey, tokenOwnerRecord: PublicKey, programId: PublicKey}
 ) {
     const pda = PublicKey.findProgramAddressSync([
-        Buffer.from("governance"), 
+        Buffer.from("governance"),
         proposal.toBuffer(),
         tokenOwnerRecord.toBuffer(),
     ],
@@ -28,8 +27,8 @@ export function voteRecordAccount(
 
 export function realmConfigAccount({realmAccount, programId}: {realmAccount: PublicKey, programId: PublicKey}) {
     const pda = PublicKey.findProgramAddressSync([
-        Buffer.from("realm-config"), 
-        realmAccount.toBuffer(),  
+        Buffer.from("realm-config"),
+        realmAccount.toBuffer(),
     ],
         programId
     )

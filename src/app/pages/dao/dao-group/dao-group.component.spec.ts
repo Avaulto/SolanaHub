@@ -9,8 +9,7 @@ describe('DaoGroupComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DaoGroupComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), DaoGroupComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DaoGroupComponent);

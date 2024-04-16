@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 
 import { BurnNftModalComponent } from './burn-nft-modal.component';
 
@@ -9,12 +8,13 @@ describe('BurnNftModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BurnNftModalComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [],
+      imports: [BurnNftModalComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BurnNftModalComponent);
     component = fixture.componentInstance;
+    component.nfts = [];
     fixture.detectChanges();
   }));
 

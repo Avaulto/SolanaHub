@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { TokenListComponent } from './token-list.component';
+import {JupStoreServiceMockProvider, PortfolioServiceMockProvider} from "../../../services/mocks";
 
 describe('TokenListComponent', () => {
   let component: TokenListComponent;
@@ -9,8 +10,8 @@ describe('TokenListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TokenListComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [PortfolioServiceMockProvider, JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), TokenListComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TokenListComponent);

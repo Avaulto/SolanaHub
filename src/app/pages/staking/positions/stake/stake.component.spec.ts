@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { StakeComponent } from './stake.component';
+import {JupStoreServiceMockProvider} from "../../../../services/mocks";
 
 describe('StakeComponent', () => {
   let component: StakeComponent;
@@ -9,8 +10,8 @@ describe('StakeComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ StakeComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), StakeComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(StakeComponent);

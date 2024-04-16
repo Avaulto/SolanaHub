@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { PoolStatsComponent } from './pool-stats.component';
+import {LoyaltyLeagueServiceMockProvider} from "../../../services/mocks/loyalty-league.service.mock";
 
 describe('PoolStatsComponent', () => {
   let component: PoolStatsComponent;
@@ -9,8 +10,8 @@ describe('PoolStatsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PoolStatsComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [LoyaltyLeagueServiceMockProvider],
+      imports: [IonicModule.forRoot(), PoolStatsComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PoolStatsComponent);

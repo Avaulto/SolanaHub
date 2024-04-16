@@ -9,8 +9,7 @@ describe('ProposalPreviewComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProposalPreviewComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), ProposalPreviewComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ProposalPreviewComponent);

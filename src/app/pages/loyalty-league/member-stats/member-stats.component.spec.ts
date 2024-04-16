@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 import { IonicModule } from '@ionic/angular';
 
 import { MemberStatsComponent } from './member-stats.component';
@@ -9,13 +10,13 @@ describe('MemberStatsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MemberStatsComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [MemberStatsComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MemberStatsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.loyalMember = {};
   }));
 
   it('should create', () => {

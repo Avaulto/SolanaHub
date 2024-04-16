@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { NftModalItemComponent } from './nft-modal-item.component';
+import {NFT} from "../../../models";
 
 describe('NftModalItemComponent', () => {
   let component: NftModalItemComponent;
@@ -9,12 +10,12 @@ describe('NftModalItemComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NftModalItemComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), NftModalItemComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NftModalItemComponent);
     component = fixture.componentInstance;
+    component.nft = {} as NFT;
     fixture.detectChanges();
   }));
 

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { FormComponent } from './form.component';
+import {JupStoreServiceMockProvider, SolanaHelpersServiceMockProvider} from "../../../services/mocks";
+import {ActivatedRoute} from "@angular/router";
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -9,13 +11,13 @@ describe('FormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [SolanaHelpersServiceMockProvider, JupStoreServiceMockProvider, {
+        provide: ActivatedRoute, useValue: jest.fn() }],
+      imports: [IonicModule.forRoot(), FormComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {

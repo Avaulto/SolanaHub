@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from "@ionic/angular";
 
 import { FeatureToastComponent } from './feature-toast.component';
 
@@ -9,8 +9,8 @@ describe('FeatureToastComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FeatureToastComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [],
+      imports: [IonicModule.forRoot(), FeatureToastComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(FeatureToastComponent);

@@ -1,7 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import {IonicModule, ModalController} from '@ionic/angular';
 
 import { FormComponent } from './form.component';
+import {
+  JupStoreServiceMockProvider,
+  LiquidStakeServiceMockProvider,
+  LoyaltyLeagueServiceMockProvider,
+  SolanaHelpersServiceMockProvider
+} from "../../../services/mocks";
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -9,13 +15,12 @@ describe('FormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [{ provide: ModalController, useValue: jest.fn()}, JupStoreServiceMockProvider, LoyaltyLeagueServiceMockProvider, SolanaHelpersServiceMockProvider, LiquidStakeServiceMockProvider],
+      imports: [FormComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   }));
 
   it('should create', () => {

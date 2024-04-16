@@ -9,8 +9,7 @@ describe('ApyCalcComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApyCalcComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), ApyCalcComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ApyCalcComponent);

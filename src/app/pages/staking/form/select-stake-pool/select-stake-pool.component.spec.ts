@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { SelectStakePoolComponent } from './select-stake-pool.component';
+import {StakePool} from "../../../../models";
+import {signal} from "@angular/core";
 
 describe('SelectStakePoolComponent', () => {
   let component: SelectStakePoolComponent;
@@ -9,13 +11,13 @@ describe('SelectStakePoolComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectStakePoolComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [SelectStakePoolComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SelectStakePoolComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+
+    component.stakePools = signal([] as StakePool[]);
   }));
 
   it('should create', () => {

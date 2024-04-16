@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { InstantUnstakeModalComponent } from './instant-unstake-modal.component';
+import {Stake} from "../../../../../models";
+import {JupStoreServiceMockProvider} from "../../../../../services/mocks";
 
 describe('InstantUnstakeModalComponent', () => {
   let component: InstantUnstakeModalComponent;
@@ -9,13 +11,13 @@ describe('InstantUnstakeModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InstantUnstakeModalComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), InstantUnstakeModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(InstantUnstakeModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.stake = {} as Stake;
   }));
 
   it('should create', () => {

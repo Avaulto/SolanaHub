@@ -1,16 +1,33 @@
-import { TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppComponent } from './app.component';
+import {
+  LoyaltyLeagueServiceMockProvider,
+  PortfolioServiceMockProvider,
+  SolanaHelpersServiceMockProvider, UtilServiceMockProvider
+} from "./services/mocks";
+import {WalletStore} from "@heavy-duty/wallet-adapter";
+import {of} from "rxjs";
+import {IonicModule} from "@ionic/angular";
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
 
 describe('AppComponent', () => {
-  beforeEach(async () => {
-    TestBed.overrideComponent(AppComponent, {
-      add: {
-        imports: [RouterTestingModule]
-      }
-    });
-  });
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      providers: [SolanaHelpersServiceMockProvider, PortfolioServiceMockProvider, LoyaltyLeagueServiceMockProvider, UtilServiceMockProvider, { provide: WalletStore, useValue: { wallets$: of(), connected$: of(), publicKey$: of()}}],
+      declarations: [ AppComponent ],
+      imports: [IonicModule.forRoot()],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  }));
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { MergeModalComponent } from './merge-modal.component';
+import {JupStoreServiceMockProvider} from "../../../../../services/mocks";
+import {Stake} from "../../../../../models";
 
 describe('MergeModalComponent', () => {
   let component: MergeModalComponent;
@@ -9,13 +11,14 @@ describe('MergeModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MergeModalComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [JupStoreServiceMockProvider],
+      imports: [IonicModule.forRoot(), MergeModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MergeModalComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.stakeAccounts = [];
+    component.targetStake = {} as Stake;
   }));
 
   it('should create', () => {

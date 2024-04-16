@@ -9,12 +9,12 @@ describe('SettingComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [IonicModule.forRoot(), SettingComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingComponent);
     component = fixture.componentInstance;
+    component.slippageControl = {};
     fixture.detectChanges();
   }));
 

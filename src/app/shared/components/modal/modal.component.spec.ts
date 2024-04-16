@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { ModalComponent } from './modal.component';
+import {LiquidStakeServiceMockProvider, SolanaHelpersServiceMockProvider} from "../../../services/mocks";
 
 describe('ModalComponent', () => {
   let component: ModalComponent;
@@ -9,8 +10,8 @@ describe('ModalComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModalComponent ],
-      imports: [IonicModule.forRoot()]
+      providers: [SolanaHelpersServiceMockProvider, LiquidStakeServiceMockProvider],
+      imports: [IonicModule.forRoot(), ModalComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModalComponent);
