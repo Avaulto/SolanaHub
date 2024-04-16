@@ -25,6 +25,9 @@ Note: Find configuration options in the `package.json` file.
 ## Build
 To build the project for the mainnet environment, run `npm run build:main`. The build artifacts will be stored in the `www` directory.
 
+## Running unit tests
+TRun `npm run test` to execute the unit tests via [jest](https://jestjs.io/).
+
 ## Credits
 Special thanks to all the amazing Solana builders.
 
