@@ -39,13 +39,8 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
   ]
 })
 export class DaoPage implements OnInit {
-  public tableMenuOptions = ['voting', 'succeeded'];
   public Govs: WritableSignal<Gov[]> = signal(null)
   public govCopy: WritableSignal<Gov[]> = signal(null)
-  // public $govs: Subject<Gov[]> = new Subject();
-
-    // .sort((a, b) => a.value > b.value ? -1 : 1)
-  
   constructor(
     private _dao: DaoService,
     private _portfolio: PortfolioService,
@@ -78,6 +73,7 @@ export class DaoPage implements OnInit {
     }
   }
   async ngOnInit() { }
+  public tableMenuOptions = ['voting', 'succeeded'];
   public proposalsStatus = signal('voting')
   public tabSelected(status) {
     

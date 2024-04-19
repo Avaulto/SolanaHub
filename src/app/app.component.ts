@@ -169,7 +169,7 @@ export class AppComponent implements OnInit {
           title: 'Airdrops finder',
           url: `/${RoutingPath.AIRDROP_FINDER}`,
           icon: 'https://cdn.lordicon.com/unukghxb.json',
-          active: true
+          active: false
         },
         // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
       ],

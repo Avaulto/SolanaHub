@@ -1,16 +1,57 @@
-<div id="not-connected-box">
-      
-  <div id="img-wrapper">
-    <ion-img src="/assets/images/bg-wallet-no-connected.svg"/>
+<div id="container">
+
+  <div id="no-subs">
+    <div id="no-sub-head"  class="ion-margin-bottom">
+      <div id="no-sub-start">
+        <ion-label>
+          dApps
+        </ion-label>
+        <ion-text>
+          Subscribe now to get alerts related to your activity across solana dApps
+        </ion-text>
+      </div>
+      <div id="no-sub-end">
+        <ion-checkbox (ionChange)="toggleCheckAll($event)" [checked]="false" />
+        <span>
+          Multi Select
+        </span>
+      </div>
+    </div>
+    <div id="dapps-subscription" class="ion-margin-bottom">
+      @for (dapp of dappsList(); track $index) {
+        <div class="dapp" [class.checked]="checkDapp.checked" (click)="selectDapp(checkDapp)">
+          <ion-checkbox 
+           [value]="dapp" 
+           #checkDapp 
+           class="dapp-checkbox"/>
+    
+           <div>
+             <ion-img [src]="dapp.avatarUrl"/>
+            </div>
+          <ion-text>{{dapp.name}}</ion-text>
+        </div>
+      }@empty {
+        <div class="dapp">
+          <ion-skeleton-text  [animated]="true" />
+          <ion-text><ion-skeleton-text [animated]="true" /></ion-text>
+        </div>
+        <div class="dapp">
+          <ion-skeleton-text  [animated]="true" />
+          <ion-text><ion-skeleton-text [animated]="true" /></ion-text>
+        </div>
+        <div class="dapp">
+          <ion-skeleton-text  [animated]="true" />
+          <ion-text><ion-skeleton-text [animated]="true" /></ion-text>
+        </div>
+
+      }
+    </div>
+    <div id="btn-wrapper">
+      <ion-button (click)="subscribe()" expand="block">
+        Subscribe
+      </ion-button>
+
+    </div>
+    <!-- <p style="text-align: center; font-size: 11px;opacity: 0.7;">By connect your wallet you agree to SolanaHub <a style="text-decoration: none;" href="https://docs.solanahub.app/solanahub/solanahub-terms-and-conditions"target="_blank">Terms &amp; Conditions</a></p> -->
   </div>
-  <ion-label>
-    dApps notifications
-  </ion-label>
-  <ion-text>
-    get notifications related to your activity within the most powerful dapps on Solana
-  </ion-text>
-  <div id="btn-wrapper">
-    Subscribe
-  </div>
-  <!-- <p style="text-align: center; font-size: 11px;opacity: 0.7;">By connect your wallet you agree to SolanaHub <a style="text-decoration: none;" href="https://docs.solanahub.app/solanahub/solanahub-terms-and-conditions"target="_blank">Terms &amp; Conditions</a></p> -->
 </div>

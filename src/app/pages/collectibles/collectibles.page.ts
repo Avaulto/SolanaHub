@@ -54,13 +54,16 @@ export class CollectiblesPage implements OnInit {
   constructor(private _portfolio:PortfolioService,    private _modalCtrl: ModalController) { }
 
   ngOnInit() {
+    setTimeout(() => {
+      console.log(this.checkNfts);
+    }, 4000);
+    
   }
   searchNft(term){
 
     this.searchTerm.set(term)
   }
   selectNft(checkbox, event) {
-
     if(event.target.localName === "ion-button"){
       return
     }

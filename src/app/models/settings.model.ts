@@ -7,9 +7,9 @@ export interface Config {
 }
 
 export enum PriorityFee {
-  None = 10000,
-  Fast = 75000,
-  Supercharger = 300000,
+  None = 70000,
+  Fast = 300000,
+  Supercharger = 700000,
 }
 
 export interface BaseConfig {
