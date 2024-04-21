@@ -7,7 +7,7 @@
     <div class="gap data-set stat">
       <div class="key ion-text-capitalize">Prize Pool</div>
       @if(prizePool$ | async; as prizePool){
-        <div class="value">{{prizePool.rebates | number:'1.0-2' }} SOL</div>
+        <div class="value">{{prizePool.hubSOLrebates | number:'1.0-2' }} hubSOL</div>
       }@else{
         <ion-skeleton-text [animated]="true" style="width: 40%;"/>
       }
