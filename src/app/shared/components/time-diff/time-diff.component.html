@@ -1,0 +1,6 @@
+<ion-button>
+  {{expiryDate | timeDiff}}
+  @if(!expiryDate){
+    <ion-skeleton-text style="width: 30px;" [animated]="true" />
+  }
+</ion-button>

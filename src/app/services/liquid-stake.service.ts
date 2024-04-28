@@ -15,6 +15,7 @@ import { depositSolIntoSanctum, depositStakeIntoSanctum, withdrawStakeFromSanctu
   providedIn: 'root'
 })
 export class LiquidStakeService {
+
   readonly restAPI = this._utils.serverlessAPI
   public stakePools: StakePool[] = []
   public marinadeSDK: Marinade;
@@ -265,8 +266,11 @@ export class LiquidStakeService {
 
   public async unstake(pool:StakePool, sol: number) {
     // single validator pools
-    const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
+    // const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
+    // // Multi validator sanctum pools
+    // const MVP = ['jupSOL']
 
+    
     const { publicKey } = this._shs.getCurrentWallet()
     const lamportsBN = new BN(sol);
     const record = {message:`${pool.poolName} unstake` , data:{amount: sol }};
@@ -277,10 +281,15 @@ export class LiquidStakeService {
       const { transaction } = await this.marinadeSDK.liquidUnstake(lamportsBN)
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey,null,record)
-    } else if(SVP.includes(pool.poolName)){
+    } else if(pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti'){
       console.log(pool);
+      const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
+      const MultiValidatorsPool_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
+      const STAKE_POOL_PROGRAM_ID =  pool.type === 'SanctumSpl' ? singalValidatorsPool_PROGRAM_ID : MultiValidatorsPool_PROGRAM_ID
+      console.log(STAKE_POOL_PROGRAM_ID);
       
       let transaction = await withdrawStakeFromSanctum(
+        STAKE_POOL_PROGRAM_ID,
         this._shs.connection,
         new PublicKey(pool.poolPublicKey),
         publicKey,

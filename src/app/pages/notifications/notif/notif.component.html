@@ -1,2 +1,41 @@
-<div class="notif-wrapper">
+<div class="notif-wrapper data-set">
+  <div class="notif-head">
+    <div>
+
+      @if(notification){
+      <div>
+        <ion-img [src]="notification?.imgURL" />
+      </div>
+      <ion-label>{{notification?.title || notification?.text}}</ion-label>
+      }@else{
+      <ion-skeleton-text class="temp-img" [animated]="true" />
+      <ion-skeleton-text [animated]="true" />
+      }
+
+    </div>
+    <div style="align-items: flex-start;">
+      <ion-chip class="type-icon">
+        @if(notification){
+        <div>
+          <animated-icon slot="start" [icon]="notification?.icon" />
+        </div>
+        <span class="ion-hide-lg-down">
+          {{notification?.type}}
+        </span>
+        }@else {
+        <ion-skeleton-text [animated]="true" />
+        }
+      </ion-chip>
+      <div>
+        @if(notification){
+        <time-diff [expiryDate]="notification?.timestamp" />
+        }
+      </div>
+    </div>
   </div>
+  @if (notification?.message) {
+  <ion-text class="notif-body">
+    {{notification?.message}}
+  </ion-text>
+  }
+</div>

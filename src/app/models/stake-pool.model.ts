@@ -14,5 +14,6 @@ export interface StakePool{
     solWithdrawalFee: number
     totalStake: number
     reserveSol: number
+    type: 'spl' | 'SanctumSplMulti' | 'SanctumSpl'
   }
   

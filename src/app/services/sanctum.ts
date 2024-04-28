@@ -68,6 +68,7 @@ export enum ValidatorStakeInfoStatus {
   ReadyForRemoval,
 }
 export async function prepareWithdrawAccounts(
+  STAKE_POOL_PROGRAM_ID_SEGMENTED: PublicKey,
   connection: Connection,
   stakePool: StakePool,
   stakePoolAddress: PublicKey,
@@ -101,7 +102,7 @@ export async function prepareWithdrawAccounts(
     }
 
     const stakeAccountAddress = await findStakeProgramAddress(
-      STAKE_POOL_PROGRAM_ID,
+      STAKE_POOL_PROGRAM_ID_SEGMENTED,
       validator.voteAccountAddress,
       stakePoolAddress,
     );
@@ -254,6 +255,7 @@ export interface ValidatorAccount {
   lamports: number;
 }
 const STAKE_POOL_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
+// const STAKE_POOL_MVP_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
 
 export function lamportsToSol(amount) {
     return amount / 10 ** 9
@@ -487,6 +489,7 @@ export async function depositStakeIntoSanctum(
   
 
   export async function withdrawStakeFromSanctum(
+    STAKE_POOL_PROGRAM_ID_SEGMENTED: PublicKey,
     connection: Connection,
     stakePoolAddress: PublicKey,
     tokenOwner: PublicKey,
@@ -519,7 +522,7 @@ export async function depositStakeIntoSanctum(
     );
   
     const withdrawAuthority = await findWithdrawAuthorityProgramAddress(
-      STAKE_POOL_PROGRAM_ID,
+      STAKE_POOL_PROGRAM_ID_SEGMENTED,
       stakePoolAddress,
     );
   
@@ -552,7 +555,7 @@ export async function depositStakeIntoSanctum(
       }
       if (isValidVoter) {
         const stakeAccountAddress = await findStakeProgramAddress(
-          STAKE_POOL_PROGRAM_ID,
+          STAKE_POOL_PROGRAM_ID_SEGMENTED,
           voteAccount,
           stakePoolAddress,
         );
@@ -585,7 +588,7 @@ export async function depositStakeIntoSanctum(
       }
     } else if (voteAccountAddress) {
       const stakeAccountAddress = await findStakeProgramAddress(
-        STAKE_POOL_PROGRAM_ID,
+        STAKE_POOL_PROGRAM_ID_SEGMENTED,
         voteAccountAddress,
         stakePoolAddress,
       );
@@ -615,6 +618,7 @@ export async function depositStakeIntoSanctum(
       // Get the list of accounts to withdraw from
       withdrawAccounts.push(
         ...(await prepareWithdrawAccounts(
+          STAKE_POOL_PROGRAM_ID_SEGMENTED,
           connection,
           stakePool.account.data,
           stakePoolAddress,
@@ -687,7 +691,7 @@ export async function depositStakeIntoSanctum(
         poolTokens: withdrawAccount.poolAmount,
         withdrawAuthority,
       })
-      withdrawStake.programId = STAKE_POOL_PROGRAM_ID;
+      withdrawStake.programId = STAKE_POOL_PROGRAM_ID_SEGMENTED;
       instructions.push(
         withdrawStake
       );

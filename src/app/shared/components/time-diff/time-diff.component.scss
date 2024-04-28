@@ -1,0 +1,18 @@
+ion-button {
+    width: fit-content;
+    text-transform: capitalize;
+    --border-radius: 6px;
+    --border-color: #CDD5DF;
+    --background: #FFF;
+    --border-width: 1px;
+    --border-style: solid;
+    --color: #364152;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 16px;
+    min-height: 20px;
+    --padding-bottom: 0;
+    --padding-top: 0;
+    height: 20px;
+}

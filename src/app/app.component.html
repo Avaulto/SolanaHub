@@ -1,9 +1,9 @@
 @if(refreshCode | async){
-  <ngx-turnstile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0"/>
+<ngx-turnstile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0" />
 }
 
 <ion-header mode="md" [translucent]="true">
-  <app-menu/>
+  <app-menu />
 
 </ion-header>
 <ion-app>
@@ -33,9 +33,8 @@
 
             </ion-item>
             }@else{
-            <ion-item [disabled]="!p.active" style="opacity: 1;" 
-            (click)="openSettingsModal()"
-              lines="none" detail="false">
+            <ion-item [disabled]="!p.active" style="opacity: 1;" (click)="openSettingsModal()" lines="none"
+              detail="false">
               <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
 
               <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
@@ -50,7 +49,7 @@
 
           </ion-menu-toggle>
         </ion-list>
-
+        <loyalty-league-member />
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content">

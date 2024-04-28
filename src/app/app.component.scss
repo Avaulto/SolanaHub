@@ -30,9 +30,9 @@ ion-menu {
   }
 
   ion-menu-toggle {
-    &:not(:last-child){
+    // &:not(:last-child){
       padding-block-end: 19px;
-    }
+    // }
     display: block;
 
     animated-icon {

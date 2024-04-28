@@ -9,13 +9,8 @@
             <ion-skeleton-text style="width: 60%;" [animated]="true" />
           }
         </span>
-
-        <ion-button>
-          {{proposal?.expiryDate | timeDiff}}
-          @if(!proposal){
-            <ion-skeleton-text style="width: 30px;" [animated]="true" />
-          }
-        </ion-button>
+        <time-diff [expiryDate]="proposal?.expiryDate"/>
+       
       </div>
       <ion-chip 
       [ngClass]="{

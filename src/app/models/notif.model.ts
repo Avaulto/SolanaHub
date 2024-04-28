@@ -1,11 +1,13 @@
-export interface dAppsConfig{
-    id: string
-    address: string
-    name: string
-    description: string
-    avatarUrl: string
-    verified: boolean
-    telegramUsername: string
-    blockchainType: string
-  }
-  
+import { AccountAddress } from "@dialectlabs/sdk";
+
+export interface DappMessageExtended {
+  text: string;
+  name: string;
+  type: string;
+  imgURL: string;
+  timestamp: Date;
+  author: AccountAddress;
+  icon?: string;
+  title?:string;
+  message?: string;
+}

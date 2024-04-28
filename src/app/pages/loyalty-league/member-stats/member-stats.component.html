@@ -2,7 +2,7 @@
   <div id="score-head">
     <div>
       <div id="total-pts-title">Your weekly airdrop</div>
-      <div id="total-pts-value">{{loyalMember()?.airdrop | number: '1.3' }} SOL</div>
+      <div id="total-pts-value">{{loyalMember()?.airdrop.toFixedNoRounding(4) }} hubSOL</div>
     </div>
 
     <div id="referral-btn">

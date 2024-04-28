@@ -34,12 +34,17 @@ export class EmptySubsComponent implements OnInit {
   }
 
   async subscribe() {
-    const addressId = this.bulkSelection()[0].id;
-    const dappPublicKey = this.bulkSelection()[0].address
-    console.log(this.bulkSelection()[0]);
-    
-    const sub = await this._notif.setupUserSubscription(dappPublicKey);
-    console.log(sub);
+    // const addressId = this.bulkSelection()[0].id;
+    // const dappPublicKey = this.bulkSelection()[0].address
+    // console.log(this.bulkSelection()[0]);
+    for (const iterator of this.bulkSelection()) {
+      const addressId = iterator.id;
+      const dappPublicKey = iterator.address
+      console.log(addressId, dappPublicKey);
+      
+      const sub = await this._notif.setupUserSubscription(dappPublicKey);
+    }
+    // console.log(sub);
     
     // console.log(addressId, dappPublicKey);
     // const sub = await this._notif.subscribe(addressId,dappPublicKey)

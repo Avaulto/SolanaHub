@@ -32,6 +32,7 @@ import { environment } from 'src/environments/environment';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, UtilService } from './services';
 import { RoutingPath } from "./shared/constants";
+import { LoyaltyLeagueMemberComponent } from './loyalty-league-member/loyalty-league-member.component';
 
 @Component({
   selector: 'app-root',
@@ -67,7 +68,8 @@ import { RoutingPath } from "./shared/constants";
     IonIcon,
     IonLabel,
     IonRouterOutlet,
-    IonImg
+    IonImg,
+    LoyaltyLeagueMemberComponent
   ],
 })
 export class AppComponent implements OnInit {
@@ -161,19 +163,19 @@ export class AppComponent implements OnInit {
         {title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true},
       ],
     },
-    {
-      group: 'Explore',
-      pages: [
-        {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
-        {
-          title: 'Airdrops finder',
-          url: `/${RoutingPath.AIRDROP_FINDER}`,
-          icon: 'https://cdn.lordicon.com/unukghxb.json',
-          active: false
-        },
-        // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
-      ],
-    },
+    // {
+    //   group: 'Explore',
+    //   pages: [
+    //     {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+    //     {
+    //       title: 'Airdrops finder',
+    //       url: `/${RoutingPath.AIRDROP_FINDER}`,
+    //       icon: 'https://cdn.lordicon.com/unukghxb.json',
+    //       active: false
+    //     },
+    //     // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
+    //   ],
+    // },
   ];
 
   async openSettingsModal() {
