@@ -1,5 +1,5 @@
 
-export interface LoyaltyScore {
+export interface LoyaltyBooster {
     nativeStake: number;
     nativeStakeLongTermBoost: number;
     hubSOL_DirectStakeBoost:    number;
@@ -40,10 +40,26 @@ export interface PointsBreakDown {
 
 
 export interface PrizePool {
-    rebates: number;
+    rebates: number
     hubSOLrebates: number
-    APR_boost: number;
-}
+    avgApyBoost: number
+    APY_boosters: {
+      MNDE: number
+      BLZE: number
+      SOL: number
+      bSOL: number
+      hubSOL: number
+      mSOL: number
+    }
+    breakdown: {
+      weekly_BLZE_emmistion: number
+      weekly_BLZE_TO_SOL_emmistion: number
+      weeklyDirectStake: number
+      directStakeRebate: number
+      blzeRebate: number
+    }
+  }
+  
 
 export interface NextAirdrop{
     nextAirdrop: Date,

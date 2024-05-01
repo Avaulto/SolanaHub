@@ -2,7 +2,7 @@ import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay } from 'rxjs';
-import { LoyaltyLeaderBoard, LoyaltyScore, NextAirdrop, PrizePool } from '../models';
+import { LoyaltyLeaderBoard, LoyaltyBooster, NextAirdrop, PrizePool } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -38,13 +38,14 @@ export class LoyaltyLeagueService {
       // catchError((err) => this._formatErrors(err))
     )
   }
-  public getLoyaltyScore(): Observable<LoyaltyScore> {
+  public getLoyaltyBoosters(): Observable<LoyaltyBooster> {
+
     return this._apiService.get(`${this.api}/score`).pipe(
       shareReplay(),
       this._utilService.isNotNull,
-      map((loyaltyScore: LoyaltyScore) => {
+      map((loyaltyBooster: LoyaltyBooster) => {
 
-        return loyaltyScore
+        return loyaltyBooster
       }),
       // catchError((err) => this._formatErrors(err))
     )

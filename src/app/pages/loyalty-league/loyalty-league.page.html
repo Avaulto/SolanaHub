@@ -37,7 +37,7 @@
         </ion-col>
         <!-- <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div> -->
         <ion-col id="points-multiplier" sizeXl="5.9" size="12" class="gap data-set ion-margin-bottom">
-          <app-points-stats />
+          <app-points-stats [prizePool]="prizePool$ | async"/>
         </ion-col>
       </ion-row>
       <ion-row>

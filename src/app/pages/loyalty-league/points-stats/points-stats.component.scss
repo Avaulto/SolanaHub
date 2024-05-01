@@ -22,17 +22,20 @@
         color: var(--colors-gray-modern-800, #202939);
         text-align: right;
         font-size: 12px;
-        font-style: normal;
+        cursor: pointer;
         font-weight: 600;
         line-height: 14px;
         /* 116.667% */
     }
 
     .bonus {
+        cursor:auto;
         color: var(--brand-600, #B84794);
     }
 }
-
+.stake-boost-tool-tip{
+    border-bottom: 2px dashed var(--ion-color-primary);
+}
 ion-skeleton-text{
     margin: 0;
     width: 15%;

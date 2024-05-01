@@ -1,76 +1,28 @@
 <div id="pm-title">points multiplier</div>
 
+@for (score of sbm$ | async ; track $index) {
+<div class="m">
+  <div class="key" [class.bonus]="score.name == 'Referrals' || score.name == 'Hub domain holder'">{{score.name}}</div>
+  @if(score.multiplier){
+    @if(score.name != 'Referrals' && score.name != 'Hub domain holder'){
+      <div class="value" 
+      [ngClass]="{'stake-boost-tool-tip': score?.stakeBoost}" 
+      [tooltip]="score?.stakeBoost ? stakeBoost : null">
+        {{score.multiplier}} 
+      </div>
+    }@else {
+      <div class="value bonus" 
+      [ngClass]="{'stake-boost-tool-tip': score?.stakeBoost}" >
+        {{score.multiplier}} 
+      </div>
+    }
 
- <div class="m">
-  <div class="key ">Native stake</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.nativeStake}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
+        <ng-template #stakeBoost>
+          Stake boost: {{score.stakeBoost | percent: '1.1-2' }}
+        </ng-template>
+      
+    }@else {
+      <ion-skeleton-text [animated]="true" />
+    }
 </div>
-
-<div class="m">
-  <div class="key ">hubSOL</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.hubSOL_DirectStakeBoost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key ">mSOL direct stake</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.mSOL_DirectStakeBoost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key ">bSOL direct stake</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.bSOL_DirectStakeBoost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key ">veMNDE votes</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.veMNDE_Boost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key ">veBLZE votes</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.veBLZE_Boost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key bonus">hubSOL DeFi Boost</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">x{{ptsScore.hubSOL_DeFiBoost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key bonus ">Referrals</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">{{ptsScore.referral_Boost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
-<div class="m">
-  <div class="key bonus ">Hub domain holder</div>
-  @if(ptsScore$ | async; as ptsScore){
-    <div class="value">{{ptsScore.hubDomain_Boost}}</div>
-  }@else{
-    <ion-skeleton-text [animated]="true" />
-  }
-</div>
+}
