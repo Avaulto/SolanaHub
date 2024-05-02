@@ -75,7 +75,7 @@ export class PointsStatsComponent implements OnInit, OnChanges {
 
       map((booster: LoyaltyBooster) => {
         for (const m in booster) {
-          console.log(this._stakeBoostMultipliers[m], m);
+      
           //@ts-ignore
           switch (m) {
 

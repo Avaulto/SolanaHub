@@ -1,6 +1,6 @@
-@if(refreshCode | async){
-<ngx-turnstile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0" />
-}
+
+<ngx-turnstile #turnStile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0" />
+
 
 <ion-header mode="md" [translucent]="true">
   <app-menu />
@@ -53,6 +53,7 @@
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content">
+
       @if (isReady$ | async) {
       <ion-router-outlet></ion-router-outlet>
       }@else {

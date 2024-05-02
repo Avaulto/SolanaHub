@@ -26,7 +26,7 @@ export class PortfolioService {
   public staking: WritableSignal<Stake[]> = signal(null);
   public defi: WritableSignal<defiHolding[]> = signal(null);
   public walletHistory: WritableSignal<TransactionHistory[]> = signal(null);
-  public privateMode:BehaviorSubject<boolean>= new BehaviorSubject(false)
+  public privateMode: BehaviorSubject<boolean> = new BehaviorSubject(false)
   readonly restAPI = this._utils.serverlessAPI
   constructor(
     private _utils: UtilService,
@@ -36,20 +36,29 @@ export class PortfolioService {
     private _sessionStorageService: SessionStorageService,
     private _fetchPortfolioService: PortfolioFetchService
   ) {
-    this._shs.walletExtended$.subscribe((wallet: WalletExtended) => {
-      if (wallet) {
-        this.turnStileRefresh.next(true)
-        this.getPortfolioAssets(wallet.publicKey.toBase58())
-      }
-      this._fetchPortfolioService.refetchPortfolio().subscribe((shouldRefresh) => {
-        this.turnStileRefresh.next(true)
-        const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
-        console.log('reFetchPortfolio');
+    // this._fetchPortfolioService.getTurnStileToken().subscribe(token => {
+    this._shs.walletExtended$.subscribe(async (wallet: WalletExtended) => {
+      console.log('wallet obs');
 
-        let forceFetch = true;
-        shouldRefresh && this.getPortfolioAssets(walletOwner, forceFetch)
-      })
+      if (wallet) {
+
+        while (!this._utils.turnStileToken) await this._utils.sleep(500);
+        this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken)
+
+        this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
+          const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
+          console.log('reFetchPortfolio');
+
+          let forceFetch = true;
+
+          while (!this._utils.turnStileToken) await this._utils.sleep(500);
+          shouldRefresh && this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, forceFetch)
+
+        })
+      }
     })
+
+    // })
   }
 
   private _portfolioData = () => {
@@ -68,10 +77,10 @@ export class PortfolioService {
     }
     return null
   }
-  public turnStileRefresh = new BehaviorSubject(true as boolean)
-  public async getPortfolioAssets(walletAddress: string, forceFetch = false) {
+  // public turnStileRefresh = new Subject()
+  public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false) {
 
-    while (!this._utils.turnStileToken) await this._utils.sleep(500);
+    // while (!this._utils.turnStileToken) await this._utils.sleep(500);
     let jupTokens = await this._utils.getJupTokens();
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
@@ -81,9 +90,9 @@ export class PortfolioService {
 
         let res = await Promise.all([
           this._utils.getJupTokens(),
-          await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${this._utils.turnStileToken}`)).json()
+          await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`)).json()
         ])
-        this.turnStileRefresh.next(false)
+        // this.turnStileRefresh.next(false)
         this._utils.turnStileToken = null
         va.track('fetch portfolio', { status: 'success', wallet: walletAddress })
         jupTokens = res[0];
@@ -162,7 +171,7 @@ export class PortfolioService {
   }
   private _platforms = []
   public async getPlatformsData(): Promise<Platform[]> {
-    if(this._platforms.length){
+    if (this._platforms.length) {
       return this._platforms
     }
 

@@ -1,20 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
   IonButtons,
   IonMenuButton,
   IonApp,
-   IonImg,
-   IonSplitPane,
-    IonMenu,
-     IonContent,
-      IonList
-      , IonListHeader, 
-      IonNote, 
-      IonMenuToggle,
-       IonItem, IonIcon, IonLabel, IonRouterOutlet, IonRow, IonChip, IonHeader
+  IonImg,
+  IonSplitPane,
+  IonMenu,
+  IonContent,
+  IonList
+  , IonListHeader,
+  IonNote,
+  IonMenuToggle,
+  IonItem,
+  IonIcon,
+  IonLabel,
+  IonRouterOutlet,
+  IonRow,
+  IonChip,
+  IonHeader
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline } from 'ionicons/icons';
@@ -29,10 +35,12 @@ import { LocalStorageService } from './services/local-storage.service';
 import { PublicKey } from '@solana/web3.js';
 import { SettingsComponent } from './shared/layouts/settings/settings.component';
 import { environment } from 'src/environments/environment';
-import { NgxTurnstileModule } from 'ngx-turnstile';
+import { NgxTurnstileComponent, NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, UtilService } from './services';
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './loyalty-league-member/loyalty-league-member.component';
+import { PortfolioFetchService } from './services/portfolio-refetch.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -73,6 +81,7 @@ import { LoyaltyLeagueMemberComponent } from './loyalty-league-member/loyalty-le
   ],
 })
 export class AppComponent implements OnInit {
+  @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
   readonly isReady$ = this._walletStore.connected$
   constructor(
@@ -81,15 +90,19 @@ export class AppComponent implements OnInit {
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
     private _utilService: UtilService,
-    private portfolioService: PortfolioService,
+    // private portfolioService: PortfolioService,
+    private _fetchPortfolioService: PortfolioFetchService
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
-  public refreshCode = this.portfolioService.turnStileRefresh
+  public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
+    this._utilService.turnStileToken = null
+    this.turnStile.reset()
+
+  })
   sendCaptchaResponse(token) {
-    console.log(token);
-    
-    this._utilService.turnStileToken = token;
+
+    this._utilService.turnStileToken = token
 
   }
   async ngOnInit() {
@@ -141,7 +154,7 @@ export class AppComponent implements OnInit {
     {
       group: 'DeFi',
       pages: [
-        {title: 'Swap', url: `/${RoutingPath.SWAP}`, icon: 'https://cdn.lordicon.com/whczgeys.json', active: true},
+        { title: 'Swap', url: `/${RoutingPath.SWAP}`, icon: 'https://cdn.lordicon.com/whczgeys.json', active: true },
         {
           title: 'Staking',
           url: `/${RoutingPath.STAKING}`,
@@ -160,7 +173,7 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/rlrlhrme.json',
           active: false
         },
-        {title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true},
+        { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
       ],
     },
     // {

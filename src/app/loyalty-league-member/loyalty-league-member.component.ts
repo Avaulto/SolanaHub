@@ -8,6 +8,7 @@ import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon } from "@ionic/angul
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { trophyOutline } from 'ionicons/icons';
+import { WalletStore } from '@heavy-duty/wallet-adapter';
 
 export interface Rank {
   rank: number
@@ -21,8 +22,9 @@ export interface Rank {
   imports: [IonIcon, IonProgressBar, AsyncPipe, DecimalPipe, IonLabel, IonSkeletonText, RouterLink]
 })
 export class LoyaltyLeagueMemberComponent implements OnInit {
-
+  readonly isReady$ = this._walletStore.connected$
   constructor(
+    private _walletStore: WalletStore,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
     private _utilsService: UtilService) { 
@@ -57,15 +59,17 @@ export class LoyaltyLeagueMemberComponent implements OnInit {
     this._utilsService.isNotNullOrUndefined,
     combineLatestWith(this._loyaltyLeagueService.llb$),
     map(([wallet, lllb]) => {
-
-      const position = lllb.loyaltyPoints.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) || 0
+      console.log(wallet, lllb);
       
+      const position = lllb.loyaltyPoints.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) || 0
+
       this.rank$.next({
         rank: position === -1 ? 0 : position,
         totalParticipant: lllb.loyaltyPoints.length
       })
       const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
       if (loyalMember) {
+   
         return loyalMember
       }
       console.log(loyalMember);

@@ -7,7 +7,6 @@ import { Observable, Subject } from "rxjs";
 export class PortfolioFetchService {
 
   private readonly _fetchPortfolio: Subject<boolean> = new Subject()
-
   triggerFetch(): void {
     this._fetchPortfolio.next(true);
   }
@@ -15,4 +14,7 @@ export class PortfolioFetchService {
   refetchPortfolio(): Observable<boolean> {
     return this._fetchPortfolio.asObservable();
   }
+ 
+
+
 }

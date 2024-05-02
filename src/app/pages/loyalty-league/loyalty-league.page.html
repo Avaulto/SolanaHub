@@ -31,7 +31,7 @@
       <ion-row class="ion-justify-content-between ion-align-items-stretch">
         <ion-col sizeXl="5.9" size="12" class="ion-margin-bottom">
           
-          <app-pool-stats [prizePool$]="prizePool$" [totalPts]="totalPts" />
+          <app-pool-stats [hubSOLrebates]="(prizePool$ | async)?.hubSOLrebates" [avgApyBoost]="(prizePool$ | async)?.avgApyBoost" [totalPts]="totalPts" />
           
 
         </ion-col>

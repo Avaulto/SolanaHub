@@ -6,8 +6,8 @@
 
     <div class="gap data-set stat">
       <div class="key ion-text-capitalize">Prize Pool</div>
-      @if(prizePool$ | async; as prizePool){
-        <div class="value">{{prizePool.hubSOLrebates | number:'1.0-2' }} hubSOL</div>
+      @if(hubSOLrebates){
+        <div class="value">{{hubSOLrebates | number:'1.0-2' }} hubSOL</div>
       }@else{
         <ion-skeleton-text [animated]="true" style="width: 40%;"/>
       }
@@ -16,8 +16,8 @@
 
     <div class="gap data-set stat">
       <div class="key ion-text-capitalize">Avg Stake Boost</div>
-      @if(prizePool$ | async; as prizePool){
-        <div class="value">{{prizePool.avgApyBoost  | percent:'1.0-2' }}</div>
+      @if(avgApyBoost){
+        <div class="value">{{avgApyBoost  | percent:'1.0-2' }}</div>
       }@else{
         <ion-skeleton-text [animated]="true" style="width: 40%;"/>
       }

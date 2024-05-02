@@ -22,7 +22,8 @@ export class PoolStatsComponent {
   }
   public lls = inject(LoyaltyLeagueService);
   public nextAirdrop$ = this.lls.getNextAirdrop();
-  @Input() prizePool$ = of({} as PrizePool) 
+  @Input() hubSOLrebates: number = null;
+  @Input() avgApyBoost: number = null
   @Input() totalPts = 0
  
 

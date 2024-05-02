@@ -45,8 +45,8 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
   @ViewChild('hubDomainHolderTpl', { static: true }) hubDomainHolderTpl: TemplateRef<any> | any;
   @ViewChild('airdropTpl', { static: true }) airdropTpl: TemplateRef<any> | any;
   async ngOnInit() {
-    const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
-    this.prizePool$.next(prizePool)
+    // const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
+    // this.prizePool$.next(prizePool)
   }
   constructor(
     private _loyaltyLeagueService: LoyaltyLeagueService,
@@ -59,10 +59,14 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
   }
   public prizePool$: Subject<PrizePool> = new Subject()
   public loyaltyLeagueMember$ = this._shs.walletExtended$.pipe(
-    combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),
+    combineLatestWith(this._loyaltyLeagueService.llb$, this._loyaltyLeagueService.getPrizePool()),
     this._utilService.isNotNullOrUndefined,
     map(([wallet, lllb, prizePool]) => {
-
+      console.log(wallet, lllb, prizePool);
+      
+      if(prizePool){
+        this.prizePool$.next(prizePool)
+      }
       if (wallet) {
 
 
