@@ -161,19 +161,26 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/xoaqvsym.json',
           active: true
         },
-        {
-          title: 'Lending',
-          url: `/${RoutingPath.LENDING}`,
-          icon: 'https://cdn.lordicon.com/jkgunhbs.json',
-          active: false
-        },
-        {
-          title: 'Liquidity pools',
-          url: `/${RoutingPath.LIQUIDITY_POOLS}`,
-          icon: 'https://cdn.lordicon.com/rlrlhrme.json',
-          active: false
-        },
+        // {
+        //   title: 'Lending',
+        //   url: `/${RoutingPath.LENDING}`,
+        //   icon: 'https://cdn.lordicon.com/jkgunhbs.json',
+        //   active: false
+        // },
+        // {
+        //   title: 'Liquidity pools',
+        //   url: `/${RoutingPath.LIQUIDITY_POOLS}`,
+        //   icon: 'https://cdn.lordicon.com/rlrlhrme.json',
+        //   active: false
+        // },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
+        {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+        {
+          title: 'Airdrops finder',
+          url: `/${RoutingPath.AIRDROP_FINDER}`,
+          icon: 'https://cdn.lordicon.com/unukghxb.json',
+          active: true
+        },
       ],
     },
     // {
@@ -184,7 +191,7 @@ export class AppComponent implements OnInit {
     //       title: 'Airdrops finder',
     //       url: `/${RoutingPath.AIRDROP_FINDER}`,
     //       icon: 'https://cdn.lordicon.com/unukghxb.json',
-    //       active: false
+    //       active: true
     //     },
     //     // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
     //   ],
