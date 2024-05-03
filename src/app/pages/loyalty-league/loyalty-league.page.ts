@@ -123,11 +123,11 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     }))
   public totalPts: number = null
   public ll = this._loyaltyLeagueService.llb$.pipe(
-    combineLatestWith(this._shs.walletExtended$),
-    switchMap(async ([ll ,wallet]) => {
+    combineLatestWith(this._shs.walletExtended$, this._loyaltyLeagueService.getPrizePool()),
+    switchMap(async ([ll ,wallet, prizePool]) => {
 
     this.totalPts = ll.totalPoints
-    const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
+    // const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
     let loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
       return {
         rank: i + 1,
