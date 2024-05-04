@@ -71,7 +71,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
 
 
-        const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+        const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
         if (loyalMember && lllb && prizePool) {
           //@ts-ignore
   
@@ -128,7 +128,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
     this.totalPts = ll.totalPoints
     // const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
-    let loyaltyLeagueExtended = ll.loyaltyPoints.map((staker, i: number) => {
+    let loyaltyLeagueExtended = ll.loyaltyLeagueMembers.map((staker, i: number) => {
       return {
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(staker.walletOwner),

@@ -13,7 +13,7 @@ export interface LoyaltyBooster {
     referral_Boost:           number;
 }
   export interface LoyaltyLeaderBoard {
-    loyaltyPoints: loyalMember[];
+    loyaltyLeagueMembers: loyalMember[];
     totalPoints:          number;
     snapshotDate:         Date;
 }

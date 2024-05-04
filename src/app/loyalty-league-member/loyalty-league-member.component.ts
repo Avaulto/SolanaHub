@@ -61,13 +61,13 @@ export class LoyaltyLeagueMemberComponent implements OnInit {
     map(([wallet, lllb]) => {
       console.log(wallet, lllb);
       
-      const position = lllb.loyaltyPoints.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) || 0
+      const position = lllb.loyaltyLeagueMembers.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) || 0
 
       this.rank$.next({
         rank: position === -1 ? 0 : position,
-        totalParticipant: lllb.loyaltyPoints.length
+        totalParticipant: lllb.loyaltyLeagueMembers.length
       })
-      const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+      const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
       if (loyalMember) {
    
         return loyalMember

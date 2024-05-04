@@ -46,7 +46,7 @@ export class WalletConnectComponent  {
     map(([wallet, lllb]) => {
 
 
-      const loyalMember = lllb.loyaltyPoints.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+      const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
       if (loyalMember) {
         return loyalMember
       }
