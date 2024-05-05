@@ -5,7 +5,7 @@
   <ion-label>Loyalty Points</ion-label>
   <div id="score">
     @if((llScore$ | async); as loyaltyLeagueMember){
-    {{ loyaltyLeagueMember.loyaltyPoints.toFixedNoRounding(2) || 0 }}
+    {{ loyaltyLeagueMember?.loyaltyPoints?.toFixedNoRounding(2) || 0 }}
     }@else{
     <ion-skeleton-text [animated]="true" />
     }
@@ -13,7 +13,7 @@
   </div>
   <div id="rank">Rank  
     @if((rank$ | async) ; as rank){
-    {{ rank.rank  | number: '1.0-0' }}/{{rank.totalParticipant | number: '1.0-0'}}
+    {{ rank.rank  | number: '1.0-0' }}/{{rank?.totalParticipant | number: '1.0-0'}}
     }@else{
     <ion-skeleton-text [animated]="true" />/<ion-skeleton-text [animated]="true" />
     }</div>
