@@ -41,12 +41,9 @@ export class PortfolioService {
     // this._fetchPortfolioService.getTurnStileToken().subscribe(token => {
     this._watchModeService.watchedWallet$.subscribe(async walletAddress => {
       if (walletAddress){
-        console.log(walletAddress);
-        
+
         while (!this._utils.turnStileToken) await this._utils.sleep(500);
-        console.log('fetching', this._utils.turnStileToken);
-        
-        this.getPortfolioAssets(walletAddress, this._utils.turnStileToken)
+        this.getPortfolioAssets(walletAddress, this._utils.turnStileToken,true,true)
       }
     })
     this._shs.walletExtended$.subscribe(async (wallet: WalletExtended) => {
@@ -87,7 +84,7 @@ export class PortfolioService {
     return null
   }
   // public turnStileRefresh = new Subject()
-  public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false) {
+  public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
 
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
     let jupTokens = await this._utils.getJupTokens();
@@ -103,7 +100,7 @@ export class PortfolioService {
         ])
         // this.turnStileRefresh.next(false)
         this._utils.turnStileToken = null
-        va.track('fetch portfolio', { status: 'success', wallet: walletAddress })
+        va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode  })
         jupTokens = res[0];
         portfolioData = res[1]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
