@@ -40,7 +40,8 @@ import { PortfolioService, SolanaHelpersService, UtilService } from './services'
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './loyalty-league-member/loyalty-league-member.component';
 import { PortfolioFetchService } from './services/portfolio-refetch.service';
-import { take } from 'rxjs';
+import { combineLatestWith, switchMap, take } from 'rxjs';
+import { WatchModeService } from './services/watch-mode.service';
 
 @Component({
   selector: 'app-root',
@@ -83,8 +84,18 @@ import { take } from 'rxjs';
 export class AppComponent implements OnInit {
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
-  readonly isReady$ = this._walletStore.connected$
+  // readonly isReady$ = this._walletStore.connected$.pipe
+  readonly watchMode$ = this._watchModeService.watchMode$
+  readonly isReady$ = this._walletStore.connected$.pipe(
+    combineLatestWith(this.watchMode$),
+    switchMap(async ([wallet, watchMode]) => {
+   
+    return wallet || watchMode;
+  }))
+
+
   constructor(
+    private _watchModeService:WatchModeService,
     private _modalCtrl: ModalController,
     private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,

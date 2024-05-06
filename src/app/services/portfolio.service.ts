@@ -13,6 +13,7 @@ import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanctio
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject, Subject } from 'rxjs';
+import { WatchModeService } from './watch-mode.service';
 
 
 @Injectable({
@@ -34,12 +35,21 @@ export class PortfolioService {
     private _shs: SolanaHelpersService,
     private _toastService: ToasterService,
     private _sessionStorageService: SessionStorageService,
-    private _fetchPortfolioService: PortfolioFetchService
+    private _fetchPortfolioService: PortfolioFetchService,
+    private _watchModeService: WatchModeService
   ) {
     // this._fetchPortfolioService.getTurnStileToken().subscribe(token => {
+    this._watchModeService.watchedWallet$.subscribe(async walletAddress => {
+      if (walletAddress){
+        console.log(walletAddress);
+        
+        while (!this._utils.turnStileToken) await this._utils.sleep(500);
+        console.log('fetching', this._utils.turnStileToken);
+        
+        this.getPortfolioAssets(walletAddress, this._utils.turnStileToken)
+      }
+    })
     this._shs.walletExtended$.subscribe(async (wallet: WalletExtended) => {
-      console.log('wallet obs');
-
       if (wallet) {
 
         while (!this._utils.turnStileToken) await this._utils.sleep(500);
@@ -47,7 +57,6 @@ export class PortfolioService {
 
         this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
           const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
-          console.log('reFetchPortfolio');
 
           let forceFetch = true;
 
@@ -409,5 +418,7 @@ export class PortfolioService {
     this.defi.set(null)
     this.staking.set(null)
     this.walletHistory.set(null)
+    // clear state of wallet connect
+    this._watchModeService.watchedWallet$.next(null)
   }
 }

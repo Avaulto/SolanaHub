@@ -95,3 +95,17 @@ ion-button {
   }
 }
 
+ion-chip{
+  position: absolute;
+  top: -16px;
+  right: 0;
+  font-size: 10px;
+  text-transform: capitalize;
+  margin: 0;
+  scale: 0.8;
+  z-index: 10;
+  opacity: 1;
+  color: white;
+  background: #9b3678;
+
+}

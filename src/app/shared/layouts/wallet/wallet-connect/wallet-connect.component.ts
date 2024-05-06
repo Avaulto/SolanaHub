@@ -12,14 +12,16 @@ import { chevronDownOutline } from 'ionicons/icons';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { loyalMember } from 'src/app/models';
+import { WatchModeService } from 'src/app/services/watch-mode.service';
 @Component({
   selector: 'app-wallet-connect',
   templateUrl: './wallet-connect.component.html',
   styleUrls: ['./wallet-connect.component.scss'],
 })
-export class WalletConnectComponent  {
+export class WalletConnectComponent {
   showSkeleton = true
   constructor(
+    private _watchModeService: WatchModeService,
     private _utilsService: UtilService,
     private _walletStore: WalletStore,
     private _toasterService: ToasterService,
@@ -59,31 +61,44 @@ export class WalletConnectComponent  {
 
 
   readonly wallets$ = this._walletStore.wallets$.pipe(shareReplay(1));
-  readonly isReady$ = this._walletStore.connected$.pipe(switchMap(async isReady => {
-    if (isReady) {
+  readonly watchMode$ = this._watchModeService.watchMode$
+  readonly isReady$ = this._walletStore.connected$.pipe(
+    combineLatestWith(this.watchMode$),
+    switchMap(async ([wallet, watchMode]) => {
+      if (wallet || watchMode) {
 
-      va.track('wallet connected');
-      this._toasterService.msg.next({
-        message: `Wallet connected`,
-        segmentClass: "toastInfo",
-        duration: 2000
-      })
+        va.track('wallet connected');
+        this._toasterService.msg.next({
+          message: `Wallet connected`,
+          segmentClass: "toastInfo",
+          duration: 2000
+        })
 
-    }
-    return isReady;
-  }))
+      }
+      return wallet || watchMode;
+    }))
+  public shortedAddress = ''
+  public watchModeWallet$ = this._watchModeService.watchedWallet$
   public walletPublicKey$: Observable<string> = this._walletStore.publicKey$.pipe(
+    combineLatestWith(this.watchModeWallet$),
     this._utilsService.isNotNull,
     this._utilsService.isNotUndefined,
     distinctUntilChanged(),
-    map(publicKey => {
+    switchMap(([publicKey, address]) => {
+      // let shortedAddress = ''
+      if (publicKey || address) {
 
-      return this._utilsService.addrUtil(publicKey.toBase58()).addrShort
-    })
+        const walletAddress = publicKey?.toBase58() || address;
+        this.shortedAddress = this._utilsService.addrUtil(walletAddress).addrShort
+      }
+      return this.shortedAddress
+
+    }),
+    shareReplay()
   )
 
   public async showWalletAdapters() {
-    
+
     const popover = await this.popoverController.create({
       component: WalletAdapterOptionsComponent,
       cssClass: 'wallet-adapter-options',
@@ -92,7 +107,7 @@ export class WalletConnectComponent  {
     await popover.present();
   }
   public async showConnectWalletActions(e: Event) {
-    const walletAddress = this._shs.getCurrentWallet().publicKey.toBase58()
+    const walletAddress = this._shs?.getCurrentWallet()?.publicKey.toBase58() || this._watchModeService.watchedWallet$.value
     const popover = await this.popoverController.create({
       component: WalletConnectedDropdownComponent,
       componentProps: { walletAddress },

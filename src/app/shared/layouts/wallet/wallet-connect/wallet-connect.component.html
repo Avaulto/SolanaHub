@@ -4,7 +4,11 @@
     connect wallet
  </ion-button>
 }@else {
+  @if(watchMode$ | async){
+    <ion-chip color="primary">watch mode</ion-chip>
+  }
 <div id="wallet" (click)="showConnectWalletActions($event)">
+
   <div id="overlay"></div>
   <div id="wallet-profile" style="position: relative;">
     <ion-img 
@@ -25,15 +29,12 @@
     
       <ion-label id="wallet-domain">{{loyaltyLeagueMember?.hubDomainHolder}}</ion-label>
     }
-    <div id="wallet-address"> {{ (walletPublicKey$ | async) }}</div>
-    <!-- <div id="loyalty-league" routerLink="/loyalty-league">
+    <div id="wallet-address"> 
+      @if(walletPublicKey$ | async){
+        {{shortedAddress}}
+      }
 
-      @if((llScore$ | async); as loyaltyLeagueMember){
-        {{loyaltyLeagueMember?.loyaltyPoints || 0 | number: '1.0-0'}} 
-      }@else{
-        <ion-skeleton-text animated /> 
-      } Loyalty Points
-    </div> -->
+    </div>
   </div>
   <ion-icon name="chevron-down-outline"></ion-icon>
   <div>

@@ -5,6 +5,7 @@ import { WalletAdapterOptionsComponent } from '../wallet-adapter-options/wallet-
 import { addIcons } from 'ionicons';
 import {copy, repeat, logOut, trophyOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService } from 'src/app/services';
+import { WatchModeService } from 'src/app/services/watch-mode.service';
 
 @Component({
   selector: 'app-wallet-connected-dropdown',
@@ -14,8 +15,9 @@ import { PortfolioService, SolanaHelpersService } from 'src/app/services';
 })
 export class WalletConnectedDropdownComponent {
   @Input() walletAddress: string;
-
+  readonly watchMode$ = this._watchModeService.watchMode$
   constructor(
+    private _watchModeService: WatchModeService,
     private _walletStore: WalletStore, 
     public popoverController: PopoverController,
     private _portfolioService:PortfolioService

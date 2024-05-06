@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
 import { IonImg, IonRow, IonCol, IonLabel, IonText, IonGrid } from '@ionic/angular/standalone';
 import { WalletModule } from '../wallet/wallet.module';
+import { WatchModeComponent } from '../../components/watch-button/watch-mode.component';
 
 @Component({
   selector: 'not-connected',
@@ -16,7 +17,8 @@ import { WalletModule } from '../wallet/wallet.module';
     IonImg,
     IonRow,
     IonCol,
-    PageHeaderComponent
+    PageHeaderComponent,
+    WatchModeComponent
   ]
 })
 export class NotConnectedComponent implements OnInit {

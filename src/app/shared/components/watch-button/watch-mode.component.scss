@@ -1,0 +1,17 @@
+ion-button{
+    --box-shadow: 0;
+    font-size: 12px;
+    padding: 0;
+    margin: 0;
+    text-transform: capitalize;
+    width: 100%;
+}
+ion-input {
+    min-height: 28px !important;
+    height: 31px;
+    font-size: 11px !important;
+    --padding-start: 2px !important;
+    --padding-bottom: 2px;
+    margin-top: 10px;
+    text-align: center;
+}

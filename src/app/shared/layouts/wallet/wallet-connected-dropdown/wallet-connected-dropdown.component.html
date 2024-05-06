@@ -1,7 +1,7 @@
 <div id="wallet-connected-actions">
   <div id="action-wrapper">
 
-
+  @if(!(watchMode$ | async)){
   <ion-button expand="block" appCopyText [copyText]="walletAddress"  fill="clear">
     <div class="div-left">
       <ion-icon name="copy"/>
@@ -14,7 +14,7 @@
       change wallet 
     </div>
   </ion-button>
-
+}
 </div>
   <ion-button expand="block" (click)="disconnectWallet()" fill="clear">
     <div class="div-left">
