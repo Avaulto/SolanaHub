@@ -15,7 +15,15 @@
             <ion-label>{{pool?.poolName}}</ion-label>
             <ion-text>{{ pool?.totalStake | number: '1.2-2'}} SOL</ion-text>
           </div>
-          <ion-chip color="primary">{{pool?.apy || 0.07 | percent : '1.2-2'}}</ion-chip>
+          <ion-chip color="primary">
+            
+            @if(pool.poolName === 'hub'){
+              {{ pool?.apy * (1 + (prizePool$ | async).APY_boosters.hubSOL) | percent : '1.2-2'}}
+              
+            }@else {
+              {{pool?.apy | percent : '1.2-2'}}
+            }
+          </ion-chip>
         </div>
       </ion-segment-button>
       }@empty {

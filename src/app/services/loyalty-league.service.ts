@@ -11,6 +11,9 @@ export class LoyaltyLeagueService {
   private _loyaltyLeagueLeaderBoard$ = new BehaviorSubject(null as LoyaltyLeaderBoard);
   public llb$ = this._loyaltyLeagueLeaderBoard$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
 
+  private _loyaltyLeaguePrizePool$ = new BehaviorSubject(null as PrizePool);
+  public llPrizePool$ = this._loyaltyLeaguePrizePool$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
+
   protected api = this._utilService.serverlessAPI + '/api/loyalty-points'
   constructor(
     private _utilService: UtilService,
@@ -19,7 +22,7 @@ export class LoyaltyLeagueService {
   ) {
     if (!this._loyaltyLeagueLeaderBoard$.value) {
       firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
-
+      firstValueFrom(this.getPrizePool()).then(llPrizePool => this._loyaltyLeaguePrizePool$.next(llPrizePool))
     }
   }
 

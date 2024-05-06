@@ -50,7 +50,7 @@
 
         @if(stake){
 
-        <div class="sol-amount">{{stake?.balance.toFixedNoRounding(3)}} {{stake.symbol}}</div>
+        <div class="sol-amount">{{stake?.balance >  0.001  ? stake?.balance.toFixedNoRounding(3) : 0}} {{stake.symbol}}</div>
         <div class="usd-value">({{stake?.balance * solPrice() | currency}})</div>
         }@else{
         <ion-skeleton-text animated />

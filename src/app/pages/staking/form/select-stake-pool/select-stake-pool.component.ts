@@ -1,4 +1,4 @@
-import { DecimalPipe, PercentPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe, PercentPipe } from '@angular/common';
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild, WritableSignal, computed, effect } from '@angular/core';
 
 import {
@@ -14,6 +14,7 @@ import {
   IonChip
  } from '@ionic/angular/standalone';
 import { StakePool } from 'src/app/models';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 @Component({
@@ -22,6 +23,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
   styleUrls: ['./select-stake-pool.component.scss'],
   standalone: true,
   imports: [
+    AsyncPipe,
     IonChip, 
     IonLabel,
     IonAvatar,
@@ -51,7 +53,8 @@ export class SelectStakePoolComponent implements AfterViewInit {
     
   }
 
-constructor(){
+prizePool$ = this.lls.llPrizePool$
+constructor(private lls: LoyaltyLeagueService){
   effect(() => {
     if (this.stakePoolFiltered()) {
       const ev: any = { detail: { value: this.stakePoolFiltered()[0] } }

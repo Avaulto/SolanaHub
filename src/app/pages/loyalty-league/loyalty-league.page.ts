@@ -57,16 +57,14 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
     // effect(() => console.log(this.loyalMember()))
   }
-  public prizePool$: Subject<PrizePool> = new Subject()
+  public prizePool$ = this._loyaltyLeagueService.llPrizePool$
   public loyaltyLeagueMember$ = this._shs.walletExtended$.pipe(
-    combineLatestWith(this._loyaltyLeagueService.llb$, this._loyaltyLeagueService.getPrizePool()),
+    combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),
     this._utilService.isNotNullOrUndefined,
     map(([wallet, lllb, prizePool]) => {
       console.log(wallet, lllb, prizePool);
       
-      if(prizePool){
-        this.prizePool$.next(prizePool)
-      }
+ 
       if (wallet) {
 
 
@@ -123,7 +121,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     }))
   public totalPts: number = null
   public ll = this._loyaltyLeagueService.llb$.pipe(
-    combineLatestWith(this._shs.walletExtended$, this._loyaltyLeagueService.getPrizePool()),
+    combineLatestWith(this._shs.walletExtended$, this.prizePool$),
     switchMap(async ([ll ,wallet, prizePool]) => {
 
     this.totalPts = ll.totalPoints
