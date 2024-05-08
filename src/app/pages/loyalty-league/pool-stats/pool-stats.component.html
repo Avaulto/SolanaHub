@@ -35,7 +35,7 @@
            {{(lls.llb$ | async)?.snapshotDate | date}}
          </span>
         </div>
-        <div class="value">{{totalPts | number:'1.1' }}</div>
+        <div class="value">{{totalPts | number:'1.0-0' }}</div>
       }@else{
         <ion-skeleton-text [animated]="true" style="width: 50%;"/>
       }

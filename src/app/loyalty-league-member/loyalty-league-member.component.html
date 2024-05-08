@@ -5,7 +5,7 @@
   <ion-label>Loyalty Points</ion-label>
   <div id="score">
     @if((llScore$ | async); as loyaltyLeagueMember){
-    {{ loyaltyLeagueMember?.loyaltyPoints?.toFixedNoRounding(2) || 0 }}
+    {{ loyaltyLeagueMember?.loyaltyPoints || 0 | number: '1.0-2'}}
     }@else{
     <ion-skeleton-text [animated]="true" />
     }

@@ -6,6 +6,9 @@
     line-height: 28px;
     /* 155.556% */
     letter-spacing: 0.18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 #nw-bal{
     display: flex;
@@ -30,4 +33,20 @@ ion-icon{
 ion-skeleton-text{
     line-height: 48px;
     border-radius: 8px;
+}
+
+
+
+ion-toggle::part(handle) {
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+ion-toggle  {
+    --handle-background: url(/assets/images/usdc.webp);
+    --track-background-checked: #e7e7e7;
+    &.toggle-checked  {
+        --handle-background-checked: url(/assets/images/sol.svg), white;
+
+    }
 }

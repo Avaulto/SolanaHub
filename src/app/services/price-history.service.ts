@@ -17,7 +17,16 @@ export class PriceHistoryService {
 
 
   protected _coingeckoAPI = `${this._utilService.serverlessAPI}/api/CG-proxy`;
-
+  public async tokenPrice(id: string){
+    let data = null
+    try {
+      const res = await fetch(`${this._coingeckoAPI}?endpoint=simple/price?ids=${id}`);
+      data = await (await res.json())[id];
+    } catch (error) {
+      console.warn(error);
+    }
+    return data
+  }
   public async getTokenDataByAddress(mintAddress: string){
     let data = null
     try {
