@@ -59,7 +59,7 @@ export class LoyaltyLeagueMemberComponent implements OnInit {
     this._utilsService.isNotNullOrUndefined,
     combineLatestWith(this._loyaltyLeagueService.llb$),
     map(([wallet, lllb]) => {
-      console.log(wallet, lllb);
+  
       
       const position = lllb.loyaltyLeagueMembers.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) || 0
 
