@@ -52,8 +52,8 @@ export class NativeStakeService {
     const { active, state }: StakeActivationData = await this._shs.connection.getStakeActivation(pk);
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
-    const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : validator.name
-    const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : validator.image
+    const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "no validator")
+    const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image  || "assets/images/unknown.svg")
 
     const stakeAccountInfo: Stake = {
       link: this._utils.explorer + '/account/' + address,
@@ -160,7 +160,7 @@ export class NativeStakeService {
       StakeProgram.space,
     );
 
-    const createAccount = this._createStakeAccount(minimumAmount,walletOwnerPk,0,keypair)
+    const createAccount = this.createStakeAccount(minimumAmount, walletOwnerPk, 0, keypair)
 
     try {
       const splitAccount: Transaction =
@@ -172,7 +172,7 @@ export class NativeStakeService {
         }, minimumAmount);
 
       const record = { message: 'account', data: { action: 'split account' } }
-      return await this._txi.sendTx([ splitAccount], walletOwnerPk, [createAccount.newStakeAccount], record)
+      return await this._txi.sendTx([splitAccount], walletOwnerPk, [createAccount.newStakeAccount], record)
     } catch (error) {
       console.log(error);
     }
@@ -206,14 +206,14 @@ export class NativeStakeService {
     });
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
-      return await this._txi.sendTx([withdrawTx],walletOwnerPK, null, record)
+      return await this._txi.sendTx([withdrawTx], walletOwnerPK, null, record)
     } catch (error) {
       console.error(error)
     }
   }
-  public _createStakeAccount(lamportToSend: number, walletOwnerPK: PublicKey, lockupDuration: number = 0, preConfigNewStakeAccount:Keypair = new Keypair()) {
+  public createStakeAccount(lamportToSend: number, walletOwnerPK: PublicKey, lockupDuration: number = 0, preConfigNewStakeAccount: Keypair = new Keypair()) {
 
-    const fromPubkey =walletOwnerPK
+    const fromPubkey = walletOwnerPK
     const newStakeAccount = preConfigNewStakeAccount
     const authorizedPubkey = walletOwnerPK
     const authorized = new Authorized(authorizedPubkey, authorizedPubkey);
@@ -245,7 +245,7 @@ export class NativeStakeService {
     // }
 
     try {
-      const stakeAccountData = this._createStakeAccount(lamportsToDelegate, walletOwnerPK, lockupDuration)
+      const stakeAccountData = this.createStakeAccount(lamportsToDelegate, walletOwnerPK, lockupDuration)
       const stakeAcc: Keypair = stakeAccountData.newStakeAccount;
       const stakeAccIns: Transaction = stakeAccountData.newStakeAccountIns;
       const delegateTX: Transaction = this._delegateStakeAccount(stakeAcc.publicKey.toBase58(), validatorVoteKey, walletOwnerPK)
@@ -259,10 +259,10 @@ export class NativeStakeService {
     }
     return null
   }
-  public reStake(stakeAccount: Stake, walletOwnerPK: PublicKey) {
+  public reStake(stakeAccount: Stake,vote_identity:string, walletOwnerPK: PublicKey) {
     try {
-      const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, stakeAccount.validator.vote_identity, walletOwnerPK)
-      const record = { message: 'account', data: { action:'reStake'  } }
+      const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, vote_identity, walletOwnerPK)
+      const record = { message: 'account', data: { action: 'reStake' } }
 
       return this._txi.sendTx([delegateTX], walletOwnerPK, null, record)
 
@@ -275,7 +275,7 @@ export class NativeStakeService {
     try {
       const instruction: DelegateStakeParams = {
         stakePubkey: new PublicKey(stakeAccountAddress),
-        authorizedPubkey:walletOwnerPK,
+        authorizedPubkey: walletOwnerPK,
         votePubkey: new PublicKey(validatorVoteKey)
       }
       const delegateTX: Transaction = StakeProgram.delegate(instruction);

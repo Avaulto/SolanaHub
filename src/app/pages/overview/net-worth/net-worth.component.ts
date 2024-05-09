@@ -11,12 +11,11 @@ import { JupStoreService, PriceHistoryService } from 'src/app/services';
   templateUrl: './net-worth.component.html',
   styleUrls: ['./net-worth.component.scss'],
   standalone: true,
-  imports:[DecimalPipe, CurrencyPipe,NgClass, IonToggle, IonSelectOption,IonSelect , AsyncPipe, IonSkeletonText, IonIcon]
+  imports:[DecimalPipe, CurrencyPipe,NgClass,IonText, IonToggle, IonSelectOption,IonSelect , AsyncPipe, IonSkeletonText, IonIcon]
 })
 export class NetWorthComponent {
   constructor(
     private _portfolioService:PortfolioService,
-    private _priceHistoryService:PriceHistoryService,
     private _jupStore:JupStoreService
   ){
     addIcons({eyeOutline, eyeOffOutline });

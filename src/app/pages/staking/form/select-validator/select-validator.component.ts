@@ -51,10 +51,6 @@ export class SelectValidatorComponent {
   }
 
   async openValidatorModal() {
-    let componentLink =  ValidatorsModalComponent
-    // componentLink.validatorsList = this.validatorsList()
-    // // componentLink.call(null,{validatorsList: this.validatorsList})
-    // console.log(componentLink);
     let config = {
       imgUrl:'assets/images/validators-icon.svg',
       title :'Select Validator',

@@ -76,9 +76,9 @@
 <ng-template #validatorProfileTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.validator.image" alt="image" />
+      <ion-img [src]="row.validator?.image" alt="image" />
     </div>
-    <div class="item-bold">{{row.validator.name}}</div>
+    <div class="item-bold">{{row.validator?.name}}</div>
   </div>
 </ng-template>
 <ng-template #validatorApy let-row let-rowIndex="rowIndex" let-column="column">

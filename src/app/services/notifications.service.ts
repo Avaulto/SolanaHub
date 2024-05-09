@@ -12,7 +12,7 @@ import { DappMessageExtended } from '../models';
   providedIn: 'root'
 })
 export class NotificationsService {
-  private _activeDapps = ['SolanaHub', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
+  private _activeDapps = ['SolanaHub','Meteora','AllDomains Notifier', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
   private _dialectSDK: DialectSdk<BlockchainSdk>
   constructor(private _shs: SolanaHelpersService) {
     this.createSdk()
@@ -43,16 +43,17 @@ export class NotificationsService {
   }
   public async getDapps(): Promise<ReadOnlyDapp[]> {
     const dapps = await this._dialectSDK.dapps.findAll({
-      verified: true,
+      // verified: true,
     })
-
+    console.log(dapps);
+    
     const filteredDapps = dapps.filter(d => d.name && d.avatarUrl && this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
     filteredDapps.sort((x, y) => { return x.name.toLowerCase() === 'solanahub' ? -1 : y.name.toLowerCase() === 'solanahub' ? 1 : 0; });
     return filteredDapps
   }
   public async getMessages(dapps: ReadOnlyDapp[]): Promise<Partial<DappMessageExtended[]>> {
     const sdk1Messages = await this._dialectSDK.wallet.messages.findAllFromDapps({
-      dappVerified: true,
+      // dappVerified: true,
     });
     const extendMessages = sdk1Messages.map(m => {
       const dappData = dapps.find(d => d.address === m.author)
@@ -67,19 +68,20 @@ export class NotificationsService {
           case "realms":
             type = 'DAO'
             break;
+          case "meteora":
           case "drift":
           case "saber":
-            type = 'trading'
+            type = 'Trading'
             break;
           default:
-            type = 'generic'
+            type = 'Generic'
             break;
         }
         return {type, imgURL: dappData.avatarUrl, name: dappData.name, ...m }
       }
       return m
     })
-    console.log(sdk1Messages);
+    console.log(sdk1Messages, 'extended:', extendMessages);
     
     return extendMessages as Partial<DappMessageExtended[]>
   }

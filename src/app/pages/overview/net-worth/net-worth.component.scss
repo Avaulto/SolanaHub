@@ -37,16 +37,34 @@ ion-skeleton-text{
 
 
 
-ion-toggle::part(handle) {
-    background-size: 70%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+
 ion-toggle  {
     --handle-background: url(/assets/images/usdc.webp);
     --track-background-checked: #e7e7e7;
+    &::part(handle) {
+        background-size: 70%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: white;
+    }
+    &::part(track) {
+        --track-background: url(/assets/images/usdc-sol.svg);
+        --track-background-checked: url(/assets/images/usdc-sol.svg);
+        background-size: 86%;
+        background-color: #e9e9e6;
+        background-repeat: no-repeat;
+        background-position: 58% center;
+    }
     &.toggle-checked  {
         --handle-background-checked: url(/assets/images/sol.svg), white;
-
+        // &::part(track) {
+        //     // background: url(/assets/images/usdc.webp);
+        //     background: url(/assets/images/usdc.webp);
+        //     background-position: 8% center;
+        //     background-size: 34%;
+        //     background-color: #e9e9e6;
+        //     background-repeat: no-repeat;
+            
+        // }
     }
 }

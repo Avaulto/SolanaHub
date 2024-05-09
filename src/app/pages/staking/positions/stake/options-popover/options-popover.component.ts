@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import {
   IonButton,
   IonIcon
 } from '@ionic/angular/standalone';
-import { Stake } from 'src/app/models';
+import { Stake, Validator } from 'src/app/models';
 import { addIcons } from 'ionicons';
 import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water, swapVertical } from 'ionicons/icons';
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
@@ -12,6 +12,7 @@ import { ModalController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { Router, RouterLink } from '@angular/router';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+
 @Component({
   selector: 'options-popover',
   templateUrl: './options-popover.component.html',
@@ -34,13 +35,41 @@ export class OptionsPopoverComponent implements OnInit {
   ngOnInit() {
 
   }
+  private  async openValidatorModal() {
+    let config = {
+      imgUrl:'assets/images/validators-icon.svg',
+      title :'Select Validator',
+      desc : 'Pick the right validator for you',
+      btnText: 'select validator & stake'
+    }
+    const validatorsList = await this._shs.getValidatorsList()
+    console.log(validatorsList);
+    const modal = await this._modalCtrl.create({
+      component: ModalComponent,
+      componentProps: {
+        componentName:'validators-modal',
+        config,
+        data: signal(validatorsList)
+      },
+      cssClass: 'modal-style'
+    });
+    modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    let validator: Validator = data
+    // if(validator){
+      return validator
+    // this.selectedValidator.set(validator);
+    
+    // }
+  }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()
     await this._nss.deactivateStakeAccount(this.stake.address, walletOwner)
   }
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
-    await this._nss.reStake(this.stake, walletOwner)
+    const validator = await this.openValidatorModal();
+    await this._nss.reStake(this.stake,validator.vote_identity,walletOwner)
   }
   public async withdraw() {
     const walletOwner = this._shs.getCurrentWallet().publicKey

@@ -150,7 +150,10 @@ export class FormComponent implements OnInit {
     try {
       
     if (stakingPath === 'native') {
-
+      // const stakeIx =  this._nss.createStakeAccount(lamportsToDelegate,walletOwner)
+      // const stakeAcc: Keypair = stakeIx.newStakeAccount;
+      // const stakeAccIns: Transaction = stakeIx.newStakeAccountIns;
+      // await this._tis.sendTx([stakeAccIns], walletOwner, [stakeAcc])
       const stake = await this._nss.stake(lamportsToDelegate, walletOwner, validatorVoteIdentity, lockupDuration);
 
       // add stakers to loyalty league referee program

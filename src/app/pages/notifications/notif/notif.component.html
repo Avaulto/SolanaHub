@@ -6,7 +6,7 @@
       <div>
         <ion-img [src]="notification?.imgURL" />
       </div>
-      <ion-label>{{notification?.title || notification?.text}}</ion-label>
+      <ion-label>{{notification?.title || notification?.name }}</ion-label>
       }@else{
       <ion-skeleton-text class="temp-img" [animated]="true" />
       <ion-skeleton-text [animated]="true" />
@@ -33,9 +33,9 @@
       </div>
     </div>
   </div>
-  @if (notification?.message) {
+
   <ion-text class="notif-body">
-    {{notification?.message}}
+    {{notification?.message || notification?.text}}
   </ion-text>
-  }
+  
 </div>

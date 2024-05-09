@@ -11,13 +11,13 @@
         *cdkVirtualFor="let validator of filteredValidators(); let i = index;">
         <div class="validator-profile">
           <div>
-            <ion-img (ionImgDidLoad)="loadImage(i)" [src]="validator.image || 'assets/images/unknown.svg'" />
+            <ion-img (ionImgDidLoad)="loadImage(i)" [src]="validator?.image || 'assets/images/unknown.svg'" />
             @if (!imagesLoaded[i]) {
             <ion-skeleton-text [animated]="true" />
             }
           </div>
           <div>
-            <ion-label> {{validator.name}}</ion-label>
+            <ion-label> {{validator?.name}}</ion-label>
             <ion-text>{{validator.activated_stake | number:'1.0-2'}}</ion-text>
           </div>
         </div>
