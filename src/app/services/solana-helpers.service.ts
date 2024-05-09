@@ -13,7 +13,7 @@ import {
 } from 'node_modules/@solana/spl-token';
 
 import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT, StakeAccountShyft } from '../models';
 import { ApiService } from './api.service';
 
 import { SessionStorageService } from './session-storage.service';
@@ -24,6 +24,7 @@ import { UtilService } from './util.service';
   providedIn: 'root'
 })
 export class SolanaHelpersService {
+  readonly restAPI = this._utils.serverlessAPI
   readonly SolanaHubVoteKey: string = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public connection: Connection;
   // create a single source of trute for wallet adapter
@@ -92,36 +93,50 @@ export class SolanaHelpersService {
   }
 
 
-
-  public async getStakeAccountsByOwner(walletAddress: string): Promise<Array<{
-    pubkey: PublicKey;
-    account: AccountInfo<Buffer | ParsedAccountData | any>;
-  }>> {
+  public async getStakeAccountsByOwner2(walletAddress: string): Promise<StakeAccountShyft[]> {
     try {
-
-      // get stake account
-      const stakeAccounts: Array<{
-        pubkey: PublicKey;
-        account: AccountInfo<Buffer | ParsedAccountData | any>;
-      }> = await this.connection.getParsedProgramAccounts(new PublicKey("Stake11111111111111111111111111111111111111"), {
-
-        "filters": [
-          {
-            "memcmp": {
-              "offset": 44, // Adjust this offset based on your account data structure
-              "bytes": walletAddress,
-            }
-          }
-        ]
-      })
-
-
-      return stakeAccounts;
+      return await (await fetch(`${this.restAPI}/api/portfolio/nativeStakeAccounts?address=${walletAddress}`)).json()
     } catch (error) {
-      new Error(error)
+      console.error(error);
+      
+      return []
     }
-    return [];
   }
+  // public async getStakeAccountsByOwner(walletAddress: string): Promise<Array<{
+  //   pubkey: PublicKey;
+  //   account: AccountInfo<Buffer | ParsedAccountData | any>;
+  // }>> {
+  //   try {
+
+  //     // get stake account
+  //     const stakeAccounts: Array<{
+  //       pubkey: PublicKey;
+  //       account: AccountInfo<Buffer | ParsedAccountData | any>;
+  //     }> = await this.connection.getParsedProgramAccounts(new PublicKey("Stake11111111111111111111111111111111111111"), {
+
+  //       "filters": [   {
+  //         "memcmp": {
+  //           "offset": 12, // fetch stake auth controlled by wallets
+  //           "bytes": walletAddress,
+  //         }
+  //       },
+  //         {
+  //           "memcmp": {
+  //             "offset": 44, // fetch stake auth controlled by program
+  //             "bytes": walletAddress,
+  //           }
+  //         }
+  //       ]
+  //     })
+
+  //     console.log(stakeAccounts);
+      
+  //     return stakeAccounts;
+  //   } catch (error) {
+  //     new Error(error)
+  //   }
+  //   return [];
+  // }
 
 
   public async getClusterStake(): Promise<{ activeStake, delinquentStake }> {

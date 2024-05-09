@@ -385,7 +385,6 @@ export class PortfolioService {
         return tx
 
       })
-      console.log(txHistory, aggregateTxHistory);
 
       this.walletHistory.set(aggregateTxHistory)
       return this.walletHistory
@@ -400,11 +399,13 @@ export class PortfolioService {
 
     const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
     this.staking.set(stakeAccounts)
+
+    const getStakeAccountsWithInfaltionRewards = await this._nss.getStakeRewardsInflation(stakeAccounts)
+    this.staking.set(getStakeAccountsWithInfaltionRewards)
   }
 
   public filteredTxHistory = (filterByAddress?: string, filterByAction?: string) => {
     const filterResults = null//this.walletHistory().filter((tx:TransactionHistory) => tx.balanceChange.find(b => b.address === filterByAddress) || tx.mainAction === filterByAction)
-    console.log(filterResults);
 
     return filterResults
   }

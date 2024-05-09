@@ -15,7 +15,33 @@ import { Validator } from "./stakewiz.model"
 //     imgUrl: string
 //     symbol: string
 // }
-
+export interface StakeAccountShyft{
+    _lamports: number
+    meta: {
+      lockup: {
+        epoch: string
+        custodian: string
+        unix_timestamp: string
+      }
+      authorized: {
+        staker: string
+        withdrawer: string
+      }
+      rentExemptReserve: string
+    }
+    stake: {
+      delegation: {
+        stake: string
+        voter: string
+        activationEpoch: string
+        deactivationEpoch: string
+        warmupCooldownRate: number
+      }
+      creditsObserved: string
+    }
+    pubkey: string
+  }
+  
 export interface DirectStake {
 
     mSOL?: {

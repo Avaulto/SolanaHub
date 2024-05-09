@@ -18,7 +18,7 @@ import {
 } from '@solana/web3.js';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
-import { Stake, Validator, WalletExtended } from '../models';
+import { Stake, StakeAccountShyft, Validator, WalletExtended } from '../models';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -35,32 +35,34 @@ export class NativeStakeService {
 
 
   private async _extendStakeAccount(
-    account: { pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData | any> },
+    account: StakeAccountShyft,
     validators: Validator[],
-    inflationReward: InflationReward
+    inflationReward?: InflationReward
   ): Promise<Stake> {
     const marinadeStakeAuth = 'stWirqFCf2Uts1JBL1Jsd3r6VBWhgnpdPxCTe1MFjrq'
-    const pk = account.pubkey;
+    const pk = new PublicKey(account.pubkey);
     const address = pk.toBase58()
-    const parsedData = account.account.data.parsed.info || null//.delegation.stake
-    const validatorVoteKey = parsedData.stake?.delegation?.voter
-    const stake = Number(parsedData.stake?.delegation?.stake) || 0;
-    const startEpoch = parsedData.stake?.delegation?.activationEpoch || 0;
-    const rentReserve = Number(account.account.data.parsed.info.meta.rentExemptReserve);
-    const accountLamport = Number(account.account.lamports);
+    // const parsedData = account.account.data.parsed.info || null//.delegation.stake
+    const validatorVoteKey = account.stake.delegation?.voter
+    const stake = Number(account.stake?.delegation?.stake) || 0;
+    const startEpoch =account.stake?.delegation?.activationEpoch || "0";
+    const rentReserve = Number(account.meta.rentExemptReserve);
+    const accountLamport = Number(account._lamports);
     const excessLamport = accountLamport - stake - rentReserve
-    const { active, state }: StakeActivationData = await this._shs.connection.getStakeActivation(pk);
+    console.log(pk);
+    
+    const { active, state }: Partial<StakeActivationData> = await this._shs.connection.getStakeActivation(pk) || {state:"inactive"};
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
-    const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
-    const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image  || "assets/images/unknown.svg")
+    const validatorName = account.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
+    const imgUrl = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image  || "assets/images/unknown.svg")
 
     const stakeAccountInfo: Stake = {
       link: this._utils.explorer + '/account/' + address,
       type: 'native',
       symbol: 'SOL',
-      lockedDue: new Date(account.account.data.parsed.info.meta.lockup.unixTimestamp * 1000),
-      locked: account.account.data.parsed.info.meta.lockup.unixTimestamp > Math.floor(Date.now() / 1000) ? true : false,
+      lockedDue: new Date(Number(account.meta.lockup.unix_timestamp) * 1000),
+      locked: Number(account.meta.lockup.unix_timestamp) > Math.floor(Date.now() / 1000) ? true : false,
       address,
       shortAddress: this._utils.addrUtil(address).addrShort,
       balance: Number(accountLamport / LAMPORTS_PER_SOL),
@@ -70,9 +72,9 @@ export class NativeStakeService {
       excessLamport,
       delegatedLamport,
       startEpoch,
-      lastReward: this._utils.decimalPipe.transform(inflationReward?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0,
-      stakeAuth: parsedData.meta.authorized.staker,
-      withdrawAuth: parsedData.meta.authorized.withdrawer,
+      lastReward : null,
+      stakeAuth: account.meta.authorized.staker,
+      withdrawAuth: account.meta.authorized.withdrawer,
       validatorName: validatorName || null,
       imgUrl: imgUrl || null,
       apy: validator?.apy_estimate || null
@@ -81,15 +83,30 @@ export class NativeStakeService {
     return stakeAccountInfo
   }
 
+  public async getStakeRewardsInflation(stakeAccounts: Stake[]): Promise<Stake[]>{
+    const stakeAccountsPk: PublicKey[] = stakeAccounts.map(acc =>  new PublicKey(acc.address));
+  
+
+    const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk);
+
+    const extendStakeAccount = stakeAccounts.map( (acc, i) => {
+      acc.lastReward =  this._utils.decimalPipe.transform(infReward[i]?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0 || 0
+      return acc 
+    })
+
+    return extendStakeAccount
+  }
   public async getOwnerNativeStake(walletAddress: string): Promise<Stake[]> {
     // try {
     const validators: Validator[] = await this._shs.getValidatorsList()
-    const stakeAccounts = await this._shs.getStakeAccountsByOwner(walletAddress);
+    const stakeAccounts = (await this._shs.getStakeAccountsByOwner2(walletAddress)) //.map(acc => {acc.pubkey = new PublicKey(acc.pubkey); return acc});
+    console.log(stakeAccounts);
+    
     const stakeAccountsPk = stakeAccounts.map(acc => acc.pubkey)
-    const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk);
+   
 
     const extendStakeAccount = stakeAccounts.map(async (acc, i) => {
-      return await this._extendStakeAccount(acc, validators, infReward[i])
+      return await this._extendStakeAccount(acc, validators)
     })
     const extendStakeAccountRes = await Promise.all(extendStakeAccount);
     // this.getInflationReward(extendStakeAccountRes)
