@@ -52,7 +52,7 @@ export class NativeStakeService {
     const { active, state }: StakeActivationData = await this._shs.connection.getStakeActivation(pk);
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
-    const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "no validator")
+    const validatorName = parsedData.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
     const imgUrl = parsedData.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image  || "assets/images/unknown.svg")
 
     const stakeAccountInfo: Stake = {
