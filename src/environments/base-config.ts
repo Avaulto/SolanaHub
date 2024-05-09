@@ -3,11 +3,17 @@ import { BaseConfig, PriorityFee } from "../app/models";
 export const getBaseConfig = (): BaseConfig => {
   return {
     rpcs: [
+      // {
+      //   name: "QuickNode",
+      //   imageURL: "../assets/images/quicknode-icon.png",
+      //   value: "https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro"
+      // },
       {
-        name: "QuickNode",
-        imageURL: "../assets/images/quicknode-icon.png",
-        value: "https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro"
+        name: 'Helius',
+        imageURL: '../assets/images/helius-icon.png',
+        value: 'https://carole-l8ne8x-fast-mainnet.helius-rpc.com'
       },
+      
       {
         name: 'Triton',
         imageURL: '../assets/images/triton-icon.svg',

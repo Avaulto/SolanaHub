@@ -82,8 +82,7 @@ export class StakeComponent implements OnInit{
     addIcons({ lockClosedOutline, copyOutline, ellipsisVertical });
   }
 ngOnInit(): void {
-  console.log(this.stake);
-  
+
   
 }
   async presentPopover(e: Event) {
