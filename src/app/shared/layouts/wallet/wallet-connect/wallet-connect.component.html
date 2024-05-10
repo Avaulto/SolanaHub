@@ -1,39 +1,31 @@
+@if(connectedWallet$ | async; as wallet){
 
-@if((isReady$ | async) === false){
-  <ion-button (click)="showWalletAdapters()" expand="block">
-    connect wallet
- </ion-button>
-}@else {
-  @if(watchMode$ | async){
-    <ion-chip color="primary">watch mode</ion-chip>
-  }
+@if(watchMode$ | async){
+<ion-chip color="primary">watch mode</ion-chip>
+}
 <div id="wallet" (click)="showConnectWalletActions($event)">
 
   <div id="overlay"></div>
+  @if( wallet?.adapter?.icon){
   <div id="wallet-profile" style="position: relative;">
-    <ion-img 
-    loading="lazy"
-    [src]="profilePic"
-    [ngStyle]="{'viability': showSkeleton ? 'hidden' :'visible'}" 
-    (ionImgDidLoad)="showSkeleton = false" 
-    (ionError)="showSkeleton = false"
-    />
 
-    @if (showSkeleton) {
-    <ion-skeleton-text animated />
-    }
-
-  </div>
+      <ion-img loading="lazy" [src]="wallet?.adapter?.icon"
+      [ngStyle]="{'viability': showSkeleton ? 'hidden' :'visible'}" (ionImgDidLoad)="showSkeleton = false"
+      (ionError)="showSkeleton = false" />
+      
+      @if (showSkeleton) {
+        <ion-skeleton-text animated />
+      }
+      
+    </div>
+  }
   <div>
     @if((llScore$ |async); as loyaltyLeagueMember){
-    
-      <ion-label id="wallet-domain">{{loyaltyLeagueMember?.hubDomainHolder}}</ion-label>
-    }
-    <div id="wallet-address"> 
-      @if(walletPublicKey$ | async){
-        {{shortedAddress}}
-      }
 
+    <ion-label id="wallet-domain">{{loyaltyLeagueMember?.hubDomainHolder}}</ion-label>
+    }
+    <div id="wallet-address">
+      {{shortenAddress(wallet?.adapter?.publicKey?.toBase58() || wallet)}}
     </div>
   </div>
   <ion-icon name="chevron-down-outline"></ion-icon>
@@ -42,3 +34,10 @@
   </div>
 </div>
 }
+@else {
+<ion-button (click)="showWalletAdapters()" expand="block">
+  connect wallet
+</ion-button> 
+
+
+ }

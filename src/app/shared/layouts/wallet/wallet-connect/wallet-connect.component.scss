@@ -9,7 +9,7 @@ ion-button {
 #wallet {
   cursor: pointer;
   display: flex;
-  padding: var(--spacing-lg, 12px);
+  padding: var(--spacing-lg, 8px);
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-none, 0px);
@@ -79,8 +79,8 @@ ion-button {
 
   #wallet-profile {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     border-radius: var(--radius-full, 9999px);
     overflow: hidden;
     margin-inline-end: 12px;

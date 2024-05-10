@@ -93,13 +93,13 @@ export class UtilService {
 
   private jupTokens: JupToken[] = null
 
-  public async getJupTokens(): Promise<JupToken[]> {
+  public async getJupTokens(path = 'all'): Promise<JupToken[]> {
     //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
     if (this.jupTokens) {
       return this.jupTokens
     } else {
       try {
-        this.jupTokens = await (await fetch('https://token.jup.ag/all')).json();
+        this.jupTokens = await (await fetch(`https://token.jup.ag/${path}`)).json();
         this.jupTokens.forEach(t => t.logoURI = t.logoURI ? t.logoURI : 'assets/images/unknown.svg');
       } catch (error) {
         console.error(error);

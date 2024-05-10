@@ -29,19 +29,18 @@ import { ModalController } from '@ionic/angular';
 
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { PageHeaderComponent, MenuComponent, AnimatedIconComponent } from './shared/components';
+import { PageHeaderComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 import { LocalStorageService } from './services/local-storage.service';
 import { PublicKey } from '@solana/web3.js';
-import { SettingsComponent } from './shared/layouts/settings/settings.component';
 import { environment } from 'src/environments/environment';
 import { NgxTurnstileComponent, NgxTurnstileModule } from 'ngx-turnstile';
-import { PortfolioService, SolanaHelpersService, UtilService } from './services';
+import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilService, WatchModeService } from './services';
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './loyalty-league-member/loyalty-league-member.component';
-import { PortfolioFetchService } from './services/portfolio-refetch.service';
+
 import { combineLatestWith, switchMap, take } from 'rxjs';
-import { WatchModeService } from './services/watch-mode.service';
+
 
 @Component({
   selector: 'app-root',
@@ -50,6 +49,7 @@ import { WatchModeService } from './services/watch-mode.service';
   standalone: true,
   imports: [
     NgxTurnstileModule,
+    SettingsButtonComponent,
     MenuComponent,
     IonHeader,
     IonImg,
@@ -154,12 +154,12 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/vspbqszr.json',
           active: false
         },
-        {
-          title: 'Settings',
-          url: `/${RoutingPath.SETTINGS}`,
-          icon: 'https://cdn.lordicon.com/ygumtulo.json',
-          active: true
-        },
+        // {
+        //   title: 'Settings',
+        //   url: `/${RoutingPath.SETTINGS}`,
+        //   icon: 'https://cdn.lordicon.com/ygumtulo.json',
+        //   active: true
+        // },
       ],
     },
     {
@@ -185,7 +185,7 @@ export class AppComponent implements OnInit {
         //   active: false
         // },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
-        // {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+        {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
         {
           title: 'Airdrops finder',
           url: `/${RoutingPath.AIRDROP_FINDER}`,
@@ -209,13 +209,6 @@ export class AppComponent implements OnInit {
     // },
   ];
 
-  async openSettingsModal() {
-    const modal = await this._modalCtrl.create({
-      component: SettingsComponent,
-      cssClass: 'modal-style'
-    });
-    modal.present();
-  }
 
 
 }

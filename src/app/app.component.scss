@@ -12,15 +12,19 @@ ion-menu {
     --padding-bottom: 20px;
   }
   app-wallet-connect {
-    margin-block-end: 12px;
     display: block;
     position: relative;
-}
+    width: 100%;
+  }
   ion-list {
     padding-top: 0px;
     padding-bottom: 0px;
   }
+  #menu-top{
+    display: flex;
+  margin-block-end: 12px;
 
+}
   ion-list-header {
     color: var(--gray-modern-500, #697586);
     font-size: 10px;
@@ -45,7 +49,11 @@ ion-menu {
     }
 
   }
-
+  animated-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 13px;
+  }
   ion-item {
     cursor: pointer;
     color: var(--gray-modern-700, #364152);

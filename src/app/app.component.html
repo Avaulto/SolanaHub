@@ -16,22 +16,26 @@
             <ion-img [src]="SolanaHubLogo"></ion-img>
             <span>SolanaHub</span>
           </div>
-          <app-wallet-connect />
+          <div id="menu-top">
+
+            <app-wallet-connect />
+            <settings-button/>
+          </div>
           <ion-menu-toggle auto-hide="false" *ngFor="let g of appPages; let i = index">
             <ion-list-header *ngIf="g.group">{{g.group}}</ion-list-header>
             @for (p of g.pages; track $index) {
-            @if (p.title != 'Settings') {
-            <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'" style="opacity: 1;" routerDirection="root"
-              [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+           
+            <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'" style="opacity: 1;"
+              routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
 
               <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
               <ion-label>{{ p.title }}</ion-label>
               @if((watchMode$ | async)){
-                @if (p.title != 'Overview') {
+              @if (p.title != 'Overview') {
               <ion-chip color="secondary">
-                  Disabled
-                </ion-chip>
+                Disabled
+              </ion-chip>
               }
               }@else{
 
@@ -43,7 +47,8 @@
 
               }
             </ion-item>
-            }@else{
+            
+            <!-- @else{
             @if(!(watchMode$ | async)){
 
 
@@ -52,7 +57,7 @@
 
               <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
 
-              <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
+              <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon>
               <ion-label>{{ p.title }}</ion-label>
               @if (!p.active) {
               <ion-chip color="secondary">Soon</ion-chip>
@@ -60,7 +65,7 @@
 
             </ion-item>
             }
-            }
+            } -->
             }
 
           </ion-menu-toggle>

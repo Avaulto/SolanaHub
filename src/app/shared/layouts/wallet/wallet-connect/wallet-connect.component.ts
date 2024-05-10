@@ -4,7 +4,7 @@ import { combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observabl
 import { WalletAdapterOptionsComponent } from '../wallet-adapter-options/wallet-adapter-options.component';
 
 import va from '@vercel/analytics';
-import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
+import { ConnectionStore, Wallet, WalletStore } from '@heavy-duty/wallet-adapter';
 import { SolanaHelpersService, UtilService, ToasterService } from 'src/app/services';
 import { WalletConnectedDropdownComponent } from '../wallet-connected-dropdown/wallet-connected-dropdown.component';
 import { addIcons } from 'ionicons';
@@ -22,7 +22,7 @@ export class WalletConnectComponent {
   showSkeleton = true
   constructor(
     private _watchModeService: WatchModeService,
-    private _utilsService: UtilService,
+    public _utilsService: UtilService,
     private _walletStore: WalletStore,
     private _toasterService: ToasterService,
     public popoverController: PopoverController,
@@ -33,14 +33,14 @@ export class WalletConnectComponent {
     addIcons({ chevronDownOutline });
     effect(() => {
       //@ts-ignore
-      if (this._portfolioService.nfts()) {
+      // if (this._portfolioService.nfts()) {
 
-        // get the first nft that has img
-        this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri)?.image_uri || 'assets/images/unknown.svg'
-      }
+      //   // get the first nft that has img
+      //   this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri)?.image_uri || 'assets/images/unknown.svg'
+      // }
     })
   }
-  public profilePic;
+  // public profilePic;
   // loyalty league member score
   public llScore$ = this._shs.walletExtended$.pipe(
     this._utilsService.isNotNullOrUndefined,
@@ -79,19 +79,34 @@ export class WalletConnectComponent {
     }))
   public shortedAddress = ''
   public watchModeWallet$ = this._watchModeService.watchedWallet$
-  public walletPublicKey$: Observable<string> = this._walletStore.publicKey$.pipe(
+  public connectedWallet$: Observable<any> = this._walletStore.wallet$.pipe(
     combineLatestWith(this.watchModeWallet$),
-    this._utilsService.isNotNull,
-    this._utilsService.isNotUndefined,
+    // this._utilsService.isNotNull,
+    // this._utilsService.isNotUndefined,
     distinctUntilChanged(),
-    switchMap(([publicKey, address]) => {
+    shareReplay(),
+    map(([wallet, watchModeWallet]: any) => {
       // let shortedAddress = ''
-      if (publicKey || address) {
+      // if (wallet || address) {
 
-        const walletAddress = publicKey?.toBase58() || address;
-        this.shortedAddress = this._utilsService.addrUtil(walletAddress).addrShort
-      }
-      return this.shortedAddress
+      //   const walletAddress = wallet.adapter.publicKey?.toBase58() || address;
+      //   this.shortedAddress = this._utilsService.addrUtil(walletAddress).addrShort
+      // }
+      // const conWallet = wallet || {address}
+      // conWallet.shortedAddress
+      // console.log(wallet, watchModeWallet);
+      // let walletShort = null
+      // if (wallet) {
+      //   console.log(wallet.adapter.publicKey);
+        
+      //   walletShort = this._utilsService.addrUtil(wallet.adapter.publicKey.toBase58()).addrShort
+      //   wallet.walletShort = walletShort
+      // }
+      // if (watchModeWallet) {
+      //   walletShort = this._utilsService.addrUtil(watchModeWallet).addrShort
+      //   watchModeWallet = walletShort
+      // }
+      return wallet || watchModeWallet
 
     }),
     shareReplay()
@@ -120,5 +135,13 @@ export class WalletConnectComponent {
       size: 'cover'
     });
     await popover.present();
+  }
+
+  public shortenAddress(address: string){
+    if(typeof address == 'string'){
+      return this._utilsService.addrUtil(address).addrShort
+    } else{
+      return null
+    }
   }
 }

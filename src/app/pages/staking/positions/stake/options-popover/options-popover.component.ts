@@ -43,7 +43,6 @@ export class OptionsPopoverComponent implements OnInit {
       btnText: 'select validator & stake'
     }
     const validatorsList = await this._shs.getValidatorsList()
-    console.log(validatorsList);
     const modal = await this._modalCtrl.create({
       component: ModalComponent,
       componentProps: {

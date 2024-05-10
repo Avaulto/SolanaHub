@@ -49,7 +49,7 @@ export class NativeStakeService {
     const rentReserve = Number(account.meta.rentExemptReserve);
     const accountLamport = Number(account._lamports);
     const excessLamport = accountLamport - stake - rentReserve
-    console.log(pk);
+
     
     const { active, state }: Partial<StakeActivationData> = await this._shs.connection.getStakeActivation(pk) || {state:"inactive"};
     const delegatedLamport = accountLamport - rentReserve
@@ -100,10 +100,7 @@ export class NativeStakeService {
     // try {
     const validators: Validator[] = await this._shs.getValidatorsList()
     const stakeAccounts = (await this._shs.getStakeAccountsByOwner2(walletAddress)) //.map(acc => {acc.pubkey = new PublicKey(acc.pubkey); return acc});
-    console.log(stakeAccounts);
-    
-    const stakeAccountsPk = stakeAccounts.map(acc => acc.pubkey)
-   
+
 
     const extendStakeAccount = stakeAccounts.map(async (acc, i) => {
       return await this._extendStakeAccount(acc, validators)
