@@ -7,7 +7,7 @@
 
 ion-button {
     margin-block-end: 1px;
-    --color: #364152;
+    --color: var(--ion-color-dark);
     --box-shadow: 0 0 0;
     text-transform: capitalize;
 

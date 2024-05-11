@@ -10,7 +10,7 @@
     }
     ion-button {
         --background: #fff;
-        --color: #697586;
+        --color: var(--ion-color-medium);
         --padding-bottom: 0;
         --padding-top: 0;
         --border-radius: 40px;

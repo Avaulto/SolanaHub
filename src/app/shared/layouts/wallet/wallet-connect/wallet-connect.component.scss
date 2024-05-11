@@ -46,7 +46,7 @@ ion-button {
   }
 
   #wallet-address {
-    color: var(--gray-modern-500, #697586);
+    color: var(--ion-color-medium);
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -106,6 +106,6 @@ ion-chip{
   z-index: 10;
   opacity: 1;
   color: white;
-  background: #9b3678;
+  background: var(--ion-color-primary);
 
 }

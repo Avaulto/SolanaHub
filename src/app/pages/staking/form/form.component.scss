@@ -18,7 +18,7 @@
     }
 
     #desc {
-        color: #697586;
+        color: var(--ion-color-medium);
         font-size: 13px;
         font-weight: 400;
     }
@@ -45,7 +45,7 @@
 
 
     #wallet-info {
-        color: #697586;
+        color: var(--ion-color-medium);
         text-align: right;
         font-family: Inter;
         font-size: 12px;
@@ -63,7 +63,7 @@
 
         ion-button {
          
-            color: var(--Component-colors-Utility-Gray-utility-gray-500, #697586);
+            color: var(--ion-color-medium);
             text-align: center;
             font-size: 10px;
             font-weight: 600;
@@ -134,7 +134,7 @@
 
 
 .type-desc {
-    color: #697586;
+    color: var(--ion-color-medium);
     font-size: 12px;
     font-weight: 400;
     line-height: 130%;

@@ -26,7 +26,7 @@ ion-menu {
 
 }
   ion-list-header {
-    color: var(--gray-modern-500, #697586);
+    color: var(--ion-color-medium);
     font-size: 10px;
     font-style: normal;
     font-weight: 600;
@@ -56,7 +56,7 @@ ion-menu {
   }
   ion-item {
     cursor: pointer;
-    color: var(--gray-modern-700, #364152);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-style: normal;
     font-weight: 600;
@@ -101,7 +101,7 @@ ion-chip{
   }
 
   span {
-    color: var(--gray-modern-950, #0D121C);
+    color: var(--ion-color-hard-hard);
     font-size: 18px;
     font-style: normal;
     font-weight: 600;

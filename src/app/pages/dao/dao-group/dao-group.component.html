@@ -11,7 +11,9 @@
         <ion-label>{{gov?.name}}</ion-label>
 
       </div>
-      <div class="gov-total-prop">{{gov.proposals.length}} proposals available</div>
+      <a [href]="'https://app.realms.today/dao/'+ gov.realmsId" target="_blank">
+        <div class="gov-total-prop">{{gov.proposals.length}} proposals available</div>
+      </a>
     }
   </div>
   <ion-row class="gov-group-body">

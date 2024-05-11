@@ -27,7 +27,7 @@
     }
     #wallet-info {
         text-align: right;
-        color: #697586;
+        color: var(--ion-color-medium);
         text-align: right;
         font-size: 12px;
         line-height: 14px;
@@ -44,7 +44,7 @@
 
         ion-button {
             text-transform: uppercase;
-            --color: var(--Component-colors-Utility-Gray-utility-gray-500, #697586);
+            --color: var(--ion-color-medium);
             text-align: center;
             font-size: 10px;
             font-weight: 600;

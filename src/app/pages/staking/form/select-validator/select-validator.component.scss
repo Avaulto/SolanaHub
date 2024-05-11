@@ -56,7 +56,7 @@
         background: var(--Colors-Background-bg-primary, #FFF);
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
         overflow: hidden;
-        color: var(--Colors-Text-text-placeholder, #697586);
+        color: var(--ion-color-medium);
         text-overflow: ellipsis;
         font-size: 13px;
         line-height: 18px;
@@ -68,7 +68,7 @@
         font-size: 12px;
         border: 1px solid #F1D5EB !important;
         background: #FAF0F8 !important;
-        color: #9B3678 !important;
+        color: var(--ion-color-primary) !important;
         font-weight: 600;
         margin-inline-end: 8px;
     }

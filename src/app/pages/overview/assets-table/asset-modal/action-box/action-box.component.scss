@@ -34,7 +34,7 @@ form {
     ion-label {
         display: block;
         text-transform: capitalize;
-        color: var(--colors-text-text-secondary-700, #364152);
+        color: var(--colors-text-text-secondary-700, var(--ion-color-dark));
         font-family: Inter;
         font-size: 13px;
         font-style: normal;
@@ -58,14 +58,11 @@ form {
         color: var(--ion-color-danger);
         font-size: 13px;
         line-height: 18px;
-        /* 138.462% */
     }
 }
 
 ion-segment {
     margin-block-end: 24px;
-    // border-bottom: 1px solid #697586;
-    // border-radius: 0;
 }
 
 .private-tx {

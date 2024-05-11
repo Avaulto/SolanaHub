@@ -13,7 +13,7 @@ div#table-wrapper {
 ion-button {
     border-radius: var(--radius-md, 8px);
     border: 1px solid var(--gray-modern-200, #E3E8EF);
-    --color: var(--gray-modern-500, #697586);
+    --color: var(--ion-color-medium);
     font-family: Inter;
     font-size: 12px;
     font-style: normal;
@@ -57,7 +57,7 @@ ion-button {
         // }
         .ngx-table__header-title {
 
-            color: var(--gray-modern-500, #697586);
+            color: var(--ion-color-medium);
 
             font-size: 12px;
 
@@ -135,7 +135,7 @@ ion-button {
 
             // width: 40px;
             // height: 40px;
-            color: var(--gray-modern-500, #697586);
+            color: var(--ion-color-medium);
             text-align: center;
 
             font-size: 12px;

@@ -7,7 +7,7 @@ header {
     min-height: 295px;
     background-image: url('/assets/images/bg-header-decorative.svg');
     #title {
-        color: var(--gray-modern-950, var(--colors-gray-modern-950, #0D121C));
+        color: var(--ion-color-hard-hard);
         font-size: 48px;
         font-style: normal;
         font-weight: 600;
@@ -20,7 +20,7 @@ header {
 
     #intro {
         max-width: 900px;
-        color: var(--colors-gray-modern-700, #364152);
+        color: var(--colors-gray-modern-700, var(--ion-color-dark));
         font-size: 16px;
         font-style: normal;
         font-weight: 400;

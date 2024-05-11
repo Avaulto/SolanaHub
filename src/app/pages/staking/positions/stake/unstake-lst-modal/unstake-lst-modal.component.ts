@@ -31,7 +31,8 @@ export class UnstakeLstModalComponent  implements OnInit {
   public amount:number = 0
 
   ngOnInit() {
-
+    console.log(this.stake);
+    
    }
 
   setAmount(event){

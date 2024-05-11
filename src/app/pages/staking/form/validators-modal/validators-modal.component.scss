@@ -34,7 +34,7 @@ cdk-virtual-scroll-viewport {
     ion-chip {
       border: 1px solid #F1D5EB !important;
       background: #FAF0F8 !important;
-      color: #9B3678 !important;
+      color: var(--ion-color-primary) !important;
     }
   }
 
@@ -102,7 +102,7 @@ cdk-virtual-scroll-viewport {
       border-radius: var(--radius-full, 1000px);
       border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #E3E8EF);
       background: var(--Component-colors-Utility-Gray-utility-gray-50, #F8FAFC);
-      color: var(--Component-colors-Utility-Gray-utility-gray-700, #364152);
+      color: var(--Component-colors-Utility-Gray-utility-gray-700, var(--ion-color-dark));
       text-align: center;
       font-size: 12px;
       font-weight: 600;

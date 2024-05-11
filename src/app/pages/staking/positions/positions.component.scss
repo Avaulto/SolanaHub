@@ -16,8 +16,7 @@
 }
 
 #sub {
-
-    color: #697586;
+    color: var(--ion-color-medium);
     font-size: 13px;
     text-transform: capitalize;
     margin-block-end: 20px;
@@ -31,7 +30,7 @@
 
         text-transform: capitalize;
         --box-shadow: 0 0 0;
-        --color:#364152;
+        --color:var(--ion-color-dark);
         margin-inline-end: 4px;
         width: 48%;
         &.button-solid{

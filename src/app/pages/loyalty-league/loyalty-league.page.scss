@@ -23,7 +23,7 @@
     }
 
     #slogen {
-        color: var(--gray-modern-950, var(--colors-gray-modern-950, #0D121C));
+        color: var(--ion-color-hard-hard);
         font-size: 48px;
         font-style: normal;
         font-weight: 600;
@@ -33,9 +33,10 @@
         margin-block-end: 24px;
 
         span {
-            color: var(--brand-600, #B84794);
+            color: var(--ion-color-primary);
+            opacity: 0.8;
             font-size: 48px;
-            font-style: normal;
+
             font-weight: 600;
             line-height: 48px;
             letter-spacing: -0.96px;
@@ -43,9 +44,8 @@
     }
 
     #intro {
-        color: var(--colors-gray-modern-700, #364152);
+        color:  var(--ion-color-dark);
         font-size: 16px;
-        font-style: normal;
         font-weight: 400;
         line-height: 24px;
         margin-block-end: 48px;
@@ -88,7 +88,7 @@
         max-width: 100%;
         border-radius: 8px;
         border: 1px;
-        background: var(--component-colors-components-buttons-primary-button-primary-bg, #9B3678);
+        background: var(--ion-color-primary);
         --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     }
 

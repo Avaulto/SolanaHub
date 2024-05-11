@@ -40,7 +40,7 @@ ion-segment {
 ion-segment-button {
     font-size: 13px;
     font-weight: 600;
-    --color: #364152;
+    --color: var(--ion-color-dark);
     --background: transparent;
     --indicator-color: #F8FAFC;
 }
@@ -49,7 +49,7 @@ ion-text {
     text-transform: capitalize;
     display: block;
     margin-block-end: 12px;
-    color: var(--colors-text-text-secondary-700, #364152);
+    color: var(--colors-text-text-secondary-700, var(--ion-color-dark));
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
@@ -65,7 +65,7 @@ ion-text {
         top: 12px;
         z-index: 2;
         overflow: hidden;
-        color: var(--Colors-Text-text-placeholder, #697586);
+        color: var(--ion-color-medium);
         font-size: 13px;
         line-height: 18px;
     }
@@ -93,12 +93,12 @@ ion-text {
         text-transform: capitalize;
 
         &.button-clear {
-            color: #364152;
+            color: var(--ion-color-dark);
             border: 1px solid #CDD5DF;
         }
 
         &.ion-color-primary {
-            border: 1px solid #9B3678;
+            border: 1px solid var(--ion-color-primary);
         }
     }
 

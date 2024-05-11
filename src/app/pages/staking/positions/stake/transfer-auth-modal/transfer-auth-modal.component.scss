@@ -9,7 +9,7 @@
 }
 
 #current-auth {
-    color: #697586;
+    color: var(--ion-color-medium);
     font-size: 12px;
     font-weight: 700;
 
@@ -118,7 +118,7 @@ ion-checkbox {
 }
 
 .type-desc {
-    color: #697586;
+    color: var(--ion-color-medium);
     font-size: 12px;
     font-weight: 400;
     line-height: 130%;

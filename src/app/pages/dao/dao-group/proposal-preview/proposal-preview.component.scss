@@ -71,7 +71,7 @@ ion-button {
     --background: #FFF;
     --border-width: 1px;
     --border-style: solid;
-    --color: #364152;
+    --color: var(--ion-color-dark);
     text-align: center;
     font-size: 11px;
     font-weight: 500;
@@ -102,14 +102,14 @@ ion-button {
     }
 
     ion-text {
-        color: #364152;
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 700;
         line-height: 18px;
     }
 
     small {
-        color: #697586;
+        color: var(--ion-color-medium);
         margin-inline-start: 2px;
         font-size: 11px;
 

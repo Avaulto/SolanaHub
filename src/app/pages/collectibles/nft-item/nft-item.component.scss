@@ -61,7 +61,7 @@ ion-text {
     // min-width: 75px;
     padding: 4px;
     border-radius: 6px;
-    color: #364152;
+    color: var(--ion-color-dark);
     border: 1px solid #E3E8EF;
     background: #F8FAFC;
     height: 20px;
@@ -71,5 +71,5 @@ ion-text {
 
 }
 ion-icon {
-    color: #697586;
+    color: var(--ion-color-medium);
 }

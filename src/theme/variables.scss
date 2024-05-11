@@ -3,9 +3,10 @@
 
 /** Ionic CSS Variables **/
 :root {
+	// --text-color:;
 	--ion-padding: 20px;
 	--ion-font-family: 'Inter', sans-serif;
-
+	
 	--ion-color-primary: #9B3678;
 	--ion-color-primary-rgb: 155, 54, 120;
 	--ion-color-primary-contrast: #ffffff;
@@ -62,12 +63,13 @@
 	--ion-color-medium-shade: #5c6776;
 	--ion-color-medium-tint: #788392;
 
-	--ion-color-dark: #000000;
-	--ion-color-dark-rgb: 0, 0, 0;
+	--ion-color-hard-hard: #0D121C;
+	--ion-color-dark: #364152;
+	--ion-color-dark-rgb: 54,65,82;
 	--ion-color-dark-contrast: #ffffff;
-	--ion-color-dark-contrast-rgb: 255, 255, 255;
-	--ion-color-dark-shade: #000000;
-	--ion-color-dark-tint: #1a1a1a;
+	--ion-color-dark-contrast-rgb: 255,255,255;
+	--ion-color-dark-shade: #303948;
+	--ion-color-dark-tint: #4a5463;
 }
 
 // @media (prefers-color-scheme: dark) {

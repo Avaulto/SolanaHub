@@ -10,7 +10,7 @@
 ion-label {
     display: block;
     text-transform: capitalize;
-    color: var(--colors-text-text-secondary-700, #364152);
+    color: var(--colors-text-text-secondary-700, var(--ion-color-dark));
     font-family: Inter;
     font-size: 13px;
     font-style: normal;
