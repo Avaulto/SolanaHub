@@ -5,7 +5,7 @@
 }
 
 #title {
-    color: var(--colors-text-text-primary-900, #121926);
+    color: var(--ion-color-dark);
     text-align: center;
     font-size: 14px;
     font-style: normal;
@@ -16,7 +16,7 @@
 }
 
 #token-balance {
-    color: var(--colors-text-text-primary-900, #121926);
+    color: var(--ion-color-dark);
     text-align: center;
     font-size: 36px;
     font-style: normal;
@@ -34,7 +34,7 @@ form {
     ion-label {
         display: block;
         text-transform: capitalize;
-        color: var(--colors-text-text-secondary-700, var(--ion-color-dark));
+        color: var(--ion-color-dark);
         font-family: Inter;
         font-size: 13px;
         font-style: normal;

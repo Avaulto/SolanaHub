@@ -64,7 +64,12 @@ export class UtilService {
     
     return config;
   }
-  
+  public get theme()  {
+    const config = JSON.parse(this._localStorage.getData('theme'))?.value || 'light'
+    console.log(config);
+    
+    return config;
+  }
 
   public formatBigNumbers = (n: number) => {
     if (n < 1e3) return this.decimalPipe.transform(n, '1.2-2');

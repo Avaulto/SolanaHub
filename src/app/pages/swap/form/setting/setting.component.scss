@@ -9,7 +9,7 @@
         }
     }
     ion-button {
-        --background: #fff;
+        --background: var(--ion-color-menu);
         --color: var(--ion-color-medium);
         --padding-bottom: 0;
         --padding-top: 0;

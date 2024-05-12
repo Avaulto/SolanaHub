@@ -2,7 +2,10 @@
 
 
 <div id="ll-member-wrapper">
-  <ion-label>Loyalty Points</ion-label>
+  <ion-label>Loyalty Points  <ion-icon id="tooltip" [position]="tooltipDirection" [tooltip]="toolTipTpl" class="tooltip-icon" name="information-circle-outline"></ion-icon></ion-label>
+  <ng-template #toolTipTpl >
+    Points tracker runs daily, don׳t panic if you cant see your score immediately
+   </ng-template>
   <div id="score">
     @if((llScore$ | async); as loyaltyLeagueMember){
     {{ loyaltyLeagueMember?.loyaltyPoints || 0 | number: '1.0-2'}}

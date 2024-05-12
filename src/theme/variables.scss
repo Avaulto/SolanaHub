@@ -6,7 +6,11 @@
 	// --text-color:;
 	--ion-padding: 20px;
 	--ion-font-family: 'Inter', sans-serif;
-	
+	--ion-color-app-bg: #f3f4f6;
+	--ion-color-page-top: #E9E9E6;
+	--ion-color-menu:#fff;
+	--ion-color-btn-bg: #FFF3FB;
+
 	--ion-color-primary: #9B3678;
 	--ion-color-primary-rgb: 155, 54, 120;
 	--ion-color-primary-contrast: #ffffff;
@@ -56,7 +60,7 @@
 	--ion-color-light-shade: #e0e0e0;
 	--ion-color-light-tint: #ffffff;
 
-	--ion-color-medium: #697586;
+	--ion-color-medium:#344054;
 	--ion-color-medium-rgb: 105, 117, 134;
 	--ion-color-medium-contrast: #ffffff;
 	--ion-color-medium-contrast-rgb: 255, 255, 255;
@@ -71,7 +75,15 @@
 	--ion-color-dark-shade: #303948;
 	--ion-color-dark-tint: #4a5463;
 }
-
+:root .dark-theme{
+	--ion-color-app-bg: #0e0e11;// #121a35;
+	--ion-color-page-top: #0e0e11;
+	--ion-color-btn-bg: #42102f;
+	--ion-color-medium: #f3f3f3;
+	--ion-color-menu:#18181b;
+	--ion-color-hard-hard: #fff;
+	--ion-color-dark: #fff;
+}
 // @media (prefers-color-scheme: dark) {
 //   /*
 //    * Dark Colors

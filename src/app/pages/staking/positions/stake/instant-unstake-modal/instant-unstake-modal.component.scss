@@ -4,7 +4,7 @@
 }
 
 ion-label {
-    color: var(--Gray-700, #344054);
+    color: var(--Gray-700, var(--ion-color-medium));
     font-size: 13px;
     font-weight: 500;
     margin-block-end: 8px;

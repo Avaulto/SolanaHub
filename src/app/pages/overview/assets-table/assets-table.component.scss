@@ -22,7 +22,7 @@
 
 }
 .item-bold {
-    color: var(--colors-text-text-primary-900, #101828);
+    color: var(--ion-color-dark);
     /* Text sm/Medium */
 
     font-size: 14px;
@@ -33,7 +33,7 @@
 }
 
 .item-light {
-    color: var(--gray-modern-600, #4B5565);
+    color: var(--ion-color-medium);
 
     font-size: 12px;
     font-weight: 400;
@@ -110,7 +110,7 @@ ion-chip {
     background: #F8F9FC;
     &.primary {
         border: 1px solid #FDD1EE;
-        background: #FFF3FB;
+        background: var(--ion-color-btn-bg);;
         color: var(--ion-color-primary);
     }
 
@@ -145,7 +145,7 @@ ion-chip {
     }
     .pool-item-info{
         text-align: center;
-        color: var(--gray-modern-900, #121926);
+        color: var(--ion-color-dark);
 
         font-size: 12px;
         font-weight: 600;

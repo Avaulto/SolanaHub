@@ -7,6 +7,7 @@ ion-button {
 }
 
 #wallet {
+  color: var(--ion-color-hard-hard);
   cursor: pointer;
   display: flex;
   padding: var(--spacing-lg, 10px);
@@ -28,7 +29,7 @@ ion-button {
   }
 
   &:hover {
-    background-color: #FDF2FA;
+    background-color: var(--ion-color-page-top);
   }
 
   ion-icon {
@@ -37,7 +38,7 @@ ion-button {
   }
 
   ion-label {
-    color: var(--gray-modern-900, #121926);
+    color: var(--ion-color-hard-hard);
     font-size: 14px;
     font-style: normal;
     font-weight: 600;

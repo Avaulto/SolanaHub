@@ -9,6 +9,8 @@ import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { trophyOutline } from 'ionicons/icons';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
+import { TooltipModule } from '../shared/layouts/tooltip/tooltip.module';
+import { TooltipPosition } from '../shared/layouts/tooltip/tooltip.enums';
 
 export interface Rank {
   rank: number
@@ -19,10 +21,11 @@ export interface Rank {
   templateUrl: './loyalty-league-member.component.html',
   styleUrls: ['./loyalty-league-member.component.scss'],
   standalone: true,
-  imports: [IonIcon, IonProgressBar, AsyncPipe, DecimalPipe, IonLabel, IonSkeletonText, RouterLink]
+  imports: [TooltipModule,IonIcon, IonProgressBar, AsyncPipe, DecimalPipe, IonLabel, IonSkeletonText, RouterLink]
 })
 export class LoyaltyLeagueMemberComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$
+  readonly tooltipDirection: TooltipPosition = TooltipPosition.ABOVE;
   constructor(
     private _walletStore: WalletStore,
     private _loyaltyLeagueService: LoyaltyLeagueService,

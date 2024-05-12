@@ -13,7 +13,7 @@
         margin-block-end: 20px;
         ion-button {
             color: var(--component-colors-utility-gray-utility-gray-600, #4B5565);
-            --background-hover: #E9E9E6;
+            --background-hover: var(--ion-color-page-top);
             font-size: 13px;
             font-weight: 600;
             line-height: 18px;
@@ -29,7 +29,7 @@
     }
 
     #total-pts-title {
-        color: var(--colors-text-text-primary-900, #101828);
+        color: var(--ion-color-dark);
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.16px;
@@ -38,7 +38,7 @@
     }
 
     #total-pts-value {
-        color: var(--colors-text-text-primary-900, #101828);
+        color: var(--ion-color-dark);
         font-size: 36px;
         font-weight: 600;
         letter-spacing: 0.36px;

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
@@ -101,7 +101,8 @@ export class AppComponent implements OnInit {
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
     private _utilService: UtilService,
-    // private portfolioService: PortfolioService,
+    private _renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
     private _fetchPortfolioService: PortfolioFetchService
   ) {
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
@@ -116,7 +117,13 @@ export class AppComponent implements OnInit {
     this._utilService.turnStileToken = token
 
   }
+
   async ngOnInit() {
+      // set stored theme
+      console.log(this._utilService.theme + 'theme');
+    
+      this._renderer.addClass(this.document.body,this._utilService.theme + '-theme')
+
 
     this._activeRoute.queryParams
       .subscribe((params) => {

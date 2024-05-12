@@ -54,7 +54,10 @@ ion-col {
     margin: 0;
     padding: 0;
 }
-
+.dark-theme {
+    ion-item,app-table-menu ion-button {
+    color: white !important;
+}}
 ion-button {
     --transition: 0.3s ease all;
     padding: 0;
@@ -73,8 +76,8 @@ ion-button {
 
 ion-content,
 ion-header {
-    --background: #f3f4f6;
-    background: #f3f4f6;
+    --background: var(--ion-color-app-bg);
+    background: var(--ion-color-app-bg);
 }
 .header-md{
     background: #FFF;
@@ -85,7 +88,7 @@ ion-header {
 }
 .data-set {
     border-radius: var(--radius-xl, 12px);
-    background: #FFF;
+    background: var(--ion-color-menu);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
 
@@ -113,7 +116,7 @@ ion-header {
 ion-input {
 
     overflow: hidden;
-    --color: #121926 !important;
+    --color: var(-ion-color-dark);
     --placeholder-color: #697586 !important;
     text-overflow: ellipsis;
     font-weight: 400;
@@ -121,7 +124,7 @@ ion-input {
     font-size: 13px;
     border-radius: var(--radius-md, 8px);
     border: 1px solid var(--colors-border-border-primary, #CDD5DF);
-    background: var(--colors-background-bg-primary, #FFF);
+    background: var(--ion-color-menu);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     --background: transparent;
     --padding-start: 12px !important;
@@ -131,7 +134,7 @@ ion-input {
 
 
 .table-title {
-    color: var(--colors-text-text-primary-900, #101828);
+    color: var(--ion-color-dark);
     // font-family: Plus Jakarta Sans;
     font-size: 16px;
     font-style: normal;

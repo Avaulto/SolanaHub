@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
   IonLabel,
   IonSegmentButton,
@@ -9,6 +9,7 @@ import {
 import { Config } from '../../../../models/settings.model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { SolanaHelpersService, ToasterService } from 'src/app/services';
+import { DOCUMENT } from '@angular/common';
 @Component({
   selector: 'select-group-config',
   templateUrl: './select-group-config.component.html',
@@ -25,14 +26,16 @@ import { SolanaHelpersService, ToasterService } from 'src/app/services';
   ]
 })
 export class SelectGroupConfigComponent  implements AfterViewInit {
-  @Input() configType: 'RPC' | 'explorer' | 'priority-fee'
+  @Input() configType: 'RPC' | 'explorer' | 'priority-fee' | 'theme'
   @Input() title: string;
   @Input() configs: Config[];
   public defaultSelection: Config = null;
   constructor(
+    private _renderer: Renderer2,
     private _toastService: ToasterService,
     private _localStorage: LocalStorageService,
-    private _shs: SolanaHelpersService
+    private _shs: SolanaHelpersService,
+    @Inject(DOCUMENT) private document: Document,
     ) { }
 
   ngAfterViewInit() {
@@ -56,6 +59,13 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
       const rpcURL = this.defaultSelection.value
       this._shs.updateRPC(rpcURL)
     }
+    if(this.configType === 'theme'){
+      if(config.value === 'dark'){
+        this.enableDarkTheme();
+      }else{
+        this.enableLightTheme();
+      }
+    }
   }
   storeSelection(selection: Config): void{
     this._localStorage.saveData(this.configType,JSON.stringify(selection))
@@ -75,5 +85,12 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
     this._shs.updateRPC(rpcURL)
     }
 
+    public enableDarkTheme() {
+      this._renderer.addClass(this.document.body, 'dark-theme');
+    }
+    public enableLightTheme() {
+      this._renderer.removeClass(this.document.body, 'dark-theme');
+    }
+    
   }
 

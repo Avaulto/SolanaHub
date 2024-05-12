@@ -9,10 +9,10 @@ import { IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/angular/standalone';
   templateUrl: './portfolio-breakdown.component.html',
   styleUrls: ['./portfolio-breakdown.component.scss'],
   standalone: true,
-  imports: [AsyncPipe,NgClass, NgStyle, IonGrid, IonRow, IonCol, IonSpinner]
+  imports: [AsyncPipe, NgClass, NgStyle, IonGrid, IonRow, IonCol, IonSpinner]
 })
 export class PortfolioBreakdownComponent implements AfterViewInit {
-  constructor(private _portfolioService:PortfolioService){
+  constructor(private _portfolioService: PortfolioService) {
     effect(() => {
       if (this.walletAssets()) {
         setTimeout(() => {
@@ -28,7 +28,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   public assetClassValue = computed(() => this.walletAssets()?.map(assetClass => {
 
     return {
-      group: assetClass.label ,
+      group: assetClass.label,
       value: assetClass.value,
       color: this.colorPicker(assetClass.label)
     }
@@ -45,7 +45,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   }, []))
   public colorPicker(assetClass: string) {
     let color = ''
-    
+
     switch (assetClass) {
       case 'Wallet':
         color = '#341663'
@@ -61,6 +61,9 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         break;
       case 'Rewards':
         color = '#F72585'
+        break;
+      case 'Airdrop':
+        color = '#b82568'
         break;
       case 'Deposit':
         color = '#E9CDC2'
@@ -104,7 +107,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
       type: 'pie',
 
       data: {
-        
+
         labels: groupNames,
         datasets: [{
           parsing: false,
@@ -117,7 +120,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
       options: {
         layout: {
           padding: 4
-      },
+        },
         elements: {
           arc: {
             borderWidth: 0

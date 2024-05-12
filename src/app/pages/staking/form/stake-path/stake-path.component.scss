@@ -1,6 +1,6 @@
 .light-title {
     text-transform: capitalize;
-    color: #344054;
+    color: var(--ion-color-medium);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -46,6 +46,7 @@ ion-radio{
 
   
     .icon-wrapper {
+        background-color: white;
         display: flex;
         padding: 10px;
         width: 40px;

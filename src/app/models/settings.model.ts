@@ -16,6 +16,7 @@ export interface BaseConfig {
   rpcs: Config[],
   explorers: Config[],
   PriorityFee: Config[],
+  Theme: Config[],
 }
 
 export interface EnvironmentConfig {
@@ -30,4 +31,5 @@ export interface EnvironmentConfig {
   readonly rpcs: Config[];
   readonly explorers: Config[];
   readonly PriorityFee: Config[];
+  readonly Theme: Config[];
 }

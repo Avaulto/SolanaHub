@@ -5,12 +5,13 @@
     .staking-stat {
         padding: 24px;
         border-radius: var(--radius-xl, 12px);
-        background: var(--Colors-Background-bg-primary, #FFF);
+        background: var(--ion-color-menu);
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
         .icon-wrapper {
             width: 48px;
             height: 48px;
+            background-color: white;
             border-radius: var(--radius-lg, 10px);
             border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
             box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
@@ -21,7 +22,7 @@
         }
 
         .stat-title {
-            color: #4B5565;
+            color: var(--ion-color-dark);
             font-size: 13px;
             font-weight: 500;
             line-height: 18px;
@@ -29,7 +30,7 @@
         }
 
         .stat-desc {
-            color: var(--colors-text-text-primary-900, #121926);
+            color: var(--ion-color-hard-hard);
             font-size: 20px;
             font-weight: 600;
             line-height: 30px;

@@ -11,7 +11,10 @@ ion-label {
     font-size: 13px;
     font-weight: 600;
     line-height: 18px;
+  
     /* 138.462% */
+    display: flex;
+    align-items: center;
     margin-block-end: 4px;
 }
 

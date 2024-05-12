@@ -58,6 +58,19 @@ export const getBaseConfig = (): BaseConfig => {
         imageURL: '../assets/images/battery-3-icon.svg',
         value: PriorityFee.Supercharger
       }
+    ],
+    Theme: [
+      {
+        name: 'Light',
+        imageURL: '../assets/images/sun-icon.svg',
+        value: 'light'
+      },
+      {
+        name: 'Dark',
+        imageURL: '../assets/images/moon-icon.svg',
+        value: 'dark'
+      }
     ]
   }
+  
 }
