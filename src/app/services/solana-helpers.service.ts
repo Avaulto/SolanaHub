@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ConnectionStore, WalletStore, connectionConfigProviderFactory } from '@heavy-duty/wallet-adapter';
 import { AccountInfo, Connection, GetProgramAccountsFilter, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, TokenBalance, TransactionInstruction } from '@solana/web3.js';
 
@@ -12,12 +12,13 @@ import {
   createBurnCheckedInstruction,
 } from 'node_modules/@solana/spl-token';
 
-import { BehaviorSubject, Observable, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT, StakeAccountShyft } from '../models';
+import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
+import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT, StakeAccountShyft, PrizePool } from '../models';
 import { ApiService } from './api.service';
 
 import { SessionStorageService } from './session-storage.service';
 import { UtilService } from './util.service';
+import { LoyaltyLeagueService } from './loyalty-league.service';
 ;
 
 @Injectable({
@@ -68,9 +69,14 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
+        const prizePool$:PrizePool = await firstValueFrom (inject(LoyaltyLeagueService).llPrizePool$)
+
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
+        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 + prizePool$ .APY_boosters.hubSOL)).toFixedNoRounding(2)
+        console.log( validatorsList[0]);
+        
       } catch (error) {
         console.error(error);
       }

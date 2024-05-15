@@ -69,7 +69,11 @@ ion-item {
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-
+ion-img{
+  width: 22px;
+  height: 22px;
+  margin-right: 13px;
+}
   ion-chip {
     scale: 0.75;
     --border-radius: 0;

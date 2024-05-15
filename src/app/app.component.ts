@@ -179,12 +179,12 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/xoaqvsym.json',
           active: true
         },
-        {
-          title: 'Lending',
-          url: `/${RoutingPath.LENDING}`,
-          icon: 'https://cdn.lordicon.com/jkgunhbs.json',
-          active: false
-        },
+        // {
+        //   title: 'Lending',
+        //   url: `/${RoutingPath.LENDING}`,
+        //   icon: 'https://cdn.lordicon.com/jkgunhbs.json',
+        //   active: false
+        // },
         // {
         //   title: 'Liquidity pools',
         //   url: `/${RoutingPath.LIQUIDITY_POOLS}`,
@@ -192,6 +192,20 @@ export class AppComponent implements OnInit {
         //   active: false
         // },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
+        // {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+        // {
+        //   title: 'Airdrops finder',
+        //   url: `/${RoutingPath.AIRDROP_FINDER}`,
+        //   icon: 'https://cdn.lordicon.com/unukghxb.json',
+        //   active: true
+        // },
+      ],
+    },
+    {
+      group: 'Explore',
+      pages: [
+        // {title: 'hubSOL', url: `/${RoutingPath.HUBSOL}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+
         {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
         {
           title: 'Airdrops finder',
@@ -199,21 +213,9 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/unukghxb.json',
           active: true
         },
+        // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
       ],
     },
-    // {
-    //   group: 'Explore',
-    //   pages: [
-    //     {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
-    //     {
-    //       title: 'Airdrops finder',
-    //       url: `/${RoutingPath.AIRDROP_FINDER}`,
-    //       icon: 'https://cdn.lordicon.com/unukghxb.json',
-    //       active: true
-    //     },
-    //     // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },
-    //   ],
-    // },
   ];
 
 

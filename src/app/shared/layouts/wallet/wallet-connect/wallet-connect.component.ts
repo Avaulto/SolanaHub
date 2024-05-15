@@ -67,7 +67,7 @@ export class WalletConnectComponent {
     switchMap(async ([wallet, watchMode]) => {
       if (wallet || watchMode) {
 
-        va.track('wallet connected');
+        // va.track('wallet connected');
         this._toasterService.msg.next({
           message: `Wallet connected`,
           segmentClass: "toastInfo",

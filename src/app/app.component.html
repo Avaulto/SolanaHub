@@ -27,7 +27,11 @@
            
             <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'" style="opacity: 1;"
               routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
+              @if(p.title === 'hubSOL'){
+                <ion-img src="/assets/images/hubsol-icon.png"/>
+              }@else {
+                <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
+              }
 
               <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
               <ion-label>{{ p.title }}</ion-label>
