@@ -54,7 +54,7 @@ export class TxInterceptorService {
     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
 
 
-    const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
+    const signature = await this._shs.connection.sendRawTransaction(rawTransaction, {skipPreflight: true});
     const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
     const txSend: toastData = {
       message: `Transaction Submitted`,
@@ -93,9 +93,8 @@ export class TxInterceptorService {
       var signatures = [];
     for await(const tx of signedTx)
     {
-      const confirmTransaction = await this._shs.connection.sendRawTransaction(
-        tx.serialize({ requireAllSignatures: false })
-      );
+      const rawTransaction =  tx.serialize({ requireAllSignatures: false })
+      const confirmTransaction = await this._shs.connection.sendRawTransaction(rawTransaction, {skipPreflight: true});
       signatures.push(confirmTransaction);
     }
 
@@ -150,7 +149,7 @@ export class TxInterceptorService {
       let signedTx = await this._shs.getCurrentWallet().signTransaction(txParam);
 
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
-      const signature = await this._shs.connection.sendRawTransaction(rawTransaction);
+      const signature = await this._shs.connection.sendRawTransaction(rawTransaction, {skipPreflight: true});
       const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
       const txSend: toastData = {
         message: `Transaction Submitted`,
