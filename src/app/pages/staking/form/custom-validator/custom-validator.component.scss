@@ -24,7 +24,7 @@
     }
 
     ion-toggle {
-        --track-background: #EEF2F6;
+        --track-background: var(--ion-color-app-bg-2);
         --handle-border-radius: 1000px;
         --border-radius: 1000px;
         --handle-height: 20px;

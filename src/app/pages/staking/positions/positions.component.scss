@@ -35,7 +35,7 @@
         width: 48%;
         &.button-solid{
             --color:var(--ion-color-primary);
-            --background:  #FAF0F8;
+            --background:  var(--ion-color-card-bg);
     
         }
     }

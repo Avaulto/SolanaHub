@@ -38,7 +38,7 @@
     }
 
     ion-toggle {
-        --track-background: #EEF2F6;
+        --track-background: var(--ion-color-app-bg-2);
         --handle-border-radius: 1000px;
         --border-radius: 1000px;
         --handle-height: 20px;
@@ -58,7 +58,7 @@
         --knob-background: white;
         --knob-box-shadow: 0px 0px 0px 2px var(--ion-color-primary);
         --pin-background: white;
-        --pin-color: #121926;
+        --pin-color: var(--ion-color-text-2);
         padding-top: 8px;
         &::part(pin) {
             padding: 5px;

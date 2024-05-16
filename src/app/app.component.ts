@@ -37,7 +37,7 @@ import { environment } from 'src/environments/environment';
 import { NgxTurnstileComponent, NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilService, WatchModeService } from './services';
 import { RoutingPath } from "./shared/constants";
-import { LoyaltyLeagueMemberComponent } from './loyalty-league-member/loyalty-league-member.component';
+import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
 import { combineLatestWith, switchMap, take } from 'rxjs';
 

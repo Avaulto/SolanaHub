@@ -24,7 +24,7 @@ ion-grid {
 ::ng-deep nft-item.checked {
     .floor-price {
         border: 1px solid #F1D5EB;
-        background: #FAF0F8;
+        background: var(--ion-color-card-bg);
         color: var(--ion-color-primary);
     }
 }

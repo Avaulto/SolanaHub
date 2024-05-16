@@ -3,5 +3,5 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    border-bottom: 1px solid var(--gray-modern-100, #EEF2F6);
+    border-bottom: 1px solid var(--gray-modern-100, var(--ion-color-app-bg-2));
 }

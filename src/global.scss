@@ -54,11 +54,10 @@ ion-col {
     margin: 0;
     padding: 0;
 }
-.dark-theme {
-    ion-item,app-table-menu ion-button {
-    color: white !important;
-}}
+
 ion-button {
+    // --background: var(--ion-color-card-bg);
+    // --color: var(--ion-color-btn);
     --transition: 0.3s ease all;
     padding: 0;
     margin: 0;
@@ -67,13 +66,16 @@ ion-button {
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
     &.button-disabled {
-        --background: #FAF0F8;
-        --color: var(--ion-color-primary);
+        --background: var(--ion-color-card-bg);
+        --color: var(--ion-color-btn);
 
         opacity: 1;
     }
 }
-
+ion-skeleton-text{
+ 
+    --background-rgb: 188, 0, 255;
+}
 ion-content,
 ion-header {
     --background: var(--ion-color-app-bg);

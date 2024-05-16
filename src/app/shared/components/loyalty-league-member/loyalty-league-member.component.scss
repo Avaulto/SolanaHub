@@ -2,12 +2,12 @@
 
     padding: var(--spacing-2xl, 20px) var(--spacing-xl, 16px);
     border-radius: var(--radius-md, 8px);
-    background: #F7E8FF;
+    background: var(--ion-color-ll);
     text-transform: capitalize;
 }
 
 ion-label {
-    color: var(--colors-text-text-primary-900, #121926);
+    color: var(--colors-text-text-primary-900, var(--ion-color-text-2));
     font-size: 13px;
     font-weight: 600;
     line-height: 18px;
@@ -19,7 +19,7 @@ ion-label {
 }
 
 #score {
-    color: var(--Secondary-900, #543B74);
+    color: var(--ion-color-ll-title);
     height: 44px;
     font-size: 36px;
     font-weight: 600;
@@ -33,7 +33,7 @@ ion-label {
 }
 
 #rank {
-    color: var(--Secondary-900, #543B74);
+    color: var(--ion-color-ll-title);
     font-size: 12px;
     font-weight: 500;
     display: flex;
@@ -47,7 +47,7 @@ ion-label {
     }
 }
 ion-progress-bar{
-    --background: #D8D0F5;
+    --background: var(--ion-color-ll-pb);
     --progress-background: var(--ion-color-secondary);
     height: 8px;
     border-radius: 8px;

@@ -83,7 +83,7 @@ ion-text {
 }
 :host ::ng-deep stake-position.disabled{
     .stake-card{
-        background: #FAF0F8;
+        background: var(--ion-color-card-bg);
         opacity: 0.8;
     }
 }

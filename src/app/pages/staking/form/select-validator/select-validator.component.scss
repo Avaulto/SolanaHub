@@ -33,7 +33,7 @@
         }
 
         ion-label {
-            color: var(--colors-text-text-primary-900, #121926);
+            color: var(--colors-text-text-primary-900, var(--ion-color-text-2));
             font-size: 12px;
             font-weight: 500;
             line-height: 18px;
@@ -67,7 +67,7 @@
     ion-chip {
         font-size: 12px;
         border: 1px solid #F1D5EB !important;
-        background: #FAF0F8 !important;
+        background: var(--ion-color-card-bg) !important;
         color: var(--ion-color-primary) !important;
         font-weight: 600;
         margin-inline-end: 8px;

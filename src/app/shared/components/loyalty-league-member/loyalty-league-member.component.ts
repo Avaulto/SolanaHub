@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { SolanaHelpersService, UtilService } from '../services';
-import { LoyaltyLeagueService } from '../services/loyalty-league.service';
+import { SolanaHelpersService, UtilService } from '../../../services';
+import { LoyaltyLeagueService } from '../../../services/loyalty-league.service';
 import { Subject, combineLatestWith, map, shareReplay } from 'rxjs';
-import { loyalMember } from '../models';
+import { loyalMember } from '../../../models';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon } from "@ionic/angular/standalone";
 import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { trophyOutline } from 'ionicons/icons';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
-import { TooltipModule } from '../shared/layouts/tooltip/tooltip.module';
-import { TooltipPosition } from '../shared/layouts/tooltip/tooltip.enums';
+import { TooltipModule } from '../../layouts/tooltip/tooltip.module';
+import { TooltipPosition } from '../../layouts/tooltip/tooltip.enums';
 
 export interface Rank {
   rank: number
@@ -64,7 +64,7 @@ export class LoyaltyLeagueMemberComponent implements OnInit {
     map(([wallet, lllb]) => {
   
       
-      const position = lllb.loyaltyLeagueMembers.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) || 0
+      const position = lllb.loyaltyLeagueMembers.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) +1 || 0
 
       this.rank$.next({
         rank: position === -1 ? 0 : position,

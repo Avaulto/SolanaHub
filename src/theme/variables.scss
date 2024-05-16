@@ -7,9 +7,18 @@
 	--ion-padding: 20px;
 	--ion-font-family: 'Inter', sans-serif;
 	--ion-color-app-bg: #f3f4f6;
+	--ion-color-app-bg-2: #EEF2F6;
 	--ion-color-page-top: #E9E9E6;
-	--ion-color-menu:#fff;
+	--ion-color-menu: #fff;
 	--ion-color-btn-bg: #FFF3FB;
+	--ion-color-text-2: #121926;
+	--ion-color-card-bg: #FAF0F8;
+	--ion-color-btn: #B84794;
+
+	// ll page
+	--ion-color-ll: #F7E8FF;
+	--ion-color-ll-title: #543B74;
+	--ion-color-ll-pb: #D8D0F5;
 
 	--ion-color-primary: #9B3678;
 	--ion-color-primary-rgb: 155, 54, 120;
@@ -60,7 +69,7 @@
 	--ion-color-light-shade: #e0e0e0;
 	--ion-color-light-tint: #ffffff;
 
-	--ion-color-medium:#344054;
+	--ion-color-medium: #344054;
 	--ion-color-medium-rgb: 105, 117, 134;
 	--ion-color-medium-contrast: #ffffff;
 	--ion-color-medium-contrast-rgb: 255, 255, 255;
@@ -69,21 +78,40 @@
 
 	--ion-color-hard-hard: #0D121C;
 	--ion-color-dark: #364152;
-	--ion-color-dark-rgb: 54,65,82;
+	--ion-color-dark-rgb: 54, 65, 82;
 	--ion-color-dark-contrast: #ffffff;
-	--ion-color-dark-contrast-rgb: 255,255,255;
+	--ion-color-dark-contrast-rgb: 255, 255, 255;
 	--ion-color-dark-shade: #303948;
 	--ion-color-dark-tint: #4a5463;
 }
-:root .dark-theme{
-	--ion-color-app-bg: #0e0e11;// #121a35;
-	--ion-color-page-top: #0e0e11;
-	--ion-color-btn-bg: #42102f;
+
+:root .dark-theme {
+	--ion-color-app-bg: #131313; // #121a35;
+	--ion-color-page-top: #1D1D1D;
+	--ion-color-btn-bg: #1E131B;
 	--ion-color-medium: #f3f3f3;
-	--ion-color-menu:#18181b;
-	--ion-color-hard-hard: #fff;
-	--ion-color-dark: #fff;
+	--ion-color-menu: #0D0D0D;
+	--ion-color-app-bg-2: #1A1A1A;
+	--ion-color-hard-hard: #FFFFFF;
+	--ion-color-dark: #898E95;
+	--ion-color-text-2: #925FCC;
+	--ion-color-card-bg: #B84794;
+	--ion-color-btn: #0D0D0D;
+
+	// ll page
+	--ion-color-ll: #1A1520;
+	--ion-color-ll-title: #FFFFFF; 
+	--ion-color-ll-pb: #322442;
+
+
+	--ion-color-primary: #B84794;
+	--ion-color-primary-rgb: 184, 71, 148;
+	--ion-color-primary-contrast: #1D1D1D;
+	--ion-color-primary-contrast-rgb: 255, 255, 255;
+	--ion-color-primary-shade: #a23e82;
+	--ion-color-primary-tint: #bf599f;
 }
+
 // @media (prefers-color-scheme: dark) {
 //   /*
 //    * Dark Colors

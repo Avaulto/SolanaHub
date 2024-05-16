@@ -44,7 +44,7 @@ ion-segment-button {
         display: flex;
         text-transform: capitalize;
         flex-direction: column;
-        color: var(--colors-text-text-primary-900, #121926);
+        color: var(--colors-text-text-primary-900, var(--ion-color-text-2));
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;

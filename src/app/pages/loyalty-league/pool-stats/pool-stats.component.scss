@@ -26,7 +26,7 @@
     }
 
     .value {
-        color: var(--colors-text-text-primary-900, #121926);
+        color: var(--colors-text-text-primary-900, var(--ion-color-text-2));
         font-size: 24px;
         font-weight: 600;
         line-height: 32px;

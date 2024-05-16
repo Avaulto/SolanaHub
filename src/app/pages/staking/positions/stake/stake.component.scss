@@ -65,7 +65,7 @@
     }
 
     .validator-name {
-        color: #121926;
+        color: var(--ion-color-text-2);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
@@ -93,7 +93,7 @@
         display: flex;
         flex-wrap: wrap;
         .sol-amount {
-            color: #121926;
+            color: var(--ion-color-text-2);
             margin-inline-end: 2px;
         }
 
