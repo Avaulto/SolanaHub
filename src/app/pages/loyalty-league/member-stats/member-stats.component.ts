@@ -21,4 +21,16 @@ export class MemberStatsComponent implements OnChanges{
 ngOnChanges(changes: SimpleChanges): void {
 
 }
+formatToSignificantDigit(num) {
+  // Convert the number to a string
+  const numStr = num.toString();
+  
+  // Find the index of the first non-zero digit after the decimal point
+  const firstNonZeroIndex = numStr.indexOf('.') + 1 + [...numStr.split('.')[1]].findIndex(char => char !== '0');
+  
+  // Slice the string to include the significant digit
+  const formattedStr = numStr.slice(0, firstNonZeroIndex + 1);
+  
+  return formattedStr;
+}
 }
