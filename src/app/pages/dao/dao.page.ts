@@ -62,6 +62,7 @@ export class DaoPage implements OnInit {
       
       // extract token address
       const communityMintHoldings = [...new Set(realmsPositions.map(position => position.poolTokens.map(token => token.address)).flat())]
+      // const communityMintHoldings = [...new Set(realmsPositions.map(position => position.poolTokens.map(token => {return {address: token.address,decimals: token.decimals }})).flat())]
 
       this.aggregateDAO(communityMintHoldings)
 

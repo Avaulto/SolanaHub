@@ -25,7 +25,7 @@
     <ion-label id="wallet-domain">{{loyaltyLeagueMember?.hubDomainHolder}}</ion-label>
     }
     <div id="wallet-address">
-      {{shortenAddress(wallet?.adapter?.publicKey?.toBase58() || wallet)}}
+      {{shortenAddress(wallet?.adapter?.publicKey?.toBase58() || wallet.publicKey?.toBase58())}}
     </div>
   </div>
   <ion-icon name="chevron-down-outline"></ion-icon>

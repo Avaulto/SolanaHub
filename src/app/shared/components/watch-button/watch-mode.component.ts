@@ -34,7 +34,8 @@ export class WatchModeComponent implements OnInit {
     const walletAddress = ev.detail.value
 
     if (PublicKey.isOnCurve(walletAddress)) {
-      this._watchModeService.watchedWallet$.next(walletAddress)
+      const publicKey = new PublicKey(walletAddress)
+      this._watchModeService.watchedWallet$.next({publicKey})
       
     }
 

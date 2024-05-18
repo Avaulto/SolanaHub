@@ -178,11 +178,12 @@ export interface TransactionHistory{
     value:      number;
     link:       string;
     holdings: holding[]
-}
-
-export interface PoolToken {
+  }
+  
+  export interface PoolToken {
     imgURL: string;
     symbol: string;
+    decimals?: number;
     address:string;
 }
 export interface holding {

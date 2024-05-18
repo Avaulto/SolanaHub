@@ -14,6 +14,7 @@ import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject, Subject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
+import { PublicKey } from '@solana/web3.js';
 
 
 @Injectable({
@@ -39,13 +40,13 @@ export class PortfolioService {
     private _watchModeService: WatchModeService
   ) {
     // this._fetchPortfolioService.getTurnStileToken().subscribe(token => {
-    this._watchModeService.watchedWallet$.subscribe(async walletAddress => {
-      if (walletAddress){
+    // this._watchModeService.watchedWallet$.subscribe(async (wallet:WalletExtended) => {
+    //   if (wallet){
 
-        while (!this._utils.turnStileToken) await this._utils.sleep(500);
-        this.getPortfolioAssets(walletAddress, this._utils.turnStileToken,true,true)
-      }
-    })
+    //     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
+    //     // this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken,true,true)
+    //   }
+    // })
     this._shs.walletExtended$.subscribe(async (wallet: WalletExtended) => {
       if (wallet) {
 
@@ -210,8 +211,8 @@ export class PortfolioService {
               records.push({
                 value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
                 imgURL: group.image,
-                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || [],
-                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: a.condition } }) || [],
+                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol ,decimals: a.decimals} }) || [],
                 type: group.label,
                 link: group.website,
                 platform: group.platformId
@@ -230,8 +231,8 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: a.condition } }) || [],
-              poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: a.condition } }) || [],
+              poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId
@@ -246,8 +247,8 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: 'credit' } }) || [],
-              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: 'credit' } }) || [],
+              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId
@@ -259,8 +260,8 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, condition: 'debt' } }) || [],
-              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: 'debt' } }) || [],
+              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId
@@ -418,5 +419,6 @@ export class PortfolioService {
     this.walletHistory.set(null)
     // clear state of wallet connect
     this._watchModeService.watchedWallet$.next(null)
+    console.log('clear session')
   }
 }

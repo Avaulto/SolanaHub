@@ -74,7 +74,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
           //@ts-ignore
   
           
-          const airdrop = prizePool.rebates * loyalMember?.prizePoolShare
+          const airdrop = prizePool.hubSOLrebates * loyalMember?.prizePoolShare
 
           const pointsBreakDown = loyalMember.pointsBreakDown
           const loyalMemberRes = {
@@ -136,7 +136,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
         hubDomainHolder: staker.hubDomainHolder,
         totalPoints: this._utilService.formatBigNumbers(staker.loyaltyPoints),
-        weeklyAirdrop: prizePool.rebates * staker?.prizePoolShare
+        weeklyAirdrop: prizePool.hubSOLrebates * staker?.prizePoolShare
       }
     })
     if(wallet){

@@ -120,8 +120,7 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
       // set stored theme
-      console.log(this._utilService.theme + 'theme');
-    
+
       this._renderer.addClass(this.document.body,this._utilService.theme + '-theme')
 
 
@@ -159,7 +158,7 @@ export class AppComponent implements OnInit {
           title: 'Notifications',
           url: `/${RoutingPath.NOTIFICATIONS}`,
           icon: 'https://cdn.lordicon.com/vspbqszr.json',
-          active: false
+          active: true
         },
         // {
         //   title: 'Settings',

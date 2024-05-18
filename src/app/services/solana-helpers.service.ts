@@ -19,6 +19,7 @@ import { ApiService } from './api.service';
 import { SessionStorageService } from './session-storage.service';
 import { UtilService } from './util.service';
 import { LoyaltyLeagueService } from './loyalty-league.service';
+import { WatchModeService } from './watch-mode.service';
 ;
 
 @Injectable({
@@ -29,7 +30,7 @@ export class SolanaHelpersService {
   readonly SolanaHubVoteKey: string = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public connection: Connection;
   // create a single source of trute for wallet adapter
-  private _walletExtended$: BehaviorSubject<WalletExtended> = new BehaviorSubject(null as WalletExtended);
+  private _walletExtended$: BehaviorSubject<Partial<WalletExtended> | WalletExtended > = new BehaviorSubject(null);
   // add balance utility
   public walletExtended$ = this._walletExtended$.asObservable().pipe(
     switchMap(async (wallet: any) => {
@@ -47,16 +48,18 @@ export class SolanaHelpersService {
     private _walletStore: WalletStore,
     private _sessionStorageService: SessionStorageService,
     private _utils: UtilService,
+    private _watchModeService: WatchModeService
   ) {
     const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)
     this._connectionStore.connection$.subscribe(conection => this.connection = conection);
     this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
+    this._watchModeService.watchedWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
   }
   public updateRPC(rpcURL){
     this._connectionStore.setEndpoint(rpcURL)
   }
-  public getCurrentWallet(): WalletExtended {
+  public getCurrentWallet(): WalletExtended | Partial<WalletExtended>  | any{
     return this._walletExtended$.value
   }
 

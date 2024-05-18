@@ -60,14 +60,12 @@ export class UtilService {
   public get priorityFee()  {
     const baseFee = PriorityFee.Fast
     const config = Number(JSON.parse(this._localStorage.getData('priority-fee'))?.value) || baseFee
-    console.log(config);
-    
+
     return config;
   }
   public get theme()  {
     const config = JSON.parse(this._localStorage.getData('theme'))?.value || 'light'
-    console.log(config);
-    
+
     return config;
   }
 
