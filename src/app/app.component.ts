@@ -158,7 +158,7 @@ export class AppComponent implements OnInit {
           title: 'Notifications',
           url: `/${RoutingPath.NOTIFICATIONS}`,
           icon: 'https://cdn.lordicon.com/vspbqszr.json',
-          active: true
+          active: false
         },
         // {
         //   title: 'Settings',
