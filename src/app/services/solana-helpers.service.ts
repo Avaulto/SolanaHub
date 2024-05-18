@@ -48,7 +48,8 @@ export class SolanaHelpersService {
     private _walletStore: WalletStore,
     private _sessionStorageService: SessionStorageService,
     private _utils: UtilService,
-    private _watchModeService: WatchModeService
+    private _watchModeService: WatchModeService,
+    private _lls:LoyaltyLeagueService
   ) {
     const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)
@@ -72,7 +73,7 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
-        const prizePool$:PrizePool = await firstValueFrom (inject(LoyaltyLeagueService).llPrizePool$)
+        const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
 
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
