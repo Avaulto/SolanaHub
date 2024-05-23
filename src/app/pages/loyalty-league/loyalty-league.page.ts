@@ -178,8 +178,8 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
   public async openFaqPopOver(){
     let config = {
       imgUrl: null,
-      title: 'How loyalty league even works?',
-      desc: 'this is a quick overview on the most common questions for the program.'
+      title: 'Loyalty League FAQ',
+      desc: 'This is a quick overview of the Loyalty Program, for detailed information visit the docs in the end'
     }
     const modal = await this._modalCtrl.create({
       component: ModalComponent,
