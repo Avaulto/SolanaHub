@@ -40,6 +40,7 @@ import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
 import { combineLatestWith, switchMap, take } from 'rxjs';
+import { NotificationsService } from './services/notifications.service';
 
 
 @Component({
@@ -89,13 +90,14 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-   
-    return wallet || watchMode;
-  }))
 
+      return wallet || watchMode;
+    }))
 
+  public notifIndicator = this._notifService.notifIndicator
   constructor(
-    private _watchModeService:WatchModeService,
+    private _notifService: NotificationsService,
+    private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,
     private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,
@@ -119,11 +121,9 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-      // set stored theme
 
-      this._renderer.addClass(this.document.body,this._utilService.theme + '-theme')
-
-
+    // set stored theme
+    this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
     this._activeRoute.queryParams
       .subscribe((params) => {
         const refWallet = params['refWallet']
@@ -134,6 +134,16 @@ export class AppComponent implements OnInit {
 
       }
       );
+
+      this._walletStore.connected$.subscribe(connected =>{
+        if(connected){
+          setTimeout(() => {
+            console.log(connected);
+            
+            this._notifService.checkAndSetIndicator()
+          });
+        }
+      })
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
@@ -205,7 +215,7 @@ export class AppComponent implements OnInit {
       pages: [
         // {title: 'hubSOL', url: `/${RoutingPath.HUBSOL}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
 
-        {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+        { title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true },
         {
           title: 'Airdrops finder',
           url: `/${RoutingPath.AIRDROP_FINDER}`,

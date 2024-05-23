@@ -18,6 +18,7 @@ import { ListNftModalComponent } from 'src/app/pages/collectibles/list-nft-modal
 import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal/burn-nft-modal.component';
 import { NftsService } from 'src/app/services/nfts.service';
 import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/unstake-lst-modal/unstake-lst-modal.component';
+import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-modal.component';
 
 @Component({
   selector: 'app-modal',
@@ -37,7 +38,8 @@ import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/
     SendNftModalComponent,
     ListNftModalComponent,
     BurnNftModalComponent,
-    UnstakeLstModalComponent
+    UnstakeLstModalComponent,
+    FaqModalComponent
   ]
 
 })
@@ -50,7 +52,7 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
+  @Input() componentName: 'll-faq-modal' | 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,

@@ -4,9 +4,9 @@
 
       @if(notification){
       <div>
-        <ion-img [src]="notification?.imgURL" />
+        <ion-img [src]="notification?.imgURL || 'assets/images/unknown.svg' " />
       </div>
-      <ion-label>{{notification?.title || notification?.name }}</ion-label>
+      <ion-label>{{notification?.metadata?.title || notification?.name }}</ion-label>
       }@else{
       <ion-skeleton-text class="temp-img" [animated]="true" />
       <ion-skeleton-text [animated]="true" />

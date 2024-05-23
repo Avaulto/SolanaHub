@@ -220,7 +220,6 @@ export class NativeStakeService {
     });
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
-      const stakeAuth = new PublicKey(stakeAccount.address)
       return await this._txi.sendTx([withdrawTx], walletOwnerPK, null, record)
     } catch (error) {
       console.error(error)

@@ -3,7 +3,7 @@ import {
   IonButton,
   IonIcon
 } from '@ionic/angular/standalone';
-import { Stake, Validator } from 'src/app/models';
+import { Stake, Validator, WalletExtended } from 'src/app/models';
 import { addIcons } from 'ionicons';
 import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water, swapVertical } from 'ionicons/icons';
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
@@ -63,7 +63,7 @@ export class OptionsPopoverComponent implements OnInit {
   }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()
-    await this._nss.deactivateStakeAccount(this.stake.address, walletOwner)
+    await this._nss.deactivateStakeAccount(this.stake.address, walletOwner as WalletExtended)
   }
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet().publicKey

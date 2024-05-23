@@ -8,7 +8,7 @@
           Stake with SolanaHub and gain <span>extra</span> rewards
         </div>
         <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
-          Boost your score to unlock weekly SOL rewards.</div>
+          Boost your score to unlock weekly SOL rewards. <span (click)="openFaqPopOver()">How it works?</span></div>
         @if(loyaltyLeagueMember$ | async){
         <app-member-stats [loyalMember]="loyalMember" />
         }@else {

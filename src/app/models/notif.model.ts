@@ -8,6 +8,8 @@ export interface DappMessageExtended {
   timestamp: Date;
   author: AccountAddress;
   icon?: string;
-  title?:string;
   message?: string;
+  metadata?: {
+    title?:string;
+  }
 }

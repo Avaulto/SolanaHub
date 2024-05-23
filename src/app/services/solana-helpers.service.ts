@@ -60,7 +60,7 @@ export class SolanaHelpersService {
   public updateRPC(rpcURL){
     this._connectionStore.setEndpoint(rpcURL)
   }
-  public getCurrentWallet(): WalletExtended | Partial<WalletExtended>  | any{
+  public getCurrentWallet(): WalletExtended | Partial<WalletExtended> {
     return this._walletExtended$.value
   }
 

@@ -32,7 +32,7 @@
     "@capacitor/status-bar": "5.0.6",
     "@coral-xyz/anchor": "^0.29.0",
     "@dialectlabs/blockchain-sdk-solana": "1.2.0",
-    "@dialectlabs/sdk": "1.9.1",
+    "@dialectlabs/sdk": "1.9.3",
     "@heavy-duty/wallet-adapter": "^0.8.0",
     "@ionic/angular": "^7.5.0",
     "@lordicon/element": "^1.4.2",

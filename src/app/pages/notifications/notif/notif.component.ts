@@ -16,8 +16,6 @@ export class NotifComponent implements OnInit {
 
   ngOnInit() {
     if(this.notification){
-      console.log(this.notification.type);
-      
       this.notification.icon = this.segmentIcon(this.notification.type);
     }
   }

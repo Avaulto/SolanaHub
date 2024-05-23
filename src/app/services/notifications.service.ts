@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { DialectSdk, Dialect, BlockchainSdk, ReadOnlyDapp, DappAddress, DappMessage, BlockchainType, Address, AddressType, Thread, ThreadMemberScope } from '@dialectlabs/sdk';
 import {
   Solana,
@@ -8,54 +8,116 @@ import {
 import { SolanaHelpersService } from './solana-helpers.service';
 import { Keypair } from '@solana/web3.js';
 import { DappMessageExtended } from '../models';
+import { LocalStorageService } from './local-storage.service';
+import { Subject } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationsService {
-  private _activeDapps = ['SolanaHub','Meteora','AllDomains Notifier', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
+  private _activeDapps = ['SolanaHub', "Texture", 'Meteora', 'AllDomains Notifier', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
   private _dialectSDK: DialectSdk<BlockchainSdk>
-  constructor(private _shs: SolanaHelpersService) {
+  constructor(
+    private _localStorageService: LocalStorageService,
+    private _shs: SolanaHelpersService,
+    private _router: Router
+  ) {
+
     this.createSdk()
   }
+  public walletNotifications: WritableSignal<Partial<DappMessageExtended[]>> = signal(null)
 
+  public notifIndicator = signal(null)
+
+
+  private _updateSDK() {
+    try {
+
+
+      this._dialectSDK = Dialect.sdk(
+        {
+          environment: 'production',
+          dialectCloud: {
+            tokenStore: 'local-storage',
+            tokenLifetimeMinutes: 43200 // 30 days
+          }
+        },
+        SolanaSdkFactory.create({
+          wallet: this._shs.getCurrentWallet() as NodeDialectSolanaWalletAdapter
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+
+    }
+  }
   public createSdk() {
     this._dialectSDK = Dialect.sdk(
       {
         environment: 'production',
         dialectCloud: {
           tokenStore: 'local-storage',
-          tokenLifetimeMinutes: 43200
-
+          tokenLifetimeMinutes: 43200 // 30 days
         }
       },
       SolanaSdkFactory.create({
-        wallet: this._shs.getCurrentWallet() as NodeDialectSolanaWalletAdapter
+        wallet: NodeDialectSolanaWalletAdapter.create(Keypair.generate())// this._shs.getCurrentWallet() as NodeDialectSolanaWalletAdapter
       }),
     );
     return this._dialectSDK
   }
   public async getSubscribedDapps(): Promise<DappAddress[]> {
-
+    this._updateSDK()
     const subs = await this._dialectSDK.wallet.dappAddresses.findAll()
 
     // const filteredDapps = dapps.filter(d => d.name && d.avatarUrl && this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
     return subs
   }
-  public async getDapps(): Promise<ReadOnlyDapp[]> {
-    const dapps = await this._dialectSDK.dapps.findAll({
-      // verified: true,
-    })
-    console.log(dapps);
-    
-    const filteredDapps = dapps.filter(d => d.name && d.avatarUrl && this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
-    filteredDapps.sort((x, y) => { return x.name.toLowerCase() === 'solanahub' ? -1 : y.name.toLowerCase() === 'solanahub' ? 1 : 0; });
-    return filteredDapps
+  public dialectDapps: ReadOnlyDapp[] = null
+  public async getOrCreateDapps(): Promise<ReadOnlyDapp[]> {
+    if (this.dialectDapps) {
+      return this.dialectDapps
+    } else {
+
+      const dapps = await this._dialectSDK.dapps.findAll({
+        verified: true,
+      })
+      console.log(dapps);
+      // d.avatarUrl &&
+      const filteredDapps = dapps.filter(d => this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
+      filteredDapps.sort((x, y) => { return x.name.toLowerCase() === 'solanahub' ? -1 : y.name.toLowerCase() === 'solanahub' ? 1 : 0; });
+
+      this.dialectDapps = filteredDapps;
+      return filteredDapps
+    }
   }
-  public async getMessages(dapps: ReadOnlyDapp[]): Promise<Partial<DappMessageExtended[]>> {
-    const sdk1Messages = await this._dialectSDK.wallet.messages.findAllFromDapps({
-      // dappVerified: true,
-    });
-    const extendMessages = sdk1Messages.map(m => {
+  public async checkAndSetIndicator() {
+    // check if access key is stored locally 
+    const hasSession = this._localStorageService.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
+    if (hasSession) {
+      // update SDK to logged pubkey
+      this._updateSDK();
+      // fetch all messages
+      const sdk1Messages = await this._dialectSDK.wallet.messages.findAllFromDapps({
+        dappVerified: true,
+      });
+      this._messages = sdk1Messages
+      // set number of messages indicator only if not on notif page
+      if(this._router.url !== '/notifications'){
+        this.notifIndicator.set(sdk1Messages.length)
+      }
+    }
+  }
+  private _messages: DappMessage[] = null
+  public async getAndSetMessages(dapps: ReadOnlyDapp[]): Promise<void> {
+
+    if (!this._messages) {
+      this._messages = await this._dialectSDK.wallet.messages.findAllFromDapps({
+        dappVerified: true,
+      });
+    }
+    // extend message data
+    const extendMessages = this._messages.map(m => {
       const dappData = dapps.find(d => d.address === m.author)
       if (dappData) {
         let type = ''
@@ -71,22 +133,26 @@ export class NotificationsService {
           case "meteora":
           case "drift":
           case "saber":
+          case "texture":
             type = 'Trading'
             break;
           default:
             type = 'Generic'
             break;
         }
-        return {type, imgURL: dappData.avatarUrl, name: dappData.name, ...m }
+        return { type, imgURL: dappData.avatarUrl, name: dappData.name, ...m }
       }
       return m
     })
-    console.log(sdk1Messages, 'extended:', extendMessages);
-    
-    return extendMessages as Partial<DappMessageExtended[]>
+
+    console.log(this._messages, 'extended:', extendMessages);
+    if (extendMessages.length > 0) {
+      this.walletNotifications.set(extendMessages as Partial<DappMessageExtended[]>)
+    }
+
   }
 
-  async setupUserSubscription(dappAccountAddress: string): Promise<Thread> {
+  async setupUserSubscription(dappAccountAddress: string, flag: boolean): Promise<Thread> {
     // Subscriber subscribes to receive notifications (direct-to-wallet for in-app feed) from dapp.
     // This means first registering an "address" (which can be as simple as a public key, but also
     // an email, phone number, etc.), and then using that address to subscribe for notifications
@@ -97,7 +163,7 @@ export class NotificationsService {
     console.log(`Subscriber address: ${JSON.stringify(address)}`);
 
     // Next, we use that address to subscribe for notifications from a dapp.
-    const dappAddress: DappAddress = await this.getOrCreateSubscription(address.id, dappAccountAddress);
+    const dappAddress: DappAddress = await this.getOrFlagSubscription(address.id, dappAccountAddress, flag);
     console.log(
       `Subscriber is subscribing to dapp address: ${JSON.stringify(dappAddress)}`,
     );
@@ -132,9 +198,11 @@ export class NotificationsService {
   }
 
 
-  async getOrCreateSubscription(
+  // get and enable/disable or create
+  async getOrFlagSubscription(
     addressId: string,
     dappAccountAddress: string,
+    flag: boolean
   ): Promise<DappAddress> {
     // Subscribe for notifications from a dapp using an address (from function above)
 
@@ -158,7 +226,7 @@ export class NotificationsService {
       return this._dialectSDK.wallet.dappAddresses.create({
         dappAccountAddress: dappAccountAddress, // The address of the "dapp" sender
         addressId, // The user/subscriber address they'd like to use to subscribe
-        enabled: true, // Subscriptions are enableable/disableable. We start by enabling
+        enabled: flag, // Subscriptions are enableable/disableable. We start by enabling
       });
     }
     return subscription;

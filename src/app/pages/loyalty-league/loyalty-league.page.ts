@@ -16,7 +16,9 @@ import { LoyaltyBooster, PrizePool } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { ModalController } from '@ionic/angular';
 
+import { ModalComponent } from 'src/app/shared/components';
 @Component({
   selector: 'app-loyalty-league',
   templateUrl: './loyalty-league.page.html',
@@ -49,6 +51,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     // this.prizePool$.next(prizePool)
   }
   constructor(
+    private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     public _utilService: UtilService,
     private _shs: SolanaHelpersService
@@ -172,4 +175,21 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     this.columns.set(this.regularTemplate())
   }
 
+  public async openFaqPopOver(){
+    let config = {
+      imgUrl: null,
+      title: 'How loyalty league even works?',
+      desc: 'this is a quick overview on the most common questions for the program.'
+    }
+    const modal = await this._modalCtrl.create({
+      component: ModalComponent,
+      componentProps: {
+        componentName:'ll-faq-modal',
+        config
+      },
+      mode: 'ios',
+      cssClass: 'faq-modal',
+    });
+    modal.present();
+  }
 }

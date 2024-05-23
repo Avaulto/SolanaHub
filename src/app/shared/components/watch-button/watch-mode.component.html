@@ -2,7 +2,7 @@
 <!-- <ngx-turnstile #turnStile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0" /> -->
 
 @if(showInput()){
-    <ion-input placeholder="Set address" (ionInput)="watchPortfolio($event)"/>
+    <ion-input placeholder="Set address" (ionChange)="watchPortfolio($event)"/>
 }@else {   
     <ion-button (click)="showInput.set(true)" id="manual-wallet" fill="clear">watch mode</ion-button>
 }

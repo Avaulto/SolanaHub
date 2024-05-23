@@ -7,3 +7,19 @@ ion-grid {
 .data-set {
     margin-block-end: 30px;
 }
+
+
+#no-notification {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: var(--ion-color-dark);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+
+    ion-img {
+        margin-block-end: 20px;
+        width: 130px;
+    }
+}

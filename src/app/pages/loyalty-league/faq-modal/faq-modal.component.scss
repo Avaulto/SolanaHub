@@ -1,0 +1,70 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+ion-row {
+    height: inherit;
+}
+
+ion-accordion-group {
+    margin-block-end: 20px;
+}
+
+ion-accordion {
+    border-radius: var(--radius-xl, 12px);
+    border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
+    background: var(--Colors-Gray-modern-50, #F8FAFC);
+    margin-block-end: 8px;
+
+    ion-item {
+        --border-color: transparent;
+        --background: var(--Colors-Gray-modern-50, #F8FAFC);
+
+        ::ng-deep {
+            ion-icon {
+                color: #9AA4B2;
+                font-size: 20px;
+            }
+        }
+    }
+
+    ion-label {
+        color: #4B5565;
+        font-weight: 500;
+        line-height: 18px;
+    }
+
+    ion-text {
+        padding: 0px 15px 15px;
+        display: block;
+        color: #697586;
+    }
+}
+
+ion-text {
+    color: var(--ion-color-dark);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    display: block;
+}
+
+ion-button {
+    --color: var(--ion-color-dark);
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Component-colors-Components-Buttons-Secondary-button-secondary-border, #CDD5DF);
+    --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, #FFF);
+    font-size: 13px;
+    font-weight: 600;
+
+    ion-icon {
+        margin-inline: 5px;
+    }
+}
+
+#resource {
+    flex-direction: column;
+    display: flex;
+    justify-content: end;
+}

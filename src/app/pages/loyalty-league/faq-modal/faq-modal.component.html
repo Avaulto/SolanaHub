@@ -1,0 +1,68 @@
+<ion-row>
+  <ion-col>
+    <ion-accordion-group [value]="['first']">
+      <ion-accordion value="first">
+        <ion-item lines="none" slot="header">
+          <ion-label>is there a minimum stake to participate in the program? </ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content">Yes, the sum of all your native or liquid stake stake need to be
+          above
+          1 SOL</ion-text>
+      </ion-accordion>
+      <ion-accordion>
+        <ion-item lines="none" slot="header">
+          <ion-label>I staked but i cant see my points, WHY?</ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content">Loyalty points snapshots are taken daily. In some cases, your
+          points
+          may not update due to delays in third-party snapshots (such as from Marinade/Solblaze, for
+          instance).</ion-text>
+      </ion-accordion>
+      <ion-accordion>
+        <ion-item lines="none" slot="header">
+          <ion-label>How to boost my Loyalty Points?</ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content"> 
+          <ul>
+            <li>stake native sol</li>
+            <li>hold hubSOL</li>
+            <li>direct stake bSOL/mSOL</li>
+            <li>vote DAO tokens like MNDE/BLZE</li>
+            <li>refer a friend and receive 20% of their total points</li>
+            <li>own .hub domain(<a href="https://alldomains.id/domains/hub" target="_blank">here</a>)</li>
+          </ul>
+        </ion-text>
+      </ion-accordion>
+      <!-- <ion-accordion>
+        <ion-item lines="none" slot="header">
+          <ion-label>How my airdrop is calculated?</ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content">The airdrop formula is:
+          <code>your points / total points * weekly airdrop</code> </ion-text>
+      </ion-accordion> -->
+      <ion-accordion>
+        <ion-item lines="none" slot="header">
+          <ion-label>How often do i get an airdrop?</ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content">Airdrop get sended directly to your wallet every Week </ion-text>
+      </ion-accordion>
+      <ion-accordion>
+        <ion-item lines="none" slot="header">
+          <ion-label>My points dont move much, why?</ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content">Your points is calculated daily base on the amount of your stake,
+          it
+          will only change if the multiplier of method your staking with is changing </ion-text>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ion-col>
+  <ion-col id="resource">
+    <ion-text>
+      <!-- Enhance your knowledge by diving deep into the Loyalty League -->
+      For further information, visit:
+    </ion-text>
+      <a href="https://docs.solanahub.app/solanahub/loyalty-league" target="_blank">
+        <ion-button color="light">Documentation <ion-icon name="exit-outline"></ion-icon></ion-button>
+      </a>
+  </ion-col>
+</ion-row>
