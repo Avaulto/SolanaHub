@@ -9,7 +9,8 @@ import { TableMenuComponent } from 'src/app/shared/layouts/mft/table-menu/table-
 import { EmptySubsComponent } from './empty-subs/empty-subs.component';
 import { NotifComponent } from './notif/notif.component';
 import { DappMessageExtended } from 'src/app/models';
-import { ModalController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
+import { ConfigComponent } from './config/config.component';
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.page.html',
@@ -41,11 +42,11 @@ import { ModalController } from '@ionic/angular';
 export class NotificationsPage implements OnInit {
 
   constructor(
-    private _modalCtrl: ModalController,
+    private _popoverController: PopoverController,
     private _notif: NotificationsService
   ) { }
   public dappsList: WritableSignal<ReadOnlyDapp[]> = signal(null)
-  public walletSubs = signal(null);
+  public walletSubscribedDapps = this._notif.walletSubscribedDapps
   public walletNotifications: WritableSignal<DappMessageExtended[]> = this._notif.walletNotifications
   public walletNotificationsFiltered = computed(() => {
     if(this.notificationType() != 'all'){
@@ -62,19 +63,14 @@ export class NotificationsPage implements OnInit {
 
   // notifIndicator = this._notif.notifIndicator
   async ngOnInit() {
-    console.log(this.walletNotifications());
-    
     const dapps = await this._notif.getOrCreateDapps()
 
     this.dappsList.set(dapps)
 
-    const getSubs = await this._notif.getSubscribedDapps();
+    // get wallet subscriptions
+    await this._notif.getSubscribedDapps();
 
-    if (getSubs.length > 0) {
-      console.log(getSubs);
-      
-      this.walletSubs.set(getSubs)
-    }
+
 
     await this._notif.getAndSetMessages(dapps)
 
@@ -82,16 +78,26 @@ export class NotificationsPage implements OnInit {
 
   }
 
-  // async openConfig(){
-  //   const modal = await this._modalCtrl.create({
-  //     component: config,
-  //     componentProps: {
-  //       componentName:'ll-faq-modal',
-  //       config
-  //     },
-  //     mode: 'ios',
-  //     cssClass: 'faq-modal',
-  //   });
-  //   modal.present();
-  // }
+  async openConfig(e){
+
+    const dappListWithSubFlag = this.dappsList().map(dapp => {
+      const haveSub = this.walletSubscribedDapps().find(sub => sub.dappId === dapp.id)?.enabled || false
+      return {...dapp, subscribed: haveSub}
+    })
+  console.log(dappListWithSubFlag);
+  
+    const modal = await this._popoverController.create({
+      component: ConfigComponent,
+      componentProps: {
+         dappListWithSubFlag
+      },
+      event: e,
+      alignment: 'start',
+      side: 'bottom',
+      showBackdrop: false,
+      mode: "md",
+      size: 'auto'
+    });
+    modal.present();
+  }
 }

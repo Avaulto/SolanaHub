@@ -1,0 +1,12 @@
+#subs{
+    // width: 200px;
+}
+.sub-profile{
+    width: 250px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    align-items: center;
+    font-size: 14px;
+    color: var(--ion-color-dark);
+}

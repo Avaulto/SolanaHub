@@ -1,3 +1,11 @@
-<p>
-  config works!
-</p>
+<div id="subs"> 
+
+  @for (sub of dappListWithSubFlag; track $index) {
+    <div class="sub-profile">
+      <div>{{sub.name}}</div>
+      <div>
+        <ion-toggle (ionChange)="updateSubscription($event, sub)" mode="ios" [enableOnOffLabels]="true" [checked]="sub.subscribed"/>
+      </div>
+    </div>
+  }
+</div>

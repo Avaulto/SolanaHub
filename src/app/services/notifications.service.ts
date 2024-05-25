@@ -1,5 +1,5 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
-import { DialectSdk, Dialect, BlockchainSdk, ReadOnlyDapp, DappAddress, DappMessage, BlockchainType, Address, AddressType, Thread, ThreadMemberScope } from '@dialectlabs/sdk';
+import { DialectSdk, Dialect, BlockchainSdk, ReadOnlyDapp, DappAddress, DappMessage, BlockchainType, Address, AddressType, Thread, ThreadMemberScope, Dapp } from '@dialectlabs/sdk';
 import {
   Solana,
   SolanaSdkFactory,
@@ -11,6 +11,7 @@ import { DappMessageExtended } from '../models';
 import { LocalStorageService } from './local-storage.service';
 import { Subject, timestamp } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToasterService } from './toaster.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,6 +19,7 @@ export class NotificationsService {
   private _activeDapps = ['SolanaHub', "Texture", 'Meteora', 'AllDomains Notifier', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
   private _dialectSDK: DialectSdk<BlockchainSdk>
   constructor(
+    private _toasterService: ToasterService,
     private _localStorageService: LocalStorageService,
     private _shs: SolanaHelpersService,
     private _router: Router
@@ -25,6 +27,7 @@ export class NotificationsService {
 
     this.createSdk()
   }
+  public walletSubscribedDapps:  WritableSignal<Partial<DappAddress[]>> = signal(null)
   public walletNotifications: WritableSignal<Partial<DappMessageExtended[]>> = signal(null)
 
   public notifIndicator = signal(null)
@@ -69,7 +72,9 @@ export class NotificationsService {
   public async getSubscribedDapps(): Promise<DappAddress[]> {
     this._updateSDK()
     const subs = await this._dialectSDK.wallet.dappAddresses.findAll()
-
+    this.walletSubscribedDapps.set(subs)
+    console.log('lasts sub update', this.walletSubscribedDapps());
+    
     // const filteredDapps = dapps.filter(d => d.name && d.avatarUrl && this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
     return subs
   }
@@ -93,7 +98,7 @@ export class NotificationsService {
   }
 
   // store last notification to calc what is the last read notification.
-  private storeLastNotification(notif){
+  private storeLastNotification(notif) {
     this._localStorageService.saveData('lastNotifDate', notif)
   }
   public async checkAndSetIndicator() {
@@ -107,21 +112,21 @@ export class NotificationsService {
         dappVerified: true,
       });
       this._messages = sdk1Messages
-      
+
       // set number of messages indicator only if not on notif page
-      if(this._router.url !== '/notifications'){
+      if (this._router.url !== '/notifications') {
         // get last read message
-        const lastMessageDate: Date =  JSON.parse(this._localStorageService.getData('lastNotifDate'));
+        const lastMessageDate: Date = JSON.parse(this._localStorageService.getData('lastNotifDate'));
         const unixDate = (timestamp) => Math.floor(new Date(timestamp).getTime() / 1000)
-        const unreadMessage = lastMessageDate ? sdk1Messages.filter(m => unixDate(m.timestamp) > unixDate(lastMessageDate) ) : sdk1Messages;
+        const unreadMessage = lastMessageDate ? sdk1Messages.filter(m => unixDate(m.timestamp) > unixDate(lastMessageDate)) : sdk1Messages;
         this.notifIndicator.set(unreadMessage.length);
         this.walletNotifications.set(this._messages as any)
       }
     }
   }
-  public notifRead(){
+  public notifRead() {
     // console.log('store last notif');
-    
+
     this.storeLastNotification(JSON.stringify(this._messages[0].timestamp))
     this.notifIndicator.set(null)
   }
@@ -169,7 +174,7 @@ export class NotificationsService {
 
   }
 
-  async setupUserSubscription(dappAccountAddress: string, flag: boolean): Promise<Thread> {
+  async setupUserSubscription(dappAccountAddress: string, flag: boolean){
     // Subscriber subscribes to receive notifications (direct-to-wallet for in-app feed) from dapp.
     // This means first registering an "address" (which can be as simple as a public key, but also
     // an email, phone number, etc.), and then using that address to subscribe for notifications
@@ -182,16 +187,23 @@ export class NotificationsService {
     // Next, we use that address to subscribe for notifications from a dapp.
     const dappAddress: DappAddress = await this.getOrFlagSubscription(address.id, dappAccountAddress, flag);
     console.log(
-      `Subscriber is subscribing to dapp address: ${JSON.stringify(dappAddress)}`,
+      `Subscriber status is:${flag} to dapp address: ${JSON.stringify(dappAddress)}`,
     );
 
     // Lastly, we create the notifications thread, which is just a one-way
     // messaging thread between the dapp and the subscribing user.
-    const notificationsThread: Thread = await this.getOrCreateNotificationsThread(dappAccountAddress);
-    console.log(
-      `Notifications thread created with id: ${notificationsThread.id}`,
-    );
-    return notificationsThread;
+    this.getSubscribedDapps()
+    this._toasterService.msg.next({ message: 'subscription preference updated', segmentClass: "toastInfo" })
+    if(flag){
+
+      const notificationsThread: Thread = await this.getOrCreateNotificationsThread(dappAccountAddress);
+      console.log(
+        `Notifications thread created with id: ${notificationsThread.id}`,
+      );
+      return notificationsThread;
+    }
+
+    return null;
   }
   async getOrCreateAddress(): Promise<Address> {
     // Register an address
@@ -244,6 +256,12 @@ export class NotificationsService {
         dappAccountAddress: dappAccountAddress, // The address of the "dapp" sender
         addressId, // The user/subscriber address they'd like to use to subscribe
         enabled: flag, // Subscriptions are enableable/disableable. We start by enabling
+      });
+    } else {
+      console.log(`Dapp ready to update...`, 'flag:', flag);
+      return await this._dialectSDK.wallet.dappAddresses.update({
+        dappAddressId: subscription.id,
+        enabled: flag,
       });
     }
     return subscription;

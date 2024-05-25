@@ -3,10 +3,10 @@
     description="Stay informed with timely notifications tailored to deliver the most important data TO YOU</br> Powered by Dialect"></page-header>
   <ion-grid>
     
-    @if(walletSubs() || walletNotifications()?.length){
+    @if(walletSubscribedDapps()?.length || walletNotifications()?.length){
     <div class="data-set">
       <table-head label="Access your Data" desc="making your cross dApss activity on solana - EASY">
-        <ion-button size="small" id="active-subs" color="light">
+        <ion-button size="small" id="active-subs" color="light" (click)="openConfig($event)">
           
           <span class="ion-hide-lg-down">
             Subscriptions
@@ -54,7 +54,7 @@
     </div>
     } @else{
     
-        <empty-subs [dappsList]="dappsList" />
+        <empty-subs updateTextBtn="subscribe" [dappsList]="dappsList" />
   
     }
   </ion-grid>

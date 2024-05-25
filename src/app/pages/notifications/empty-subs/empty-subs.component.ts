@@ -44,10 +44,14 @@ export class EmptySubsComponent implements OnInit {
       const turnSubOn = true
       await this._notif.setupUserSubscription(dappPublicKey, turnSubOn);
     }
-    const dapps =  await this._notif.getOrCreateDapps()
+    const dapps = await this._notif.getOrCreateDapps()
+      // update subscriptions state
+      await this._notif.getSubscribedDapps()
+      
     await this._notif.getAndSetMessages(dapps)
     // console.log(sub);
-    
+
+  
     // console.log(addressId, dappPublicKey);
     // const sub = await this._notif.subscribe(addressId,dappPublicKey)
     // console.log(sub,addressId, dappPublicKey);
