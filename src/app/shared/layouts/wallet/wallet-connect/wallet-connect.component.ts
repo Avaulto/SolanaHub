@@ -52,8 +52,7 @@ export class WalletConnectComponent {
       if (loyalMember) {
         return loyalMember
       }
-      console.log(loyalMember);
-
+    
 
       return {} as loyalMember
 

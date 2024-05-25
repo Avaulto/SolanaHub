@@ -7,8 +7,32 @@ ion-grid {
 .data-set {
     margin-block-end: 30px;
 }
+#active-subs{
 
+    border-radius: var(--radius-sm, 6px);
+    border: 1px solid var(--Component-colors-Components-Buttons-Secondary-button-secondary-border, #CDD5DF);
+    // --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, #FFF);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: capitalize;
+    --padding-bottom: 4px;
+    --padding-end: 8px;
+    --padding-top: 4px;
+    --padding-start: 8px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animated-icon {
+        width: 20px;
+        height: 20px;
 
+    }
+    span{
+        color: var(--ion-color-dark);
+        margin-inline-end:4px ;
+    }
+}
 #no-notification {
     display: flex;
     align-items: center;

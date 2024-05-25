@@ -21,7 +21,7 @@ export class NotifComponent implements OnInit {
   }
   segmentIcon = (type: string) => {
     let icon = ''
-    switch (type.toLowerCase()) {
+    switch (type?.toLowerCase()) {
       case 'dao':
         icon = 'https://cdn.lordicon.com/ivugxnop.json'
         break;

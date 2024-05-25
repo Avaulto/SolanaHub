@@ -1,7 +1,12 @@
 .table-info{
-    padding: 20px 32px;
+   
+    padding: 20px 2vh;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     border-bottom: 1px solid var(--gray-modern-100, var(--ion-color-app-bg-2));
+
+}
+#table-content{
+    max-width: 85%;
 }

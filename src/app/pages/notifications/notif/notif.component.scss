@@ -6,6 +6,7 @@
     padding: 20px;
 }
 .notif-head {
+    flex-wrap: wrap;
     text-transform: capitalize;
     display: flex;
     justify-content: space-between;

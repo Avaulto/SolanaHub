@@ -75,8 +75,7 @@ export class LoyaltyLeagueMemberComponent implements OnInit {
    
         return loyalMember
       }
-      console.log(loyalMember);
-
+  
 
       return {} as loyalMember
 

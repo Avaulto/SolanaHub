@@ -67,13 +67,13 @@ export class OptionsPopoverComponent implements OnInit {
   }
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
-    let validatorVoteIdentity = null;
+    let validatorVoteIdentity: string = null;
     console.log(this.stake.state);
     
     if(this.stake.state === 'deactivating'){
       validatorVoteIdentity = this.stake.validator.vote_identity
     }else{
-      validatorVoteIdentity = await this.openValidatorModal();
+      validatorVoteIdentity = (await this.openValidatorModal()).vote_identity;
 
     }
     await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)

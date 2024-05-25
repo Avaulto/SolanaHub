@@ -2,16 +2,26 @@
   <page-header title="Notifications"
     description="Stay informed with timely notifications tailored to deliver the most important data TO YOU</br> Powered by Dialect"></page-header>
   <ion-grid>
-    @if(walletNotificationsFiltered() || walletSubs()){
+    
+    @if(walletSubs() || walletNotifications()?.length){
     <div class="data-set">
-      <table-head label="Access your Data" desc="making your cross dApss activity on solana - EASY"></table-head>
+      <table-head label="Access your Data" desc="making your cross dApss activity on solana - EASY">
+        <ion-button size="small" id="active-subs" color="light">
+          
+          <span class="ion-hide-lg-down">
+            Subscriptions
+          </span>
+          <animated-icon icon="https://cdn.lordicon.com/vspbqszr.json"/>
+        </ion-button>
+      </table-head>
       <ion-row class="ion-align-items-center ">
 
 
         <div class="ion-margin-start ion-hide-lg-down"></div>
         <ion-col>
           <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]"
-            (onSelectTab)="tabSelected($event)" />
+            (onSelectTab)="tabSelected($event)" >
+          </app-table-menu>
         </ion-col>
         <div class="ion-margin-end ion-hide-lg-down"></div>
 
@@ -43,7 +53,9 @@
       }
     </div>
     } @else{
-    <empty-subs [dappsList]="dappsList" />
+    
+        <empty-subs [dappsList]="dappsList" />
+  
     }
   </ion-grid>
 </ion-content>

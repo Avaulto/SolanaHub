@@ -9,7 +9,7 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { Keypair } from '@solana/web3.js';
 import { DappMessageExtended } from '../models';
 import { LocalStorageService } from './local-storage.service';
-import { Subject } from 'rxjs';
+import { Subject, timestamp } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
@@ -91,6 +91,11 @@ export class NotificationsService {
       return filteredDapps
     }
   }
+
+  // store last notification to calc what is the last read notification.
+  private storeLastNotification(notif){
+    this._localStorageService.saveData('lastNotifDate', notif)
+  }
   public async checkAndSetIndicator() {
     // check if access key is stored locally 
     const hasSession = this._localStorageService.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
@@ -102,11 +107,23 @@ export class NotificationsService {
         dappVerified: true,
       });
       this._messages = sdk1Messages
+      
       // set number of messages indicator only if not on notif page
       if(this._router.url !== '/notifications'){
-        this.notifIndicator.set(sdk1Messages.length)
+        // get last read message
+        const lastMessageDate: Date =  JSON.parse(this._localStorageService.getData('lastNotifDate'));
+        const unixDate = (timestamp) => Math.floor(new Date(timestamp).getTime() / 1000)
+        const unreadMessage = lastMessageDate ? sdk1Messages.filter(m => unixDate(m.timestamp) > unixDate(lastMessageDate) ) : sdk1Messages;
+        this.notifIndicator.set(unreadMessage.length);
+        this.walletNotifications.set(this._messages as any)
       }
     }
+  }
+  public notifRead(){
+    // console.log('store last notif');
+    
+    this.storeLastNotification(JSON.stringify(this._messages[0].timestamp))
+    this.notifIndicator.set(null)
   }
   private _messages: DappMessage[] = null
   public async getAndSetMessages(dapps: ReadOnlyDapp[]): Promise<void> {
