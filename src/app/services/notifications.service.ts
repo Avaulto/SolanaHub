@@ -35,8 +35,6 @@ export class NotificationsService {
 
   private _updateSDK() {
     try {
-
-
       this._dialectSDK = Dialect.sdk(
         {
           environment: 'production',
@@ -46,7 +44,7 @@ export class NotificationsService {
           }
         },
         SolanaSdkFactory.create({
-          wallet: this._shs.getCurrentWallet() as NodeDialectSolanaWalletAdapter
+          wallet: this._shs.getCurrentWallet() as any
         }),
       );
     } catch (error) {
@@ -73,8 +71,6 @@ export class NotificationsService {
     this._updateSDK()
     const subs = await this._dialectSDK.wallet.dappAddresses.findAll()
     this.walletSubscribedDapps.set(subs)
-    console.log('lasts sub update', this.walletSubscribedDapps());
-    
     // const filteredDapps = dapps.filter(d => d.name && d.avatarUrl && this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
     return subs
   }

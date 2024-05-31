@@ -1,8 +1,8 @@
 #subs{
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: none;
 } 
 .sub-profile{
-    width: 250px;
     display: flex;
     justify-content: space-between;
     padding: 10px;

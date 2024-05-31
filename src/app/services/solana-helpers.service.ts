@@ -35,6 +35,7 @@ export class SolanaHelpersService {
   public walletExtended$ = this._walletExtended$.asObservable().pipe(
     switchMap(async (wallet: any) => {
       if (wallet) {
+        wallet.signMessage = async (message) => await firstValueFrom(this._walletStore.signMessage(message))
         wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
       }
       return wallet;

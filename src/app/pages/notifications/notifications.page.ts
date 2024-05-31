@@ -96,7 +96,8 @@ export class NotificationsPage implements OnInit {
       side: 'bottom',
       showBackdrop: false,
       mode: "md",
-      size: 'auto'
+      size: 'auto',
+      cssClass:'notif-config'
     });
     modal.present();
   }

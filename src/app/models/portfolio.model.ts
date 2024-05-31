@@ -2,10 +2,12 @@ import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js"
 import { Validator } from "./stakewiz.model"
 import { JupToken } from "./jup-token.model"
 import { StakePool } from "./stake-pool.model"
+import { Observable } from "rxjs";
 
 export interface WalletExtended {
   balance?: number,
   publicKey: PublicKey,
+  signMessage(message: Uint8Array): Observable<Uint8Array> | undefined;
   signTransaction: (transaction: Transaction | VersionedTransaction) => Promise<Transaction | VersionedTransaction>,
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
 }
