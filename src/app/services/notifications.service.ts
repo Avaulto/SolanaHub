@@ -16,7 +16,7 @@ import { ToasterService } from './toaster.service';
   providedIn: 'root'
 })
 export class NotificationsService {
-  private _activeDapps = ['SolanaHub', "Texture", 'Meteora', 'AllDomains Notifier', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
+  private _activeDapps = ['SolanaHub', "Texture", 'Meteora','marginfi', 'AllDomains Notifier', 'Rafffle', 'Tensor', 'Kamino', 'Solana Feature Updates', 'Dialect Notifications', 'Drift', 'Realms', 'Marinade', 'Squads', 'Saber', 'Dialect', 'MonkeDAO', 'Mango']
   private _dialectSDK: DialectSdk<BlockchainSdk>
   constructor(
     private _toasterService: ToasterService,
@@ -68,7 +68,10 @@ export class NotificationsService {
     return this._dialectSDK
   }
   public async getSubscribedDapps(): Promise<DappAddress[]> {
+    const hasSession = this._localStorageService.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
+    if (!hasSession) {
     this._updateSDK()
+    }
     const subs = await this._dialectSDK.wallet.dappAddresses.findAll()
     this.walletSubscribedDapps.set(subs)
     // const filteredDapps = dapps.filter(d => d.name && d.avatarUrl && this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
@@ -83,7 +86,6 @@ export class NotificationsService {
       const dapps = await this._dialectSDK.dapps.findAll({
         verified: true,
       })
-      console.log(dapps);
       // d.avatarUrl &&
       const filteredDapps = dapps.filter(d => this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
       filteredDapps.sort((x, y) => { return x.name.toLowerCase() === 'solanahub' ? -1 : y.name.toLowerCase() === 'solanahub' ? 1 : 0; });
@@ -150,6 +152,7 @@ export class NotificationsService {
             break;
           case "meteora":
           case "drift":
+          case "marginfi":
           case "saber":
           case "texture":
             type = 'Trading'

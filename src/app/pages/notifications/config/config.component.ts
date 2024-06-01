@@ -36,7 +36,6 @@ export class ConfigComponent implements OnInit {
     const addressId = sub.id;
     const dappPublicKey = sub.address
     const toggleSub = event.detail.checked
-    console.log(sub, "subscribe:",toggleSub);
     await this._notif.setupUserSubscription(dappPublicKey, toggleSub);
 
     await this._notif.getOrCreateDapps()

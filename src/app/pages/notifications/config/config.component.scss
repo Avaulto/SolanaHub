@@ -4,9 +4,13 @@
 } 
 .sub-profile{
     display: flex;
+    text-transform: capitalize;
     justify-content: space-between;
     padding: 10px;
     align-items: center;
     font-size: 14px;
     color: var(--ion-color-dark);
+}
+ion-toggle{
+    scale: 0.9;
 }
