@@ -39,10 +39,7 @@ export class ConfigComponent implements OnInit {
     await this._notif.setupUserSubscription(dappPublicKey, toggleSub, appName);
 
     await this._notif.getOrCreateDapps()
-    // get messages per se
-    // await this._notif.getAndSetMessages(dapps)
-
-
+    // get messages per sub
     // update subscriptions state
     await this._notif.getSubscribedDapps()
   }
