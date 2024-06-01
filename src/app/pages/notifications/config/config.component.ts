@@ -33,10 +33,10 @@ export class ConfigComponent implements OnInit {
     // const dappPublicKey = this.bulkSelection()[0].address
     // console.log(this.bulkSelection()[0]);
 
-    const addressId = sub.id;
+    const appName = sub.name;
     const dappPublicKey = sub.address
     const toggleSub = event.detail.checked
-    await this._notif.setupUserSubscription(dappPublicKey, toggleSub);
+    await this._notif.setupUserSubscription(dappPublicKey, toggleSub, appName);
 
     await this._notif.getOrCreateDapps()
     // get messages per se

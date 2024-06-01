@@ -38,11 +38,11 @@ export class EmptySubsComponent implements OnInit {
     // const dappPublicKey = this.bulkSelection()[0].address
     // console.log(this.bulkSelection()[0]);
     for (const iterator of this.bulkSelection()) {
-      const addressId = iterator.id;
+      const appName = iterator.name;
       const dappPublicKey = iterator.address
-      console.log(addressId, dappPublicKey);
+      
       const turnSubOn = true
-      await this._notif.setupUserSubscription(dappPublicKey, turnSubOn);
+      await this._notif.setupUserSubscription(dappPublicKey, turnSubOn, appName);
     }
     const dapps = await this._notif.getOrCreateDapps()
       // update subscriptions state

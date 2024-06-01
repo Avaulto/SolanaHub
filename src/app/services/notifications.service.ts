@@ -5,12 +5,12 @@ import {
   SolanaSdkFactory,
   NodeDialectSolanaWalletAdapter
 } from '@dialectlabs/blockchain-sdk-solana';
+import va from '@vercel/analytics';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { Keypair } from '@solana/web3.js';
 import { DappMessageExtended } from '../models';
 import { LocalStorageService } from './local-storage.service';
-import { Subject, timestamp } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { ToasterService } from './toaster.service';
 @Injectable({
   providedIn: 'root'
@@ -173,7 +173,8 @@ export class NotificationsService {
 
   }
 
-  async setupUserSubscription(dappAccountAddress: string, flag: boolean){
+  async setupUserSubscription(dappAccountAddress: string, flag: boolean, appName: string){
+    va.track('register to notification', { dapp: appName, subscribe: flag })
     // Subscriber subscribes to receive notifications (direct-to-wallet for in-app feed) from dapp.
     // This means first registering an "address" (which can be as simple as a public key, but also
     // an email, phone number, etc.), and then using that address to subscribe for notifications
