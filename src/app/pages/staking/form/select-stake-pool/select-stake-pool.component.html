@@ -6,6 +6,7 @@
     <ion-segment mode="ios" #loaded (ionChange)="selectPool($event)" [value]="defaultPool">
       @for (pool of stakePoolFiltered(); track $index) {
       <ion-segment-button [value]="pool">
+        
         <div class="pool-profile">
           <ion-avatar>
 
@@ -15,32 +16,42 @@
             <ion-label>{{pool?.poolName}}</ion-label>
             <ion-text>{{ pool?.totalStake | number: '1.2-2'}} SOL</ion-text>
           </div>
+          <div>
+
+        
           <ion-chip color="primary">
-            
+
             @if(pool.poolName === 'hub'){
-              {{ pool?.apy * (1 + (prizePool$ | async).APY_boosters.hubSOL) | percent : '1.2-2'}}
-              
+            {{ pool?.apy * (1 + (prizePool$ | async).APY_boosters.hubSOL) | percent : '1.2-2'}}
+             
+            
             }@else {
-              {{pool?.apy | percent : '1.2-2'}}
+            {{pool?.apy | percent : '1.2-2'}}
             }
+           
           </ion-chip>
+          <!-- @if(pool.poolName === 'hub'){
+              <div>Boosted</div>
+            
+            } -->
+          </div>
         </div>
       </ion-segment-button>
       }@empty {
       @for (pool of [1,2,3]; track $index) {
-        <ion-segment-button [value]="pool">
-      <div class="pool-profile">
-        <ion-avatar>
+      <ion-segment-button [value]="pool">
+        <div class="pool-profile">
+          <ion-avatar>
 
-          <ion-skeleton-text animated />
-        </ion-avatar>
-        <div class="pool-name">
-          <ion-label><ion-skeleton-text  style="width: 40px;    margin: 4px auto;" animated /></ion-label>
-          <ion-text><ion-skeleton-text  style="width: 60px;    margin: 4px auto;" animated /> SOL</ion-text>
+            <ion-skeleton-text animated />
+          </ion-avatar>
+          <div class="pool-name">
+            <ion-label><ion-skeleton-text style="width: 40px;    margin: 4px auto;" animated /></ion-label>
+            <ion-text><ion-skeleton-text style="width: 60px;    margin: 4px auto;" animated /> SOL</ion-text>
+          </div>
+          <ion-chip color="primary"><ion-skeleton-text style="width: 30px;" animated />%</ion-chip>
         </div>
-        <ion-chip color="primary"><ion-skeleton-text  style="width: 30px;" animated />%</ion-chip>
-      </div>
-    </ion-segment-button>
+      </ion-segment-button>
       }
       }
     </ion-segment>

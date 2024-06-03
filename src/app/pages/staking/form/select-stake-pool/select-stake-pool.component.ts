@@ -11,10 +11,13 @@ import {
   IonContent,
   IonPopover,
   IonSkeletonText,
-  IonChip
- } from '@ionic/angular/standalone';
+  IonChip, 
+  IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { alertCircleOutline } from 'ionicons/icons';
 import { StakePool } from 'src/app/models';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+import { AlertComponent } from 'src/app/shared/components';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 @Component({
@@ -22,7 +25,8 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
   templateUrl: './select-stake-pool.component.html',
   styleUrls: ['./select-stake-pool.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon, 
+    AlertComponent,
     AsyncPipe,
     IonChip, 
     IonLabel,
@@ -55,6 +59,7 @@ export class SelectStakePoolComponent implements AfterViewInit {
 
 prizePool$ = this.lls.llPrizePool$
 constructor(private lls: LoyaltyLeagueService){
+  addIcons({alertCircleOutline})
   effect(() => {
     if (this.stakePoolFiltered()) {
       const ev: any = { detail: { value: this.stakePoolFiltered()[0] } }
@@ -64,6 +69,18 @@ constructor(private lls: LoyaltyLeagueService){
       });
     }
   })
+}
+showHubTip = false
+showTip(event, pool){
+  console.log(event,pool);
+  
+  if(pool.name =='hub'){
+    this.showHubTip = true
+  }
+}
+alert(){
+  console.log('alert');
+  
 }
   ngAfterViewInit() {
 
