@@ -14,7 +14,7 @@ export class LoyaltyLeagueService {
   private _loyaltyLeaguePrizePool$ = new BehaviorSubject(null as PrizePool);
   public llPrizePool$ = this._loyaltyLeaguePrizePool$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
 
-  protected api = this._utilService.serverlessAPI + '/api/loyalty-points'
+  protected api = this._utilService.serverlessAPI + '/api/loyalty-league'
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService,

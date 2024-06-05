@@ -47,12 +47,15 @@ export class SelectStakePoolComponent implements AfterViewInit {
   @ViewChild('popoverTpl', { static: true }) popoverTpl: TemplateRef<any> | any;
   @Output() onSelectPool = new EventEmitter();
   @Input() stakePools: WritableSignal<StakePool[]> = null
-  private _listedPools = ['hub', 'solblaze', 'marinade']
+  private _listedPools = ['hub', 'solblaze', 'the vault']
   stakePoolFiltered = computed(() => this.stakePools()?.filter(p => this._listedPools.includes(p.poolName.toLowerCase())))
   position: TooltipPosition = TooltipPosition.BELOW;
   public defaultPool:StakePool =null;
   selectPool(ev){
-
+    setTimeout(() => {
+      console.log(this.stakePools());
+      
+    },1000);
     this.onSelectPool.emit(ev.detail.value)
     
   }
