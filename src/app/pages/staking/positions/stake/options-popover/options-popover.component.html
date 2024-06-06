@@ -87,5 +87,14 @@
         </div>
       </ion-button>
     }
+    @if(stake.pool.poolName == 'the vault'){
+
+      <ion-button (click)="setDirectStakevSOL()"  expand="block" fill="clear">
+        <div class="ion-text-left">
+          <ion-icon name="navigate-outline"></ion-icon>
+          set direct stake validator
+        </div>
+      </ion-button>
+    }
   }
   </div>

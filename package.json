@@ -30,7 +30,7 @@
     "@capacitor/haptics": "5.0.6",
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/status-bar": "5.0.6",
-    "@coral-xyz/anchor": "^0.29.0",
+    "@coral-xyz/anchor": "^0.30.0",
     "@dialectlabs/blockchain-sdk-solana": "1.2.0",
     "@dialectlabs/sdk": "1.9.3",
     "@heavy-duty/wallet-adapter": "^0.8.0",

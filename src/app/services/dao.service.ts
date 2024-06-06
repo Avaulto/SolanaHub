@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {PublicKey, Connection, Keypair, clusterApiUrl, Transaction, sendAndConfirmTransaction} from "@solana/web3.js";
-import {Governance} from "./realms/index";
+// import {Governance} from "./realms/index";
 import {   Gov } from '../models/dao.model';
 import { UtilService } from './util.service';
 @Injectable({
@@ -29,9 +29,9 @@ export class DaoService {
     
   }
     
-  public initGovSDK(connection: Connection, programId?: PublicKey){
-    return new Governance(connection,programId);
-  }
+  // public initGovSDK(connection: Connection, programId?: PublicKey){
+  //   return new Governance(connection,programId);
+  // }
   // Fetch all the DAOs the user has voting power in
   // public async  fetchDAOs(gov: Governance, user:PublicKey):Promise<DAOonChain[]> {
   //   return await gov.getTokenOwnerRecordsFromPubkey(user)

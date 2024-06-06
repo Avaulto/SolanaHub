@@ -10,6 +10,8 @@ import { TxInterceptorService } from './tx-interceptor.service';
 import { NativeStakeService } from './native-stake.service';
 import { MarinadeResult } from '@marinade.finance/marinade-ts-sdk/dist/src/marinade.types';
 import { depositSolIntoSanctum, depositStakeIntoSanctum, withdrawStakeFromSanctum } from './sanctum';
+import { vSOLdirectStake } from './vSOL/set-validator-directed-stake';
+import { ToasterService } from './toaster.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,7 @@ export class LiquidStakeService {
   public stakePools: StakePool[] = []
   public marinadeSDK: Marinade;
   constructor(
+    private _toasterService: ToasterService,
     private _nss: NativeStakeService,
     private _txi: TxInterceptorService,
     private _shs: SolanaHelpersService,
@@ -70,13 +73,14 @@ export class LiquidStakeService {
     const record = { message: 'liquid staking', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
 
     const lamportsBN = new BN(lamports);
-    if (pool.poolName.toLowerCase() === 'marinade') {
+    const poolName = pool.poolName.toLowerCase()
+    if (poolName === 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(walletOwnerPK)
       }
       return await this._marinadeStakeSOL(lamportsBN, walletOwnerPK, validatorVoteAccount, record)
     } else {
-      return await this._stakePoolStakeSOL(new PublicKey(pool.poolPublicKey), walletOwnerPK, lamportsBN, validatorVoteAccount, record)
+      return await this._stakePoolStakeSOL(new PublicKey(pool.poolPublicKey), walletOwnerPK, lamportsBN, validatorVoteAccount, poolName, record)
     }
   }
   private async _marinadeStakeSOL(lamports: BN, walletOwnerPK: PublicKey, validatorVoteAccount?: string, record?) {
@@ -102,7 +106,8 @@ export class LiquidStakeService {
     poolPublicKey: PublicKey,
     walletOwnerPK: PublicKey,
     sol: BN,
-    validatorVoteAccount: string,
+    validatorVoteAddress: string,
+    poolName: string,
     record
   ) {
     let ix = await depositSol(
@@ -115,21 +120,27 @@ export class LiquidStakeService {
       // new PublicKey(environment.platformATAbSOLFeeCollector)
     );
     let ixs: any = [ix]
-    if (validatorVoteAccount) {
-      const ix2 = this.stakeCLS(validatorVoteAccount, walletOwnerPK);
+    if (validatorVoteAddress) {
+      const ix2 = this.stakeCLS(validatorVoteAddress, walletOwnerPK);
       ixs.push(ix2)
     }
 
     const txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
-    if (validatorVoteAccount) {
-      await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAccount}&txid=${txId}`);
+    if (validatorVoteAddress) {
+      if (poolName === 'solbalze') {
+        await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAddress}&txid=${txId}`);
+      }
+      if (poolName === 'the-vault') {
+        const wallet = this._shs.getCurrentWallet()
+        await this.setvSOLDirectStake(wallet, validatorVoteAddress)
+      }
     }
     return txId
 
 
   }
 
-  public async depositStakeHubSolPool(walletOwnerPK: PublicKey, stakeAccountPK:PublicKey){
+  public async depositStakeHubSolPool(walletOwnerPK: PublicKey, stakeAccountPK: PublicKey) {
     const validatorVoteAccount = new PublicKey('7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh');
     let depositTx = await depositStakeIntoSanctum(
       this._shs.connection,
@@ -139,28 +150,28 @@ export class LiquidStakeService {
       stakeAccountPK
     );
     const record = {
-      message: 'liquid staking', data: {pool: 'hub'}
+      message: 'liquid staking', data: { pool: 'hub' }
     }
-    await this._txi.sendTx(depositTx.instructions, walletOwnerPK,depositTx.signers,record)
+    await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
-  public async depositSolHubSolPool(walletOwnerPK: PublicKey, lamports:number){
- 
+  public async depositSolHubSolPool(walletOwnerPK: PublicKey, lamports: number) {
+
     const record = {
       message: 'liquid staking', data: {
         pool: 'hub',
         amount: lamports / LAMPORTS_PER_SOL
       }
     }
-  let depositTx = await depositSolIntoSanctum(
-    this._shs.connection,
-    new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'), // pool address
-    walletOwnerPK,
-    lamports,
-    undefined,
-    undefined,
-    undefined
-);
-   await this._txi.sendTx(depositTx.instructions, walletOwnerPK,depositTx.signers,record)
+    let depositTx = await depositSolIntoSanctum(
+      this._shs.connection,
+      new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'), // pool address
+      walletOwnerPK,
+      lamports,
+      undefined,
+      undefined,
+      undefined
+    );
+    await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
 
   public async getDirectStake(walletAddress): Promise<DirectStake> {
@@ -182,7 +193,14 @@ export class LiquidStakeService {
     }
     return directStake
   }
+  async setvSOLDirectStake(wallet, validatorVoteAddress: string) {
 
+    await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
+    this._toasterService.msg.next({
+      message: 'Validator direct stake set',
+      segmentClass: 'toastInfo'
+    })
+  }
   async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
     const { publicKey } = this._shs.getCurrentWallet()
     // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
@@ -204,10 +222,10 @@ export class LiquidStakeService {
         const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
         const txIns: Transaction = depositAccount.transaction
         await this._txi.sendTx([txIns], publicKey, null, record);
-      } else if(pool.poolName.toLowerCase() == 'hub'){
-        this.depositStakeHubSolPool(publicKey,stakeAccountPK)
+      } else if (pool.poolName.toLowerCase() == 'hub') {
+        this.depositStakeHubSolPool(publicKey, stakeAccountPK)
       }
-      
+
       else {
 
         let ix = await depositStake(
@@ -264,30 +282,30 @@ export class LiquidStakeService {
 
   }
 
-  public async unstake(pool:StakePool, sol: number) {
+  public async unstake(pool: StakePool, sol: number) {
     // single validator pools
     // const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
     // // Multi validator sanctum pools
     // const MVP = ['jupSOL']
 
-    
+
     const { publicKey } = this._shs.getCurrentWallet()
     const lamportsBN = new BN(sol);
-    const record = {message:`${pool.poolName} unstake` , data:{amount: sol }};
+    const record = { message: `${pool.poolName} unstake`, data: { amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(publicKey)
       }
       const { transaction } = await this.marinadeSDK.liquidUnstake(lamportsBN)
       // sign and send the `transaction`
-      await this._txi.sendTx([transaction], publicKey,null,record)
-    } else if(pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti'){
+      await this._txi.sendTx([transaction], publicKey, null, record)
+    } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
       console.log(pool);
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
       const MultiValidatorsPool_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
-      const STAKE_POOL_PROGRAM_ID =  pool.type === 'SanctumSpl' ? singalValidatorsPool_PROGRAM_ID : MultiValidatorsPool_PROGRAM_ID
+      const STAKE_POOL_PROGRAM_ID = pool.type === 'SanctumSpl' ? singalValidatorsPool_PROGRAM_ID : MultiValidatorsPool_PROGRAM_ID
       console.log(STAKE_POOL_PROGRAM_ID);
-      
+
       let transaction = await withdrawStakeFromSanctum(
         STAKE_POOL_PROGRAM_ID,
         this._shs.connection,
