@@ -85,28 +85,7 @@ export class WalletConnectComponent {
     distinctUntilChanged(),
     shareReplay(),
     map(([wallet, watchModeWallet]: any) => {
-      // let shortedAddress = ''
-      // if (wallet || address) {
-
-      //   const walletAddress = wallet.adapter.publicKey?.toBase58() || address;
-      //   this.shortedAddress = this._utilsService.addrUtil(walletAddress).addrShort
-      // }
-      // const conWallet = wallet || {address}
-      // conWallet.shortedAddress
-      // console.log(wallet, watchModeWallet);
-      // let walletShort = null
-      // if (wallet) {
-      //   console.log(wallet.adapter.publicKey);
-        
-      //   walletShort = this._utilsService.addrUtil(wallet.adapter.publicKey.toBase58()).addrShort
-      //   wallet.walletShort = walletShort
-      // }
-      // if (watchModeWallet) {
-      //   walletShort = this._utilsService.addrUtil(watchModeWallet).addrShort
-      //   watchModeWallet = walletShort
-      // }
       return wallet || watchModeWallet
-
     }),
     shareReplay()
   )

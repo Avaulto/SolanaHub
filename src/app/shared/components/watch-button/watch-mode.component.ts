@@ -4,14 +4,16 @@ import { NgxTurnstileComponent } from 'ngx-turnstile';
 import { PortfolioService } from 'src/app/services';
 import { environment } from 'src/environments/environment';
 import { WatchModeService } from '../../../services/watch-mode.service';
-import { IonButton, IonInput } from "@ionic/angular/standalone";
+import { IonButton, IonInput, IonIcon, IonText, IonTextarea } from "@ionic/angular/standalone";
+import { addIcons } from 'ionicons';
+import { searchCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'watch-mode',
   templateUrl: './watch-mode.component.html',
   styleUrls: ['./watch-mode.component.scss'],
   standalone: true,
-  imports:[IonButton, IonInput]
+  imports:[IonButton, IonInput,IonIcon,IonTextarea]
 })
 export class WatchModeComponent implements OnInit {
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent
@@ -19,6 +21,9 @@ export class WatchModeComponent implements OnInit {
   private _watchModeService = inject(WatchModeService)
   public showInput = signal(false);
   private _turnStileToken = signal(null)
+  constructor(){
+    addIcons({searchCircleOutline})
+  }
   ngOnInit() { }
 
   sendCaptchaResponse(token) {
