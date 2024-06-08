@@ -198,7 +198,7 @@ export class AppComponent implements OnInit {
           title: 'Liquidity pools',
           url: `/${RoutingPath.LIQUIDITY_POOLS}`,
           icon: 'https://cdn.lordicon.com/rlrlhrme.json',
-          active: true
+          active: false
         },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
         // {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
