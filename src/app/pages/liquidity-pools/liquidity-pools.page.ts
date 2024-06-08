@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonContent,IonGrid } from "@ionic/angular/standalone";
+import { PageHeaderComponent } from 'src/app/shared/components';
 
 @Component({
   selector: 'app-liquidity-pools',
   templateUrl: './liquidity-pools.page.html',
   styleUrls: ['./liquidity-pools.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonContent,IonGrid,PageHeaderComponent ]
 })
 export class LiquidityPoolsPage implements OnInit {
 
