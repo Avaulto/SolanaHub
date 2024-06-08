@@ -5,6 +5,7 @@ export interface LoyaltyBooster {
     hubSOL_DirectStakeBoost:    number;
     hubSOL_DeFiBoost:    number;
     mSOL_DirectStakeBoost:    number;
+    vSOL_DirectStakeBoost:    number;
     bSOL_DirectStakeBoost:    number;
     veMNDE_Boost:             number;
     veBLZE_Boost:             number;
@@ -31,6 +32,7 @@ export interface PointsBreakDown {
     nativeStakePts: number;
     bSOLpts:        number;
     mSOLpts:        number;
+    vSOLpts:        number;
     hubSOLpts:       number;
     veMNDEpts:      number;
     veBLZEpts:      number;

@@ -6,7 +6,7 @@ import {
 import { Stake, Validator, WalletExtended } from 'src/app/models';
 import { addIcons } from 'ionicons';
 import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water, swapVertical, navigateOutline } from 'ionicons/icons';
-import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
+import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { ModalController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
@@ -27,7 +27,8 @@ export class OptionsPopoverComponent implements OnInit {
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _nss: NativeStakeService,
-    private _lss: LiquidStakeService
+    private _lss: LiquidStakeService,
+    private _txi: TxInterceptorService,
   ) {
     addIcons({swapVertical,navigateOutline, arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water });
   }
@@ -91,7 +92,10 @@ export class OptionsPopoverComponent implements OnInit {
       validatorVoteIdentity = (await this.openValidatorModal('Set direct stake validator')).vote_identity;
 
     }
-    await this._lss.setvSOLDirectStake(walletOwner, validatorVoteIdentity)
+   const ins = await this._lss.setvSOLDirectStake(walletOwner, validatorVoteIdentity)
+   const record = { message: 'vSOL direct stake', data: { validatorId: validatorVoteIdentity } }
+
+   await this._txi.sendTx(ins,walletOwner.publicKey, null,record )
   }
   async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'unstake-lst-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
     let config = {

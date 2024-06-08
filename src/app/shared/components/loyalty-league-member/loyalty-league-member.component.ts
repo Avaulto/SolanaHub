@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SolanaHelpersService, UtilService } from '../../../services';
+import { SolanaHelpersService, UtilService, WatchModeService } from '../../../services';
 import { LoyaltyLeagueService } from '../../../services/loyalty-league.service';
-import { Subject, combineLatestWith, map, shareReplay } from 'rxjs';
+import { Observable, Subject, combineLatestWith, map, shareReplay } from 'rxjs';
 import { loyalMember } from '../../../models';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon } from "@ionic/angular/standalone";
@@ -24,9 +24,18 @@ export interface Rank {
   imports: [TooltipModule,IonIcon, IonProgressBar, AsyncPipe, DecimalPipe, IonLabel, IonSkeletonText, RouterLink]
 })
 export class LoyaltyLeagueMemberComponent implements OnInit {
-  readonly isReady$ = this._walletStore.connected$
+  readonly _watchModeWallet$ = this._watchModeService.watchedWallet$
+  readonly connectedWallet$: Observable<any> = this._walletStore.wallet$.pipe(
+    combineLatestWith(this._watchModeWallet$),
+    shareReplay(),
+    map(([wallet, watchModeWallet]: any) => {
+      return wallet || watchModeWallet
+    }),
+    shareReplay()
+  )
   readonly tooltipDirection: TooltipPosition = TooltipPosition.ABOVE;
   constructor(
+    private _watchModeService: WatchModeService,
     private _walletStore: WalletStore,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,

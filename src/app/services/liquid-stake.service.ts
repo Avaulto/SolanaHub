@@ -120,19 +120,24 @@ export class LiquidStakeService {
       // new PublicKey(environment.platformATAbSOLFeeCollector)
     );
     let ixs: any = [ix]
-    if (validatorVoteAddress) {
-      const ix2 = this.stakeCLS(validatorVoteAddress, walletOwnerPK);
-      ixs.push(ix2)
-    }
 
-    const txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
+    let txId;
+    console.log(poolName);
     if (validatorVoteAddress) {
       if (poolName === 'solbalze') {
+        const ix2 = this.stakeCLS(validatorVoteAddress, walletOwnerPK);
+        ixs.push(ix2)
+        txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
         await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAddress}&txid=${txId}`);
       }
-      if (poolName === 'the-vault') {
+      
+      if (poolName === 'the vault') {
         const wallet = this._shs.getCurrentWallet()
-        await this.setvSOLDirectStake(wallet, validatorVoteAddress)
+        const ix2 = await this.setvSOLDirectStake(wallet, validatorVoteAddress)
+        
+        ixs.push(...ix2)
+        console.log(ixs);
+        txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
       }
     }
     return txId
@@ -181,7 +186,7 @@ export class LiquidStakeService {
 
       const result: DirectStake = await (await fetch(`${this.restAPI}/api/get-direct-stake?walletAddress=${walletAddress}`)).json();
 
-      result.mSOL ? directStake.mSOL.validator = validators.find((v: Validator) => v.vote_identity === result.mSOL.validatorVoteAccount) : null
+      result.vSOL ? directStake.vSOL.validator = validators.find((v: Validator) => v.vote_identity === result.vSOL.validatorVoteAccount) : null
       result.bSOL ? directStake.bSOL.map(s => s.validator = validators.find((v: Validator, i) => v.vote_identity === result.bSOL[i].validatorVoteAccount)) : null;
       directStake = result;
 
@@ -193,13 +198,15 @@ export class LiquidStakeService {
     }
     return directStake
   }
-  async setvSOLDirectStake(wallet, validatorVoteAddress: string) {
+  async setvSOLDirectStake(wallet, validatorVoteAddress: string): Promise<TransactionInstruction[]> {
 
-    await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
-    this._toasterService.msg.next({
-      message: 'Validator direct stake set',
-      segmentClass: 'toastInfo'
-    })
+    // this._toasterService.msg.next({
+    //   message: 'Validator direct stake set',
+    //   segmentClass: 'toastInfo'
+    // })
+    console.log(wallet, validatorVoteAddress);
+    
+    return await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
   }
   async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
     const { publicKey } = this._shs.getCurrentWallet()

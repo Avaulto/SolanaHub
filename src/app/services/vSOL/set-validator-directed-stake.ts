@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { DirectedStake, directedStakeIdl } from "./directed-stake-idl"
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from "@solana/web3.js";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
 // When given a wallet, lookup the director PDA
@@ -21,9 +21,11 @@ async function getDirected(program: Program<DirectedStake>, authority: PublicKey
     return currentDirector[0]?.stakeTarget;
 }
 
-async function setDirected(program: Program<DirectedStake>, authority: PublicKey, validatorVotePubKey: PublicKey) {
+async function setDirectedInstructions(program: Program<DirectedStake>, authority: PublicKey, validatorVotePubKey: PublicKey): Promise<TransactionInstruction[]> {
 
     const current = await getDirected(program, authority);
+
+    const ix = [];
 
     if(!current) {
         // Create first
@@ -34,25 +36,33 @@ async function setDirected(program: Program<DirectedStake>, authority: PublicKey
                 payer: authority,
             })
             .instruction();
+
+        ix.push(initDirectorIx);
         
-        await program.methods
+        const setDirectorIx = await program.methods
             .setStakeTarget()
             .accounts({
                 authority: authority,
                 stakeTarget: validatorVotePubKey,
             })
             .preInstructions([initDirectorIx])
-            .rpc();
+            .instruction();
+
+        ix.push(setDirectorIx);
     } else {
         // No init is needed
-        await program.methods
+        const setDirectorIx = await program.methods
             .setStakeTarget()
             .accounts({
                 authority: authority,
                 stakeTarget: validatorVotePubKey,
             })
-            .rpc();
+            .instruction();
+
+        ix.push(setDirectorIx);
     }
+
+    return ix;
 }
 
 async function closeDirected(program: Program<DirectedStake>, authority: PublicKey, validatorVotePubKey: PublicKey) {
@@ -68,7 +78,7 @@ async function closeDirected(program: Program<DirectedStake>, authority: PublicK
 
 
   
-export async function vSOLdirectStake(wallet, connection, validatorVoteAddress) {
+export async function vSOLdirectStake(wallet, connection, validatorVoteAddress): Promise<TransactionInstruction[]> {
 
     const provider = new anchor.AnchorProvider(connection, wallet);
     anchor.setProvider(provider);
@@ -86,7 +96,7 @@ export async function vSOLdirectStake(wallet, connection, validatorVoteAddress) 
     // if(!current) {
         // Set to Nordic Staking
         const validatorVotePubKey = new PublicKey(validatorVoteAddress);
-        await setDirected(directedStakeProgram, wallet.publicKey, validatorVotePubKey);
+        return await setDirectedInstructions(directedStakeProgram, wallet.publicKey, validatorVotePubKey);
     // }
     // console.log('finish vSOL direct stake');
     

@@ -50,6 +50,12 @@ export interface DirectStake {
         validatorVoteAccount: string
         validator?: Validator
     }
+    vSOL?: {
+      amount: string
+      tokenOwner: string
+      validatorVoteAccount: string
+      validator?: Validator
+  }
     bSOL?: Array<{
         amount: number
         tokenOwner: string

@@ -65,9 +65,19 @@ export class SolanaHelpersService {
     return this._walletExtended$.value
   }
 
+  private featureValidator(validators:Validator[], vote_identity: string, position?: number){
+    let index = validators.findIndex(obj => obj.vote_identity === vote_identity);
+    if (index !== -1) {
+        let removedObject = validators.splice(index, 1)[0];
+        validators.splice(1, 0, removedObject);
+    }
+    return validators
+  }
   private _validatorsList: Validator[] = this._sessionStorageService.getData('validators') ? JSON.parse(this._sessionStorageService.getData('validators')) : []
   public async getValidatorsList(): Promise<Validator[]> {
+    this.featureValidator(this._validatorsList, 'B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9')
     if (this._validatorsList.length > 0) {
+
 
       return this._validatorsList;
     } else {
@@ -79,9 +89,10 @@ export class SolanaHelpersService {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
-        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 + prizePool$ .APY_boosters.hubSOL)).toFixedNoRounding(2)
-        console.log( validatorsList[0]);
         
+        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 + prizePool$ .APY_boosters.hubSOL)).toFixedNoRounding(2)
+        
+
       } catch (error) {
         console.error(error);
       }

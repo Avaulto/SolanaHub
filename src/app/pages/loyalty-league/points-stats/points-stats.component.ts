@@ -32,12 +32,11 @@ export class PointsStatsComponent implements OnInit, OnChanges {
       stakeBoost: null
     },
     {
-      id: 'mSOL_DirectStakeBoost',
-      name: 'mSOL direct stake',
+      id: 'vSOL_DirectStakeBoost',
+      name: 'vSOL direct stake',
       multiplier: null,
       stakeBoost: null
     },
-
     {
       id: "bSOL_DirectStakeBoost",
       name: 'bSOL direct stake',
@@ -75,15 +74,15 @@ export class PointsStatsComponent implements OnInit, OnChanges {
 
       map((booster: LoyaltyBooster) => {
         for (const m in booster) {
-      
+
           //@ts-ignore
           switch (m) {
 
             case 'nativeStake':
             case 'hubSOL_DirectStakeBoost':
             case 'hubSOL_DeFiBoost':
-            case 'mSOL_DirectStakeBoost':
             case 'bSOL_DirectStakeBoost':
+            case 'vSOL_DirectStakeBoost':
               // case 'nativeStakeLongTermBoost':
               //@ts-ignore
               this._stakeBoostMultipliers.find(b => b.id == m).multiplier = this.utilService.decimalPipe.transform(booster[m], '1.2-2') + "x"
@@ -117,15 +116,15 @@ export class PointsStatsComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (this.prizePool) {
       this.sbm$.value[0].stakeBoost = this.prizePool.APY_boosters['SOL']
-        this.sbm$.value[1].stakeBoost = this.prizePool.APY_boosters['hubSOL']
-        this.sbm$.value[2].stakeBoost = this.prizePool.APY_boosters['mSOL']
-        this.sbm$.value[3].stakeBoost = this.prizePool.APY_boosters['bSOL']
-        this.sbm$.value[4].stakeBoost = this.prizePool.APY_boosters['MNDE']
-        this.sbm$.value[5].stakeBoost = this.prizePool.APY_boosters['BLZE']
+      this.sbm$.value[1].stakeBoost = this.prizePool.APY_boosters['hubSOL']
+      this.sbm$.value[2].stakeBoost = this.prizePool.APY_boosters['vSOL']
+      this.sbm$.value[3].stakeBoost = this.prizePool.APY_boosters['bSOL']
+      this.sbm$.value[4].stakeBoost = this.prizePool.APY_boosters['MNDE']
+      this.sbm$.value[5].stakeBoost = this.prizePool.APY_boosters['BLZE']
 
       // Object.keys(this.prizePool.APY_boosters).map((k, i) => {
       //   console.log(this.sbm$.value[i].id, k);
-        
+
       //   switch (k) {
       //     case 'SOL':
       //       this.sbm$.value[0].stakeBoost = this.prizePool.APY_boosters['SOL']
