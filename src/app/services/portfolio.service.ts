@@ -88,7 +88,7 @@ export class PortfolioService {
   public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
 
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
-    let jupTokens = await this._utils.getJupTokens();
+    let jupTokens = await this._utils.getJupTokens('strict');
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
@@ -96,7 +96,7 @@ export class PortfolioService {
       if (!portfolioData || !jupTokens) {
 
         let res = await Promise.all([
-          this._utils.getJupTokens(),
+          this._utils.getJupTokens('strict'),
           await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`)).json()
         ])
         // this.turnStileRefresh.next(false)
@@ -120,14 +120,24 @@ export class PortfolioService {
       this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
       this._portfolioDeFi(portfolio.elements, jupTokens)
 
-
+      
       const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
-
+      
       this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)
       // this.getWalletHistory(walletAddress)
+      // refetch jup full data
+      jupTokens = await this._utils.getJupTokens('all')
+      console.log(extendTokenData, jupTokens, walletAddress);
+      
+      this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
+      // this._portfolioDeFi(portfolio.elements, jupTokens)
+      setTimeout(() => {
+        
+        this.walletAssets.set(mergeDuplications)
+      }, 1000);
     } catch (error) {
       console.error(error);
       this.walletAssets.set([])
@@ -142,9 +152,11 @@ export class PortfolioService {
     if (tokens) {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
-      this._utils.addTokenData(tokens?.data.assets, jupTokens)
+      let tokensData= this._utils.addTokenData(tokens?.data.assets, jupTokens)
+  
+      
       // add pipes
-      const tokensAggregated: Token[] = tokens.data.assets.filter(item => item.value).map((item: Token) => {
+      const tokensAggregated: Token[] = tokensData.filter(item => item.value).map((item: Token) => {
         // if(LST_direct_stake.mSOL && item.symbol.toLowerCase() === 'msol'){
         //   item.extraData = LST_direct_stake.mSOL;
         // }

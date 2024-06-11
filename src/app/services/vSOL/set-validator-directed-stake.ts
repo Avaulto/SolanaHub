@@ -1,8 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { DirectedStake, directedStakeIdl } from "./directed-stake-idl"
-import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from "@solana/web3.js";
-import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
+import {  PublicKey, TransactionInstruction } from "@solana/web3.js";
 
 // When given a wallet, lookup the director PDA
 const findDirectorAddress = (authority: PublicKey) => {

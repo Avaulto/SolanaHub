@@ -118,7 +118,7 @@ export class FormComponent implements OnInit {
         this.bestRoute.set(null)
       }
     })
-    const tokensList = await this._util.getJupTokens();
+    const tokensList = await this._util.getJupTokens('all');
 
     this.jupTokens.set(tokensList)
   }
