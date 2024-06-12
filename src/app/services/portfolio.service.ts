@@ -88,7 +88,7 @@ export class PortfolioService {
   public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
 
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
-    let jupTokens = await this._utils.getJupTokens('strict');
+    let jupTokens = await this._utils.getJupTokens('all');
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
@@ -96,7 +96,7 @@ export class PortfolioService {
       if (!portfolioData || !jupTokens) {
 
         let res = await Promise.all([
-          this._utils.getJupTokens('strict'),
+          this._utils.getJupTokens('all'),
           await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`)).json()
         ])
         // this.turnStileRefresh.next(false)
@@ -127,17 +127,7 @@ export class PortfolioService {
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)
-      // this.getWalletHistory(walletAddress)
-      // refetch jup full data
-      jupTokens = await this._utils.getJupTokens('all')
-      console.log(extendTokenData, jupTokens, walletAddress);
-      
-      this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
-      // this._portfolioDeFi(portfolio.elements, jupTokens)
-      setTimeout(() => {
-        
-        this.walletAssets.set(mergeDuplications)
-      }, 1000);
+
     } catch (error) {
       console.error(error);
       this.walletAssets.set([])
