@@ -68,6 +68,7 @@ ion-segment-button {
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
     }
     .pool-name{
         display: flex;
@@ -80,6 +81,16 @@ ion-segment-button {
         margin-block-end: 8px;
     }
 
+}
+#boosted{
+    position: absolute;
+    left: 0;
+    border: 1px solid var(--ion-color-secondary);
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: var(--ion-color-secondary);
+    font-size: 11px;
+    opacity: 0.8;
 }
 
 @media only screen and (max-width: 992px) {

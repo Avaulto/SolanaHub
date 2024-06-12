@@ -30,11 +30,12 @@
             }
            
           </ion-chip>
-          <!-- @if(pool.poolName === 'hub'){
-              <div>Boosted</div>
-            
-            } -->
+      
           </div>
+          @if(pool.poolName === 'hub'){
+            <div id="boosted" class="ion-hide-lg-down">Boosted</div>
+          
+          }
         </div>
       </ion-segment-button>
       }@empty {
