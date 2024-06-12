@@ -5,8 +5,8 @@ import {
 } from '@ionic/angular/standalone';
 import { Stake, Validator, WalletExtended } from 'src/app/models';
 import { addIcons } from 'ionicons';
-import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water, swapVertical } from 'ionicons/icons';
-import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
+import { arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water, swapVertical, navigateOutline } from 'ionicons/icons';
+import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { ModalController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
@@ -27,20 +27,21 @@ export class OptionsPopoverComponent implements OnInit {
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _nss: NativeStakeService,
-    private _lss: LiquidStakeService
+    private _lss: LiquidStakeService,
+    private _txi: TxInterceptorService,
   ) {
-    addIcons({swapVertical, arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water });
+    addIcons({swapVertical,navigateOutline, arrowUp, arrowDown, people, peopleCircle, flash, paperPlane, water });
   }
 
   ngOnInit() {
 
   }
-  private  async openValidatorModal() {
+  private  async openValidatorModal(btnText: string) {
     let config = {
       imgUrl:'assets/images/validators-icon.svg',
       title :'Select Validator',
       desc : 'Pick the right validator for you',
-      btnText: 'select validator & stake'
+      btnText
     }
     const validatorsList = await this._shs.getValidatorsList()
     const modal = await this._modalCtrl.create({
@@ -68,12 +69,11 @@ export class OptionsPopoverComponent implements OnInit {
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
     let validatorVoteIdentity: string = null;
-    console.log(this.stake.state);
-    
+
     if(this.stake.state === 'deactivating'){
       validatorVoteIdentity = this.stake.validator.vote_identity
     }else{
-      validatorVoteIdentity = (await this.openValidatorModal()).vote_identity;
+      validatorVoteIdentity = (await this.openValidatorModal('select validator & stake')).vote_identity;
 
     }
     await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)
@@ -82,7 +82,21 @@ export class OptionsPopoverComponent implements OnInit {
     const walletOwner = this._shs.getCurrentWallet().publicKey
     await this._nss.withdraw(this.stake, walletOwner)
   }
+  public async setDirectStakevSOL() {
+    const walletOwner = this._shs.getCurrentWallet()
+    let validatorVoteIdentity: string = null;
 
+    if(this.stake.state === 'deactivating'){
+      validatorVoteIdentity = this.stake.validator.vote_identity
+    }else{
+      validatorVoteIdentity = (await this.openValidatorModal('Set direct stake validator')).vote_identity;
+
+    }
+   const ins = await this._lss.setvSOLDirectStake(walletOwner, validatorVoteIdentity)
+   const record = { message: 'vSOL direct stake', data: { validatorId: validatorVoteIdentity } }
+
+   await this._txi.sendTx(ins,walletOwner.publicKey, null,record )
+  }
   async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'unstake-lst-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
     let config = {
       imgUrl: null,

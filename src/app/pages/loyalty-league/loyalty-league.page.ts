@@ -94,7 +94,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
               },
               {
                 label: 'liquid stake:',
-                value: this._utilService.formatBigNumbers(pointsBreakDown.hubSOLpts + pointsBreakDown.mSOLpts + pointsBreakDown.bSOLpts)
+                value: this._utilService.formatBigNumbers(pointsBreakDown.hubSOLpts + pointsBreakDown.vSOLpts + pointsBreakDown.bSOLpts)
               },
               {
                 label: 'DAO votes:',
@@ -134,7 +134,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(staker.walletOwner),
         nativeStake: this._utilService.formatBigNumbers(staker.pointsBreakDown.nativeStakePts),
-        liquidStake: { hubSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.hubSOLpts),mSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.mSOLpts), bSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.bSOLpts) },
+        liquidStake: { hubSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.hubSOLpts),vSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.vSOLpts), bSOL: this._utilService.formatBigNumbers(staker.pointsBreakDown.bSOLpts) },
         dao: { veMNDE: this._utilService.formatBigNumbers(staker.pointsBreakDown.veMNDEpts), veBLZE: this._utilService.formatBigNumbers(staker.pointsBreakDown.veBLZEpts) },
         referrals: this._utilService.formatBigNumbers(staker.pointsBreakDown.referralPts),
         hubDomainHolder: staker.hubDomainHolder,
@@ -165,7 +165,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
       { key: 'referrals', title: 'Referrals', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'hubDomainHolder', title: 'HUB Domain Holder', cellTemplate: this.hubDomainHolderTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'totalPoints', title: 'Total Points', cssClass: { name: 'bold-text', includeHeader: true } },
-      { key: 'weeklyAirdrop', title: 'Airdrop', cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'weeklyAirdrop', title: 'Est. Rewards', cellTemplate: this.airdropTpl, cssClass: { name: 'bold-text', includeHeader: true } },
     ]
   }
   public copyAddress(address: string) {

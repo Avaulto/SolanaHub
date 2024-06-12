@@ -29,9 +29,9 @@ export class DaoService {
     
   }
     
-  public initGovSDK(connection: Connection, programId?: PublicKey){
-    // return new Governance(connection,programId);
-  }
+  // public initGovSDK(connection: Connection, programId?: PublicKey){
+  //   return new Governance(connection,programId);
+  // }
   // Fetch all the DAOs the user has voting power in
   // public async  fetchDAOs(gov: Governance, user:PublicKey):Promise<DAOonChain[]> {
   //   return await gov.getTokenOwnerRecordsFromPubkey(user)

@@ -21,7 +21,7 @@
         
           <ion-chip color="primary">
 
-            @if(pool.poolName === 'hub'){
+            @if(pool?.poolName === 'hub'){
             {{ pool?.apy * (1 + (prizePool$ | async).APY_boosters.hubSOL) | percent : '1.2-2'}}
              
             

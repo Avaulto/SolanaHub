@@ -98,7 +98,7 @@ export class UtilService {
 
   public async getJupTokens(path = 'all'): Promise<JupToken[]> {
     //const env = TOKEN_LIST_URL[environment.solanaEnv]//environment.solanaEnv
-    if (this.jupTokens) {
+    if (!path && this.jupTokens) {
       return this.jupTokens
     } else {
       try {
@@ -113,9 +113,8 @@ export class UtilService {
   public addTokenData(assets: any, tokensInfo: JupToken[]): any[] {
 
     return assets.map((res: any) => {
-
-
-      res.data.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
+      
+      res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
       const token = tokensInfo.find(token => token.address === res.data.address)
       res.name = token?.name ? token.name : '';
