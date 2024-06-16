@@ -124,7 +124,7 @@ export class LiquidStakeService {
     let txId;
     console.log(poolName);
     if (validatorVoteAddress) {
-      if (poolName === 'solbalze') {
+      if (poolName === 'solblaze') {
         const ix2 = this.stakeCLS(validatorVoteAddress, walletOwnerPK);
         ixs.push(ix2)
         txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
