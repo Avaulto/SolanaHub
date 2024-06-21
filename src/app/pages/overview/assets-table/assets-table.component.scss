@@ -153,6 +153,13 @@ ion-chip {
     }
 }
 
+.pool-img-wrapper,.pool-symbol-wrapper {
+        width: 300px;
+    max-width: 250px;
+    flex-wrap: wrap;
+    display: flex;
+    flex-direction: row;
+}
 
 .platform-icon-wrapper{
     display: flex;

@@ -17,7 +17,7 @@
     <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
       <div class="item">
         <div class="item-img-wrapper">
-          <ion-img [src]="row.logoUrl" alt="image" />
+          <ion-img [src]="row.logoUrl || 'assets/images/unknown.svg'" alt="image" />
         </div>
         <div class="item-info">
 

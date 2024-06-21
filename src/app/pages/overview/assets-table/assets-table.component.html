@@ -55,7 +55,7 @@
 <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.imgUrl" alt="image" />
+      <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
     </div>
     <div class="item-info">
       @if (!row.status) {
@@ -76,7 +76,7 @@
 <ng-template #validatorProfileTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.validator?.image" alt="image" />
+      <ion-img [src]="row.validator?.image || 'assets/images/unknown.svg'" alt="image" />
     </div>
     <div class="item-bold">{{row.validator?.name}}</div>
   </div>
@@ -125,11 +125,13 @@
         <ion-img [src]="item.imgURL" alt="image" />
       }
     </div>
-    @for (item of row.poolTokens; track $index) {
-      <div class="pool-item-info ion-text-center">
-        <div class="asset-symbol">{{item.symbol}}@if ($index +1 < row.poolTokens.length) {-}</div>
-      </div>
-    }
+    <div class="pool-symbol-wrapper">
+      @for (item of row.poolTokens; track $index) {
+        <div class="pool-item-info ion-text-center">
+          <div class="asset-symbol">{{item.symbol}}@if ($index +1 < row.poolTokens.length) {-}</div>
+        </div>
+      }
+    </div>
     </div>
 </ng-template>
 
