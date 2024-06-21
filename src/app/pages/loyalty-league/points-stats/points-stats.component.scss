@@ -50,20 +50,9 @@ ion-skeleton-text{
     margin: 0 auto;
 }
 
-#learn-more-link {
-    background: white;
-    width: 50px;
-    padding: 2px 5px;
-    font-size: 12px;
-    border-radius: 4px;
-    display: block;
-    text-align: center;
-    border: 1px solid #EFF0F0;
-
-    a{
-        text-transform: capitalize;
-        text-decoration: none;
-        color: #4b5565;
-        font-weight: 300;
-    }
+#calc-boost{
+cursor: pointer;
+ion-icon{
+    color:var(--ion-color-secondary);
+}
 }

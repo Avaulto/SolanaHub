@@ -50,8 +50,15 @@ export class NativeStakeService {
     const accountLamport = Number(account._lamports);
     const excessLamport = accountLamport - stake - rentReserve
 
+    try {
+      var { active, state }: Partial<StakeActivationData> = await this._shs.connection?.getStakeActivation(pk) || {state:"inactive"};
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    console.log(active, state );
     
-    const { active, state }: Partial<StakeActivationData> = await this._shs.connection.getStakeActivation(pk) || {state:"inactive"};
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
     const validatorName = account.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")

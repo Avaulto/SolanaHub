@@ -264,3 +264,10 @@ ion-spinner {
 .notif-config{
     --width: 200px;
 }
+
+.ll-boost-calc-popover {
+    --width: 380px;
+    overflow-y: auto;
+    // --box-shadow: 0 0 0;
+    // --background: transparent;
+}

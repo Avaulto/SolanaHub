@@ -84,8 +84,10 @@ export class NotificationsService {
     } else {
 
       const dapps = await this._dialectSDK.dapps.findAll({
-        verified: true,
+        // verified: true,
       })
+      console.log(dapps);
+      
       // d.avatarUrl &&
       const filteredDapps = dapps.filter(d => this._activeDapps.includes(d.name) && d.blockchainType === 'SOLANA')
       filteredDapps.sort((x, y) => { return x.name.toLowerCase() === 'solanahub' ? -1 : y.name.toLowerCase() === 'solanahub' ? 1 : 0; });

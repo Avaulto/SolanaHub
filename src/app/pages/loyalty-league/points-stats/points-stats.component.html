@@ -1,7 +1,9 @@
 <div id="pm-title">points multiplier
-  <!-- <div id="learn-more-link">
-    <a href="https://docs.solanahub.app/solanahub/loyalty-league" target="_blank">FAQ</a>
-  </div> -->
+ 
+    <ion-button size="small" [disabled]="!prizePool" id="calc-boost" (click)="showCalcBoost($event)" fill="clear">
+      <ion-icon  name="calculator-outline"></ion-icon>
+    </ion-button>
+
 </div>
 
 @for (score of sbm$ | async ; track $index) {

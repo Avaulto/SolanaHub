@@ -122,7 +122,6 @@ export class LiquidStakeService {
     let ixs: any = [ix]
 
     let txId;
-    console.log(poolName);
     if (validatorVoteAddress) {
       if (poolName === 'solblaze') {
         const ix2 = this.stakeCLS(validatorVoteAddress, walletOwnerPK);
