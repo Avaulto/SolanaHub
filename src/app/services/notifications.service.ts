@@ -84,7 +84,7 @@ export class NotificationsService {
     } else {
 
       const dapps = await this._dialectSDK.dapps.findAll({
-        // verified: true,
+        verified: true,
       })
       console.log(dapps);
       
