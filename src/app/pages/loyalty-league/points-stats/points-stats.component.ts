@@ -94,8 +94,8 @@ export class PointsStatsComponent implements OnInit, OnChanges {
               //@ts-ignore
               this._stakeBoostMultipliers.find(b => b.id == m).multiplier = this.utilService.decimalPipe.transform(booster[m], '1.2-2') + "x"
               break;
-            case 'veMNDE_Boost':
-            case 'veBLZE_Boost':
+              case 'veBLZE_Boost':
+              case 'veMNDE_Boost':
               //@ts-ignore
               this._stakeBoostMultipliers.find(b => b.id == m).multiplier = this.utilService.decimalPipe.transform(booster[m], '1.4') + "x"
               break;

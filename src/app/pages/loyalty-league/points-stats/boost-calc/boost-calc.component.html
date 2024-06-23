@@ -5,45 +5,46 @@
     <div class="g-head">
 
       <ion-label>Native stake </ion-label>
-      <div>{{multipliers.nativeStake.toFixedNoRounding(3)}}x</div>
+      <div>{{multipliers.nativeStake.toFixedNoRounding(2)}}x</div>
     </div>
     <ion-input type="number" formControlName="native"/>
   </div>
   <div class="calc-group">
     <div class="g-head">
       <ion-label>hubSOL</ion-label>
-      <div>{{multipliers.hubSOL_DirectStakeBoost.toFixedNoRounding(3)}}x</div>
+      <div>{{multipliers.hubSOL_DirectStakeBoost.toFixedNoRounding(2)}}x</div>
     </div>
     <ion-input type="number" formControlName="hubSOL"/>
   </div>
   <div class="calc-group">
     <div class="g-head">
       <ion-label>vSOL</ion-label>
-      <div>{{multipliers.vSOL_DirectStakeBoost.toFixedNoRounding(3)}}x</div>
+      <div>{{multipliers.vSOL_DirectStakeBoost.toFixedNoRounding(2)}}x</div>
     </div>
     <ion-input type="number" formControlName="vSOL"/>
   </div>
   <div class="calc-group">
     <div class="g-head">
       <ion-label>bSOL</ion-label>
-      <div>{{multipliers.vSOL_DirectStakeBoost.toFixedNoRounding(3)}}x</div>
+      <div>{{multipliers.bSOL_DirectStakeBoost.toFixed(2)}}x</div>
     </div>
     <ion-input type="number" formControlName="bSOL"/>
   </div>
   <div class="calc-group">
     <div class="g-head">
-      <ion-label>veBLZE</ion-label>
-      <div>{{multipliers.veBLZE_Boost.toFixedNoRounding(4)}}x</div>
-    </div>
-    <ion-input type="number" formControlName="veBLZE"/>
-  </div>
-  <div class="calc-group">
-    <div class="g-head">
       <ion-label>veMNDE</ion-label>
-      <div>{{multipliers.veMNDE_Boost.toFixedNoRounding(3)}}x</div>
+      <div>{{multipliers.veMNDE_Boost.toFixed(4)}}x</div>
     </div>
     <ion-input type="number" formControlName="veMNDE"/>
   </div>
+  <div class="calc-group">
+    <div class="g-head">
+      <ion-label>veBLZE</ion-label>
+      <div>{{multipliers.veBLZE_Boost.toFixed(4)}}x</div>
+    </div>
+    <ion-input type="number" formControlName="veBLZE"/>
+  </div>
+
   <div class="calc-group">
     <div class="g-head">
       <ion-label>Own .HUB domain</ion-label>
