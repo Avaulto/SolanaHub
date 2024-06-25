@@ -54,6 +54,7 @@ export class NativeStakeService {
       var { active, state }: Partial<StakeActivationData> = await this._shs.connection?.getStakeActivation(pk) || {state:"inactive"};
       
     } catch (error) {
+       state = "inactive";
       console.log(error);
       
     }

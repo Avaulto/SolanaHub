@@ -41,7 +41,8 @@
     box-shadow: 0 0 2px var(--ion-color-primary);
     margin-block-start: 20px;
     ion-text{
-        font-size: 22px;
+        display: block;
+        font-size: 20px;
         color: var(--ion-color-primary);
         font-weight: bold;
     }

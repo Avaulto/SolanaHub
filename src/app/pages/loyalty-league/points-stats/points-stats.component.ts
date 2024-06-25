@@ -94,8 +94,8 @@ export class PointsStatsComponent implements OnInit, OnChanges {
               //@ts-ignore
               this._stakeBoostMultipliers.find(b => b.id == m).multiplier = this.utilService.decimalPipe.transform(booster[m], '1.2-2') + "x"
               break;
-              case 'veBLZE_Boost':
-              case 'veMNDE_Boost':
+            case 'veMNDE_Boost':
+            case 'veBLZE_Boost':
               //@ts-ignore
               this._stakeBoostMultipliers.find(b => b.id == m).multiplier = this.utilService.decimalPipe.transform(booster[m], '1.4') + "x"
               break;
@@ -145,7 +145,7 @@ export class PointsStatsComponent implements OnInit, OnChanges {
   public async showCalcBoost(e: Event) {
     const popover = await this.popoverController.create({
       component: BoostCalcComponent,
-      componentProps: { multipliers: this._simpleBooster, apyRates: this.prizePool.APY_boosters },
+      componentProps: {rebates:this.prizePool.hubSOLrebates, multipliers: this._simpleBooster, apyRates: this.prizePool.APY_boosters },
       event: e,
       alignment: 'start',
       side: 'right',

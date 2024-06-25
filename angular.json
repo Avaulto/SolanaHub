@@ -32,7 +32,10 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+              
+                "src/actions.json"
+               
             ],
             "styles": ["src/theme/variables.scss", "src/global.scss","node_modules/ngx-easy-table/style.css"],
             "scripts": [],

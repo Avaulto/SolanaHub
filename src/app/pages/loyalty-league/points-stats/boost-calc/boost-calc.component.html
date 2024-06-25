@@ -55,9 +55,16 @@
 </form>
   <div id="calc-summarize">
     <ion-label>your stake boost: </ion-label>
-    <ion-text  class="stake-boost-tool-tip" [tooltip]="stakeBoost">{{(boostSum | async | percent: '1.2-2') || 0}} APR</ion-text>
+    <ion-text  class="stake-boost-tool-tip" [tooltip]="stakeBoost">
+      <span>
+        {{(boostSum | async | percent: '1.2-2') || 0}} APR
+      </span>
+      <span>
+        / {{esWeeklyReward.toFixed(3)}} hubSOL
+      </span>
+    </ion-text>
     <ng-template #stakeBoost>
-      Paid weekly in hubSOL
+      Paid weekly
     </ng-template>
   </div>
 </div>

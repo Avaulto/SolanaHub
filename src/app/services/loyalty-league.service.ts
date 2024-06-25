@@ -34,6 +34,9 @@ export class LoyaltyLeagueService {
   //   });
   //   return throwError((() => error))
   // }
+  public getllTotalPts(): number{
+    return this._loyaltyLeagueLeaderBoard$.value.totalPoints
+  }
   public getNextAirdrop(): Observable<NextAirdrop> {
     return this._apiService.get(`${this.api}/get-next-airdrop`).pipe(
       this._utilService.isNotNull,

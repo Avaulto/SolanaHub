@@ -1,0 +1,4 @@
+{
+    "pathPattern": "/stake-hubSOL",
+    "apiPath": "https://api.solanahub.app/api/actions/stake-instructions"
+}

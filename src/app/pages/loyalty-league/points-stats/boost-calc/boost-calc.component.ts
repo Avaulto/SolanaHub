@@ -5,6 +5,7 @@ import { LoyaltyBooster } from 'src/app/models';
 import { map } from 'rxjs';
 import { AsyncPipe, DecimalPipe, PercentPipe } from '@angular/common';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 interface Boosters {
   nativeStake: number
   nativeStakeLongTermBoost: number
@@ -37,10 +38,14 @@ interface apyRates {
 export class BoostCalcComponent implements OnInit {
   @Input() multipliers: Boosters;
   @Input() apyRates: apyRates;
+  @Input() rebates: number;
   public boostForm: FormGroup;
   public boostSum = null;
-
-  constructor(private _fb: FormBuilder) { }
+  public esWeeklyReward = 0
+  constructor(
+    private _fb: FormBuilder,
+    private _lls:LoyaltyLeagueService
+  ) { }
 
   ngOnInit() {
     const factors = {
@@ -84,16 +89,19 @@ export class BoostCalcComponent implements OnInit {
       };
       // Calculate true values
       const trueValues = this.calculateTrueValues(inputs, factors);
-
+      this.esWeeklyReward = this.calculateTotalAPYhubSOL(trueValues)
+      
+      // const totalPts = Object.values(trueValues).reduce((acc, v) => Number(acc) + Number(v),0)
+      
+      
       // Calculate total APY
       let totalAPY = this.calculateTotalAPY(trueValues, apys);
-
+      
       // percentage boost by hubDOMAIN
+      v.hubDomain ? this.esWeeklyReward = this.esWeeklyReward * 1.05 : this.esWeeklyReward
       v.hubDomain ? totalAPY = totalAPY * 1.05 : totalAPY
 
-      console.log(totalAPY);
-
-
+      
       return totalAPY
 
     }))
@@ -113,6 +121,12 @@ export class BoostCalcComponent implements OnInit {
     return trueValues;
   }
 
+  calculateTotalAPYhubSOL(trueValues){
+    const calculatedPts:any = Object.values(trueValues).reduce((acc: number, v) => Number(acc || 0) + Number(v),0);
+    const newTotalPts = this._lls.getllTotalPts() + calculatedPts;
+    const estimatedAirdrop = calculatedPts / newTotalPts * this.rebates
+    return estimatedAirdrop
+  }
   // Function to calculate the total APY
   calculateTotalAPY(trueValues, apys) {
     let totalTrueValue = 0;
