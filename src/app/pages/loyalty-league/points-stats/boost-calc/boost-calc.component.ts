@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
-import { IonInput, IonLabel, IonButton, IonText, IonCheckbox } from '@ionic/angular/standalone';
+import { IonInput, IonLabel, IonButton, IonText, IonCheckbox, IonImg, IonToggle } from '@ionic/angular/standalone';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoyaltyBooster } from 'src/app/models';
 import { map } from 'rxjs';
@@ -33,7 +33,7 @@ interface apyRates {
   templateUrl: './boost-calc.component.html',
   styleUrls: ['./boost-calc.component.scss'],
   standalone: true,
-  imports: [TooltipModule, IonCheckbox,DecimalPipe, PercentPipe, IonInput, IonLabel, IonText, ReactiveFormsModule, AsyncPipe]
+  imports: [IonToggle, IonImg, TooltipModule, IonCheckbox,DecimalPipe, PercentPipe, IonInput, IonLabel, IonText, ReactiveFormsModule, AsyncPipe]
 })
 export class BoostCalcComponent implements OnInit {
   @Input() multipliers: Boosters;
@@ -45,7 +45,17 @@ export class BoostCalcComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _lls:LoyaltyLeagueService
-  ) { }
+  ) {
+    this.boostForm = this._fb.group({
+      native: [],
+      hubSOL: [],
+      bSOL: [],
+      vSOL: [],
+      veMNDE: [],
+      veBLZE: [],
+      hubDomain: [false]
+    })
+   }
 
   ngOnInit() {
     const factors = {
@@ -67,16 +77,10 @@ export class BoostCalcComponent implements OnInit {
       "BLZE": this.apyRates.BLZE
     };
 
-    this.boostForm = this._fb.group({
-      native: [],
-      hubSOL: [],
-      bSOL: [],
-      vSOL: [],
-      veMNDE: [],
-      veBLZE: [],
-      hubDomain: [false]
-    })
-    this.boostSum = this.boostForm.valueChanges.pipe(map(v => {
+
+    this.boostForm.valueChanges.subscribe(v => {
+      console.log(v);
+      
       // Calculate true values
       // Example input amounts
       const inputs = {
@@ -91,6 +95,8 @@ export class BoostCalcComponent implements OnInit {
       const trueValues = this.calculateTrueValues(inputs, factors);
       this.esWeeklyReward = this.calculateTotalAPYhubSOL(trueValues)
       
+      console.log(this.esWeeklyReward);
+      
       // const totalPts = Object.values(trueValues).reduce((acc, v) => Number(acc) + Number(v),0)
       
       
@@ -101,10 +107,8 @@ export class BoostCalcComponent implements OnInit {
       v.hubDomain ? this.esWeeklyReward = this.esWeeklyReward * 1.05 : this.esWeeklyReward
       v.hubDomain ? totalAPY = totalAPY * 1.05 : totalAPY
 
-      
-      return totalAPY
-
-    }))
+      this.boostSum = totalAPY
+    })
   }
 
   // Function to calculate the true value adjusted by the factor
@@ -141,6 +145,9 @@ export class BoostCalcComponent implements OnInit {
     return weightedAPY / totalTrueValue;
   }
 
-
+  public preview: 'percentage' | 'hubSOL'
+   simulateAirdrop(e){
+    e.detail.checked ? this.preview = 'hubSOL' : this.preview = 'percentage'
+  }
 
 }

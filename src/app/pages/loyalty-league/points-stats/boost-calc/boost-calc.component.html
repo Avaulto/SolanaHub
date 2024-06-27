@@ -1,61 +1,87 @@
 <div class="ion-padding data-set" id="calc-boost-wrapper">
-  <div id="ll-calc-title">Loyalty League stake boost calculator</div>
+  <div id="ll-calc-title">Maximize Your Staking Rewards</div>
+  <div id="ll-calc-sub">Utilize Our Boost Calculator to Unlock the Full Potential of Your Assets</div>
   <form [formGroup]="boostForm">
-  <div class="calc-group">
-    <div class="g-head">
+    <div class="calc-group">
+      <div class="g-head">
 
-      <ion-label>Native stake </ion-label>
-      <div>{{multipliers.nativeStake.toFixedNoRounding(2)}}x</div>
+        <ion-label><ion-img src="assets/images/sol.svg" /> Native stake </ion-label>
+        <div>{{multipliers.nativeStake.toFixedNoRounding(2)}}x</div>
+      </div>
+      <ion-input type="number" formControlName="native" />
     </div>
-    <ion-input type="number" formControlName="native"/>
-  </div>
-  <div class="calc-group">
-    <div class="g-head">
-      <ion-label>hubSOL</ion-label>
-      <div>{{multipliers.hubSOL_DirectStakeBoost.toFixedNoRounding(2)}}x</div>
+    <div class="calc-group">
+      <div class="g-head">
+        <ion-label><ion-img src="assets/images/hubSOL.png" /> hubSOL</ion-label>
+        <div>{{multipliers.hubSOL_DirectStakeBoost.toFixedNoRounding(2)}}x</div>
+      </div>
+      <ion-input type="number" formControlName="hubSOL" />
     </div>
-    <ion-input type="number" formControlName="hubSOL"/>
-  </div>
-  <div class="calc-group">
-    <div class="g-head">
-      <ion-label>vSOL</ion-label>
-      <div>{{multipliers.vSOL_DirectStakeBoost.toFixedNoRounding(2)}}x</div>
+    <div class="calc-group">
+      <div class="g-head">
+        <ion-label><ion-img src="assets/images/vsol-small.webp" /> vSOL</ion-label>
+        <div>{{multipliers.vSOL_DirectStakeBoost.toFixedNoRounding(2)}}x</div>
+      </div>
+      <ion-input type="number" formControlName="vSOL" />
     </div>
-    <ion-input type="number" formControlName="vSOL"/>
-  </div>
-  <div class="calc-group">
-    <div class="g-head">
-      <ion-label>bSOL</ion-label>
-      <div>{{multipliers.bSOL_DirectStakeBoost.toFixed(2)}}x</div>
+    <div class="calc-group">
+      <div class="g-head">
+        <ion-label><ion-img src="assets/images/bsol-small.webp" />bSOL</ion-label>
+        <div>{{multipliers.bSOL_DirectStakeBoost.toFixed(2)}}x</div>
+      </div>
+      <ion-input type="number" formControlName="bSOL" />
     </div>
-    <ion-input type="number" formControlName="bSOL"/>
-  </div>
-  <div class="calc-group">
-    <div class="g-head">
-      <ion-label>veMNDE</ion-label>
-      <div>{{multipliers.veMNDE_Boost.toFixed(4)}}x</div>
+    <div class="calc-group">
+      <div class="g-head">
+        <ion-label><ion-img src="assets/images/mnde-small.webp" />veMNDE</ion-label>
+        <div>{{multipliers.veMNDE_Boost.toFixed(4)}}x</div>
+      </div>
+      <ion-input type="number" formControlName="veMNDE" />
     </div>
-    <ion-input type="number" formControlName="veMNDE"/>
-  </div>
-  <div class="calc-group">
-    <div class="g-head">
-      <ion-label>veBLZE</ion-label>
-      <div>{{multipliers.veBLZE_Boost.toFixed(4)}}x</div>
+    <div class="calc-group">
+      <div class="g-head">
+        <ion-label><ion-img src="assets/images/blze-small.webp" />veBLZE</ion-label>
+        <div>{{multipliers.veBLZE_Boost.toFixed(4)}}x</div>
+      </div>
+      <ion-input type="number" formControlName="veBLZE" />
     </div>
-    <ion-input type="number" formControlName="veBLZE"/>
-  </div>
 
-  <div class="calc-group">
-    <div class="g-head">
-      <ion-label>Own .HUB domain</ion-label>
-      <ion-checkbox formControlName="hubDomain"/>
+    <div class="calc-group">
+      <div class="g-head">
+        <ion-label>Own .HUB domain? <a href="https://alldomains.id/domains/hub" target="_blank">buy</a></ion-label>
+        <ion-checkbox formControlName="hubDomain" />
+      </div>
     </div>
-  </div>
 
-</form>
+  </form>
   <div id="calc-summarize">
-    <ion-label>your stake boost: </ion-label>
-    <ion-text  class="stake-boost-tool-tip" [tooltip]="stakeBoost">
+    <div id="calc-sum-header">
+
+      <h5>rewards: </h5>
+
+      <ion-toggle (ionChange)="simulateAirdrop($event)" mode="ios"></ion-toggle>
+
+    </div>
+    @if(preview === 'hubSOL'){
+    <div class="reward-group">
+      <ion-label>weekly</ion-label>
+      <ion-text>{{esWeeklyReward | number}} hubSOL</ion-text>
+    </div>
+    <div class="reward-group">
+      <ion-label>yearly</ion-label>
+      <ion-text>{{esWeeklyReward * 52 | number}} hubSOL</ion-text>
+    </div>
+    }@else {
+    <div class="reward-group">
+      <ion-label>weekly</ion-label>
+      <ion-text> {{(boostSum / 52 | percent: '1.2-2') || 0}} Boost </ion-text>
+    </div>
+    <div class="reward-group">
+      <ion-label>yearly</ion-label>
+      <ion-text> {{(boostSum / 1 | percent: '1.2-2') || 0}} Boost </ion-text>
+    </div>
+    }
+    <!-- <ion-text  class="stake-boost-tool-tip" [tooltip]="stakeBoost">
       <span>
         {{(boostSum | async | percent: '1.2-2') || 0}} APR
       </span>
@@ -65,6 +91,6 @@
     </ion-text>
     <ng-template #stakeBoost>
       Paid weekly
-    </ng-template>
+    </ng-template> -->
   </div>
 </div>

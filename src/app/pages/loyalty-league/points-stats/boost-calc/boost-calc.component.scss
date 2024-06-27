@@ -1,7 +1,13 @@
 
-#ll-calc-title {
+#ll-calc-title{
+    color: var(--ion-color-dark);
+    font-weight: 14px;
+    font-weight: 600;
+    margin-block-end: 6px;
+}
+#ll-calc-sub {
     color: var(--colors-text-text-tertiary-600, #4B5565);
-    font-size: 13px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
     line-height: 18px;
@@ -20,6 +26,21 @@
         font-size: 12px;
         font-style: normal;
         font-weight: 500;
+        display: flex;
+        align-items: center;
+        ion-img{
+            width: 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-inline-end: 4px;
+        }
+        a{
+            font-weight: 600;
+            text-decoration: none;
+            text-transform: capitalize;
+            margin-inline-start: 4px;
+            font-size: 11px;
+        }
     }
 
     div {
@@ -35,16 +56,26 @@
     font-size: 14px;
     text-transform: capitalize;
     font-weight: 400;
-    padding: 20px;
-    border: 1px solid var(--ion-color-secondary);
-    border-radius: 4px;
-    box-shadow: 0 0 2px var(--ion-color-primary);
-    margin-block-start: 20px;
-    ion-text{
-        display: block;
-        font-size: 20px;
-        color: var(--ion-color-primary);
-        font-weight: bold;
+    border-top: 0.5px solid #34405473;
+    margin-block-start: 15px;
+    #calc-sum-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .reward-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        ion-label{
+            color: var(--colors-gray-modern-800, #202939);
+            font-size: 12px;
+        }
+        ion-text{
+            text-transform: none;
+            color: var(--ion-color-primary);
+            font-weight: 500;
+        }
     }
     .stake-boost-tool-tip {
         border-bottom: 2px dashed var(--ion-color-primary);
@@ -52,3 +83,27 @@
 }
 
 
+ion-toggle{
+    --handle-background: url(/assets/images/percentage-icon.svg);
+    --track-background-checked: #e7e7e7;
+    zoom: 0.6;
+    &::part(handle) {
+        // height: 10px;
+        background-size: 70%;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: white;
+    }
+    &::part(track) {
+        width: 58px;
+        // --track-background: url(/assets/images/usdc-sol.svg);
+        // --track-background-checked: url(/assets/images/usdc-sol.svg);
+        background-size: 78%;
+        background-color: var(--ion-color-page-top);
+        background-repeat: no-repeat;
+        background-position: 58% center;
+    }
+    &.toggle-checked  {
+        --handle-background-checked: url(/assets/images/hubsol-icon.png), white;
+    }
+}
