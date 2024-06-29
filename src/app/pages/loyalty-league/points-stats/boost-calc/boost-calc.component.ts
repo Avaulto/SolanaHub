@@ -1,11 +1,14 @@
 import { Component, Input, OnInit, signal } from '@angular/core';
-import { IonInput, IonLabel, IonButton, IonText, IonCheckbox, IonImg, IonToggle } from '@ionic/angular/standalone';
+import { IonInput, IonLabel, IonButton, IonText, IonCheckbox, IonImg, IonToggle, IonIcon } from '@ionic/angular/standalone';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoyaltyBooster } from 'src/app/models';
 import { map } from 'rxjs';
 import { AsyncPipe, DecimalPipe, PercentPipe } from '@angular/common';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+import { addIcons } from 'ionicons';
+import { alertCircleOutline } from 'ionicons/icons';
+import { AlertComponent } from 'src/app/shared/components';
 interface Boosters {
   nativeStake: number
   nativeStakeLongTermBoost: number
@@ -33,7 +36,20 @@ interface apyRates {
   templateUrl: './boost-calc.component.html',
   styleUrls: ['./boost-calc.component.scss'],
   standalone: true,
-  imports: [IonToggle, IonImg, TooltipModule, IonCheckbox,DecimalPipe, PercentPipe, IonInput, IonLabel, IonText, ReactiveFormsModule, AsyncPipe]
+  imports: [
+    AlertComponent,
+    IonIcon,
+    IonToggle,
+    IonImg,
+    IonCheckbox,
+    DecimalPipe,
+    PercentPipe,
+    IonInput,
+    IonLabel,
+    IonText,
+    ReactiveFormsModule,
+    AsyncPipe]
+
 })
 export class BoostCalcComponent implements OnInit {
   @Input() multipliers: Boosters;
@@ -44,8 +60,12 @@ export class BoostCalcComponent implements OnInit {
   public esWeeklyReward = 0
   constructor(
     private _fb: FormBuilder,
-    private _lls:LoyaltyLeagueService
+    private _lls: LoyaltyLeagueService
   ) {
+    addIcons({ alertCircleOutline })
+  }
+
+  ngOnInit() {
     this.boostForm = this._fb.group({
       native: [],
       hubSOL: [],
@@ -55,9 +75,6 @@ export class BoostCalcComponent implements OnInit {
       veBLZE: [],
       hubDomain: [false]
     })
-   }
-
-  ngOnInit() {
     const factors = {
       "SOL": this.multipliers.nativeStake,
       "MNDE": this.multipliers.veMNDE_Boost,
@@ -80,7 +97,7 @@ export class BoostCalcComponent implements OnInit {
 
     this.boostForm.valueChanges.subscribe(v => {
       console.log(v);
-      
+
       // Calculate true values
       // Example input amounts
       const inputs = {
@@ -94,15 +111,15 @@ export class BoostCalcComponent implements OnInit {
       // Calculate true values
       const trueValues = this.calculateTrueValues(inputs, factors);
       this.esWeeklyReward = this.calculateTotalAPYhubSOL(trueValues)
-      
+
       console.log(this.esWeeklyReward);
-      
+
       // const totalPts = Object.values(trueValues).reduce((acc, v) => Number(acc) + Number(v),0)
-      
-      
+
+
       // Calculate total APY
       let totalAPY = this.calculateTotalAPY(trueValues, apys);
-      
+
       // percentage boost by hubDOMAIN
       v.hubDomain ? this.esWeeklyReward = this.esWeeklyReward * 1.05 : this.esWeeklyReward
       v.hubDomain ? totalAPY = totalAPY * 1.05 : totalAPY
@@ -125,8 +142,8 @@ export class BoostCalcComponent implements OnInit {
     return trueValues;
   }
 
-  calculateTotalAPYhubSOL(trueValues){
-    const calculatedPts:any = Object.values(trueValues).reduce((acc: number, v) => Number(acc || 0) + Number(v),0);
+  calculateTotalAPYhubSOL(trueValues) {
+    const calculatedPts: any = Object.values(trueValues).reduce((acc: number, v) => Number(acc || 0) + Number(v), 0);
     const newTotalPts = this._lls.getllTotalPts() + calculatedPts;
     const estimatedAirdrop = calculatedPts / newTotalPts * this.rebates
     return estimatedAirdrop
@@ -135,7 +152,7 @@ export class BoostCalcComponent implements OnInit {
   calculateTotalAPY(trueValues, apys) {
     let totalTrueValue = 0;
     let weightedAPY = 0;
-    
+
     for (let key in trueValues) {
       if (trueValues.hasOwnProperty(key) && apys.hasOwnProperty(key)) {
         totalTrueValue += trueValues[key];
@@ -146,7 +163,7 @@ export class BoostCalcComponent implements OnInit {
   }
 
   public preview: 'percentage' | 'hubSOL'
-   simulateAirdrop(e){
+  simulateAirdrop(e) {
     e.detail.checked ? this.preview = 'hubSOL' : this.preview = 'percentage'
   }
 

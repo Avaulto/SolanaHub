@@ -17,7 +17,6 @@
             <span>SolanaHub</span>
           </div>
           <div id="menu-top">
-
             <app-wallet-connect />
             <settings-button/>
           </div>
@@ -55,25 +54,6 @@
               }
               }
             </ion-item>
-            
-            <!-- @else{
-            @if(!(watchMode$ | async)){
-
-
-            <ion-item [disabled]="!p.active" style="opacity: 1;" (click)="openSettingsModal()" lines="none"
-              detail="false">
-
-              <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
-
-              <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-              @if (!p.active) {
-              <ion-chip color="secondary">Soon</ion-chip>
-              }
-
-            </ion-item>
-            }
-            } -->
             }
 
           </ion-menu-toggle>
@@ -88,6 +68,8 @@
       }@else {
       <not-connected />
       }
+      
+      <!-- <donate/> -->
     </ion-content>
 
   </ion-split-pane>

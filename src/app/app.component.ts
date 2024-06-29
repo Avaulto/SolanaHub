@@ -41,6 +41,7 @@ import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league
 
 import { combineLatestWith, switchMap, take } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
+import { DonateComponent } from './shared/layouts/donate/donate.component';
 
 
 @Component({
@@ -49,6 +50,7 @@ import { NotificationsService } from './services/notifications.service';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
+    DonateComponent,
     NgxTurnstileModule,
     SettingsButtonComponent,
     MenuComponent,
@@ -121,6 +123,7 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    // check if localstorage for donate button is exist
 
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')

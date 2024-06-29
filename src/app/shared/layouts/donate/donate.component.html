@@ -1,0 +1,8 @@
+<div [class]=" !showDonateBtn  ? 'ion-hide' : ''">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="showDonatePopup($event)">
+    <ion-icon name="close-outline" (click)="hideDonate()"/>
+    <ion-fab-button>
+      <ion-img src="assets/images/cubik-logo.svg" />
+    </ion-fab-button>
+  </ion-fab>
+</div>

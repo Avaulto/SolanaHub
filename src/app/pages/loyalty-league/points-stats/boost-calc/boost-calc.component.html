@@ -1,6 +1,7 @@
 <div class="ion-padding data-set" id="calc-boost-wrapper">
   <div id="ll-calc-title">Maximize Your Staking Rewards</div>
   <div id="ll-calc-sub">Utilize Our Boost Calculator to Unlock the Full Potential of Your Assets</div>
+  
   <form [formGroup]="boostForm">
     <div class="calc-group">
       <div class="g-head">
@@ -81,16 +82,6 @@
       <ion-text> {{(boostSum / 1 | percent: '1.2-2') || 0}} Boost </ion-text>
     </div>
     }
-    <!-- <ion-text  class="stake-boost-tool-tip" [tooltip]="stakeBoost">
-      <span>
-        {{(boostSum | async | percent: '1.2-2') || 0}} APR
-      </span>
-      <span>
-        / {{esWeeklyReward.toFixed(3)}} hubSOL
-      </span>
-    </ion-text>
-    <ng-template #stakeBoost>
-      Paid weekly
-    </ng-template> -->
   </div>
+  <alert text="These rewards are in addition to your stake rewards." type="regular"/>
 </div>
