@@ -1,0 +1,49 @@
+:host{
+    padding: 10px;
+}
+#card{  
+    background: #CEF3FB;
+    border-radius: 10px;
+    padding: 10px 10px;
+    position: relative;
+    height: 160px;
+}
+ion-label{
+    color: #1c9ed7;
+    font-weight: 500;
+    font-size: 30px;
+    display: block;
+}
+ion-text{
+    color: var(--ion-color-medium);
+    font-size: 14px;
+}
+a{
+    position: absolute;
+    bottom: 9px;
+    left: 9px;
+    font-size: 12px;
+    text-decoration: none;
+    text-transform: capitalize;
+    color: black;
+    font-weight: 200;
+}
+#donate-btn-wrapper{
+    padding: 7px 0px 0 8px;
+    background: white;
+    position: absolute;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 8px 0px 8px 0;
+    ion-button{
+        --background: black;
+    }
+}
+
+#blink{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 550px;
+}
