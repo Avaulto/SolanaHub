@@ -188,7 +188,7 @@ export class SolanaHelpersService {
     );
   }
 
-    public async getTokenAccountsBalance(wallet: string, getType?: 'token' | 'nft'): Promise<any[]> {
+    public async getTokenAccountsBalance(wallet: string,includeMeta: boolean,emptyAccountOnly: boolean,  getType?: 'token' | 'nft'): Promise<any[]> {
       const filters: GetProgramAccountsFilter[] = [
         {
           dataSize: 165,    //size of account (bytes)
@@ -207,17 +207,26 @@ export class SolanaHelpersService {
       let tokensBalance = accounts.map((account, i) => {
         //Parse the account data
         const parsedAccountInfo: any = account.account.data;
-        const mintAddress: string = parsedAccountInfo["parsed"]["info"]["mint"];
+        const address: string = parsedAccountInfo["parsed"]["info"]["mint"];
         const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
         const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
-        return { tokenPubkey: account.pubkey.toString(), mintAddress, balance, decimals }
+        return { data:{tokenAccount: account.pubkey.toString(), address, balance, decimals} }
       })
       if (getType) {
         if (getType == 'nft') {
-          tokensBalance = tokensBalance.filter(token => token.decimals == 0)
+          tokensBalance = tokensBalance.filter(token => token.data.decimals == 0)
         } else if (getType == 'token') {
-          tokensBalance = tokensBalance.filter(token => token.decimals != 0)
+          tokensBalance = tokensBalance.filter(token => token.data.decimals != 0)
         }
+      }
+      if(includeMeta){
+        const jupTokens = await this._utils.getJupTokens()
+        tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens)
+      }
+      if(emptyAccountOnly){
+        console.log(tokensBalance);
+        
+        tokensBalance = tokensBalance.filter((acc: any) => acc.balance === 0)
       }
       return tokensBalance;
 

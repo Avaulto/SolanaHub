@@ -41,6 +41,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/staking/staking.page').then( m => m.StakingPage)
   },
   {
+    path: RoutingPath.SAVINGS,
+    loadComponent: () => import('./pages/saving/saving.page').then( m => m.SavingPage)
+  },
+  {
     path: RoutingPath.LENDING,
     loadComponent: () => import('./pages/lending/lending.page').then( m => m.LendingPage)
   },
@@ -64,10 +68,4 @@ export const routes: Routes = [
     path:"**",
     redirectTo: RoutingPath.OVERVIEW
   },
-
-
-
-
-
-
 ];
