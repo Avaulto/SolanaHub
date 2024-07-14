@@ -1,7 +1,11 @@
 <div id="loyal-member">
   <div id="score-head">
     <div>
-      <div id="total-pts-title">Your weekly airdrop</div>
+      <div id="total-pts-title">Your weekly airdrop 
+        @if(isAmbassador){
+          <ion-icon name="disc-outline"></ion-icon>
+        }
+      </div>
       <div id="total-pts-value">{{airdrop }} hubSOL</div>
     </div>
 

@@ -32,8 +32,9 @@ export interface PointsBreakDown {
     nativeStakePts: number;
     bSOLpts:        number;
     mSOLpts:        number;
+    ambassadorPts?: number;
     vSOLpts:        number;
-    hubSOLpts:       number;
+    hubSOLpts:      number;
     veMNDEpts:      number;
     veBLZEpts:      number;
     referralPts:    number;
