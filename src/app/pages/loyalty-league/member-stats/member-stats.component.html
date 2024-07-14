@@ -3,7 +3,19 @@
     <div>
       <div id="total-pts-title">Your weekly airdrop 
         @if(isAmbassador){
-          <ion-icon name="disc-outline"></ion-icon>
+          <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
+          <ng-template #toolTipTpl>
+                    
+            <div class="tool-tip">
+              <div style="text-transform: capitalize; display: flex;align-items: center;margin-block-end: 4px;font-weight: 600;color:var(--ion-color-dark);">
+                <span 
+                style="background-color: var(--ion-color-warning); width:12px;height: 12px;border-radius: 50%;margin-inline-end: 6px;"
+                >
+              </span> 
+              Ambassador program</div>
+              <div class="tool-tip-desc">you have received 100 loyalty points boost as a SolanaHub Ambassador.</div>
+            </div>
+          </ng-template>
         }
       </div>
       <div id="total-pts-value">{{airdrop }} hubSOL</div>

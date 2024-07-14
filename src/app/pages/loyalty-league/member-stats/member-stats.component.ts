@@ -6,13 +6,14 @@ import { addIcons } from 'ionicons';
 import { copyOutline, discOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { loyalMember } from 'src/app/models';
+import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 
 @Component({
   selector: 'app-member-stats',
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [DecimalPipe, AsyncPipe, JsonPipe, IonButton, IonRow, IonCol, NgStyle, IonIcon, CopyTextDirective]
+  imports: [TooltipModule, DecimalPipe, AsyncPipe, JsonPipe, IonButton, IonRow, IonCol, NgStyle, IonIcon, CopyTextDirective]
 })
 export class MemberStatsComponent implements OnChanges {
 
