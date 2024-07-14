@@ -191,19 +191,19 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/xoaqvsym.json',
           active: true
         },
-        {
-          title: 'Lending',
-          url: `/${RoutingPath.LENDING}`,
-          icon: 'https://cdn.lordicon.com/jkgunhbs.json',
-          active: false
-        },
+        // {
+        //   title: 'Lending',
+        //   url: `/${RoutingPath.LENDING}`,
+        //   icon: 'https://cdn.lordicon.com/jkgunhbs.json',
+        //   active: false
+        // },
         // {
         //   title: 'Liquidity pools',
         //   url: `/${RoutingPath.LIQUIDITY_POOLS}`,
         //   icon: 'https://cdn.lordicon.com/rlrlhrme.json',
         //   active: false
         // },
-        { title: 'Saving', url: `/${RoutingPath.SAVINGS}`, icon: 'https://cdn.lordicon.com/rnzxfhba.json', active: true },
+        { title: 'Stash', url: `/${RoutingPath.STASH}`, icon: 'https://cdn.lordicon.com/rnzxfhba.json', active: false },
 
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
         // {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},

@@ -21,6 +21,7 @@ export class MftComponent implements OnInit {
   @Input() label:string;
   @Input() desc:string;
   @Input() tableId: string;
+  @Input() checkboxes: boolean = false
   @Input('tableRows') tableRows = 5;
   @Input('tableMenuOptions') tableMenuOptions: string[] = []
     //@ts-ignore
@@ -56,6 +57,7 @@ export class MftComponent implements OnInit {
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
+    this.configuration.checkboxes = this.checkboxes;
     if(this._platform.width() < 992){
       this.configuration.horizontalScroll = true;
     }

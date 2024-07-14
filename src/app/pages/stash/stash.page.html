@@ -1,11 +1,19 @@
 <ion-content [fullscreen]="true">
-  <page-header title="Saving"
-    description="
+  <page-header title="Stash" description="
     Discover innovative ways to maximize the potential of your idle assets on Solana. 
     Optimize your investments and make your funds work more efficiently for you.
     "></page-header>
   <ion-grid>
-    <ion-row>
+    @if(analyzeStage() === 0){
+    <promo [@slideInLeave] (onStartAnalyze)="analyzeStage.set(1)" />
+    }@else if(analyzeStage() === 1){
+    <analyze (onStartAnalyze)="analyzeStage.set(2)" />
+    }@else{
+    <burnable-accounts class="gap data-set ion-margin-bottom" [@slideInEnter] />
+    <extractable-stake-accounts class="gap data-set  ion-margin-bottom" [@slideInEnter] />
+    <empty-accounts class="gap data-set " [@slideInEnter] />
+    }
+    <!-- <ion-row>
       <ion-col size="12" class="data-set ion-margin-bottom">
         <table-head label="Manage your Empty Account"
           desc="Select one or more account to close/burn and get your SOL back!"></table-head>
@@ -41,7 +49,7 @@
                     </div>
                   </ng-template>
                 </div>
-                <ion-button class="ion-text-capitalize" >close all</ion-button>
+                <ion-button class="ion-text-capitalize" >Extract all</ion-button>
      
               </ion-row>
             </ion-col>
@@ -54,18 +62,17 @@
     <ion-row>
       <ion-col size="12" class="data-set">
     <app-mft 
-
     [tableId]="'savings-table'" 
       [tableColumns]="columns"
       [tableData]="tableData">
     </app-mft>
 </ion-col>
-</ion-row>
+</ion-row> -->
   </ion-grid>
 
 </ion-content>
 
-<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+<!-- <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
       <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
@@ -83,11 +90,16 @@
   <div class="ion-text-center">
     {{row.balance | number: '1.0'}} {{row.symbol}}
   </div>
-  <div class="ion-text-center">
-    {{row.value | currency }} 
-  </div>
 </ng-template>
 
+<ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-center">
+    {{row.value | number: '1.0'}} {{row['extract-asset']}}
+  </div>
+  <div class="ion-text-center">
+    {{row.source}} 
+  </div>
+</ng-template>
 <ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-center account-info">
     {{row.tokenAccount.short}}  <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
@@ -95,4 +107,4 @@
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
   <ion-button class="ion-text-capitalize close-single">Close</ion-button>
-</ng-template>
+</ng-template> -->

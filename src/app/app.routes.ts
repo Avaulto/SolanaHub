@@ -41,8 +41,8 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/staking/staking.page').then( m => m.StakingPage)
   },
   {
-    path: RoutingPath.SAVINGS,
-    loadComponent: () => import('./pages/saving/saving.page').then( m => m.SavingPage)
+    path: RoutingPath.STASH,
+    loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage)
   },
   {
     path: RoutingPath.LENDING,
