@@ -15,6 +15,7 @@ import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-m
 import { BurnableAccountsComponent } from './burnable-accounts/burnable-accounts.component';
 import { EmptyAccountsComponent } from './empty-accounts/empty-accounts.component';
 import { ExtractableStakeAccountsComponent } from "./extractable-stake-accounts/extractable-stake-accounts.component";
+import { StashService } from './stash.service';
 export enum SavingType {
   closeATA = 1,
   burnATA = 2,
@@ -81,6 +82,7 @@ export class StashPage implements OnInit {
     return this._columnsOptions[this.selectedTab().toLowerCase()]
   })
   constructor(
+    private _stashService: StashService,
     private _shs: SolanaHelpersService,
     private _util: UtilService
   ) { }
@@ -94,6 +96,7 @@ export class StashPage implements OnInit {
   })
   ngOnInit() {
     this.getSavingData()
+    this._stashService.findExtractAbleSOLAccounts()
     this._columnsOptions = {
       assets: [
         // { key: 'rank', title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },

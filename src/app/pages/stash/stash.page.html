@@ -4,15 +4,15 @@
     Optimize your investments and make your funds work more efficiently for you.
     "></page-header>
   <ion-grid>
-    @if(analyzeStage() === 0){
+    <!-- @if(analyzeStage() === 0){
     <promo [@slideInLeave] (onStartAnalyze)="analyzeStage.set(1)" />
     }@else if(analyzeStage() === 1){
     <analyze (onStartAnalyze)="analyzeStage.set(2)" />
     }@else{
     <burnable-accounts class="gap data-set ion-margin-bottom" [@slideInEnter] />
-    <extractable-stake-accounts class="gap data-set  ion-margin-bottom" [@slideInEnter] />
     <empty-accounts class="gap data-set " [@slideInEnter] />
-    }
+  } -->
+  <extractable-stake-accounts class="gap data-set  ion-margin-bottom" [@slideInEnter] />
     <!-- <ion-row>
       <ion-col size="12" class="data-set ion-margin-bottom">
         <table-head label="Manage your Empty Account"
