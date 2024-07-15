@@ -36,7 +36,7 @@ export class ValidatorsModalComponent {
   @Output() onSelectValidator = new EventEmitter()
   public util = inject(UtilService);
   public selectedValidator: Validator;
-  public filteredValidators: Signal<Validator[]> = computed(() => this.validatorsList.filter(t => t?.name?.toLowerCase().startsWith(this.searchTerm().toLowerCase())))
+  public filteredValidators: Signal<Validator[]> = computed(() => this.validatorsList.filter(t => t?.name?.toLowerCase().indexOf(this.searchTerm().toLowerCase()) > -1))
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term)
