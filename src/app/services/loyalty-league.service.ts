@@ -80,7 +80,7 @@ export class LoyaltyLeagueService {
   public async addReferral(referer: string, participantAddress: string) {
     let data = null
     try {
-      const res = await fetch(`${this.api}/referral?referAddress=${referer}&participantAddress=${participantAddress}`);
+      const res = await fetch(`${this.api}/referral?referrer=${referer}&participantAddress=${participantAddress}`);
       data = await res.json();
     } catch (error) {
       console.warn(error);

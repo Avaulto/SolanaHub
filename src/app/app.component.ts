@@ -130,7 +130,7 @@ export class AppComponent implements OnInit {
     this._activeRoute.queryParams
       .subscribe((params) => {
         const refWallet = params['refWallet']
-        if (refWallet && PublicKey.isOnCurve(refWallet)) {
+        if (refWallet) {
 
           this._localStorage.saveData('refWallet', refWallet)
         }
