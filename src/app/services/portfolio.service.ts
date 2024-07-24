@@ -88,22 +88,22 @@ export class PortfolioService {
   public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
 
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
-    let jupTokens = await this._utils.getJupTokens('all');
+    // let jupTokens = await this._utils.getJupTokens('all');
     // if user switch wallet - clean the session storage
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
 
-      if (!portfolioData || !jupTokens) {
+      if (!portfolioData) {
 
         let res = await Promise.all([
-          this._utils.getJupTokens('all'),
+          // this._utils.getJupTokens('all'),
           await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`)).json()
         ])
         // this.turnStileRefresh.next(false)
         this._utils.turnStileToken = null
         va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode  })
-        jupTokens = res[0];
-        portfolioData = res[1]
+        // jupTokens = res[0];
+        portfolioData = res[0]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
         const storageCap = 4073741824 // 5 mib
         if (this._utils.memorySizeOf(portfolioData) < storageCap) {
@@ -117,8 +117,13 @@ export class PortfolioService {
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
 
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
-      this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
-      this._portfolioDeFi(portfolio.elements, jupTokens)
+      const tokenJupData = Object.keys(portfolio.tokenInfo.solana).map(key => {
+        return portfolio.tokenInfo.solana[key];
+    })
+    console.log(tokenJupData);
+    
+      this._portfolioTokens(extendTokenData, tokenJupData);
+      this._portfolioDeFi(portfolio.elements, tokenJupData)
 
       
       const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
@@ -136,7 +141,7 @@ export class PortfolioService {
     }
   }
 
-  private async _portfolioTokens(tokens: any, jupTokens: JupToken[], walletAddress): Promise<void> {
+  private async _portfolioTokens(tokens: any, jupTokens: JupToken[]): Promise<void> {
 
 
     if (tokens) {
