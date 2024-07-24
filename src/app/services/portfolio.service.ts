@@ -51,6 +51,7 @@ export class PortfolioService {
       if (wallet) {
 
         while (!this._utils.turnStileToken) await this._utils.sleep(500);
+
         this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken)
 
         this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
@@ -90,6 +91,7 @@ export class PortfolioService {
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
     // let jupTokens = await this._utils.getJupTokens('all');
     // if user switch wallet - clean the session storage
+    
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
 
@@ -120,7 +122,6 @@ export class PortfolioService {
       const tokenJupData = Object.keys(portfolio.tokenInfo.solana).map(key => {
         return portfolio.tokenInfo.solana[key];
     })
-    console.log(tokenJupData);
     
       this._portfolioTokens(extendTokenData, tokenJupData);
       this._portfolioDeFi(portfolio.elements, tokenJupData)
@@ -148,7 +149,7 @@ export class PortfolioService {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
       let tokensData= this._utils.addTokenData(tokens?.data.assets, jupTokens)
-  
+      
       
       // add pipes
       const tokensAggregated: Token[] = tokensData.filter(item => item.value).map((item: Token) => {
