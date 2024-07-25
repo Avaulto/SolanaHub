@@ -111,8 +111,6 @@ export class UtilService {
     return this.jupTokens
   }
   public addTokenData(assets: any, tokensInfo: JupToken[]): any[] {
-    console.log(assets,tokensInfo);
-    
     return assets.map((res: any) => {
       
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)

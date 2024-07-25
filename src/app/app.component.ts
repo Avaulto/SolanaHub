@@ -121,10 +121,7 @@ export class AppComponent implements OnInit {
     
   }
   sendCaptchaResponse(token) {
-    console.log('the token:', token);
-    
     this._utilService.turnStileToken = token
-
   }
 
   async ngOnInit() {
