@@ -91,7 +91,7 @@ export class PortfolioService {
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
     // let jupTokens = await this._utils.getJupTokens('all');
     // if user switch wallet - clean the session storage
-    
+
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
 
@@ -103,7 +103,7 @@ export class PortfolioService {
         ])
         // this.turnStileRefresh.next(false)
         this._utils.turnStileToken = null
-        va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode  })
+        va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode })
         // jupTokens = res[0];
         portfolioData = res[0]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
@@ -121,14 +121,14 @@ export class PortfolioService {
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
       const tokenJupData = Object.keys(portfolio.tokenInfo.solana).map(key => {
         return portfolio.tokenInfo.solana[key];
-    })
-    
+      })
+
       this._portfolioTokens(extendTokenData, tokenJupData);
       this._portfolioDeFi(portfolio.elements, tokenJupData)
 
-      
+
       const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
-      
+
       this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
@@ -148,9 +148,9 @@ export class PortfolioService {
     if (tokens) {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
-      let tokensData= this._utils.addTokenData(tokens?.data.assets, jupTokens)
-      
-      
+      let tokensData = this._utils.addTokenData(tokens?.data.assets, jupTokens)
+
+
       // add pipes
       const tokensAggregated: Token[] = tokensData.filter(item => item.value).map((item: Token) => {
         // if(LST_direct_stake.mSOL && item.symbol.toLowerCase() === 'msol'){
@@ -167,16 +167,20 @@ export class PortfolioService {
       this.tokens.set(tokensAggregated)
     }
   }
-  private async _portfolioNft(nfts: any) {
+
+  public async getNFTdata() {
     try {
+      const {publicKey} = this._shs.getCurrentWallet();
+      const nftData = await (await fetch(`${this.restAPI}/api/portfolio/nft?address=${publicKey.toBase58()}`)).json()
+      this.nfts.set(nftData.data.assets)
       // console.log(nfts);
-      const magicEdenNft = await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
-      console.log(magicEdenNft);
+      // const magicEdenNft = await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
+      // console.log(magicEdenNft);
 
-      // const nftExtended = await (await fetch(`https://api.blockchainapi.com/v1/solana/nft/solana/GqUDRFJ8wb38fx3o7tzefZY483pZgjDVKxkdgsDNhBiG/owner_advanced`)).json()
+      // // const nftExtended = await (await fetch(`https://api.blockchainapi.com/v1/solana/nft/solana/GqUDRFJ8wb38fx3o7tzefZY483pZgjDVKxkdgsDNhBiG/owner_advanced`)).json()
 
-      const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`, { method: 'POST', body: JSON.stringify({ nfts: magicEdenNft }) })).json()
-      console.log(nftExtended);
+      // const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`, { method: 'POST', body: JSON.stringify({ nfts: magicEdenNft }) })).json()
+      // console.log(nftExtended);
 
     } catch (error) {
       console.error(error);
@@ -219,8 +223,8 @@ export class PortfolioService {
               records.push({
                 value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
                 imgURL: group.image,
-                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: a.condition } }) || [],
-                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol ,decimals: a.decimals} }) || [],
+                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: a.condition } }) || [],
+                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
                 type: group.label,
                 link: group.website,
                 platform: group.platformId
@@ -239,7 +243,7 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: a.condition } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: a.condition } }) || [],
               poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
@@ -255,7 +259,7 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: 'credit' } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: 'credit' } }) || [],
               poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
@@ -268,7 +272,7 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: 'debt' } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: 'debt' } }) || [],
               poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,

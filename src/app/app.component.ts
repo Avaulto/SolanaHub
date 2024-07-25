@@ -125,15 +125,6 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    console.log(window.turnstile);
-    const self = this;
-    // check if localstorage for donate button is exist
-    // window.turnstile.render(this.turnStile.nativeElement, {
-    //   sitekey: this.turnStileKey,
-    //   callback: function(token) {
-    //     self.sendCaptchaResponse(token);
-    // }
-    // });
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
     this._activeRoute.queryParams
