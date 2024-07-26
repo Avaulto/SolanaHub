@@ -127,9 +127,9 @@ export class PortfolioService {
       this._portfolioDeFi(portfolio.elements, tokenJupData)
 
 
-      const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
+      // const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
 
-      this.nfts.set(extendNftData.data.assets)
+      // this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)
