@@ -6,22 +6,21 @@
 
 ion-button {
     height: 36px;
-    --background: var(--ion-color-menu);
+    --background: var(--ion-color-menu);  
     text-transform: capitalize;
-    // color: var(--ion-color-dark);
-    font-family: Inter;
     font-size: 13px;
-    font-style: normal;
     font-weight: 600;
     line-height: 20px;
     margin-inline-end: 8px;
+    color: var(--ion-color-text);
+    // color: var(--ion-color-btn);
     /* 153.846% */
 }
 
 .active {
     border-radius: var(--radius-sm, 6px);
     --background: var(--ion-color-btn-bg);;
-    // color: var(--ion-color-primary)
+    color: var(--ion-color-primary);
 }
 
 @media only screen and (max-width: 992px) {

@@ -54,9 +54,8 @@ export class CollectiblesPage implements OnInit {
   constructor(private _portfolio:PortfolioService,    private _modalCtrl: ModalController) { }
 
   ngOnInit() {
-    setTimeout(() => {
-      console.log(this.checkNfts);
-    }, 4000);
+    
+    this._portfolio.getNFTdata()
     
   }
   searchNft(term){

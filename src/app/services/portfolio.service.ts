@@ -51,6 +51,7 @@ export class PortfolioService {
       if (wallet) {
 
         while (!this._utils.turnStileToken) await this._utils.sleep(500);
+
         this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken)
 
         this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
@@ -88,22 +89,23 @@ export class PortfolioService {
   public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
 
     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
-    let jupTokens = await this._utils.getJupTokens('all');
+    // let jupTokens = await this._utils.getJupTokens('all');
     // if user switch wallet - clean the session storage
+
     let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
     try {
 
-      if (!portfolioData || !jupTokens) {
+      if (!portfolioData) {
 
         let res = await Promise.all([
-          this._utils.getJupTokens('all'),
+          // this._utils.getJupTokens('all'),
           await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`)).json()
         ])
         // this.turnStileRefresh.next(false)
         this._utils.turnStileToken = null
-        va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode  })
-        jupTokens = res[0];
-        portfolioData = res[1]
+        va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode })
+        // jupTokens = res[0];
+        portfolioData = res[0]
         portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
         const storageCap = 4073741824 // 5 mib
         if (this._utils.memorySizeOf(portfolioData) < storageCap) {
@@ -117,13 +119,17 @@ export class PortfolioService {
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
 
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
-      this._portfolioTokens(extendTokenData, jupTokens, walletAddress);
-      this._portfolioDeFi(portfolio.elements, jupTokens)
+      const tokenJupData = Object.keys(portfolio.tokenInfo.solana).map(key => {
+        return portfolio.tokenInfo.solana[key];
+      })
 
-      
-      const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
-      
-      this.nfts.set(extendNftData.data.assets)
+      this._portfolioTokens(extendTokenData, tokenJupData);
+      this._portfolioDeFi(portfolio.elements, tokenJupData)
+
+
+      // const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
+
+      // this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)
@@ -136,15 +142,15 @@ export class PortfolioService {
     }
   }
 
-  private async _portfolioTokens(tokens: any, jupTokens: JupToken[], walletAddress): Promise<void> {
+  private async _portfolioTokens(tokens: any, jupTokens: JupToken[]): Promise<void> {
 
 
     if (tokens) {
       // const LST_direct_stake = await this._lss.getDirectStake(walletAddress)
 
-      let tokensData= this._utils.addTokenData(tokens?.data.assets, jupTokens)
-  
-      
+      let tokensData = this._utils.addTokenData(tokens?.data.assets, jupTokens)
+
+
       // add pipes
       const tokensAggregated: Token[] = tokensData.filter(item => item.value).map((item: Token) => {
         // if(LST_direct_stake.mSOL && item.symbol.toLowerCase() === 'msol'){
@@ -161,16 +167,20 @@ export class PortfolioService {
       this.tokens.set(tokensAggregated)
     }
   }
-  private async _portfolioNft(nfts: any) {
+
+  public async getNFTdata() {
     try {
+      const {publicKey} = this._shs.getCurrentWallet();
+      const nftData = await (await fetch(`${this.restAPI}/api/portfolio/nft?address=${publicKey.toBase58()}`)).json()
+      this.nfts.set(nftData.data.assets)
       // console.log(nfts);
-      const magicEdenNft = await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
-      console.log(magicEdenNft);
+      // const magicEdenNft = await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
+      // console.log(magicEdenNft);
 
-      // const nftExtended = await (await fetch(`https://api.blockchainapi.com/v1/solana/nft/solana/GqUDRFJ8wb38fx3o7tzefZY483pZgjDVKxkdgsDNhBiG/owner_advanced`)).json()
+      // // const nftExtended = await (await fetch(`https://api.blockchainapi.com/v1/solana/nft/solana/GqUDRFJ8wb38fx3o7tzefZY483pZgjDVKxkdgsDNhBiG/owner_advanced`)).json()
 
-      const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`, { method: 'POST', body: JSON.stringify({ nfts: magicEdenNft }) })).json()
-      console.log(nftExtended);
+      // const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`, { method: 'POST', body: JSON.stringify({ nfts: magicEdenNft }) })).json()
+      // console.log(nftExtended);
 
     } catch (error) {
       console.error(error);
@@ -213,8 +223,8 @@ export class PortfolioService {
               records.push({
                 value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
                 imgURL: group.image,
-                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: a.condition } }) || [],
-                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol ,decimals: a.decimals} }) || [],
+                holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: a.condition } }) || [],
+                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
                 type: group.label,
                 link: group.website,
                 platform: group.platformId
@@ -233,7 +243,7 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: a.condition } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: a.condition } }) || [],
               poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
@@ -249,7 +259,7 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: 'credit' } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: 'credit' } }) || [],
               poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
@@ -262,7 +272,7 @@ export class PortfolioService {
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
-              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol,decimals: a.decimals, condition: 'debt' } }) || [],
+              holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: 'debt' } }) || [],
               poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,

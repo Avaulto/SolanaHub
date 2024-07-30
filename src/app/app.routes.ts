@@ -1,5 +1,9 @@
 import { Routes } from '@angular/router';
 import {RoutingPath} from "./shared/constants";
+import { IsConnectedGuard } from './shared/guards/is-connected.guard';
+import { inject } from '@angular/core';
+import { WalletStore } from '@heavy-duty/wallet-adapter';
+export const canActivate = (isConnected: boolean, walletService = inject(WalletStore)) => walletService.connected$;
 
 export const routes: Routes = [
   {
@@ -18,27 +22,34 @@ export const routes: Routes = [
   },
   {
     path: RoutingPath.COLLECTIBLES,
-    loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage)
+    loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage),
+    // redirectTo: RoutingPath.OVERVIEW,
+   
   },
   {
     path: RoutingPath.BRIDGE,
-    loadComponent: () => import('./pages/bridge/bridge.page').then( m => m.BridgePage)
+    loadComponent: () => import('./pages/bridge/bridge.page').then( m => m.BridgePage),
+    
   },
   {
     path: RoutingPath.LOYALTY_LEAGUE,
-    loadComponent: () => import('./pages/loyalty-league/loyalty-league.page').then( m => m.LoyaltyLeaguePage)
+    loadComponent: () => import('./pages/loyalty-league/loyalty-league.page').then( m => m.LoyaltyLeaguePage),
+    
   },
   {
     path: `${RoutingPath.SWAP}/:pair`,
-    loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage)
+    loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage),
+    
   },
   {
     path: RoutingPath.SWAP,
-    loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage)
+    loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage),
+    
   },
   {
     path: RoutingPath.STAKING,
-    loadComponent: () => import('./pages/staking/staking.page').then( m => m.StakingPage)
+    loadComponent: () => import('./pages/staking/staking.page').then( m => m.StakingPage),
+    
   },
   {
     path: RoutingPath.STASH,
@@ -46,23 +57,28 @@ export const routes: Routes = [
   },
   {
     path: RoutingPath.LENDING,
-    loadComponent: () => import('./pages/lending/lending.page').then( m => m.LendingPage)
+    loadComponent: () => import('./pages/lending/lending.page').then( m => m.LendingPage),
+    
   },
   {
     path: RoutingPath.LIQUIDITY_POOLS,
-    loadComponent: () => import('./pages/liquidity-pools/liquidity-pools.page').then( m => m.LiquidityPoolsPage)
+    loadComponent: () => import('./pages/liquidity-pools/liquidity-pools.page').then( m => m.LiquidityPoolsPage),
+    
   },
   {
     path: RoutingPath.DAO,
-    loadComponent: () => import('./pages/dao/dao.page').then( m => m.DaoPage)
+    loadComponent: () => import('./pages/dao/dao.page').then( m => m.DaoPage),
+    
   },
   {
     path: RoutingPath.AIRDROP_FINDER,
-    loadComponent: () => import('./pages/airdrop-finder/airdrop-finder.page').then( m => m.AirdropFinderPage)
+    loadComponent: () => import('./pages/airdrop-finder/airdrop-finder.page').then( m => m.AirdropFinderPage),
+    
   },
   {
     path: RoutingPath.NOTIFICATIONS,
-    loadComponent: () => import('./pages/notifications/notifications.page').then( m => m.NotificationsPage)
+    loadComponent: () => import('./pages/notifications/notifications.page').then( m => m.NotificationsPage),
+    
   },
   {
     path:"**",

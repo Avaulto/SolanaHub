@@ -1,5 +1,5 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
@@ -116,21 +116,21 @@ export class AppComponent implements OnInit {
     this.turnStile.reset()
 
   })
+  log(e){
+    console.log(e);
+    
+  }
   sendCaptchaResponse(token) {
-
     this._utilService.turnStileToken = token
-
   }
 
   async ngOnInit() {
-    // check if localstorage for donate button is exist
-
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
     this._activeRoute.queryParams
       .subscribe((params) => {
         const refWallet = params['refWallet']
-        if (refWallet && PublicKey.isOnCurve(refWallet)) {
+        if (refWallet) {
 
           this._localStorage.saveData('refWallet', refWallet)
         }
@@ -141,8 +141,6 @@ export class AppComponent implements OnInit {
       this._walletStore.connected$.subscribe(connected =>{
         if(connected){
           setTimeout(() => {
-            console.log(connected);
-            
             this._notifService.checkAndSetIndicator()
           });
         }

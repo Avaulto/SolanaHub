@@ -1,6 +1,6 @@
-<ngx-turnstile #turnStile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto"
+<ngx-turnstile #turnStile [siteKey]="turnStileKey" (errored)="log($event)" (resolved)="sendCaptchaResponse($event)" theme="auto"
   [tabIndex]="0" />
-
+  <!-- <div class="cf-turnstile"#turnStile></div> -->
 
 <ion-header mode="md" [translucent]="true">
   <app-menu />

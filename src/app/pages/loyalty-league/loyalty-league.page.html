@@ -10,7 +10,7 @@
         <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
           Boost your score to unlock weekly SOL rewards. <span (click)="openFaqPopOver()">How it works?</span></div>
         @if(loyaltyLeagueMember$ | async){
-        <app-member-stats [loyalMember]="loyalMember" />
+        <app-member-stats [isAmbassador]="isAmbassador" [loyalMember]="loyalMember" />
         }@else {
           <div id="no-stake-box">
             <ion-label>total points</ion-label>

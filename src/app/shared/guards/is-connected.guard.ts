@@ -8,13 +8,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 
-export class IsConnectedGuard implements CanActivate {
+export class IsConnectedGuard{
   readonly isReady$ =  inject(WalletStore).connected$
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
+    
     return this.isReady$
   }
   

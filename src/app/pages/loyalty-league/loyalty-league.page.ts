@@ -41,6 +41,7 @@ import { ModalComponent } from 'src/app/shared/components';
 export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
   public connectedWallet = 'CdoFMmSgkhKGKwunc7Tusg2sMZjxML6kpsvEmqpVYPjyP'
   public loyalMember = signal(null)
+  public isAmbassador: boolean = false;
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
   @ViewChild('LSTpl', { static: true }) LSTpl: TemplateRef<any> | any;
   @ViewChild('daoTpl', { static: true }) daoTpl: TemplateRef<any> | any;
@@ -76,7 +77,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         if (loyalMember && lllb && prizePool) {
           //@ts-ignore
   
-          
+          this.isAmbassador = loyalMember.pointsBreakDown.ambassadorPts ? true : false;
           const airdrop = prizePool.hubSOLrebates * loyalMember?.prizePoolShare
 
           const pointsBreakDown = loyalMember.pointsBreakDown
@@ -108,8 +109,10 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
                 label: 'HUB domain boost:',
                 value: this._utilService.formatBigNumbers(pointsBreakDown.hubDomainPts)
               },
+            
             ]
           }
+          
           this.loyalMember.set(loyalMemberRes)
   
           

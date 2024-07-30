@@ -29,12 +29,17 @@
     }
 
     #total-pts-title {
+        display: flex;
         color: var(--ion-color-dark);
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.16px;
         line-height: 100%;
         margin-block-end: 10px;
+        ion-icon{
+            color: var(--ion-color-warning);
+            cursor: pointer;
+        }
     }
 
     #total-pts-value {

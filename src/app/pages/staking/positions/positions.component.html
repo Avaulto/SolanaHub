@@ -14,11 +14,11 @@
   <div id="positions-container">
 
   <!-- @if(positionGroup() === 'native'){ -->
-    @for  (stake of stake$ | async; track $index) {
+    @for  (stake of stakePosition(); track $index) {
       <stake-position [stake]="stake" [stakeAccounts]="stakeAccounts()" />
     }@empty {
       
-      @if((stake$ | async) === null){
+      @if(!stakePosition()){
         <stake-position [stake]="" />
         <stake-position [stake]="" />
         <stake-position [stake]="" />
