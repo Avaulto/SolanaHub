@@ -115,7 +115,7 @@ export class UtilService {
       
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
      
-      res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
+      // res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
 
       const token = tokensInfo.find(token => token.address === res.data.address)
       res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
