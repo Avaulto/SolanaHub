@@ -8,7 +8,7 @@
     "ng": "ng",
     "start": "ng serve --configuration=local",
     "start:dev": "ng serve --configuration=development",
-    "build:main": "ng build --configuration=production",
+    "build:main": "ng build --configuration=development",
     "build:dev": "ng build --configuration=development",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
