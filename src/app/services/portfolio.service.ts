@@ -132,7 +132,9 @@ export class PortfolioService {
       // this.nfts.set(extendNftData.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
+      
       this.walletAssets.set(mergeDuplications)
+      console.log(this.walletAssets());
 
     } catch (error) {
       console.error(error);

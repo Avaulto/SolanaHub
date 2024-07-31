@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild, computed, effect, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit, ViewChild, WritableSignal, computed, effect, inject } from '@angular/core';
 import { PortfolioService, UtilService } from 'src/app/services';
 import { ChartConfiguration } from 'chart.js';
 import Chart from 'chart.js/auto'
@@ -12,20 +12,20 @@ import { IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/angular/standalone';
   imports: [AsyncPipe, NgClass, NgStyle, IonGrid, IonRow, IonCol, IonSpinner]
 })
 export class PortfolioBreakdownComponent implements AfterViewInit {
+  @Input() assets: WritableSignal<any>
   constructor(private _portfolioService: PortfolioService) {
     effect(() => {
-      if (this.walletAssets()) {
+      if (this.assets()) {
         setTimeout(() => {
-
           this.createGroupCategory()
         }, 300);
       }
     })
   }
   public showBalance = this._portfolioService.privateMode
-  public walletAssets = inject(PortfolioService).walletAssets
-  public portfolioTotalValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
-  public assetClassValue = computed(() => this.walletAssets()?.map(assetClass => {
+
+  public portfolioTotalValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
+  public assetClassValue = computed(() => this.assets()?.map(assetClass => {
 
     return {
       group: assetClass.label,
@@ -60,15 +60,18 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         color = '#B5179E'
         break;
       case 'Rewards':
+      case 'NFTs':
         color = '#F72585'
         break;
       case 'Airdrop':
         color = '#b82568'
         break;
       case 'Deposit':
+      case 'Tokens':
         color = '#E9CDC2'
         break;
       case 'Farming':
+      case 'Positions':
         color = '#341663'
         break;
       case 'Vesting':

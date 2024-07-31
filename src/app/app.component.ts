@@ -170,13 +170,7 @@ export class AppComponent implements OnInit {
           url: `/${RoutingPath.NOTIFICATIONS}`,
           icon: 'https://cdn.lordicon.com/vspbqszr.json',
           active: true
-        },
-        // {
-        //   title: 'Settings',
-        //   url: `/${RoutingPath.SETTINGS}`,
-        //   icon: 'https://cdn.lordicon.com/ygumtulo.json',
-        //   active: true
-        // },
+        }
       ],
     },
     {
@@ -189,6 +183,9 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/xoaqvsym.json',
           active: true
         },
+        { title: 'Stash', url: `/${RoutingPath.STASH}`, icon: 'https://cdn.lordicon.com/rnzxfhba.json', active: true },
+
+        { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
         // {
         //   title: 'Lending',
         //   url: `/${RoutingPath.LENDING}`,
@@ -200,16 +197,6 @@ export class AppComponent implements OnInit {
         //   url: `/${RoutingPath.LIQUIDITY_POOLS}`,
         //   icon: 'https://cdn.lordicon.com/rlrlhrme.json',
         //   active: false
-        // },
-        { title: 'Stash', url: `/${RoutingPath.STASH}`, icon: 'https://cdn.lordicon.com/rnzxfhba.json', active: false },
-
-        { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
-        // {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
-        // {
-        //   title: 'Airdrops finder',
-        //   url: `/${RoutingPath.AIRDROP_FINDER}`,
-        //   icon: 'https://cdn.lordicon.com/unukghxb.json',
-        //   active: true
         // },
       ],
     },

@@ -22,9 +22,19 @@
 
 
 
+<ng-template #selectAllTemplate let-changeEvent>
+  <label class="ngx-form-checkbox">
+    <ion-checkbox (ionChange)="tableEventEmitted($event)" />
+  </label>
+</ng-template>
 
 <div id="table-wrapper">
-  <ngx-table #table [id]="tableId" (event)="onRowClicked.emit($event)" [configuration]="configuration"
+  <ngx-table 
+  #table 
+  [id]="tableId"
+   (event)="onRowClicked.emit($event)"
+    [configuration]="configuration"
+    [selectAllTemplate]="selectAllTemplate"
     [data]="tableData()" [columns]="tableColumns()" [loadingTemplate]="loadingTemplate">
   </ngx-table>
   @if (configuration.paginationEnabled) {

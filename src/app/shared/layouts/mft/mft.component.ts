@@ -33,6 +33,7 @@ export class MftComponent implements OnInit {
   @Output('onRowClicked') onRowClicked = new EventEmitter()
   @Output('onTabSelected') onTabSelected = new EventEmitter()
   @Output('onSearch') onSearch = new EventEmitter()
+  @Output('onEmitData') onEmitData = new EventEmitter()
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
@@ -51,9 +52,10 @@ export class MftComponent implements OnInit {
     showDetailsArrow: true,
     paginationRangeEnabled: false,
     paginationEnabled: true,
+    rows: 50,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
-    isLoading: true,
+    isLoading: false,
   };
   ngOnInit(): void {
     this.configuration.rows = this.tableRows;
@@ -118,5 +120,41 @@ export class MftComponent implements OnInit {
       type: API.onGlobalSearch,
       value: this.searchTerm(),
     });
+  }
+  public allSelected = new Set();
+  tableEventEmitted(event): void {
+    console.log(event);
+    
+    if (event.event === 'onSelectAll') {
+      this.tableData().forEach((row: any) => (row.selected = event.value));
+    }
+    this.onEmitData.emit(this.allSelected)
+  }
+
+  rowSelected(): void {
+    this.allSelected = this.tableData().every((row) => !!row.selected);
+    this.onEmitData.emit(this.allSelected)
+  }
+  eventEmitted($event: { event: string; value: any }): void {
+    // switch ($event.event) {
+    //   case 'onCheckboxSelect':
+    //     if (this.selected.has($event.value.rowId)) {
+    //       this.selected.delete($event.value);
+    //     } else {
+    //       this.selected.add($event.value);
+    //     }
+    //     break;
+    //   case 'onSelectAll':
+    //     this.tableData().forEach((_, key) => {
+    //       if (this.selected.has(key)) {
+    //         this.selected.delete(key);
+    //       } else {
+    //         this.selected.add(key);
+    //       }
+    //     });
+    //     break;
+    // }
+    
+    // this.onEmitData.emit(this.selected)
   }
 }

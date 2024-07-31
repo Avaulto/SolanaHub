@@ -1,11 +1,10 @@
-import { Component, OnInit, WritableSignal, inject, signal } from '@angular/core';
+import { Component, OnInit, WritableSignal, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { NetWorthComponent } from './net-worth/net-worth.component';
 import { AssetsTableComponent } from './assets-table/assets-table.component';
-import { PortfolioBreakdownComponent } from './portfolio-breakdown/portfolio-breakdown.component';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
-import { TransactionsHistoryTableComponent } from 'src/app/shared/components/transactions-history-table/transactions-history-table.component';
+import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent} from 'src/app/shared/components';
+import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { TransactionHistory } from 'src/app/models';
 import { NgxTurnstileModule } from 'ngx-turnstile';
@@ -27,10 +26,12 @@ import { NgxTurnstileModule } from 'ngx-turnstile';
 
 })
 export class OverviewPage implements OnInit {
-  private _utilService = inject(UtilService);
-  private _portfolioService = inject(PortfolioService)
-  private _shs = inject(SolanaHelpersService)
-  constructor() { }
+  private _jupStore = inject(JupStoreService)
+  public walletAssets = inject(PortfolioService).walletAssets
+  public portfolioTotalUsdValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
+  public portfolioValueInSOL = computed(() => this.portfolioTotalUsdValue() / this._jupStore.solPrice())
+
+
 
   async ngOnInit() {
     // this._shs.walletExtended$.pipe(this._utilService.isNotNullOrUndefined).subscribe(wallet =>{

@@ -1,22 +1,22 @@
 <div id="nw-key" class="ion-text-capitalize">
-   <span>
-       net worth
-   </span> 
-   <div>
-    <ion-toggle [disabled]="!portfolioTotalUsdValue()" (ionChange)="simulateNetWorth($event)" mode="ios"></ion-toggle>
-   </div>
+    <span>
+        net worth
+    </span>
+    <div>
+        <ion-toggle [disabled]="!totalValueUSD()" (ionChange)="simulateNetWorth($event)" mode="ios"></ion-toggle>
+    </div>
 </div>
-    @if (portfolioTotalUsdValue()) {
-        <div id="nw-bal">
-            <div id="nw-val"  [ngClass]="{'private-balance': showBalance | async }">
-                @if(simulatePortfolio() === 'usd'){
+@if (totalValueUSD()) {
+<div id="nw-bal">
+    <div id="nw-val" [ngClass]="{'private-balance': showBalance | async }">
+        @if(simulatePortfolio() === 'usd'){
 
-                    {{portfolioTotalUsdValue() | currency }}
-                }@else {
-                    {{portfolioValueInSOL()  | number: '1.0-1' }} SOL
-                }
-            </div> <ion-icon (click)="toggleShowBalance()" [name]="hideBalance ?  'eye-off-outline' : 'eye-outline'"/>
-        </div>
-    }@else {
-        <ion-skeleton-text [animated]="true" />
-    }
+        {{totalValueUSD() | currency }}
+        }@else {
+        {{totalValueInSOL() | number: '1.0-1' }} SOL
+        }
+    </div> <ion-icon (click)="toggleShowBalance()" [name]="hideBalance ?  'eye-off-outline' : 'eye-outline'" />
+</div>
+}@else {
+<ion-skeleton-text [animated]="true" />
+}

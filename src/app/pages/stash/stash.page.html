@@ -4,7 +4,7 @@
     Optimize your investments and make your funds work more efficiently for you.
     "></page-header>
   <ion-grid>
-    @if(analyzeStage() === 0){
+    <!-- @if(analyzeStage() === 0){
     <promo [@slideInLeave] (onStartAnalyze)="analyzeStage.set(1)" />
     }@else if(analyzeStage() === 1){
     <analyze (onStartAnalyze)="analyzeStage.set(2)" />
@@ -12,7 +12,30 @@
     <burnable-accounts class="gap data-set ion-margin-bottom" [@slideInEnter] />
     <empty-accounts class="gap data-set " [@slideInEnter] />
     <extractable-stake-accounts class="gap data-set  ion-margin-bottom" [@slideInEnter] />
-  }
+  } -->
+
+    <ion-row id="stat-wrapper" class="ion-justify-content-between">
+      <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
+        <div class="icon-wrapper ion-hide-lg-down">
+          <ion-img src="assets/images/vault-icon.svg" />
+        </div>
+        <div class="stat-title">Total stash</div>
+        <div class="stat-desc">
+
+
+          {{stashTotalUsdValue() | currency}}
+
+          <!-- @if (stat.desc === '') {
+        <ion-skeleton-text [animated]="true" />
+        } -->
+        </div>
+      </ion-col>
+      <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
+        <app-portfolio-breakdown [assets]="assets" />
+      </ion-col>
+
+    </ion-row>
+
     <!-- <ion-row>
       <ion-col size="12" class="data-set ion-margin-bottom">
         <table-head label="Manage your Empty Account"
@@ -58,21 +81,29 @@
           </ion-row>
   
       </ion-col>
+    </ion-row> -->
+    <ion-row class="data-set">
+      <ion-row class="gap table-head ion-align-items-center ion-justify-content-between">
+        <ion-col size="8">
+          <div id="head-line"><ion-label>Tokens</ion-label> <ion-chip color="primary">5</ion-chip></div>
+          <ion-text>{{5 | currency}}</ion-text>
+        </ion-col>
+        <ion-col size="2.5">
+          <div id="toggle-swap">
+            <span>Swap to hubSOL</span><ion-toggle mode="md" />
+          </div>
+        </ion-col>
+        <ion-col size="1.2">
+          <ion-button [disabled]="true" class="ion-text-capitalize">Close all</ion-button>
+        </ion-col>
+      </ion-row>
+      <app-mft (onEmitData)="selectedRows($event)" [tableRows]="100" [checkboxes]="true" [tableId]="'savings-table'" [tableColumns]="columns" [tableData]="tableData" />
     </ion-row>
-    <ion-row>
-      <ion-col size="12" class="data-set">
-    <app-mft 
-    [tableId]="'savings-table'" 
-      [tableColumns]="columns"
-      [tableData]="tableData">
-    </app-mft>
-</ion-col>
-</ion-row> -->
   </ion-grid>
 
 </ion-content>
 
-<!-- <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
       <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
@@ -86,25 +117,37 @@
   </div>
 </ng-template>
 
-<ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
+<ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-center">
+    <ion-checkbox/>
+  </div>
+</ng-template>
+
+<ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left">
     {{row.balance | number: '1.0'}} {{row.symbol}}
   </div>
 </ng-template>
 
 <ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center">
+  <div class="ion-text-left">
     {{row.value | number: '1.0'}} {{row['extract-asset']}}
   </div>
-  <div class="ion-text-center">
-    {{row.source}} 
+  <div class="ion-text-left">
+    {{row.source}}
   </div>
 </ng-template>
 <ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center account-info">
-    {{row.tokenAccount.short}}  <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
+  <div class="ion-text-left account-info">
+    {{row.tokenAccount.short}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
   </div>
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
   <ion-button class="ion-text-capitalize close-single">Close</ion-button>
-</ng-template> -->
+</ng-template>
+
+<ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="source-type ion-text-left ion-text-capitalize">
+    <ion-chip >{{row.source}}</ion-chip>
+  </div>
+</ng-template>
