@@ -106,7 +106,9 @@ export class PortfolioService {
         va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode })
         // jupTokens = res[0];
         portfolioData = res[0]
-        portfolioData.elements = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts')
+        // console.log(portfolioData.elements);
+        
+        portfolioData.elements = portfolioData.elements.filter(e => e?.platformId !== 'wallet-nfts')
         const storageCap = 4073741824 // 5 mib
         if (this._utils.memorySizeOf(portfolioData) < storageCap) {
           this._sessionStorageService.saveData('portfolioData', JSON.stringify({ portfolioData, lastSave: Math.floor(new Date().getTime() / 1000) }))
@@ -115,7 +117,7 @@ export class PortfolioService {
       }
       this._portfolioStaking(walletAddress)
       const portfolio = portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
-      const excludeNFTv2 = portfolio.elements.filter(e => e.platformId !== 'wallet-nfts-v2')
+      const excludeNFTv2 = portfolio?.elements?.filter(e => e.platformId !== 'wallet-nfts-v2')
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
 
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')

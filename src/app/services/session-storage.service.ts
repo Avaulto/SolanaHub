@@ -9,11 +9,21 @@ export class SessionStorageService {
   constructor() { }
 
   public saveData(key: string, value: string) {
-    sessionStorage.setItem(key, value);
+    try {
+      sessionStorage.setItem(key, value);
+    } catch (error) {
+      console.log(error);
+      
+    }
   }
 
   public getData(key: string) {
+    try {
     return sessionStorage.getItem(key)
+    }catch (error) {
+      console.log(error);
+      return null
+    }
   }
   public removeData(key: string) {
     sessionStorage.removeItem(key);
