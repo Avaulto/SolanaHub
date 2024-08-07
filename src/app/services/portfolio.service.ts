@@ -209,7 +209,7 @@ export class PortfolioService {
 
     const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
     const defiHolding = await Promise.all(editedDataExtended
-      .filter(g => !excludeList.includes(g.platformId) && g.value > 0.01)
+      .filter(g => !excludeList.includes(g.platformId))
       .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
       .map(async group => {
         let records: defiHolding[] = [];
@@ -256,6 +256,7 @@ export class PortfolioService {
         }
 
         if (group.type === "borrowlend") {
+          
           group.data.suppliedAssets.map(async asset => {
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
             records.push({
