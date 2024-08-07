@@ -21,7 +21,7 @@ export interface LoyaltyBooster {
 
 export interface loyalMember {
     walletOwner:     string;
-    loyaltyPoints:   number;
+    loyaltyPoints:   any;
     pointsBreakDown: PointsBreakDown;
     hubDomainHolder: string;
     prizePoolShare:  number;

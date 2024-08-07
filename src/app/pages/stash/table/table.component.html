@@ -1,0 +1,27 @@
+<ion-row class="data-set">
+  <ion-row class="gap table-head ion-align-items-center ion-justify-content-between">
+    <ion-col size="8">
+      <div id="head-line">
+        <ion-label>{{tableName}}</ion-label> 
+        <ion-chip>{{tableData().length}} • {{10.1 | currency}}</ion-chip>
+      </div>
+      <p>SolanaHub a 1% fee for this service, and the amount reclaimed is paid in SOL.</p>
+    </ion-col>
+    <ion-col size="2.5">
+      <div id="toggle-swap">
+        <ion-toggle mode="md" /><span>Swap to hubSOL</span>
+      </div>
+    </ion-col>
+    <ion-col size="1.2">
+      <ion-button [disabled]="true" class="ion-text-capitalize">{{actionTitle}}</ion-button>
+    </ion-col>
+  </ion-row>
+  <app-mft 
+    (onEmitData)="selectedRows($event)"
+    [tableRows]="100"
+    [checkboxes]="true" 
+    [tableId]="'savings-table'" 
+    [tableColumns]="columns" 
+    [tableData]="tableData"
+     />
+</ion-row>

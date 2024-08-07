@@ -97,9 +97,13 @@ export class MftComponent implements OnInit {
   }
   constructor(private _platform: Platform) { 
     effect(() =>{
-      if(this.tableData()){
+      if(this.tableData && this.tableData()?.length ){
         
-        this.configuration.isLoading = false;
+        setTimeout(() => {
+          
+          this.configuration.isLoading = false;
+  
+        }, 100);
       } else{
         this.configuration.isLoading = true;
       }
@@ -110,6 +114,7 @@ export class MftComponent implements OnInit {
       }
 
     })
+    console.log(this.configuration.isLoading);
   }
   public searchTerm = signal('')
   searchItem(term: any) {
@@ -123,8 +128,6 @@ export class MftComponent implements OnInit {
   }
   public allSelected = new Set();
   tableEventEmitted(event): void {
-    console.log(event);
-    
     if (event.event === 'onSelectAll') {
       this.tableData().forEach((row: any) => (row.selected = event.value));
     }
@@ -136,25 +139,6 @@ export class MftComponent implements OnInit {
     this.onEmitData.emit(this.allSelected)
   }
   eventEmitted($event: { event: string; value: any }): void {
-    // switch ($event.event) {
-    //   case 'onCheckboxSelect':
-    //     if (this.selected.has($event.value.rowId)) {
-    //       this.selected.delete($event.value);
-    //     } else {
-    //       this.selected.add($event.value);
-    //     }
-    //     break;
-    //   case 'onSelectAll':
-    //     this.tableData().forEach((_, key) => {
-    //       if (this.selected.has(key)) {
-    //         this.selected.delete(key);
-    //       } else {
-    //         this.selected.add(key);
-    //       }
-    //     });
-    //     break;
-    // }
-    
-    // this.onEmitData.emit(this.selected)
+
   }
 }

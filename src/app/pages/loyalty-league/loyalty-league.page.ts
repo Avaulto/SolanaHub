@@ -76,7 +76,6 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
         const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
         if (loyalMember && lllb && prizePool) {
           //@ts-ignore
-  
           this.isAmbassador = loyalMember.pointsBreakDown.ambassadorPts ? true : false;
           const airdrop = prizePool.hubSOLrebates * loyalMember?.prizePoolShare
 
@@ -87,7 +86,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
             pointsBreakDown: [
               {
                 label: 'total points:',
-                value: this._utilService.formatBigNumbers(loyalMember.loyaltyPoints)
+                value: this._utilService.formatBigNumbers(parseFloat(loyalMember.loyaltyPoints))
               },
               {
                 label: 'native stake:',

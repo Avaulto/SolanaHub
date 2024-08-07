@@ -22,9 +22,9 @@ export class MemberStatsComponent implements OnChanges {
   @Input() isAmbassador: boolean = false;
   public airdrop = null
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.loyalMember());
     
     if (this.loyalMember()) {
+      console.log(this.loyalMember());
       this.airdrop = this.formatToSignificantDigit(this.loyalMember().airdrop)
     }
   }

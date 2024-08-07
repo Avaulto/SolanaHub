@@ -10,8 +10,9 @@
     justify-content: center;
     transform: translateY(-70px);
     margin: 0 auto;
+    min-height: 600px;
 }
-#not-connected-box{
+#stash-box .inner{
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -24,13 +25,12 @@
 
 ion-img {
     margin-bottom: 20px;
-    width: 200px;
-    height: 200px;
+    width: 295.21px;
 }
 
 ion-label {
     color: var(--Gray-900, #101828);
-    text-align: start;
+    text-align: center;
     width: 100%;
     font-size: 20px;
     font-weight: 600;
@@ -40,15 +40,20 @@ ion-label {
 
 ion-text {
     color: var(--Gray-600, #475467);
-    text-align: start;
+    text-align: center;
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
     margin-bottom: 32px;
+    width: 600px;
+    max-width: 100%;
+    span{
+        color: var(--ion-color-primary);
+    }
 }
 
 #btn-wrapper {
-    text-align: start;
+    text-align: center;
     width: 100%;
     ion-button{
         text-transform: capitalize;

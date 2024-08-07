@@ -80,7 +80,7 @@ export class LoyaltyLeagueMemberComponent implements OnInit {
         totalParticipant: lllb.loyaltyLeagueMembers.length
       })
       const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-      console.log(loyalMember);
+  
       
       if (loyalMember) {
    

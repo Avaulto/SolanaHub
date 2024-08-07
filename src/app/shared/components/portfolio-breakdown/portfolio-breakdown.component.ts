@@ -68,6 +68,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         break;
       case 'Deposit':
       case 'Tokens':
+      case 'Empty accounts':
         color = '#E9CDC2'
         break;
       case 'Farming':

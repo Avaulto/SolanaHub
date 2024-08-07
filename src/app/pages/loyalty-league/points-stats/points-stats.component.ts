@@ -134,7 +134,6 @@ export class PointsStatsComponent implements OnInit, OnChanges {
       this.sbm$.value[3].stakeBoost = this.prizePool.APY_boosters['bSOL']
       this.sbm$.value[4].stakeBoost = this.prizePool.APY_boosters['MNDE']
       this.sbm$.value[5].stakeBoost = this.prizePool.APY_boosters['BLZE']
-      console.log('boosters:',this.sbm$.value);
       this.sbm$.next(this.sbm$.value)
 
     }
