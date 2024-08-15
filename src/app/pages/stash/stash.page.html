@@ -27,16 +27,21 @@
       </ion-col>
 
     </ion-row>
-    <stash-table class="ion-margin-bottom" tableName="low value assets" actionTitle="swap" [columns]="emptyAccountsColumn"
+    <div class="ion-hide-lg-down">
+    <stash-table class="ion-margin-bottom" [hasFees]="true" tableName="low value assets" actionTitle="swap" [columns]="emptyAccountsColumn"
       [stash]="emptyAccounts" />
 
-      <stash-table class="ion-margin-bottom" tableName="Staking" actionTitle="withdraw" [columns]="emptyAccountsColumn"
+      <stash-table class="ion-margin-bottom" [hasFees]="true" tableName="Staking" actionTitle="withdraw" [columns]="emptyAccountsColumn"
       [stash]="emptyAccounts" />
 
-      <stash-table class="ion-margin-bottom" tableName="DeFi Positions" actionTitle="withdraw" [columns]="emptyAccountsColumn"
+      <stash-table class="ion-margin-bottom" [hasFees]="true" tableName="DeFi Positions" actionTitle="withdraw" [columns]="emptyAccountsColumn"
       [stash]="emptyAccounts" />
       <stash-table class="ion-margin-bottom" tableName="empty accounts" actionTitle="close" [columns]="emptyAccountsColumn"
       [stash]="emptyAccounts" />
+    </div>
+    <div class="ion-hide-lg-up">
+here
+    </div>
     }
   </ion-grid>
 

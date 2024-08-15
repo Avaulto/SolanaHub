@@ -29,6 +29,12 @@ ion-button {
 }
 
 :host ::ng-deep {
+    // .checkbox-on table tbody > tr > td:first-child {
+    //     display: none;
+    // }
+    // .checkbox-on table thead > tr > th:nth-child(2) {
+    //     display: none;
+    // }
     .ngx-table{
         font-family: var(--ion-font-family);
     }

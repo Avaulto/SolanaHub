@@ -1,6 +1,8 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
-import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
+import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowUpOutline } from 'ionicons/icons';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
 @Component({
@@ -10,8 +12,12 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
   standalone: true,
   imports:[
     IonRow,
+    IonIcon,
+    IonItem,
     IonCol,
     IonCheckbox,
+    IonAccordionGroup,
+    IonAccordion,
     IonText,
      IonChip, 
      IonButton,
@@ -24,19 +30,16 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
   ]
 })
 export class TableComponent  implements OnInit {
-  @ViewChild('checkboxTpl', { static: true }) checkboxTpl: TemplateRef<any> | any;
-  @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
-  @ViewChild('accountTpl', { static: true }) accountTpl: TemplateRef<any> | any;
-  @ViewChild('amountTpl', { static: true }) amountTpl: TemplateRef<any> | any;
-  @ViewChild('valueTpl', { static: true }) valueTpl: TemplateRef<any> | any;
-  @ViewChild('actionTpl', { static: true }) actionTpl: TemplateRef<any> | any;
-  @ViewChild('sourceTpl', { static: true }) sourceTpl: TemplateRef<any> | any;
+
+  @Input() hasFees: boolean = false;
   @Input() columns;
   @Input() stash;
   @Input() tableName: string;
   @Input() actionTitle: string;
   public tableData = signal([])
-  constructor() { }
+  constructor() { 
+    addIcons({arrowUpOutline})
+  }
 
   ngOnInit() {
     this.tableData.set(this.stash.data.assets)
@@ -47,4 +50,22 @@ export class TableComponent  implements OnInit {
     console.log(event);
     
   }
+
+  @ViewChild('accordionGroup', { static: true }) accordionGroup: IonAccordionGroup;
+
+  alternateClick(ev){
+    if(ev.target.id !== 'toggle-btn'){
+      ev.stopPropagation()
+    }
+  }
+  flipArrow = false;
+  toggleAccordion = () => {
+    this.flipArrow = !this.flipArrow
+    const nativeEl = this.accordionGroup;
+    if (nativeEl.value === 'first') {
+      nativeEl.value = undefined;
+    } else {
+      nativeEl.value = 'first';
+    }
+  };
 }

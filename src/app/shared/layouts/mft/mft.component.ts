@@ -22,6 +22,7 @@ export class MftComponent implements OnInit {
   @Input() desc:string;
   @Input() tableId: string;
   @Input() checkboxes: boolean = false
+  @Input() paginationEnabled: boolean = false
   @Input('tableRows') tableRows = 5;
   @Input('tableMenuOptions') tableMenuOptions: string[] = []
     //@ts-ignore
@@ -51,8 +52,8 @@ export class MftComponent implements OnInit {
     // threeWaySort: true,
     showDetailsArrow: true,
     paginationRangeEnabled: false,
-    paginationEnabled: true,
-    rows: 50,
+    paginationEnabled: this.paginationEnabled,
+    rows: this.tableRows,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
     isLoading: false,
@@ -63,11 +64,9 @@ export class MftComponent implements OnInit {
     if(this._platform.width() < 992){
       this.configuration.horizontalScroll = true;
     }
-
   }
-  previousPage() {
   
-    
+  previousPage() {
     const res = this.table.apiEvent({
       type: API.getPaginationCurrentPage,
     });
@@ -107,7 +106,7 @@ export class MftComponent implements OnInit {
       } else{
         this.configuration.isLoading = true;
       }
-      if(this.tableData && this.tableData()?.length < this.tableRows){
+      if(!this.paginationEnabled && this.tableData && this.tableData()?.length < this.tableRows){
         this.configuration.paginationEnabled = false
       }else{
         this.configuration.paginationEnabled = true
@@ -126,18 +125,36 @@ export class MftComponent implements OnInit {
       value: this.searchTerm(),
     });
   }
-  public allSelected = new Set();
-  tableEventEmitted(event): void {
+  allSelected = false;
+  tableEventEmitted(event: { event: string; value: any }): void {
+    console.log(event);
+    
     if (event.event === 'onSelectAll') {
-      this.tableData().forEach((row: any) => (row.selected = event.value));
+      this.allSelected = this.tableData().filter((row: any) => (row.selected = event.value));
     }
-    this.onEmitData.emit(this.allSelected)
+    console.log(this.allSelected);
   }
 
   rowSelected(): void {
     this.allSelected = this.tableData().every((row) => !!row.selected);
-    this.onEmitData.emit(this.allSelected)
+    console.log(this.allSelected);
+    
   }
+  // tableEventEmitted(event): void {
+  //   console.log(event, this.tableData());
+    
+  //   if (event.event === 'onSelectAll') {
+  //     this.tableData().forEach((row: any) => (row.selected = event.value));
+  //   }
+  //   console.log(this.allSelected);
+    
+  //   this.onEmitData.emit(this.allSelected)
+  // }
+
+  // rowSelected(): void {
+  //   this.allSelected = this.tableData().every((row) => !!row.selected);
+  //   this.onEmitData.emit(this.allSelected)
+  // }
   eventEmitted($event: { event: string; value: any }): void {
 
   }

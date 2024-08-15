@@ -72,7 +72,7 @@ export class StashPage implements OnInit {
   @ViewChild('actionTpl', { static: true }) actionTpl: TemplateRef<any> | any;
   @ViewChild('sourceTpl', { static: true }) sourceTpl: TemplateRef<any> | any;
   @ViewChildren('checkAsset') checkNfts: QueryList<IonCheckbox>
-  public analyzeStage = signal(0);
+  public analyzeStage = signal(1);
   public selectedTab = signal('assets');
   public tableMenuOptions: string[] = ['Assets', 'Positions', 'Stake'];
   private _columnsOptions = null
@@ -89,13 +89,13 @@ export class StashPage implements OnInit {
   public emptyAccountsColumn = signal([])
   ngOnInit() {
     this.emptyAccountsColumn = signal([
-      // { key: 'select', title: '', cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: false }, width: '5%' },
+      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: false } },
       { key: 'asset', title: 'Asset', width: '40%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'tokenAccount', title: 'Account', cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
-      { key: 'value', title: 'Extracted Value', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'value', title: 'Extracted Value',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'source', title: 'Source', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      // { key: 'action', title: '', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
     // this._stashService.findExtractAbleSOLAccounts()
   
@@ -368,68 +368,68 @@ export class StashPage implements OnInit {
 
 
 
-    const demiData = {
-      assets: [
-        {
-          "name": "Jito Staked SOL",
-          "symbol": "JitoSOL",
-          "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-          "decimals": 9,
-          "balance": 0,
-          "value": "0.2",
-          "extract-asset": "SOL",
+    // const demiData = {
+    //   assets: [
+    //     {
+    //       "name": "Jito Staked SOL",
+    //       "symbol": "JitoSOL",
+    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+    //       "decimals": 9,
+    //       "balance": 0,
+    //       "value": "0.2",
+    //       "extract-asset": "SOL",
 
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-          "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-          "source": 'empty account'
-        },
-        {
-          "name": "Jito Staked SOL",
-          "symbol": "JitoSOL",
-          "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-          "decimals": 9,
-          "balance": 0,
-          "value": "0.2",
-          "extract-asset": "SOL",
+    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
+    //       "source": 'empty account'
+    //     },
+    //     {
+    //       "name": "Jito Staked SOL",
+    //       "symbol": "JitoSOL",
+    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+    //       "decimals": 9,
+    //       "balance": 0,
+    //       "value": "0.2",
+    //       "extract-asset": "SOL",
 
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-          "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-          "source": 'empty account'
-        },
-        {
-          "name": "Jito Staked SOL",
-          "symbol": "JitoSOL",
-          "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-          "decimals": 9,
-          "balance": 0,
-          "value": "0.2",
-          "extract-asset": "SOL",
+    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
+    //       "source": 'empty account'
+    //     },
+    //     {
+    //       "name": "Jito Staked SOL",
+    //       "symbol": "JitoSOL",
+    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+    //       "decimals": 9,
+    //       "balance": 0,
+    //       "value": "0.2",
+    //       "extract-asset": "SOL",
 
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-          "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-          "source": 'empty account'
-        },
-        {
-          "name": "Jito Staked SOL",
-          "symbol": "JitoSOL",
-          "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-          "decimals": 9,
-          "balance": 0,
-          "value": "0.2",
-          "extract-asset": "SOL",
+    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
+    //       "source": 'empty account'
+    //     },
+    //     {
+    //       "name": "Jito Staked SOL",
+    //       "symbol": "JitoSOL",
+    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+    //       "decimals": 9,
+    //       "balance": 0,
+    //       "value": "0.2",
+    //       "extract-asset": "SOL",
 
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-          "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-          "source": 'empty account'
-        },
+    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
+    //       "source": 'empty account'
+    //     },
 
-      ],
-      positions: {}
-    }
+    //   ],
+    //   positions: {}
+    // }
 
     setTimeout(() => {
       this.analyzeStage.set(1)

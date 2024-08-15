@@ -1,3 +1,7 @@
+:host{
+    overflow: hidden;
+    border-radius: 8px;
+}
 .table-head {
     width: 100%;
 
@@ -52,4 +56,24 @@
             font-size: 12px;
         }
     }
+}
+#toggle-btn {
+    --box-shadow: 0;
+    --color: #9AA4B2;
+    position: absolute;
+    right: 0;
+    top: 0;
+    --background-focused: transparent;
+    --background-hover: transparent;
+    ion-icon{
+        transition: 0.3s ease;
+    }
+    .flipArrow{
+        transform: rotate(180deg);
+        
+    }
+}
+
+#action-btn{
+    margin-right: 26px;
 }
