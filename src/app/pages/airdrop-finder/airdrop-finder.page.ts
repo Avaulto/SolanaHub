@@ -68,7 +68,6 @@ export class AirdropFinderPage implements OnInit {
     if (this._airdropData()) {
 
       let tableType: string = this.selectedTab().toLowerCase();
-      console.log(tableType, this._airdropData()[tableType]);
 
       return this._airdropData()[tableType]
     }
@@ -85,7 +84,7 @@ export class AirdropFinderPage implements OnInit {
     const airdrops = await this._afs.getWalletAirdrops(publicKey.toBase58(), token)
     const data = { airdrops: airdrops.airdrops, points: airdrops }
 
-    const platforms = await this._portfolio.getPlatformsData();
+    // const platforms = await this._portfolio.getPlatformsData();
     // data.airdrops = data.airdrops.map(ad => {
     //   ad.stage = ad.stage.replaceAll("_", " ")
     //   return { ...ad }
