@@ -52,3 +52,18 @@ ion-grid{
     line-height: 20px;
     /* 166.667% */
 }
+ion-button{
+    padding: 10px;
+    display: block;
+    text-transform: capitalize;
+    span{
+        color: white;
+    }
+}
+a{
+    display: block;
+    width: 100%;
+    align-items: center;
+    text-transform: capitalize;
+    text-decoration: none;
+}

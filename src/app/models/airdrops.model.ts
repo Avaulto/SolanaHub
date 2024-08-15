@@ -1,33 +1,38 @@
 export interface Airdrops {
-    error: any
-    data: Array<{
+  date: number
+  owner: string
+  addressSystem: string
+  fetcherReports: Array<{
+    id: string
+    status: string
+    duration: number
+  }>
+  airdrops: Array<{
+    id: string
+    claimLink: string
+    image: string
+    emitterLink: string
+    emitterName: string
+    claimStart: number
+    claimEnd?: number
+    name?: string
+    items: Array<{
+      amount: number
+      isClaimed?: boolean
+      isEligible: boolean
+      label: string
       address: string
-      eligibility: Array<{
-        protocol: string
-        protocolLabel: string
-        token: string
-        ticker: string
-        eligible: boolean
-        amount: number
-        note: string
-        potentialValueUsdc: number
-        stage: string
-        tokenPrice: number
-      }>
-      points: Array<{
-        protocol: string
-        protocolLabel: string
-        note: string
-        points: number
-        stage: string
-      }>
-      network: string
-      timeTaken: Array<{
-        action: string
-        time: number
-      }>
-      error: any
-      alias: any
+      airdropId: string
+      price: number
+      status: string
+      value: number
+      owner: string
     }>
-  }
+    owner: string
+    networkId: string
+    status: string
+    value: number
+  }>
+  duration: number
+}
   

@@ -13,44 +13,76 @@
           [tableData]="tableData" />
       </ion-col>
     </ion-row>
-
-    <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+    <ng-template #providerTpl let-row let-rowIndex="rowIndex" let-column="column">
       <div class="item">
         <div class="item-img-wrapper">
-          <ion-img [src]="row.logoUrl || 'assets/images/unknown.svg'" alt="image" />
+          <ion-img [src]="row.image || 'assets/images/unknown.svg'" alt="image" />
         </div>
-        <div class="item-info">
-
-          <div class="item-bold">{{row.ticker || 'unknown'}}</div>
-          <div class="item-light">{{row.token }}</div>
-
+        <div class="item-info">        
+          <div class="item-bold">{{row.emitterName || 'unknown'}}</div>
         </div>
       </div>
-    </ng-template>
-    <ng-template #eligibilityTpl let-row let-rowIndex="rowIndex" let-column="column">
-      @if(row.eligible){
+      </ng-template>
+    <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+      @for (item of row.items; track $index) {
 
-      <ion-icon style="font-size:20px;color:#079455;" name="checkmark-circle-outline"></ion-icon>
-      } @else{
+        <div class="ion-text-center">
+            
+            <div class="item-bold">{{item.label}}</div>
+      
+          </div>
 
-      <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
       }
     </ng-template>
-    <ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
-      <div class="ion-text-center">
-        {{row.amount | number: '1.1-3'}} {{row.ticker}}
+    <ng-template #datesTpl let-row let-rowIndex="rowIndex" let-column="column">
+      <div>
+         {{row.claimStart | date}}
       </div>
+    </ng-template>
+    <ng-template #claimStatusTpl let-row let-rowIndex="rowIndex" let-column="column">
+      @for (item of row.items; track $index) {
+
+        <div>
+
+          <a target="_blank"  class="ion-text-center" [href]="row.claimLink">
+          <ion-button [disabled]="!item.isEligible || item.isClaimed">
+              @if(!item.isEligible){
+                not eligible
+                <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
+              }
+              @else if (item.isClaimed) {
+                claimed
+                <ion-icon style="font-size:20px;" name="checkmark-circle-outline"></ion-icon>
+              }@else {
+               <span>
+                 claim
+               </span>
+              }
+              
+            </ion-button>
+          </a>
+        </div>
+      
+    
+    }
+    </ng-template>
+    <ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
+      @for (item of row.items; track $index) {
+      <div class="ion-text-center">
+        {{item.amount | number: '1.1-3'}} 
+      </div>
+    }
     </ng-template>
 
     <ng-template #pointsTpl let-row let-rowIndex="rowIndex" let-column="column">
       <div class="ion-text-center">
-        {{row.points | number: '1.1-3'}}
+        {{row.points | number: '1.1-2'}}
       </div>
     </ng-template>
 
     <ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
       <div class="ion-text-center">
-        {{row.potentialValueUsdc | currency}}
+        {{row.value | currency}}
       </div>
     </ng-template>
     <ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">

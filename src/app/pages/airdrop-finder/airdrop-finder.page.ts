@@ -1,12 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
-import { IonRow, IonCol, IonSpinner, IonContent, IonGrid, IonHeader, IonButtons, IonMenuButton, IonToolbar, IonTitle, IonIcon, IonImg } from '@ionic/angular/standalone';
+import { IonRow, IonCol, IonSpinner, IonContent, IonGrid, IonHeader, IonButtons, IonMenuButton, IonToolbar, IonTitle, IonIcon, IonImg, IonButton } from '@ionic/angular/standalone';
 import { PortfolioService, SolanaHelpersService } from 'src/app/services';
 import { AirdropsFinderService } from 'src/app/services/airdrops-finder.service';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { addIcons } from 'ionicons';
 import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline, wallet } from 'ionicons/icons';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { environment } from 'src/environments/environment';
@@ -16,6 +16,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./airdrop-finder.page.scss'],
   standalone: true,
   imports: [
+    DatePipe,
+    IonButton, 
     NgxTurnstileModule,
     CurrencyPipe,
     DecimalPipe,
@@ -37,10 +39,14 @@ import { environment } from 'src/environments/environment';
   ]
 })
 export class AirdropFinderPage implements OnInit {
+  @ViewChild('providerTpl', { static: true }) providerTpl: TemplateRef<any> | any;
+  @ViewChild('datesTpl', { static: true }) datesTpl: TemplateRef<any> | any;
+  
+  //
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   @ViewChild('amountTpl', { static: true }) amountTpl: TemplateRef<any> | any;
   @ViewChild('valueTpl', { static: true }) valueTpl: TemplateRef<any> | any;
-  @ViewChild('eligibilityTpl', { static: true }) eligibilityTpl: TemplateRef<any> | any;
+  @ViewChild('claimStatusTpl', { static: true }) claimStatusTpl: TemplateRef<any> | any;
   @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
   @ViewChild('pointsTpl', { static: true }) pointsTpl: TemplateRef<any> | any;
   constructor(
@@ -77,18 +83,18 @@ export class AirdropFinderPage implements OnInit {
   async getAirdrops(token) {
     const { publicKey } = this._shs.getCurrentWallet()
     const airdrops = await this._afs.getWalletAirdrops(publicKey.toBase58(), token)
-    const data = { airdrops: airdrops.data[0].eligibility, points: airdrops.data[0].points }
+    const data = { airdrops: airdrops.airdrops, points: airdrops }
 
     const platforms = await this._portfolio.getPlatformsData();
-    data.airdrops = data.airdrops.map(ad => {
-      ad.stage = ad.stage.replaceAll("_", " ")
-      return { ...ad }
-    })
-    data.points = data.points.map(pts => {
-      const platform = platforms.find(p => p.name.toLowerCase() === pts.protocol);
-      pts.stage = pts.stage.replaceAll("_", " ")
-      return { ...pts, ...platform }
-    })
+    // data.airdrops = data.airdrops.map(ad => {
+    //   ad.stage = ad.stage.replaceAll("_", " ")
+    //   return { ...ad }
+    // })
+    // data.points = data.points.map(pts => {
+    //   const platform = platforms.find(p => p.name.toLowerCase() === pts.protocol);
+    //   pts.stage = pts.stage.replaceAll("_", " ")
+    //   return { ...pts, ...platform }
+    // })
 
 
     this._airdropData.set(data)
@@ -97,19 +103,25 @@ export class AirdropFinderPage implements OnInit {
   async ngOnInit() {
     this._columnsOptions = {
       airdrops: [
+        { key: 'provider', title: 'Provider', cellTemplate: this.providerTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'dates', title: 'Claim open',cellTemplate: this.datesTpl,  cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'symbol', title: 'Symbol', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'amount', title: 'Amount',cellTemplate: this.amountTpl,  cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'value', title: 'Value',  cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'link', title: 'link',cellTemplate:this.claimStatusTpl,  cssClass: { name: 'ion-text-center', includeHeader: true } },
         // { key: 'rank', title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'ticker', title: 'Token', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'stage', title: 'Stage', cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
-        { key: 'eligible', title: 'Eligible', cellTemplate: this.eligibilityTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'amount', title: 'Amount', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'potentialValueUsdc', title: 'Potential Value', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'ticker', title: 'Token', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'stage', title: 'Stage', cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
+      //   { key: 'eligible', title: 'Eligible', cellTemplate: this.eligibilityTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'amount', title: 'Amount', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'potentialValueUsdc', title: 'Potential Value', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       ],
-      points: [
-        { key: 'points', title: 'Points', cellTemplate: this.pointsTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'stage', title: 'Stage', cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'protocol', title: 'Platform', cellTemplate: this.platformIconTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      // points: [
+      //   { key: 'points', title: 'Points', cellTemplate: this.pointsTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'stage', title: 'Stage', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      //   { key: 'protocol', title: 'Platform', cellTemplate: this.platformIconTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
 
-      ]
+      // ]
     }
 
 
