@@ -59,7 +59,7 @@ export class AirdropFinderPage implements OnInit {
   public turnStileKey = environment.turnStile
   private _airdropData = signal(null)
   public selectedTab = signal('Airdrops');
-  public tableMenuOptions: string[] = ['Airdrops', 'Points'];
+  // public tableMenuOptions: string[] = ['Airdrops', 'Points'];
   public columns = computed(() => {
     //@ts-ignore
     return this._columnsOptions[this.selectedTab().toLowerCase()]
@@ -107,14 +107,8 @@ export class AirdropFinderPage implements OnInit {
         { key: 'symbol', title: 'Symbol', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
         { key: 'amount', title: 'Amount',cellTemplate: this.amountTpl,  cssClass: { name: 'ion-text-center', includeHeader: true } },
         { key: 'value', title: 'Value',  cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-        { key: 'link', title: 'link',cellTemplate:this.claimStatusTpl,  cssClass: { name: 'ion-text-center', includeHeader: true } },
-        // { key: 'rank', title: 'Rank', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'ticker', title: 'Token', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'stage', title: 'Stage', cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
-      //   { key: 'eligible', title: 'Eligible', cellTemplate: this.eligibilityTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'amount', title: 'Amount', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'potentialValueUsdc', title: 'Potential Value', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
-      ],
+        { key: 'link', title: 'Link', cellTemplate:this.claimStatusTpl,  cssClass: { name: 'ion-text-center', includeHeader: true } },
+           ],
       // points: [
       //   { key: 'points', title: 'Points', cellTemplate: this.pointsTpl, cssClass: { name: 'ion-text-center', includeHeader: true } },
       //   { key: 'stage', title: 'Stage', cssClass: { name: 'ion-text-center', includeHeader: true } },
