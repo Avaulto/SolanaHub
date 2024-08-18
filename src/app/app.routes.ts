@@ -77,9 +77,14 @@ export const routes: Routes = [
     
   },
   {
+    path: RoutingPath.HUBSOL,
+    loadComponent: () => import('./pages/hubsol/hubsol.page').then( m => m.HubsolPage)
+  },
+  {
     path:"**",
     redirectTo: RoutingPath.OVERVIEW
   },
+
 
 
 
