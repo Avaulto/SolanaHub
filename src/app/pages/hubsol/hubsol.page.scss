@@ -168,6 +168,7 @@
 
         div {
             // width: 600px;
+            // transform: translateY(3px);
             max-width: 100%;
         }
     }
@@ -331,8 +332,9 @@ ion-skeleton-text {
         flex-wrap: wrap;
     }
     #hubSOL-trust {
-        div {
+        div,p {
             display: flex;
+            text-align: left;
             justify-content: left;
         }
         ion-col{
