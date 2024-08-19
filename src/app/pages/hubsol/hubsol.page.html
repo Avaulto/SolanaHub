@@ -1,4 +1,3 @@
-
 <ion-content [fullscreen]="true">
 
   <ion-row id="promo">
@@ -8,34 +7,153 @@
         Powerful liquid stake solution
       </div>
       <div id="intro">Unlock the power of your SOL with self-custodial liquid stake token hubSOL and enjoy secure,
-         and boosted stake experience. </div>
-      
-    <div id="hubSOL-metrics">
-      <div class="metrics">
-        <ion-label>APY</ion-label>
-        <ion-text>{{0.08 | percent}}</ion-text>
-      </div>
-      <div class="metrics">
-        <ion-label>TVL</ion-label>
-        <ion-text>50k SOL / $10m</ion-text>
-      </div>
-      <div class="metrics">
-        <ion-label># of stakers</ion-label>
-        <ion-text>10,000</ion-text>
-      </div>
-    </div>
-    <div>
-      <ion-button>Stake Now</ion-button>
-    </div>
-    </ion-col>
-    
-  </ion-row>
-  
-  <div id="hubSOL-benefits">
-<div id="left-box"></div>
-<div id="right-box" #lottie>
+        and boosted stake experience. </div>
 
-</div>
+      <div class="hubSOL-metrics ion-hide-lg-down">
+        <div class="metrics ">
+          <ion-label>APY</ion-label>
+          @if (metrics() === null) {
+            <ion-skeleton-text [animated]="true" />
+            }@else {
+              
+              <ion-text>{{metrics().apy | percent: "1.1"}}</ion-text>
+            }
+        </div>
+        <div class="metrics">
+          <ion-label>TVL</ion-label>
+          @if (metrics() === null) {
+            <ion-skeleton-text [animated]="true" />
+            }@else {
+              
+              <ion-text>{{metrics().tvl | number: '1.0-0'}} SOL</ion-text>
+            }
+        </div>
+        <div class="metrics">
+          <ion-label># Of Stakers</ion-label>
+          @if (metrics() === null) {
+            <ion-skeleton-text [animated]="true" />
+            }@else {
+              
+              <ion-text>{{metrics().holders | number: "1.0"}}</ion-text>
+            }
+        </div>
+      </div>
+      <div class="hubSOL-metrics ion-hide-lg-up">
+        <div class="metrics ">
+          <div>
+            <ion-label>APY</ion-label>
+            <ion-text>{{0.08 | percent}}</ion-text>
+          </div>
+          <div>
+            <ion-label>TVL</ion-label>
+            <ion-text>50k SOL / $10m</ion-text>
+          </div>
+          <div>
+            <ion-label># of stakers</ion-label>
+            <ion-text>10,000</ion-text>
+          </div>
+        </div>
+        </div>
+      <div>
+        <ion-button 
+        routerDirection="root" 
+        routerLink="/staking"
+         >Stake Now</ion-button>
+      </div>
+    </ion-col>
+
+  </ion-row>
+
+  <ion-row id="hubSOL-benefits">
+    <ion-col sizeLg="6" size="12" id="left-box">
+      <div id="highlight-lst">
+        <ion-img src="assets/images/hubsol-icon.png" /> <span>1 hubSOL = 1 SOL + staking rewards</span>
+      </div>
+      <ion-label id="benefits-title">
+        Like $SOL, but Better
+      </ion-label>
+      <ion-text>
+        hubSOL is a liquid stake token that you get as a representative asset for your SOL inside our stake pool.
+      </ion-text>
+      <ion-text style="margin-block-end: 26px;">
+        When you stake SOL using liquid staking you enjoy of stake rewards
+        accumulated in the pool over time + exclusive benefits to hubSOL.
+      </ion-text>
+
+      <div id="benefit-list">
+        <div class="benefit">
+          <ion-img src="assets/images/check-heart.svg" /> <span>Weekly airdrops delivered directly to your wallet</span>
+        </div>
+        <div class="benefit">
+          <ion-img src="assets/images/check-heart.svg" /> <span>Enjoy premium features available only to holders</span>
+        </div>
+        <div class="benefit">
+          <ion-img src="assets/images/check-heart.svg" /> <span>Join a rapidly adopted token with multiple protocol
+            integrations</span>
+        </div>
+      </div>
+    </ion-col>
+    <ion-col sizeLg="6" size="12" id="right-box">
+      <div #animationEl></div>
+    </ion-col>
+  </ion-row>
+
+  <div id="hubSOL-trust">
+    <div>
+      <div id="sanctum-power">Powered By <ion-img src="assets/images/sanctum-full-black.svg" /></div>
     </div>
-    
-    </ion-content>
+    <p>A safe staking solution</p>
+    <ion-row class="ion-justify-content-between">
+      <ion-col size="12" sizeLg="3">
+        <ion-img src="assets/icon/f-icon.svg" />
+        <ion-label>Secure</ion-label>
+        <ion-text>Powered by a Solana Labs smart contract, rigorously audited over seven times for your peace of mind.
+          Rest assured, as validators, we never have access to your funds—now or in the future.
+        </ion-text>
+      </ion-col>
+      <ion-col class="ion-margin-bottom" size="12" sizeLg="3">
+        <ion-img src="assets/icon/f-icon-2.svg" />
+        <ion-label>Liquid</ion-label>
+        <ion-text>The hubSOL token is backed by the robust Sanctum smart contract and substantial liquidity
+          pools—holding
+          millions of dollars worth of SOL, ensuring you can swap back at any time with ease.</ion-text>
+      </ion-col>
+      <ion-col size="12" sizeLg="3">
+        <ion-img src="assets/icon/f-icon-3.svg" />
+        <ion-label>Reliable</ion-label>
+        <ion-text>
+          Guided by three core values:
+
+          Decentralization,
+          Top-tier infrastructure for maximum uptime,
+          Ongoing transparency in our commission and commitments. </ion-text>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <div id="hubSOL-support">
+    <ion-row class="ion-justify-content-between">
+      <ion-col size="12" sizeLg="9">
+        <ion-label>Supported platforms</ion-label>
+        <ion-text>hubSOL is widely supported across leading platforms in the Solana ecosystem.</ion-text>
+      </ion-col>
+      <ion-col class="ion-hide-lg-down" size="12" sizeLg="2">
+        <ion-button 
+        routerDirection="root" 
+        routerLink="/staking"
+         >Stake Now</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-align-items-center">
+      @for (item of supportedPlatforms; track $index) {
+
+        <ion-col class="platform" size="6" sizeLg="3">
+          <div class="wrapper" >
+            <div><span class="chip" [ngClass]="item.type">{{item.type}}</span></div>
+            <ion-img [src]="item.img"/>
+          </div>
+        </ion-col>
+      }
+    </ion-row>
+  </div>
+</ion-content>
