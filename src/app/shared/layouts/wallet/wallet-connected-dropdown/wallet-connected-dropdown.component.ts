@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import {copy, repeat, logOut, trophyOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService } from 'src/app/services';
 import { WatchModeService } from 'src/app/services/watch-mode.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-wallet-connected-dropdown',
@@ -20,17 +21,20 @@ export class WalletConnectedDropdownComponent {
     private _watchModeService: WatchModeService,
     private _walletStore: WalletStore, 
     public popoverController: PopoverController,
-    private _portfolioService:PortfolioService
+    private _portfolioService:PortfolioService,
+    private _router: Router,
 
     ) {
     addIcons({copy, repeat, logOut, trophyOutline })
   }
 
   public disconnectWallet() {
+    
     this._walletStore.disconnect().subscribe();
     this.popoverController.dismiss();
-
     this._portfolioService.clearWallet()
+    console.log('should redirect');
+    this._router.navigate(['']);
   }
 
   public async showWalletAdapters() {

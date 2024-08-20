@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Wallet, WalletStore } from '@heavy-duty/wallet-adapter';
 import { IonModal, PopoverController } from '@ionic/angular';
 import { WalletName } from '@solana/wallet-adapter-base';
@@ -14,7 +15,8 @@ export class WalletAdapterOptionsComponent implements OnInit {
   public walletsOptions$: Observable<Wallet[]> = this._walletStore.wallets$.pipe(shareReplay(1))
   constructor(
     private _walletStore: WalletStore,
-     public popoverController: PopoverController
+     public popoverController: PopoverController,
+     private _router: Router
      ) { }
 
   ngOnInit() {
@@ -23,6 +25,7 @@ export class WalletAdapterOptionsComponent implements OnInit {
   async onSelectWallet(walletName: WalletName | any) {
     this._walletStore.selectWallet(walletName);
     try {
+     
       await this.popoverController.dismiss();
     } catch (error) {
       console.error(error)

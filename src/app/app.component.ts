@@ -1,6 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
   IonButtons,
@@ -92,12 +92,16 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-
+      console.log('wallet connected', wallet);
+      if(wallet){
+        this._router.navigate(['/overview']);
+      }
       return wallet || watchMode;
     }))
 
   public notifIndicator = this._notifService.notifIndicator
   constructor(
+    private _router: Router,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,

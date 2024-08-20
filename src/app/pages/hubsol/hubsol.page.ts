@@ -1,5 +1,5 @@
 import { DecimalPipe, NgClass, PercentPipe } from '@angular/common';
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonHeader, IonToolbar, IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText } from "@ionic/angular/standalone";
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -7,7 +7,7 @@ import { PublicKey } from '@solana/web3.js';
 import Lottie from 'lottie-web';
 import { firstValueFrom } from 'rxjs';
 import { PrizePool } from 'src/app/models';
-import { SolanaHelpersService } from 'src/app/services';
+import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 
@@ -34,8 +34,8 @@ import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 })
 export class HubsolPage implements OnInit {
   @ViewChild('animationEl', { static: true }) animationEl: ElementRef;
+    protected api = inject(UtilService).serverlessAPI + '/api'
   public supportedPlatforms = [
-    
     {
       img: 'assets/images/platforms/phantom.svg',
       type: 'wallet'
@@ -87,9 +87,7 @@ export class HubsolPage implements OnInit {
     // }
   ]
   constructor(
-    private _lls: LoyaltyLeagueService,
-    private _lss: LiquidStakeService,
-    private _shs: SolanaHelpersService
+
   ) { }
   ngOnInit() {
     this.startAnim()
@@ -106,34 +104,9 @@ export class HubsolPage implements OnInit {
   }
   public metrics = signal(null)
   public async getMetrics() {
-    const hubSOL_mint = new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX')
-    const metricsRaw = await this._shs.connection.getParsedProgramAccounts(
-      TOKEN_PROGRAM_ID,
-      {
-        filters: [
-          {
-            dataSize: 165
-          },
-          {
-            memcmp: {
-              offset: 0,
-              bytes: hubSOL_mint.toBase58(), // base58 encoded string
-            },
-          },
-        ],
-      }
-    )
-    const getApy = (await this._lss.getStakePoolList())[0].apy
-    const stakeBoost = (await firstValueFrom(this._lls.llPrizePool$)).APY_boosters.hubSOL
-
-    const holders = metricsRaw.filter(staker => staker.account.data['parsed'].info.tokenAmount.uiAmount > 0)
-    const metrics = {
-      holders: holders.length,
-      tvl: holders.reduce((acc, staker) => acc + staker.account.data['parsed'].info.tokenAmount.uiAmount, 0),
-      apy: getApy * (1 + stakeBoost).toFixedNoRounding(2)
-    }
+    const metrics = await (await fetch(`${this.api}/hubSOL/get-metrics`)).json()
     console.log(metrics);
-
+    
     this.metrics.set(metrics)
 
   }

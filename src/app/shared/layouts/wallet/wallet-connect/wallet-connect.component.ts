@@ -65,7 +65,7 @@ export class WalletConnectComponent {
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
       if (wallet || watchMode) {
-
+        
         // va.track('wallet connected');
         this._toasterService.msg.next({
           message: `Wallet connected`,

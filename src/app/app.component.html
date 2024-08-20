@@ -62,12 +62,12 @@
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content">
-
-      @if (isReady$ | async) {
+     <div class="ion-hide">
+       {{isReady$ | async}}
+     </div>
+    
       <ion-router-outlet></ion-router-outlet>
-      }@else {
-      <not-connected />
-      }
+ 
       
       <!-- <donate/> -->
     </ion-content>
