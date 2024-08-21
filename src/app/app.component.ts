@@ -1,6 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
   IonButtons,
@@ -39,7 +39,7 @@ import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilServ
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
-import { combineLatestWith, switchMap, take } from 'rxjs';
+import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 
@@ -93,15 +93,20 @@ export class AppComponent implements OnInit {
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
       console.log('wallet connected', wallet);
+      // if(wallet){
+      //   this._router.navigate(['/overview']);
+      // }
       if(wallet){
-        this._router.navigate(['/overview']);
+        setTimeout(() => {
+          this._notifService.checkAndSetIndicator()
+        });
       }
       return wallet || watchMode;
     }))
 
   public notifIndicator = this._notifService.notifIndicator
   constructor(
-    private _router: Router,
+    public router: Router,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,
@@ -113,6 +118,8 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     private _fetchPortfolioService: PortfolioFetchService
   ) {
+   
+    
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
   }
   public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
@@ -127,7 +134,7 @@ export class AppComponent implements OnInit {
   sendCaptchaResponse(token) {
     this._utilService.turnStileToken = token
   }
-
+  path;;
   async ngOnInit() {
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
@@ -142,13 +149,10 @@ export class AppComponent implements OnInit {
       }
       );
 
-      this._walletStore.connected$.subscribe(connected =>{
-        if(connected){
-          setTimeout(() => {
-            this._notifService.checkAndSetIndicator()
-          });
-        }
-      })
+      this.path = this.router.events.pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        map((event) => event.url)
+      )
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';

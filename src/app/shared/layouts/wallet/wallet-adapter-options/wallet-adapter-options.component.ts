@@ -16,7 +16,6 @@ export class WalletAdapterOptionsComponent implements OnInit {
   constructor(
     private _walletStore: WalletStore,
      public popoverController: PopoverController,
-     private _router: Router
      ) { }
 
   ngOnInit() {
@@ -25,7 +24,7 @@ export class WalletAdapterOptionsComponent implements OnInit {
   async onSelectWallet(walletName: WalletName | any) {
     this._walletStore.selectWallet(walletName);
     try {
-     
+      
       await this.popoverController.dismiss();
     } catch (error) {
       console.error(error)

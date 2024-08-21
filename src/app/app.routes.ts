@@ -16,18 +16,18 @@ export const routes: Routes = [
   {
     path: RoutingPath.OVERVIEW,
     loadComponent: () => import('./pages/overview/overview.page').then( m => m.OverviewPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.COLLECTIBLES,
     loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage),
-    canActivate: [IsConnectedGuard]
+    
    
   },
   {
     path: RoutingPath.BRIDGE,
     loadComponent: () => import('./pages/bridge/bridge.page').then( m => m.BridgePage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.LOYALTY_LEAGUE,
@@ -37,37 +37,37 @@ export const routes: Routes = [
   {
     path: `${RoutingPath.SWAP}/:pair`,
     loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.SWAP,
     loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.STAKING,
     loadComponent: () => import('./pages/staking/staking.page').then( m => m.StakingPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.LENDING,
     loadComponent: () => import('./pages/lending/lending.page').then( m => m.LendingPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.DAO,
     loadComponent: () => import('./pages/dao/dao.page').then( m => m.DaoPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.AIRDROP_FINDER,
     loadComponent: () => import('./pages/airdrop-finder/airdrop-finder.page').then( m => m.AirdropFinderPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.NOTIFICATIONS,
     loadComponent: () => import('./pages/notifications/notifications.page').then( m => m.NotificationsPage),
-    canActivate: [IsConnectedGuard]
+    
   },
   {
     path: RoutingPath.HUBSOL,

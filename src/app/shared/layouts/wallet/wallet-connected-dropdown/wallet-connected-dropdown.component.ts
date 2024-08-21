@@ -33,8 +33,6 @@ export class WalletConnectedDropdownComponent {
     this._walletStore.disconnect().subscribe();
     this.popoverController.dismiss();
     this._portfolioService.clearWallet()
-    console.log('should redirect');
-    this._router.navigate(['']);
   }
 
   public async showWalletAdapters() {

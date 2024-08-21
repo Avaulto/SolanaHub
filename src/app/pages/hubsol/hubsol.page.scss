@@ -2,7 +2,7 @@
     background-color: var(--ion-color-page-top);
     background-image: url(/assets/images/bg-header-decorative.svg);
     justify-content: space-between;
-    padding: 56px 3vw;
+    padding: 56px 2.5vw;
 
     #promo-text {
         flex-wrap: wrap;
@@ -175,7 +175,7 @@
 }
 
 #hubSOL-trust {
-    padding: 24px;
+    padding: 2.5vw;
     background-color: #E6E7EB;
     background-image: url(/assets/images/bg-header-decorative.svg);
     div {
@@ -236,7 +236,7 @@
 
 
 #hubSOL-support {
-    padding: 54px 24px;
+    padding: 54px 2.5vw;
 
     ion-label {
         color: var(--colors-text-text-primary-900, #101828);
