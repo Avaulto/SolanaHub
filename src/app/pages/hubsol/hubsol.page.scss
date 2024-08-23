@@ -214,7 +214,10 @@
 
         ion-img {
             margin-block-end: 13px;
-            width: 48px;
+            width: 44px;
+            border: 1px solid #667085;
+            border-radius: 9px;
+            padding: 10px;
         }
     }
 
