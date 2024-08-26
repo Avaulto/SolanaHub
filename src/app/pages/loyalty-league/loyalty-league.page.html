@@ -31,14 +31,14 @@
     <div id="loyalty-league-info">
       
       <ion-row class="ion-justify-content-between ion-align-items-stretch">
-        <ion-col sizeXl="5.9" size="12" class="ion-margin-bottom">
+        <ion-col  size="12" class="ion-margin-bottom">
           
           <app-pool-stats [hubSOLrebates]="(prizePool$ | async)?.hubSOLrebates" [avgApyBoost]="(prizePool$ | async)?.avgApyBoost" [totalPts]="totalPts" />
           
 
         </ion-col>
         <!-- <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div> -->
-        <ion-col id="points-multiplier" sizeXl="5.9" size="12" class="gap data-set ion-margin-bottom">
+        <ion-col id="points-multiplier"  size="12" class="ion-margin-bottom">
           <app-points-stats [prizePool]="prizePool$ | async"/>
         </ion-col>
       </ion-row>
@@ -65,7 +65,7 @@
             <div class="token-pts">
 
               <div class="token-pts">
-                <ion-img [tooltip]="hubSOLtoolTipTpl" src="assets/images/hubsol-small.webp" />
+                <ion-img [tooltip]="hubSOLtoolTipTpl" src="assets/images/hubSOL.svg" />
                 <span>
                   {{row.liquidStake.hubSOL}}
                 </span>
@@ -76,7 +76,7 @@
               </span> 
 
               <div>
-                <ion-img  [tooltip]="vSOLtoolTipTpl" src="assets/images/vsol-small.webp" />
+                <ion-img  [tooltip]="vSOLtoolTipTpl" src="assets/images/vSOL.svg" />
                 <span>
                   {{row.liquidStake.vSOL}}
                 </span>
@@ -85,7 +85,7 @@
                 +
               </span> 
               <div class="token-pts">
-                <ion-img  [tooltip]="bSOLtoolTipTpl" src="assets/images/bsol-small.webp" />
+                <ion-img  [tooltip]="bSOLtoolTipTpl" src="assets/images/bSOL.svg" />
                 <span>
                   {{row.liquidStake.bSOL}}
                 </span>
@@ -98,7 +98,7 @@
           <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="token-pts">
               <div>
-                <ion-img [tooltip]="mndetoolTipTpl" src="assets/images/mnde-small.webp" />
+                <ion-img [tooltip]="mndetoolTipTpl" src="assets/images/MNDE.svg" />
                 <span>
                   {{row.dao.veMNDE}}
                 </span>
@@ -107,7 +107,7 @@
                 +
               </span> 
               <div>
-                <ion-img [tooltip]="blzetoolTipTpl" src="assets/images/blze-small.webp" />
+                <ion-img [tooltip]="blzetoolTipTpl" src="assets/images/BLZE.svg" />
                 <span>
                   {{row.dao.veBLZE}}
                 </span>

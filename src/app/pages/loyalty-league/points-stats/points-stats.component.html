@@ -5,21 +5,25 @@
     </ion-button>
 
 </div>
+<div class="points-multiplier">
+
 
 @for (score of sbm$ | async ; track $index) {
 <div class="m">
-  <div class="key" [class.bonus]="score.name == 'Referrals' || score.name == 'Hub domain holder'">{{score.name}}</div>
+  <!-- <div class="key" [class.bonus]="score.name == 'Referrals' || score.name == 'Hub domain holder'">{{score.name}}</div> -->
   @if(score.multiplier){
-  @if(score.name != 'Referrals' && score.name != 'Hub domain holder'){
-  <div class="value" [ngClass]="{'stake-boost-tool-tip': score?.stakeBoost}"
-    [tooltip]="score?.stakeBoost ? stakeBoost : null">
-    {{score.multiplier}}
-  </div>
+    @if(score.name != 'Referrals' && score.name != 'Hub domain holder'){
+      <div class="value" [ngClass]="{'stake-boost-tool-tip': score?.stakeBoost}"
+     >
+      {{score.multiplier}}
+      <!-- <ion-img [src]="score.image"/> -->
+    </div>
   }@else {
-  <div class="value bonus" [ngClass]="{'stake-boost-tool-tip': score?.stakeBoost}">
-    {{score.multiplier}}
-  </div>
+    <div class="value bonus" [ngClass]="{'stake-boost-tool-tip': score?.stakeBoost}">
+      {{score.multiplier}}
+    </div>
   }
+  <ion-img class="key" [src]="score.image"/>
 
   <ng-template #stakeBoost>
     Stake boost: {{score.stakeBoost | percent: '1.1-2' }}
@@ -30,3 +34,4 @@
   }
 </div>
 }
+</div>

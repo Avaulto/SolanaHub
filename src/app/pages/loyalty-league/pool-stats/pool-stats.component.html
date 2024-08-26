@@ -14,7 +14,7 @@
 
     </div>
 
-    <div class="gap data-set stat">
+    <!-- <div class="gap data-set stat">
       <div class="key ion-text-capitalize">Avg Stake Boost</div>
       @if(avgApyBoost){
         <div class="value">{{avgApyBoost  | percent:'1.0-2' }}</div>
@@ -23,7 +23,7 @@
       }
 
     
-    </div>
+    </div> -->
   
     <div class="gap data-set stat" style="position: relative;">
       <div class="key ion-text-capitalize">Total Points </div>
@@ -44,9 +44,9 @@
     </div>
 
     <div class="gap data-set stat">
-      <div class="key ion-text-capitalize">Next Airdrop</div>
+      <div class="key ion-text-capitalize">Session</div>
       @if(nextAirdrop$ | async; as nextAirdrop){
-        <div class="value">ETA in {{nextAirdrop.days}} days</div>
+        <div class="value">3</div>
       }@else{
         <ion-skeleton-text [animated]="true"/>
       }

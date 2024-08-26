@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, map, shareReplay, switchMap, take } from '
 import { UtilService } from 'src/app/services';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { IonSkeletonText, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { IonSkeletonText, IonIcon, IonButton, IonImg } from '@ionic/angular/standalone';
 import { LoyaltyBooster, LoyaltyLeaderBoard, PrizePool } from 'src/app/models';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { addIcons } from 'ionicons';
@@ -17,7 +17,7 @@ import { PopoverController } from '@ionic/angular';
   templateUrl: './points-stats.component.html',
   styleUrls: ['./points-stats.component.scss'],
   standalone: true,
-  imports: [IonButton, IonIcon, AsyncPipe, PercentPipe, KeyValuePipe, JsonPipe, NgClass, IonSkeletonText, TooltipModule]
+  imports: [IonImg, IonButton, IonIcon, AsyncPipe, PercentPipe, KeyValuePipe, JsonPipe, NgClass, IonSkeletonText, TooltipModule]
 })
 export class PointsStatsComponent implements OnInit, OnChanges {
 
@@ -27,48 +27,56 @@ export class PointsStatsComponent implements OnInit, OnChanges {
     {
       id: 'nativeStake',
       name: 'Native stake',
+      image: 'assets/images/SOL.svg',
       multiplier: null,
       stakeBoost: null,
     },
     {
       id: 'hubSOL_DirectStakeBoost',
       name: 'hubSOL',
+      image: 'assets/images/hubSOL.svg',
       multiplier: null,
       stakeBoost: null
     },
     {
       id: 'vSOL_DirectStakeBoost',
       name: 'vSOL direct stake',
+      image: 'assets/images/vSOL.svg',
       multiplier: null,
       stakeBoost: null
     },
     {
       id: "bSOL_DirectStakeBoost",
       name: 'bSOL direct stake',
+      image: 'assets/images/bSOL.svg',
       multiplier: null,
       stakeBoost: null
     },
     {
       id: 'veMNDE_Boost',
       name: 'veMNDE votes',
+      image: 'assets/images/MNDE.svg',
       multiplier: null,
       stakeBoost: null
     },
     {
       id: 'veBLZE_Boost',
       name: 'veBLZE votes',
+      image: 'assets/images/BLZE.svg',
       multiplier: null,
       stakeBoost: null
     },
     {
       id: 'referral_Boost',
       name: 'Referrals',
+      image: 'assets/images/refer.svg',
       multiplier: null,
       stakeBoost: null
     },
     {
       id: "hubDomain_Boost",
       name: 'Hub domain holder',
+      image: 'assets/images/hub.svg',
       multiplier: null,
       stakeBoost: null
     }

@@ -1,33 +1,39 @@
 #pm-title {
     color: var(--ion-color-hard-hard);
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
     margin-block-end: 11px;
     text-transform: capitalize;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
 }
-
+.points-multiplier {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 .m {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin-block-end: 6px;
-
+    align-items: center;
     .key {
         color: var(--colors-gray-modern-500, #697586);
         font-size: 12px;
         font-style: normal;
         font-weight: 500;
+        width: 32px;
+
     }
 
     .value {
         color: var(--colors-gray-modern-800, #202939);
-        text-align: right;
         font-size: 12px;
         cursor: pointer;
         font-weight: 600;
         line-height: 14px;
-        /* 116.667% */
+        margin-block-end: 12px;
     }
 
     .bonus {
@@ -35,9 +41,9 @@
         color: var(--brand-600, #B84794);
     }
 }
-.stake-boost-tool-tip{
-    border-bottom: 2px dashed var(--ion-color-primary);
-}
+// .stake-boost-tool-tip{
+//     border-bottom: 2px dashed var(--ion-color-primary);
+// }
 ion-skeleton-text{
     margin: 0;
     width: 15%;
