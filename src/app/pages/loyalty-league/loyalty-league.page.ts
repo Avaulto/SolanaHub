@@ -36,11 +36,11 @@ import { V2LoaderComponent } from './v2-loader/v2-loader.component';
     PointsStatsComponent,
     CopyTextDirective,
     AsyncPipe,
-    DecimalPipe
+    DecimalPipe,
+    V2LoaderComponent
   ]
 })
 export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
-  public connectedWallet = 'CdoFMmSgkhKGKwunc7Tusg2sMZjxML6kpsvEmqpVYPjyP'
   public loyalMember = signal(null)
   public isAmbassador: boolean = false;
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
@@ -63,22 +63,8 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
 
     // effect(() => console.log(this.loyalMember()))
   }
-  async presentPopover() {
-    const popover = await this.popoverController.create({
-      component: V2LoaderComponent,
-      // event: e,
-      cssClass:'ll-loader',
-      backdropDismiss:false
-    });
 
-    await popover.present();
 
-    const { role } = await popover.onDidDismiss();
-    console.log(`Popover dismissed with role: ${role}`);
-  }
-  ionViewWillEnter(){
-    this.presentPopover()
-  }
   public prizePool$ = this._loyaltyLeagueService.llPrizePool$
   public loyaltyLeagueMember$ = this._shs.walletExtended$.pipe(
     combineLatestWith(this._loyaltyLeagueService.llb$, this.prizePool$),

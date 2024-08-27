@@ -1,9 +1,10 @@
 import { AfterContentInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Lottie from 'lottie-web';
 @Component({
-  selector: 'app-v2-loader',
+  selector: 'll-v2-loader',
   templateUrl: './v2-loader.component.html',
   styleUrls: ['./v2-loader.component.scss'],
+  standalone: true
 })
 export class V2LoaderComponent  implements AfterContentInit {
   @ViewChild('animationEl', {static:true}) animationEl: ElementRef<any>
