@@ -1,0 +1,24 @@
+#loader-wrapper{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
+}
+div{
+    
+    color: var(--ion-color-hard-hard);
+    font-size: 18px;
+    font-weight: 600;
+    
+    
+
+}
+span{
+    margin-block-start: 5px;
+    display: block;
+    color: var(--ion-color-dark);
+    font-size: 14px;
+    font-weight: 400;
+}

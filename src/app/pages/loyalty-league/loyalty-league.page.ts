@@ -17,8 +17,9 @@ import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
-
+import { PopoverController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components';
+import { V2LoaderComponent } from './v2-loader/v2-loader.component';
 @Component({
   selector: 'app-loyalty-league',
   templateUrl: './loyalty-league.page.html',
@@ -52,6 +53,7 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     // this.prizePool$.next(prizePool)
   }
   constructor(
+    public popoverController: PopoverController,
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     public _utilService: UtilService,
@@ -60,6 +62,22 @@ export class LoyaltyLeaguePage implements OnInit, AfterViewInit {
     addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline });
 
     // effect(() => console.log(this.loyalMember()))
+  }
+  async presentPopover() {
+    const popover = await this.popoverController.create({
+      component: V2LoaderComponent,
+      // event: e,
+      cssClass:'ll-loader',
+      backdropDismiss:false
+    });
+
+    await popover.present();
+
+    const { role } = await popover.onDidDismiss();
+    console.log(`Popover dismissed with role: ${role}`);
+  }
+  ionViewWillEnter(){
+    this.presentPopover()
   }
   public prizePool$ = this._loyaltyLeagueService.llPrizePool$
   public loyaltyLeagueMember$ = this._shs.walletExtended$.pipe(

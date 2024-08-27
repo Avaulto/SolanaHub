@@ -28,7 +28,7 @@
       </ion-col>
     </ion-row>
     <ion-grid>
-    <div id="loyalty-league-info">
+    <!-- <div id="loyalty-league-info">
       
       <ion-row class="ion-justify-content-between ion-align-items-stretch">
         <ion-col sizeXl="5.9" size="12" class="ion-margin-bottom">
@@ -37,7 +37,6 @@
           
 
         </ion-col>
-        <!-- <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div> -->
         <ion-col id="points-multiplier" sizeXl="5.9" size="12" class="gap data-set ion-margin-bottom">
           <app-points-stats [prizePool]="prizePool$ | async"/>
         </ion-col>
@@ -57,7 +56,6 @@
                 {{row.walletOwner.addrShort}}
               </span>
               <ion-icon style="cursor: pointer;" appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
-              <!-- @if(row.liquidStake.msol) -->
             </div>
 
           </ng-template>
@@ -130,14 +128,13 @@
             <div class="airdrop">
               {{row.weeklyAirdrop | number: '1.3'}}
               <ion-img src="assets/images/hubsol-small.webp" />
-              <!-- @if(row.liquidStake.msol) -->
             </div>
 
           </ng-template>
 
         </ion-col>
       </ion-row>
-    </div>
+    </div> -->
   </ion-grid>
 
 </ion-content>
