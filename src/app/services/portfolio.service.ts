@@ -115,16 +115,16 @@ export class PortfolioService {
         }
 
       }
-      this._portfolioStaking(walletAddress)
       const portfolio = portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
       const excludeNFTv2 = portfolio?.elements?.filter(e => e.platformId !== 'wallet-nfts-v2')
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
-
+      
       const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
       const tokenJupData = Object.keys(portfolio.tokenInfo.solana).map(key => {
         return portfolio.tokenInfo.solana[key];
       })
-
+      
+      this._portfolioStaking(walletAddress)
       this._portfolioTokens(extendTokenData, tokenJupData);
       this._portfolioDeFi(portfolio.elements, tokenJupData)
 
@@ -412,7 +412,8 @@ export class PortfolioService {
   }
 
   public async _portfolioStaking(walletAddress: string) {
-
+    console.log(walletAddress, 'get stake');
+    
     const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
     this.staking.set(stakeAccounts)
 

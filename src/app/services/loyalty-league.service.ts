@@ -21,8 +21,8 @@ export class LoyaltyLeagueService {
     // private _toasterService:ToasterService
   ) {
     if (!this._loyaltyLeagueLeaderBoard$.value) {
-      firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
-      firstValueFrom(this.getPrizePool()).then(llPrizePool => this._loyaltyLeaguePrizePool$.next(llPrizePool))
+      // firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
+      // firstValueFrom(this.getPrizePool()).then(llPrizePool => this._loyaltyLeaguePrizePool$.next(llPrizePool))
     }
   }
 

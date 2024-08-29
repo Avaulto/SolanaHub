@@ -106,6 +106,8 @@ export class NativeStakeService {
   public async getOwnerNativeStake(walletAddress: string): Promise<Stake[]> {
     // try {
     const validators: Validator[] = await this._shs.getValidatorsList()
+    console.log(validators);
+    
     const stakeAccounts = (await this._shs.getStakeAccountsByOwner2(walletAddress)) //.map(acc => {acc.pubkey = new PublicKey(acc.pubkey); return acc});
 
 
