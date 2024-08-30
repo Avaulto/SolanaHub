@@ -84,13 +84,13 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
-        const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
+        const prizePool$ = 1//:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
 
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
         
-        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 + prizePool$ .APY_boosters.hubSOL)).toFixedNoRounding(2)
+        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 )).toFixedNoRounding(2)
         
 
       } catch (error) {
