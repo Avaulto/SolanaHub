@@ -77,11 +77,39 @@
     }
 }
 
-
-
+#wallet-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 10px;
+}
+#connect-with-social {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    #powere-by {
+        font-size: 12px;
+        width: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        width: 195px;
+        color: var(--ion-color-dark);
+    }
+    ion-img{
+        background: black;
+        padding: 6px 8px;
+        border-radius: 8px;
+        width: 60px;
+    }
+}
 @media only screen and (max-width: 1000px) {
+    #powere-by {
+
+        width: 245px !important; 
+    }
     .wallet {
-      width: 49%;
       flex-direction: row !important;
 
       padding: 12px 20px !important;
@@ -89,7 +117,7 @@
         width: 20px;
         height: 20px;
         margin-block-end: 0;
-        margin-inline-end: 4px;
+        margin-inline-end: 12px;
       }
     }
   

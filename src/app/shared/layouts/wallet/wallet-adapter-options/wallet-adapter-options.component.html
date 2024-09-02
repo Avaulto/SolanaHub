@@ -1,27 +1,59 @@
 <div id="wallet-adapters-wrapper" class="ion-padding">
 
-    <div id="modal-intro">
-      <div>
-        <ion-label>Connect wallet</ion-label>
-        <ion-text>You need to connect a Solana wallet.</ion-text>
-      </div>
-  
-          <ion-img id="close-modal" (click)="popoverController.dismiss()" src="assets/images/close-icon.svg" />
-    
+  <div id="modal-intro">
+    <div>
+      <ion-label>Connect wallet</ion-label>
+      <ion-text>You need to connect a Solana wallet.</ion-text>
     </div>
 
-  
-    <div id="wallet-connected-actions">
-  <ion-label>Popular Wallets</ion-label>
-  <div class="wallet" (click)="onSelectWallet(opt.adapter.name)" *ngFor="let opt of walletsOptions$ | async">
-
-    <ion-avatar slot="start">
-      <ion-img [src]="opt.adapter.icon"></ion-img>
-    </ion-avatar>
-    <ion-text>
-      {{opt.adapter?.name}}
-    </ion-text>
+    <ion-img id="close-modal" (click)="popoverController.dismiss()" src="assets/images/close-icon.svg" />
 
   </div>
-</div>
+
+
+  <div id="wallet-connected-actions">
+    <ion-label>Popular Wallets</ion-label>
+    <div id="wallet-list">
+      <div class="wallet" (click)="onSelectWallet(opt.adapter.name)" *ngFor="let opt of walletsweb3Options$ | async">
+
+        <ion-avatar slot="start">
+       
+            <ion-img [src]="opt.adapter.icon"></ion-img>
+          
+        </ion-avatar>
+        <ion-text>
+          {{opt.adapter?.name}}
+        </ion-text>
+
+      </div>
+    </div>
+    <div id="connect-with-social">
+
+      <ion-label>Connect with Social </ion-label>
+      <div id="powere-by">
+        <span>Powered by</span>
+        <a href="https://www.moongate.one/" target="_blank">
+          <ion-img src="assets/images/moongate-logo.svg"></ion-img>
+        </a>
+      </div>
+    </div>
+    <div id="wallet-list">
+      <div class="wallet" (click)="onSelectWallet(opt.adapter.name)" *ngFor="let opt of socialWallets$ | async">
+
+        <ion-avatar slot="start">
+          
+          @if (opt.adapter.name.indexOf('Twitter') > -1) {
+            <ion-img src="https://i.pinimg.com/originals/2f/b9/09/2fb909b74a854f0715e64dda5825990d.jpg"></ion-img>
+          }@else {
+            
+            <ion-img [src]="opt.adapter.icon"></ion-img>
+          }
+        </ion-avatar>
+        <ion-text>
+          {{opt.adapter?.name}}
+        </ion-text>
+
+      </div>
+    </div>
+  </div>
 </div>

@@ -116,7 +116,8 @@ export class NativeStakeService {
     })
     const extendStakeAccountRes = await Promise.all(extendStakeAccount);
     // this.getInflationReward(extendStakeAccountRes)
-
+    console.log(extendStakeAccountRes);
+    
     // this._stakeAccounts$.next(extendStakeAccountRes);
     return extendStakeAccountRes
     // } catch (error) {

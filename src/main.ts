@@ -9,6 +9,8 @@ import { environment } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
 import { PhantomWalletAdapter, UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { registerMoonGateWallet } from "@moongate/moongate-adapter";
+
 import {
   BrowserAnimationsModule,
   provideAnimations,
@@ -20,6 +22,9 @@ if (environment.production) {
   enableProdMode();
 
 }
+registerMoonGateWallet({ authMode: "Google"})
+registerMoonGateWallet({ authMode: "Twitter"})
+registerMoonGateWallet({ authMode: "Apple" })
 
 bootstrapApplication(AppComponent, {
   providers: [
