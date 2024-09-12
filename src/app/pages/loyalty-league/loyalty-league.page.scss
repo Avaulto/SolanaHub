@@ -44,19 +44,20 @@
     }
 
     #intro {
-        color:  var(--ion-color-dark);
+        color: var(--ion-color-dark);
         font-size: 16px;
         font-weight: 400;
         line-height: 24px;
-        margin-block-end: 48px;
+        margin-block-end: 33px;
+
         /* 150% */
-        span{
+        span {
             text-decoration: underline;
             cursor: pointer;
         }
     }
 
-    #no-stake-box{
+    #no-stake-box {
         text-transform: capitalize;
         border-radius: var(--radius-xl, 12px);
         border: 1px solid #DBDBD8;
@@ -65,6 +66,7 @@
         display: flex;
         flex-direction: column;
         margin-block-end: 32px;
+
         ion-label {
             color: var(--ion-color-dark);
             font-size: 16px;
@@ -73,7 +75,7 @@
             line-height: 100%;
             margin-block-end: 10px;
         }
-    
+
         ion-text {
             color: var(--ion-color-dark);
             font-size: 36px;
@@ -82,70 +84,39 @@
             line-height: 100%;
         }
     }
-    #stake-redirect {
-        font-size: 18px;
-        font-weight: 600;
-        line-height: 28px;
-        text-transform: capitalize;
-        height: 60px;
-        width: 324px;
-        max-width: 100%;
-        border-radius: 8px;
-        border: 1px;
-        background: var(--ion-color-primary);
-        --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    }
+
+  
 
 
-    #promo-media {
-        align-items: center;
-        display: flex;
-        justify-content: flex-end;
-    }
 }
 
 
 // loyalty league content section
 
 
-.addr-item {
-    align-items: center;
-    justify-content: center;
-    display: flex;
 
-    ion-icon {
-        margin-inline-start: 8px;
-        font-size: 12px;
-    }
-}
 
-.token-pts, .airdrop, .bonuses {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    div {
-        display: flex;
-        align-items: center;
-        margin-inline: 4px;
+// v2 style
+#btns-container {
+    ion-button {
+        text-transform: capitalize;
+        --padding-bottom: 16px;
+        --padding-top: 16px;
+        --padding-start: 24px;
+        --padding-end: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 24px;
+        height: 52px;
+        margin-inline-end: 10px;
+        ion-icon {
+            margin-inline-end: 10px;
+        }
     }
-    ion-img{
-        width: 13px;
-        height: 13px;
-        margin-inline: 4px;
-        border-radius: 50%;
-        overflow: hidden;
-    }
-    ion-icon{
-        margin-inline: 4px;
-        font-size: 14px;
-    }
-
-}
-
-@media only screen and (max-width: 992px) {
-    .token-pts, .airdrop, .bonuses {
-    justify-content: flex-start;
-    margin-inline-start: 17px;
+    #faq-btn {
+        font-size: 13px;
+        --background-hover: transparent;
+        --box-shadow: none;
+        color: var(--ion-color-dark);
     }
 }

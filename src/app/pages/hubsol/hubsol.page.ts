@@ -1,15 +1,11 @@
 import { DecimalPipe, NgClass, PercentPipe } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonHeader, IonToolbar, IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText } from "@ionic/angular/standalone";
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { PublicKey } from '@solana/web3.js';
+import {  IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText } from "@ionic/angular/standalone";
+
 import Lottie from 'lottie-web';
-import { firstValueFrom } from 'rxjs';
-import { PrizePool } from 'src/app/models';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
-import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
-import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+
+import {  UtilService } from 'src/app/services';
 
 @Component({
   selector: 'app-hubsol',

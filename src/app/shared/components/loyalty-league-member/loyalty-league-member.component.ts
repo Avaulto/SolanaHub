@@ -1,16 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { SolanaHelpersService, UtilService, WatchModeService } from '../../../services';
-import { LoyaltyLeagueService } from '../../../services/loyalty-league.service';
-import { Observable, Subject, combineLatestWith, map, shareReplay } from 'rxjs';
-import { loyalMember } from '../../../models';
+import { Component } from '@angular/core';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon } from "@ionic/angular/standalone";
 import { RouterLink } from '@angular/router';
-import { addIcons } from 'ionicons';
-import { trophyOutline } from 'ionicons/icons';
-import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { TooltipModule } from '../../layouts/tooltip/tooltip.module';
-import { TooltipPosition } from '../../layouts/tooltip/tooltip.enums';
 
 export interface Rank {
   rank: number
@@ -23,73 +15,73 @@ export interface Rank {
   standalone: true,
   imports: [TooltipModule,IonIcon, IonProgressBar, AsyncPipe, DecimalPipe, IonLabel, IonSkeletonText, RouterLink]
 })
-export class LoyaltyLeagueMemberComponent implements OnInit {
-  readonly _watchModeWallet$ = this._watchModeService.watchedWallet$
-  readonly connectedWallet$: Observable<any> = this._walletStore.wallet$.pipe(
-    combineLatestWith(this._watchModeWallet$),
-    shareReplay(),
-    map(([wallet, watchModeWallet]: any) => {
-      return wallet || watchModeWallet
-    }),
-    shareReplay()
-  )
-  readonly tooltipDirection: TooltipPosition = TooltipPosition.ABOVE;
-  constructor(
-    private _watchModeService: WatchModeService,
-    private _walletStore: WalletStore,
-    private _loyaltyLeagueService: LoyaltyLeagueService,
-    private _shs: SolanaHelpersService,
-    private _utilsService: UtilService) { 
-      addIcons({trophyOutline})
-    }
+export class LoyaltyLeagueMemberComponent {
+  // readonly _watchModeWallet$ = this._watchModeService.watchedWallet$
+  // readonly connectedWallet$: Observable<any> = this._walletStore.wallet$.pipe(
+  //   combineLatestWith(this._watchModeWallet$),
+  //   shareReplay(),
+  //   map(([wallet, watchModeWallet]: any) => {
+  //     return wallet || watchModeWallet
+  //   }),
+  //   shareReplay()
+  // )
+  // readonly tooltipDirection: TooltipPosition = TooltipPosition.ABOVE;
+  // constructor(
+  //   private _watchModeService: WatchModeService,
+  //   private _walletStore: WalletStore,
+  //   private _loyaltyLeagueService: LoyaltyLeagueService,
+  //   private _shs: SolanaHelpersService,
+  //   private _utilsService: UtilService) { 
+  //     addIcons({trophyOutline})
+  //   }
 
-  ngOnInit() { }
-  // loyalty league member score
-  public rank$: Subject<Rank> = new Subject()
-  public timeToAirdrop = this._loyaltyLeagueService.getNextAirdrop().pipe(map(toa => {
-    // Set start and end date
-    const endDate = new Date(toa.nextAirdrop).getTime();
-    const days = 7; // Days you want to subtract
-    const last = new Date(endDate - (days * 24 * 60 * 60 * 1000));
-    const startDate = new Date(last).getTime();
-    // Get todays date and time
-    const now = new Date().getTime();
+  // ngOnInit() { }
+  // // loyalty league member score
+  // public rank$: Subject<Rank> = new Subject()
+  // public timeToAirdrop = this._loyaltyLeagueService.getNextAirdrop().pipe(map(toa => {
+  //   // Set start and end date
+  //   const endDate = new Date(toa.nextAirdrop).getTime();
+  //   const days = 7; // Days you want to subtract
+  //   const last = new Date(endDate - (days * 24 * 60 * 60 * 1000));
+  //   const startDate = new Date(last).getTime();
+  //   // Get todays date and time
+  //   const now = new Date().getTime();
 
-    // Find the distance between now and the count down date
-    const distanceWhole = endDate - startDate;
-    const distanceLeft = endDate - now;
+  //   // Find the distance between now and the count down date
+  //   const distanceWhole = endDate - startDate;
+  //   const distanceLeft = endDate - now;
 
-    // Time calculations for minutes and percentage progressed
-    const minutesLeft = Math.floor(distanceLeft / (1000 * 60));
-    const minutesTotal = Math.floor(distanceWhole / (1000 * 60));
-    const result = Math.floor(((minutesTotal - minutesLeft) / minutesTotal) * 100);
+  //   // Time calculations for minutes and percentage progressed
+  //   const minutesLeft = Math.floor(distanceLeft / (1000 * 60));
+  //   const minutesTotal = Math.floor(distanceWhole / (1000 * 60));
+  //   const result = Math.floor(((minutesTotal - minutesLeft) / minutesTotal) * 100);
 
-    return result / 100
-  }))
-  public llScore$ = this._shs.walletExtended$.pipe(
+  //   return result / 100
+  // }))
+  // public llScore$ = this._shs.walletExtended$.pipe(
 
-    this._utilsService.isNotNullOrUndefined,
-    combineLatestWith(this._loyaltyLeagueService.llb$),
-    map(([wallet, lllb]) => {
+  //   this._utilsService.isNotNullOrUndefined,
+  //   combineLatestWith(this._loyaltyLeagueService.llb$),
+  //   map(([wallet, lllb]) => {
   
       
-      const position = lllb.loyaltyLeagueMembers.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) +1 || 0
+  //     const position = lllb.loyaltyLeagueMembers.findIndex(staker => staker.walletOwner === wallet.publicKey.toBase58()) +1 || 0
 
-      this.rank$.next({
-        rank: position === -1 ? 0 : position,
-        totalParticipant: lllb.loyaltyLeagueMembers.length
-      })
-      const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-      if (loyalMember) {
+  //     this.rank$.next({
+  //       rank: position === -1 ? 0 : position,
+  //       totalParticipant: lllb.loyaltyLeagueMembers.length
+  //     })
+  //     const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+  //     if (loyalMember) {
    
-        return loyalMember
-      }
+  //       return loyalMember
+  //     }
   
 
-      return {} as loyalMember
+  //     return {} as loyalMember
 
-    }),
-    shareReplay()
-  )
+  //   }),
+  //   shareReplay()
+  // )
 
 }

@@ -8,12 +8,10 @@ import {
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
   TokenOwnerOffCurveError,
-  burnChecked,
-  createBurnCheckedInstruction,
 } from 'node_modules/@solana/spl-token';
 
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT, StakeAccountShyft, PrizePool } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft } from '../models';
 import { ApiService } from './api.service';
 
 import { SessionStorageService } from './session-storage.service';
@@ -84,13 +82,13 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
-        const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
+        // const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
 
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
         
-        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 + prizePool$ .APY_boosters.hubSOL)).toFixedNoRounding(2)
+        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1)).toFixedNoRounding(2)
         
 
       } catch (error) {

@@ -1,32 +1,38 @@
-import { Component, Input, OnChanges, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
 
-import { IonButton, IonRow, IonCol, IonIcon } from '@ionic/angular/standalone';
-import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
+import { IonButton, IonRow, IonCol, IonIcon, IonImg } from '@ionic/angular/standalone';
+import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe, NgStyle } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { copyOutline, discOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
-import { loyalMember } from 'src/app/models';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { LoyaltyBadgeComponent } from './loyalty-badge/loyalty-badge.component';
 
 @Component({
   selector: 'app-member-stats',
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [TooltipModule, DecimalPipe, AsyncPipe, JsonPipe, IonButton, IonRow, IonCol, NgStyle, IonIcon, CopyTextDirective]
+  imports: [IonImg, 
+    LoyaltyBadgeComponent,
+    TooltipModule, DecimalPipe, AsyncPipe, JsonPipe, IonButton, IonRow, IonCol, NgStyle, IonIcon, CopyTextDirective]
 })
 export class MemberStatsComponent implements OnChanges {
 
   constructor() { addIcons({ copyOutline,discOutline }); }
-  @Input() loyalMember
+  @Input() loyalMember = signal<any>({
+    staking: 15000,
+    dao: 15000,
+    quests: 15000,
+    referrals: 15000,
+    totalPts: 15000,
+  });
   @Input() isAmbassador: boolean = false;
-  public airdrop = null
+ 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(this.loyalMember());
     
-    if (this.loyalMember()) {
-      this.airdrop = this.formatToSignificantDigit(this.loyalMember().airdrop)
-    }
+
   }
   formatToSignificantDigit(num) {
     console.log('original num:', num);

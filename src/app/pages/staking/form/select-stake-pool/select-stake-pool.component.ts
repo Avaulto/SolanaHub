@@ -60,7 +60,6 @@ export class SelectStakePoolComponent implements AfterViewInit {
     
   }
 
-prizePool$ = this.lls.llPrizePool$
 constructor(private lls: LoyaltyLeagueService){
   addIcons({alertCircleOutline})
   effect(() => {
