@@ -1,4 +1,8 @@
-<ion-content [fullscreen]="true">
+<multipliers-menu [menuToggle]="openMenu" />
+
+
+
+<ion-content class="loyalty-league-content" [fullscreen]="true">
 
   <ion-row id="promo">
     <ion-col id="promo-text">
@@ -9,7 +13,8 @@
       <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
         Boost your score to unlock weekly SOL rewards. </div>
       <div id="btns-container">
-        <ion-button id="multipliers-btn"> <ion-icon name="flash-outline" />Earn more with multipliers</ion-button>
+        <ion-button id="multipliers-btn" (click)="openMenu = true"> <ion-icon name="flash-outline" />Earn more
+          with multipliers</ion-button>
         <ion-button fill="clear" id="faq-btn" (click)="openFaqPopOver()">How it works</ion-button>
       </div>
     </ion-col>
@@ -29,11 +34,8 @@
       <ion-row class="ion-justify-content-between ion-align-items-stretch">
         <ion-col size="12" class="ion-margin-bottom">
 
-          <!-- <app-pool-stats [hubSOLrebates]="(prizePool$ | async)?.hubSOLrebates" [avgApyBoost]="(prizePool$ | async)?.avgApyBoost" [totalPts]="totalPts" /> -->
-
 
         </ion-col>
-        <!-- <div style="display: block; width: 100%;" class="ion-margin-bottom ion-hide-md-up"></div> -->
         <ion-col id="points-multiplier" size="12" class="ion-margin-bottom">
           <app-member-stats />
         </ion-col>
@@ -47,28 +49,4 @@
     </div>
   </ion-grid>
 
-</ion-content>
-
-
-
-<ng-template #hubSOLtoolTipTpl>
-  hubSOL
-</ng-template>
-
-
-<ng-template #vSOLtoolTipTpl>
-  vSOL
-</ng-template>
-
-
-<ng-template #bSOLtoolTipTpl>
-  bSOL
-</ng-template>
-
-<ng-template #mndetoolTipTpl>
-  MNDE
-</ng-template>
-
-<ng-template #blzetoolTipTpl>
-  BLZE
-</ng-template>
+</ion-content> 

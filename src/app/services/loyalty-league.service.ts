@@ -1,8 +1,9 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable, firstValueFrom, map, of, shareReplay } from 'rxjs';
-import { LeaderBoard, loyaltyLeagueMember, Multipliers, Season } from '../models';
+import {  Observable, of, throwError } from 'rxjs';
+import { LeaderBoard, Multipliers, Season } from '../models';
+import { ToasterService } from './toaster.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class LoyaltyLeagueService {
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService,
-    // private _toasterService:ToasterService
+    private _toasterService:ToasterService
   ) {
     // if (!this._loyaltyLeagueLeaderBoard$.value) {
     //   firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
@@ -26,14 +27,14 @@ export class LoyaltyLeagueService {
     // }
   }
 
-  // private _formatErrors(error: any) {
-  //   console.warn('my err', error)
-  //   this._toasterService.msg.next({
-  //     message: error.message || 'fail to load loyalty program',
-  //     segmentClass: "toastError",
-  //   });
-  //   return throwError((() => error))
-  // }
+  private _formatErrors(error: any) {
+    console.warn('my err', error)
+    this._toasterService.msg.next({
+      message: error.message || 'fail to load loyalty program',
+      segmentClass: "toastError",
+    });
+    return throwError((() => error))
+  }
   public getSessionMetrics(): Observable<Season> {
     return of({
       airdrop: 10,

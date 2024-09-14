@@ -104,6 +104,12 @@ ion-header {
     align-items: flex-end;
 }
 
+#multipliers-modal {
+    --width: 40vw;
+    --height: 100vh;
+    align-items: flex-end;
+}
+
 #nft-toast {
     --width: 100vw;
     --height: 10vh;
@@ -207,7 +213,12 @@ ion-spinner {
     --height: 300px;
     --border-radius: 12px;
 }
-
+.refer-a-friend-modal{
+    --width: 550px;
+    --height: auto;
+    --max-width: 95%;
+    --border-radius: 12px;
+}
 .wallet-connect-dropdown {
     --width: 238px;
     --box-shadow: 0 0 0;

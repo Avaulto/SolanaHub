@@ -1,0 +1,68 @@
+<ion-menu side="end" #menu menuId="first-menu" contentId="main-content">
+  <div id="multipliers-container" class="ion-padding">
+    <ion-img id="close-icon" src="assets/images/close-icon.svg" (click)="dismissModal()" />
+    <div id="multipliers-title">Boost your score with multipliers</div>
+    <div class="group-title">LST</div>
+    <div class="multipliers-container">
+      @for (lst of LSTs; track $index) {
+      <div class="asset-item">
+        <ion-img [src]="lst.img" />
+        <ion-label>{{lst.title}}</ion-label>
+        <ion-text>{{lst.pts}} pts</ion-text>
+      </div>
+      }
+    </div>
+    <div class="group-title">DAO Tokens<span color="primary">Boosted</span></div>
+    <div class="multipliers-container">
+      @for (dao of daoTokens; track $index) {
+      <div class="asset-item">
+        <ion-img [src]="dao.img" />
+        <ion-label>{{dao.title}}</ion-label>
+        <ion-text>{{dao.pts}}</ion-text>
+      </div>
+      }
+    </div>
+
+    <div class="group-title">
+      <span>
+        hubSOL Boosters
+      </span>
+      <div class="group-subtitle">Deposit your hubSOL into DeFi platforms to get more points <ion-img
+          [tooltip]="platformToolTipTpl" src="assets/images/info-icon.svg" /> </div>
+    </div>
+
+    <div class="multipliers-container defi-container">
+      @for (defi of hubSOLBoosters; track $index) {
+      <div class="asset-item">
+        <ion-img [src]="defi.img" />
+        <div class="defi-info">
+
+          <ion-label>{{defi.title}}</ion-label>
+          <div class="badges-container">
+            @for (badge of defi.badges; track $index) {
+            <span class="badge">
+              {{badge.strategy}}
+            </span>
+            @if (badge.solanahubboosted) {
+            <span class="badge sh-boosted">SolanaHub Boosted</span>
+            }
+            @if (badge.protocolBoosted) {
+            <span class="badge protocol-boosted">Protocol Boosted</span>
+            }
+            }
+          </div>
+        </div>
+        <ion-text>+{{defi.pts}} pts</ion-text>
+        <div class="link-container">
+          <span>|</span> <a [href]="defi.link" target="_blank"><ion-img src="assets/images/ll/link.svg" /></a>
+        </div>
+      </div>
+      }
+    </div>
+
+  </div>
+</ion-menu>
+
+<ng-template #platformToolTipTpl>
+  test
+</ng-template>

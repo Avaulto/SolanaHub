@@ -1,7 +1,6 @@
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, computed, effect, signal } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import {  Component, OnInit,  ViewChild, signal } from '@angular/core';
+
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
-import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { addIcons } from 'ionicons';
@@ -9,7 +8,7 @@ import { addIcons } from 'ionicons';
 import { AsyncPipe } from '@angular/common';
 
 import { MemberStatsComponent } from './member-stats/member-stats.component';
-import { IonImg, IonCol, IonRow, IonContent, IonGrid, IonButton, IonIcon, IonFab, IonFabButton } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonImg, IonCol, IonRow, IonContent, IonGrid, IonButton, IonIcon, IonFab, IonFabButton } from '@ionic/angular/standalone';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
@@ -18,12 +17,18 @@ import { ModalComponent } from 'src/app/shared/components';
 import { TableComponent } from "./table/table.component";
 import { flashOutline, flaskOutline } from 'ionicons/icons';
 import { SeasonStatsComponent } from './season-stats/season-stats.component';
+import { MultipliersMenuComponent } from './multipliers-menu/multipliers-menu.component';
+
 @Component({
   selector: 'app-loyalty-league',
   templateUrl: './loyalty-league.page.html',
   styleUrls: ['./loyalty-league.page.scss'],
   standalone: true,
   imports: [
+    MultipliersMenuComponent,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
     MemberStatsComponent,
     TooltipModule,
     SeasonStatsComponent,
@@ -46,11 +51,7 @@ export class LoyaltyLeaguePage implements OnInit {
   public connectedWallet = 'CdoFMmSgkhKGKwunc7Tusg2sMZjxML6kpsvEmqpVYPjyP'
   public loyalMember = signal(null)
   public isAmbassador: boolean = false;
-
-  async ngOnInit() {
-    // const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
-    // this.prizePool$.next(prizePool)
-  }
+  public openMenu = false
   constructor(
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
@@ -65,7 +66,10 @@ export class LoyaltyLeaguePage implements OnInit {
     // effect(() => console.log(this.loyalMember()))
   }
 
+  ngOnInit() {
+  }
 
+ 
 
   public async openFaqPopOver() {
     let config = {
