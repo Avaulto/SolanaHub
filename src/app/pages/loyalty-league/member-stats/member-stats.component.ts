@@ -35,6 +35,7 @@ export class MemberStatsComponent implements OnChanges {
 
   constructor(private _modalCtrl: ModalController) { addIcons({ copyOutline, discOutline }); }
   @Input() tiers: Tier[] = null;
+  public hiddenPts = signal('? ? ? ? ?')
   @Input() loyalMember = signal<any>({
     staking: 15000,
     dao: 15000,

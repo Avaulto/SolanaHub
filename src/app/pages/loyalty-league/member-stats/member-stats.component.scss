@@ -110,6 +110,58 @@
 }
 
 
+.hidden-content {
+    position: relative;
+    overflow: hidden;
+    padding: 5px 10px;
+    background: linear-gradient(90deg, #f0f0f0, #e0e0e0, #f0f0f0);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+    border-radius: 4px;
+    cursor: pointer;
+    .content {
+      visibility: hidden;
+      filter: blur(5px);
+      transition: filter 0.5s ease;
+    }
+  
+    &::before {
+      content:"? ? ? ? ?";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #888;
+      text-shadow: 0 0 5px rgba(0,0,0,0.3);
+    }
+  }
+  
+  .reveal-content {
+    .hidden-content {
+      background: none;
+      animation: none;
+  
+      &::before {
+        content: "";
+      }
+      
+      .content {
+        visibility: visible;
+        filter: blur(0);
+      }
+    }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  
 @media only screen and (max-width: 992px) {
     .member-stats{
         display: block !important;

@@ -29,7 +29,7 @@
       <div class="points-breakdown">
         <h3 class="points-breakdown__title">Points breakdown</h3>
         <ion-row class="points-breakdown__grid">
-          @for (category of ['Staking', 'DAO', 'Referrals', 'Quests']; track category) {
+          @for (category of ['Staking', 'DAO', 'Referrals']; track category) {
           <ion-col size="4" >
             <div class="points-category">
               <div class="points-category__title">{{ category }}</div>
@@ -37,6 +37,13 @@
             </div>
           </ion-col>
         }
+        <ion-col size="4" >
+          <div class="points-category" [class.reveal-content]="hiddenPts() !== '? ? ? ? ?'" (click)="hiddenPts.set('More ways to earn points is cooking!')">
+            <div class="points-category__title hidden-content">
+              <span class="content">{{hiddenPts()}}</span>
+            </div>
+          </div>
+        </ion-col>
         </ion-row>
       </div>
     </div>
