@@ -1,6 +1,6 @@
-<ion-menu side="end" #menu menuId="first-menu" contentId="main-content">
-  <div id="multipliers-container" class="ion-padding">
-    <ion-img id="close-icon" src="assets/images/close-icon.svg" (click)="dismissModal()" />
+<div id="multipliers-menu-container" [@menuAnimation] >
+  <div id="multipliers-menu" class="ion-padding" >
+    <ion-img id="close-icon" src="assets/images/close-icon.svg" (click)="dismissModal($event)" />
     <div id="multipliers-title">Boost your score with multipliers</div>
     <div class="group-title">LST</div>
     <div class="multipliers-container">
@@ -61,8 +61,7 @@
     </div>
 
   </div>
-</ion-menu>
-
+</div>
 <ng-template #platformToolTipTpl>
   test
 </ng-template>

@@ -1,101 +1,123 @@
-#loyal-member {
+.loyal-member-container {
+  .loyal-member {
     text-transform: capitalize;
     border-radius: var(--radius-xl, 12px);
     background: #FFF;
     padding: 32px;
+  }
 
-    #score-head {
-        display: flex;
-        justify-content: space-between;
-        margin-block-end: 24px;
-
-        ion-button {
-
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 18px;
-            text-transform: capitalize;
-            --color: var(--component-colors-utility-gray-utility-gray-600, #364152);
-            --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, #FFF);
-            --background-hover: var(--ion-color-page-top);
-            --padding-bottom: var(--spacing-lg, 12px);
-            --padding-top: var(--spacing-lg, 12px);
-            --padding-start: var(--spacing-lg, 12px);
-            --padding-end: var(--spacing-lg, 12px);
-            --border-radius: 6px;
-            --border-style: solid;
-            --border-width: 1px;
-            --border-color: #CDD5DF;
-            --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-
-            ion-img {
-                margin-inline-end: 4px;
-                width: 20px;
-                height: 20px;
-            }
-        }
-
-        ion-icon {
-            margin-inline-start: 6px;
-            font-size: 16px;
-        }
+  .member-stats {
+    display: flex;
+    #points-container {
+        width: 100%;
     }
+    .total-points {
+      margin-bottom: 24px;
 
-    #total-pts-title {
+      &__title {
         display: flex;
+        align-items: center;
         color: var(--ion-color-text-2);
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.16px;
-        line-height: 100%;
-        margin-block-end: 10px;
+        line-height: 1;
+        margin-bottom: 10px;
 
         ion-icon {
-            color: var(--ion-color-warning);
-            cursor: pointer;
+          color: var(--ion-color-warning);
+          cursor: pointer;
+          margin-left: 6px;
+          font-size: 16px;
         }
-    }
+      }
 
-    #total-pts-value {
+      &__value {
         color: var(--ion-color-text-2);
-        font-size: 32px;
+        font-size: 36px;
         font-weight: 600;
         letter-spacing: 0.36px;
-        line-height: 100%;
+        line-height: 1;
         text-transform: none;
+        display: flex;
+        align-items: center;
+        span {
+          margin-inline-end: 16px;
+        }
+        loyalty-badge{
+            display: flex;
+        }
+      }
     }
-
-}
-
-#score-body {
-
-
-    #pts-breakdown-title {
-        width: 100%;
+    .divider{
+       height: 100%;
+       background-color: #E3E8EF;
+       width: 1px;
+       margin-inline-end:  50px;
+    }
+    .points-breakdown {
+      &__title {
         color: #4B5565;
         font-size: 16px;
         font-weight: 500;
         line-height: 24px;
-        margin-block-end: 12px;
+        margin-bottom: 12px;
+      }
+
+      &__grid {
+        ion-col {
+          margin-bottom: 16px;
+        }
+      }
     }
-    #pts-breakdown-body ion-col{
-        margin-block-end: 16px;
-    }
-    .pts-title {
+
+    .points-category {
+      &__title {
         color: var(--colors-text-text-tertiary-600, #4B5565);
         font-size: 11px;
         font-weight: 500;
         line-height: 16px;
-    }
+      }
 
-    .pts-value {
+      &__value {
         line-height: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        align-content: center;
-        row-gap: 12px;
-        align-self: stretch;
-        flex-wrap: wrap;
+      }
+    }
+  }
+}
+
+.tooltip {
+  &__header {
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+  }
+
+  &__icon {
+    background-color: var(--ion-color-warning);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  &__description {
+    font-size: 14px;
+  }
+}
+
+
+@media only screen and (max-width: 992px) {
+    .member-stats{
+        display: block !important;
+    }
+    .divider {
+        width: 100% !important;
+        height: 1px !important;
+        margin-inline-end: 0 !important;
+        margin-block: 25px !important;
     }
 }

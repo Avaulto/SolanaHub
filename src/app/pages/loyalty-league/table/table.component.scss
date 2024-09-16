@@ -1,50 +1,15 @@
-
 .addr-item {
-    align-items: center;
-    justify-content: center;
-    display: flex;
+  display: flex;
+  align-items: center;
 
-    ion-icon {
-        margin-inline-start: 8px;
-        font-size: 12px;
-    }
+  ion-icon {
+    margin-inline-start: 8px;
+    font-size: 12px;
+    cursor: pointer;
+  }
 }
 
-.token-pts,
-.airdrop,
-.bonuses {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-
-    div {
-        display: flex;
-        align-items: center;
-        margin-inline: 4px;
-    }
-
-    ion-img {
-        width: 13px;
-        height: 13px;
-        margin-inline: 4px;
-        border-radius: 50%;
-        overflow: hidden;
-    }
-
-    ion-icon {
-        margin-inline: 4px;
-        font-size: 14px;
-    }
-
-}
-
-@media only screen and (max-width: 992px) {
-
-    .token-pts,
-    .airdrop,
-    .bonuses {
-        justify-content: flex-start;
-        margin-inline-start: 17px;
-    }
+.tier-icon {
+  width: 32px;
+  margin-inline-end: 8px;
 }

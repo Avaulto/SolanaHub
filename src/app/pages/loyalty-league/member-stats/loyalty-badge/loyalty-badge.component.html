@@ -1,10 +1,12 @@
-<div id="badge-container" [class]="badgeContainerClass">
+@if(currentTier){
+<div id="badge-container" [class]="currentTier.title">
   <div id="badge-img">
-    <ion-img [src]="badgeImg" alt="badge"/>
+    <ion-img [src]="currentTier.icon" alt="badge"/>
   </div>
-  <div id="badge-info">
-    <div id="badge-title">
-      {{badgeTitle}}
+  <div id="badge-info" >
+    <div id="badge-title" class="ion-text-capitalize">
+      {{currentTier.title}}
     </div>
   </div>
-</div>
+  </div>
+}

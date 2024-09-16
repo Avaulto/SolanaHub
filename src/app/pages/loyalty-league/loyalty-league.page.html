@@ -1,9 +1,11 @@
-<multipliers-menu [menuToggle]="openMenu" />
 
 
 
-<ion-content class="loyalty-league-content" [fullscreen]="true">
-
+@if (openMenu) {
+  <multipliers-menu id="multipliers-menu-wrapper" (click)="dismissModal($event)" (menuToggle)="openMenu = false"/>
+}
+<ion-content class="loyalty-league-content" [fullscreen]="true" >
+  
   <ion-row id="promo">
     <ion-col id="promo-text">
       <div id="title">Loyalty League</div>
@@ -25,25 +27,25 @@
   </ion-row>
   <ion-grid>
     <div id="loyalty-league-info">
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button>
 
           <ion-icon name="flask-outline" />
         </ion-fab-button>
-      </ion-fab>
+      </ion-fab> -->
       <ion-row class="ion-justify-content-between ion-align-items-stretch">
         <ion-col size="12" class="ion-margin-bottom">
 
 
         </ion-col>
         <ion-col id="points-multiplier" size="12" class="ion-margin-bottom">
-          <app-member-stats />
+          <app-member-stats [tiers]="tiers" />
         </ion-col>
       </ion-row>
       <ion-row>
 
         <ion-col size="12" class="data-set">
-          <ll-table />
+          <ll-table [tiers]="tiers" />
         </ion-col>
       </ion-row>
     </div>

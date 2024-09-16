@@ -1,7 +1,20 @@
 
-ion-menu {
-    --width: 459px;
-    --max-width: 100%;
+:host{
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    background: #00000029;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    overflow: auto;
+}
+#multipliers-menu-container {
+    background: #FFF;
+    width: 459px;
+    max-width: 100%;
+    overflow: auto;
 }
 
 #multipliers-title {
@@ -14,6 +27,7 @@ ion-menu {
 }
 
 #close-icon {
+    background: #FFF;
     width: 24px;
     cursor: pointer;
     position: absolute;

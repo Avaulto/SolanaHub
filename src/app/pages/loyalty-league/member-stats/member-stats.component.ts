@@ -1,20 +1,22 @@
-import { Component, Input, OnChanges, signal, SimpleChanges, WritableSignal } from '@angular/core';
+import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 
-import { IonButton, IonRow, IonCol, IonIcon, IonImg } from '@ionic/angular/standalone';
+import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { copyOutline, discOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
-import { LoyaltyBadgeComponent } from './loyalty-badge/loyalty-badge.component';
 import { ModalController } from '@ionic/angular';
-import { ReferAFriendModalComponent } from './refer-a-friend-modal/refer-a-friend-modal.component';
+import { Tier } from 'src/app/models';
+import { LoyaltyPathComponent,LoyaltyBadgeComponent,ReferAFriendModalComponent} from '../';
+
 @Component({
   selector: 'app-member-stats',
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonLabel, IonTitle, 
+    LoyaltyPathComponent,
     IonImg,
     LoyaltyBadgeComponent,
     TooltipModule,
@@ -32,6 +34,7 @@ import { ReferAFriendModalComponent } from './refer-a-friend-modal/refer-a-frien
 export class MemberStatsComponent implements OnChanges {
 
   constructor(private _modalCtrl: ModalController) { addIcons({ copyOutline, discOutline }); }
+  @Input() tiers: Tier[] = null;
   @Input() loyalMember = signal<any>({
     staking: 15000,
     dao: 15000,
@@ -40,6 +43,7 @@ export class MemberStatsComponent implements OnChanges {
     totalPts: 15000,
   });
   @Input() isAmbassador: boolean = false;
+  public daysLoyal = 47;
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log(this.loyalMember());

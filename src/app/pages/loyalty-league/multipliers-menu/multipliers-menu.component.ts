@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IonMenu, IonImg, IonText, IonLabel, IonChip } from '@ionic/angular/standalone';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'multipliers-menu',
@@ -8,11 +9,20 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
   styleUrls: ['./multipliers-menu.component.scss'],
   standalone: true,
   imports: [TooltipModule,IonChip, IonLabel, IonText, IonImg, IonMenu,],
-  encapsulation: ViewEncapsulation.None
+  animations: [
+    trigger('menuAnimation', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)' }),
+        animate('300ms ease-in-out', style({ transform: 'translateX(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in-out', style({ transform: 'translateX(100%)' }))
+      ])
+    ])
+  ]
 })
-export class MultipliersMenuComponent implements OnChanges {
-  @Input() menuToggle;
-  @ViewChild('menu') menu: IonMenu
+export class MultipliersMenuComponent implements OnInit, OnChanges {
+  @Output() menuToggle = new EventEmitter();
   constructor() { }
   LSTs = [
     {
@@ -113,18 +123,19 @@ export class MultipliersMenuComponent implements OnChanges {
     },
 
   ]
+  ngOnInit(): void {
+    console.log('init');
+    
+  }
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.menu){
-
-      new this.menu.ionDidClose().subscribe(v => console.log(v))
-    }
-
+    console.log('changes', changes);
+    
 
       // this.menu.open()
     
   }
-  dismissModal() {
-    console.log('dismissModal')
-    this.menu.close()
+  dismissModal(event: any ) {
+    console.log('dismissModal', event)
+    this.menuToggle.emit()
   }
 }

@@ -1,74 +1,50 @@
-<div id="loyal-member">
-  <div id="score-head">
-    <div>
-      <div id="total-pts-title">Your Total Points
-        @if(isAmbassador){
-        <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
-        <ng-template #toolTipTpl>
-
-          <div class="tool-tip">
-            <div
-              style="text-transform: capitalize; display: flex;align-items: center;margin-block-end: 4px;font-weight: 600;color:var(--ion-color-dark);">
-              <span
-                style="background-color: var(--ion-color-warning); width:12px;height: 12px;border-radius: 50%;margin-inline-end: 6px;">
-              </span>
-              Ambassador program
+<div class="loyal-member-container">
+  <ion-row class="loyal-member">
+    <ion-col size="12" sizeLg="5" class="member-stats">
+      <div id="points-container">
+        
+      
+      <div class="total-points">
+        <ion-label class="total-points__title">
+          Your Total Points
+          @if(isAmbassador){
+            <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
+            <ng-template #toolTipTpl>
+              <div class="tooltip">
+                <div class="tooltip__header">
+                  <span class="tooltip__icon"></span>
+                  Ambassador program
+                </div>
+                <div class="tooltip__description">You have received 1000 loyalty points boost as a SolanaHub Ambassador.</div>
+              </div>
+            </ng-template>
+          }
+        </ion-label>
+        <div class="total-points__value">
+          <span>15,000</span>
+          <loyalty-badge [tiers]="tiers" [daysLoyal]="daysLoyal" />
+        </div>
+      </div>
+      
+      <div class="points-breakdown">
+        <h3 class="points-breakdown__title">Points breakdown</h3>
+        <ion-row class="points-breakdown__grid">
+          @for (category of ['Staking', 'DAO', 'Referrals', 'Quests']; track category) {
+          <ion-col size="4" >
+            <div class="points-category">
+              <div class="points-category__title">{{ category }}</div>
+              <div class="points-category__value">10,000</div>
             </div>
-            <div class="tool-tip-desc">you have received 1000 loyalty points boost as a SolanaHub Ambassador.</div>
-          </div>
-        </ng-template>
+          </ion-col>
         }
-      </div>
-      <div id="total-pts-value">
-        <span>
-          15,000
-        </span>
-        <loyalty-badge [daysLoyal]="444" />
-      </div>
-    </div>
-
-    <div id="referral-btn">
-      <ion-button (click)="openReferAFriendModal()">
-        <ion-img src="assets/images/ll/users-plus.svg" />
-        <span>
-          Refer a friend
-        </span>
-      </ion-button>
-    </div>
-  </div>
-  <div id="score-body">
-    <ion-row>
-
-      <div id="pts-breakdown-title">Points breakdown</div>
-      <ion-col size="12" sizeMd="5">
-
-
-        <ion-row id="pts-breakdown-body">
-          <ion-col size="4">
-            <div class="pts-title">Staking</div>
-            <div class="pts-value">10,000</div>
-          </ion-col>
-          <ion-col size="4">
-            <div class="pts-title">DAO</div>
-            <div class="pts-value">10,000</div>
-          </ion-col>
-          <ion-col size="4">
-            <div class="pts-title">Referrals</div>
-            <div class="pts-value">10,000</div>
-          </ion-col>
-          <ion-col size="4">
-            <div class="pts-title">Quests</div>
-            <div class="pts-value">10,000</div>
-          </ion-col>
-          <!-- @for (points of loyalMember; track $index | keyvalue) {
-      <ion-col size="4" [ngStyle]="{'margin-block-end': $index < 3 ? '10px' : ''}">
-        <div class="pts-title">{{points.key}}</div>
-        <div class="pts-value">{{points.value}}</div>
-      </ion-col>
-      } -->
         </ion-row>
-      </ion-col>
-      <ion-col size="12" sizeMd="7"></ion-col>
-    </ion-row>
-  </div>
+      </div>
+    </div>
+      <div class="divider" ></div>
+    
+    </ion-col>
+    <ion-col size="12" sizeLg="7">
+      <loyalty-path (openReferAFriendModal)="openReferAFriendModal()" [tiers]="tiers" [daysLoyal]="daysLoyal" />
+    </ion-col>
+  </ion-row>
 </div>

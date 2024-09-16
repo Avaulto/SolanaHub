@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChange } from '@angular/core';
 import { IonImg } from "@ionic/angular/standalone";
+import { Tier } from 'src/app/models';
 
 @Component({
   selector: 'loyalty-badge',
@@ -10,37 +11,19 @@ import { IonImg } from "@ionic/angular/standalone";
 })
 export class LoyaltyBadgeComponent  implements OnChanges {
   @Input() daysLoyal: number = 0;
-  public badgeContainerClass: string = '';
-  public badgeImg: string = '';
-  public badgeTitle: string = '';
-
+  @Input() tiers: Tier[] = null;
+  public currentTier: Tier = null;
   constructor() { }
 
   ngOnChanges(): void {
+    // get the current tier base on the daysLoyal from finish to start
 
-    
-    if(this.daysLoyal > 0){
-      this.badgeContainerClass = 'degen';
-      this.badgeImg = 'assets/images/ll/badge-1.svg';
-      this.badgeTitle = 'Degen';
+    for (let i = this.tiers.length - 1; i >= 0; i--) {
+      if (this.daysLoyal >= this.tiers[i].loyaltyDaysRequirement) {
+        this.currentTier = this.tiers[i];
+        break;
+      }
     }
-    if(this.daysLoyal > 15){
-      this.badgeContainerClass = 'manlet';
-      this.badgeImg = 'assets/images/ll/badge-2.svg';
-      this.badgeTitle = 'Manlet';
-    }
-    if(this.daysLoyal > 30){
-      this.badgeContainerClass = 'maxi';
-      this.badgeImg = 'assets/images/ll/badge-3.svg';
-      this.badgeTitle = 'Maxi';
-    } 
-    if(this.daysLoyal > 60){
-      this.badgeContainerClass = 'diamond-hands';
-      this.badgeImg = 'assets/images/ll/badge-4.svg';
-      this.badgeTitle = 'Diamond hands';
-    }
-    console.log(this.badgeImg);
-    
   }
 
 }

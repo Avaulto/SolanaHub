@@ -18,6 +18,7 @@ import { TableComponent } from "./table/table.component";
 import { flashOutline, flaskOutline } from 'ionicons/icons';
 import { SeasonStatsComponent } from './season-stats/season-stats.component';
 import { MultipliersMenuComponent } from './multipliers-menu/multipliers-menu.component';
+import { Tier } from 'src/app/models';
 
 @Component({
   selector: 'app-loyalty-league',
@@ -65,7 +66,36 @@ export class LoyaltyLeaguePage implements OnInit {
 
     // effect(() => console.log(this.loyalMember()))
   }
-
+  public tiers: Tier[] = [
+    {
+      title: 'degen',
+      points: 1000,
+      icon: 'assets/images/ll/badge-1.svg',
+      iconFull: 'assets/images/ll/badge-full-1.svg',
+      loyaltyDaysRequirement: 15,
+    },
+    {
+      title: 'manlet',
+      points: 1000,
+      icon: 'assets/images/ll/badge-2.svg',
+      iconFull: 'assets/images/ll/badge-full-2.svg',
+      loyaltyDaysRequirement: 30,
+    },
+    {
+      title: 'maxi',
+      points: 1000,
+      icon: 'assets/images/ll/badge-3.svg',
+      iconFull: 'assets/images/ll/badge-full-3.svg',
+      loyaltyDaysRequirement: 45,
+    },
+    {
+      title: 'diamond-hands',
+      points: 1000,
+      icon: 'assets/images/ll/badge-4.svg',
+      iconFull: 'assets/images/ll/badge-full-4.svg',
+      loyaltyDaysRequirement: 60,
+    },
+  ];
   ngOnInit() {
   }
 
@@ -87,5 +117,12 @@ export class LoyaltyLeaguePage implements OnInit {
       cssClass: 'faq-modal',
     });
     modal.present();
+  }
+  dismissModal(event: any) {
+    console.log('dismissModal', event)
+    // close model only if click is outside the menu
+    if (event.target.id === 'multipliers-menu-wrapper') {
+      this.openMenu = false
+    }
   }
 }

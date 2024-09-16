@@ -7,52 +7,18 @@
           [tableData]="leaderBoard" />
 
           <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="addr-item">
+            <div class="addr-item ion-text-left">
+              <div class="tier-icon">
+                @if(row.daysLoyal > 14) {
+                <ion-img [src]="getTierIcon(row.daysLoyal)"></ion-img>
+              }
+              </div>
               <span>
-                {{row.walletOwner.addrShort}}
+                {{row.walletOwner}}
               </span>
               <ion-icon style="cursor: pointer;" appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
               <!-- @if(row.liquidStake.msol) -->
             </div>
 
           </ng-template>
-          <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="token-pts">
-
-              
-              <div class="token-pts">
-                <ion-img src="assets/images/bSOL.svg" />
-                <span>
-                  
-                </span>
-              </div>  
-        
-          
-            </div>
-            
-          </ng-template>
-          <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="token-pts">
-            
-            </div>
-          </ng-template>
-          <ng-template #hubDomainHolderTpl let-row let-rowIndex="rowIndex" let-column="column">
-            @if(row.hubDomainHolder){
-           
-            <ion-icon style="font-size:20px;color:#079455;" name="checkmark-circle-outline"></ion-icon>
-            } @else{
-         
-            <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
-            }
-
-
-          </ng-template>
-
-          <ng-template #airdropTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="airdrop">
-              {{row.weeklyAirdrop | number: '1.3'}}
-              <ion-img src="assets/images/hubsol-small.webp" />
-              <!-- @if(row.liquidStake.msol) -->
-            </div>
-
-          </ng-template>
+  

@@ -33,8 +33,7 @@ export interface LeaderBoard {
   totalPoints: number
 }
 export interface loyaltyLeagueMember {
-  prizePoolShare?: number
-  hubDomain: string,
+  hubDomain?: string,
   walletOwner: string,
   totalPts: number,
   stakingPts: number,
@@ -47,3 +46,10 @@ export interface loyaltyLeagueMember {
 }
 
 
+export interface Tier {
+  title: string;
+  points: number;
+  icon: string;
+  iconFull: string;
+  loyaltyDaysRequirement: number;
+}
