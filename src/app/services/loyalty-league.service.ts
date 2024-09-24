@@ -66,15 +66,11 @@ export class LoyaltyLeagueService {
     },
   ];
   public getSessionMetrics(): Observable<Season> {
-    return of({
-      airdrop: 10,
-      season: 1,
-      totalPoints: 1000,
-      totalParticipants: 100,
-      startDate: new Date(),
-      endDate: new Date(),
-    })
     // return this._loyaltyLeagueLeaderBoard$.value.totalPoints
+    return this._apiService.get(`${this.api}/session-metrics`).pipe(
+      this._utilService.isNotNull,
+      catchError(err => this._formatErrors(err))
+    )
   }
   private _llMember: loyaltyLeagueMember = null
   public getMember(walletAddress: string): Observable<loyaltyLeagueMember> {
@@ -108,33 +104,10 @@ export class LoyaltyLeagueService {
     }
    
   }
-  public getLeaderBoard(): Observable<loyaltyLeagueMember[]> {
+  public getLeaderBoard(): Observable<LeaderBoard> {
 
     return this._apiService.get(`${this.api}/leader-board`).pipe(
       this._utilService.isNotNull,
-      map((loyaltyLeaderBoard: LeaderBoard) => {
-
-        // {
-        //   hubDomain: 'user1.hub',
-        //   walletOwner: '8xH3....dGwL',
-        //   daysLoyal: 60,
-        //   stakingPts: this._utilService.decimalPipe.transform(10230),
-        //   daoPts: this._utilService.decimalPipe.transform(2523),
-        //   referralPts: this._utilService.decimalPipe.transform(512),
-        //   totalPoints: this._utilService.decimalPipe.transform(15765),
-        // }
-        const llEdited = loyaltyLeaderBoard.loyaltyLeagueMembers.map((member: loyaltyLeagueMember) => {
-          return {
-            walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
-            stakingPts: this._utilService.decimalPipe.transform(member.stakingPts) as any,
-            daoPts: this._utilService.decimalPipe.transform(member.daoPts) as any,
-            referralPts: this._utilService.decimalPipe.transform(member.referralPts)as any,
-            totalPts: this._utilService.decimalPipe.transform(member.totalPts) as any,
-            daysLoyal: member.daysLoyal,
-          }
-        })
-        return llEdited
-      }),
       catchError((err) => this._formatErrors(err))
     )
   }

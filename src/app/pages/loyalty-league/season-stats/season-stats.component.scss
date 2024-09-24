@@ -57,7 +57,13 @@
         line-height: 24px; 
     }
 }
-
+ion-skeleton-text {
+    --border-radius: 7px;
+    width: 140px;
+    z-index: 2222;
+    height: 34px;
+    --background-rgb: 1, 110, 1;
+}
 @media (max-width: 450px) {
     #season-stats-content {
         grid-template-columns: 1fr;

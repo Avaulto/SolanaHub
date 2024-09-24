@@ -124,6 +124,12 @@
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
+        align-items: center;
+    display: flex;
+    ion-icon {
+        color: #00a3ff;
+        margin-inline-start: 4px;
+    }
     }
 
     .link-container {

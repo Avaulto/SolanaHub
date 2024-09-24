@@ -10,8 +10,8 @@
   <div id="ll-memeber-pts">
 
     <ion-text>
-      @if(member$ | async){
-        {{(member$ | async)?.totalPts}}
+      @if(member$ | async; as member){
+        {{member?.totalPts}}
       <!-- <number-counter [startNumber]="startNumber" [targetNumber]="endNumber" [duration]="duration" /> -->
       }@else{
       <ion-skeleton-text animated></ion-skeleton-text>

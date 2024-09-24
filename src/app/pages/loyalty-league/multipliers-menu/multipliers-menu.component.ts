@@ -1,18 +1,20 @@
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-import { IonMenu, IonImg, IonText, IonLabel, IonChip, IonSkeletonText } from '@ionic/angular/standalone';
+import { IonMenu, IonImg, IonText, IonLabel, IonChip, IonSkeletonText, IonIcon } from '@ionic/angular/standalone';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { Multipliers } from 'src/app/models';
 import { map, Observable, ReplaySubject, shareReplay, switchMap, of, BehaviorSubject, combineLatestWith, Subscription } from 'rxjs';
 import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
+import { addIcons } from 'ionicons';
+import { diamondOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'multipliers-menu',
   templateUrl: './multipliers-menu.component.html',
   styleUrls: ['./multipliers-menu.component.scss'],
   standalone: true,
-  imports: [IonSkeletonText, 
+  imports: [IonIcon, IonSkeletonText, 
     TooltipModule,
     IonChip,
     IonLabel,
@@ -91,7 +93,7 @@ export class MultipliersMenuComponent implements OnInit {
       {
         img: 'assets/images/ll/mango.svg',
         title: 'mango',
-        pts: "3x",
+        pts: 0,
         link: 'https://yield.fan/dashboard',
         badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: true }]
       },
@@ -144,6 +146,9 @@ export class MultipliersMenuComponent implements OnInit {
     this.updateMultipliers()
   
   }
+  constructor(){
+    addIcons({ diamondOutline })
+  }
   async updateMultipliers() {
     const fetchedMultipliers = await this.multipliersFetched
     this.defaultMultipliers = {
@@ -190,27 +195,11 @@ export class MultipliersMenuComponent implements OnInit {
           badges: [{ strategy: 'All LP pools', protocolBoosted: true, solanahubboosted: false }]
         },
         {
-          img: 'assets/images/ll/kamino.svg',
-          title: 'kamino',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.kamino,
-          link: 'https://app.kamino.finance/liquidity/7ycAn4vg4eZ82zeRWHey5qLQ53htEmeGq8CJ2tVXpPt9',
-          badges: [{ strategy: 'vault', protocolBoosted: false, solanahubboosted: false }]
-  
-        },
-        {
           img: 'assets/images/ll/mango.svg',
           title: 'mango',
-          pts: "3x",
+          pts: "3x" as any,
           link: 'https://yield.fan/dashboard',
           badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: true }]
-        },
-        {
-          img: 'assets/images/ll/raydium.svg',
-          title: 'raydium',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.raydium,
-          link: 'https://raydium.io/liquidity-pools/?token=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-          badges: [{ strategy: 'LP', protocolBoosted: false, solanahubboosted: false }]
-  
         },
         {
           img: 'assets/images/ll/meteora.svg',
@@ -221,6 +210,14 @@ export class MultipliersMenuComponent implements OnInit {
   
         },
         {
+          img: 'assets/images/ll/kamino.svg',
+          title: 'kamino',
+          pts: fetchedMultipliers.hubSOLDeFiBoost.kamino,
+          link: 'https://app.kamino.finance/liquidity/7ycAn4vg4eZ82zeRWHey5qLQ53htEmeGq8CJ2tVXpPt9',
+          badges: [{ strategy: 'vault', protocolBoosted: false, solanahubboosted: false }]
+  
+        },
+        {
           img: 'assets/images/ll/solayer.svg',
           title: 'solayer',
           pts: fetchedMultipliers.hubSOLDeFiBoost.solayer,
@@ -228,7 +225,13 @@ export class MultipliersMenuComponent implements OnInit {
           badges: [{ strategy: 'Restaking', protocolBoosted: false, solanahubboosted: false }]
   
         },
-  
+        {
+          img: 'assets/images/ll/raydium.svg',
+          title: 'raydium',
+          pts: fetchedMultipliers.hubSOLDeFiBoost.raydium,
+          link: 'https://raydium.io/liquidity-pools/?token=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
+          badges: [{ strategy: 'LP', protocolBoosted: false, solanahubboosted: false }]
+        },
         {
           img: 'assets/images/ll/texture.svg',
           title: 'texture',
@@ -244,16 +247,11 @@ export class MultipliersMenuComponent implements OnInit {
           link: 'https://rain.fi/swap/hubSOL-SOL',
           badges: [{ strategy: 'p2p Lending', protocolBoosted: false, solanahubboosted: false }]
         },
-      ]
+      ] // .sort((a: any, b: any) => b.pts - a.pts)
     };
   }
   dismissModal(event: any) {
     console.log('dismissModal', event)
     this.menuToggle.emit()
-  }
-  isNumber(value: any): boolean {
-    const isNumber = !isNaN(parseFloat(value)) && isFinite(value);
-    console.log('isNumber', value, isNumber)
-    return isNumber;
   }
 }

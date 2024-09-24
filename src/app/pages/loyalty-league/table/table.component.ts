@@ -7,6 +7,7 @@ import { DecimalPipe } from '@angular/common';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 @Component({
   selector: 'll-table',
   templateUrl: './table.component.html',
@@ -24,12 +25,26 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
   @Input() tiers: Tier[] = [];
   constructor(
+    private _utilService: UtilService,
     private _loyaltyLeagueService: LoyaltyLeagueService,
   ) {
 
   }
 
-  public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard());
+  public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard().pipe(      map((loyaltyLeaderBoard: LeaderBoard) => {
+
+    const llEdited = loyaltyLeaderBoard.loyaltyLeagueMembers.map((member: loyaltyLeagueMember) => {
+      return {
+        walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
+        stakingPts: this._utilService.decimalPipe.transform(member.stakingPts) as any,
+        daoPts: this._utilService.decimalPipe.transform(member.daoPts) as any,
+        referralPts: this._utilService.decimalPipe.transform(member.referralPts)as any,
+        totalPts: this._utilService.decimalPipe.transform(member.totalPts) as any,
+        daysLoyal: member.daysLoyal,
+      }
+    })
+    return llEdited
+  }),));
 
 
 

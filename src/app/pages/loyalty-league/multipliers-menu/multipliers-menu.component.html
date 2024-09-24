@@ -65,9 +65,9 @@
         @if (defi.pts) {
         <ion-text>
           @if(defi.pts.toString().indexOf('x') > -1) {
-            {{defi.pts}} pts
+            +{{defi.pts}} pts <ion-icon name="diamond-outline"/>
           } @else {
-            {{  defi.pts | number:'1.0-3' }} pts
+            +{{ defi.pts | number:'1.0-0' }} pts
           }
         </ion-text>
         } @else {
