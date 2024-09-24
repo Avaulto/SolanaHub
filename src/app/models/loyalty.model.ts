@@ -1,24 +1,38 @@
 
 export interface Multipliers {
-  SOL: number,
-  hubSOL: number,
-  vSOL: number,
-  bSOL: number,
-  veMNDE: number,
-  veBLZE: number,
-  hubSOLDeFiBoost: number,
-  bonusPoints: {
-      hubDomain: number,
-      referrals: number,
-      loyalBoost: {
-        degen: number,
-        manlet: number,
-        maxi: number,
-        diamondHand:number
-      },
-      ambassador: number,
+  _id?: string
+  SOL: number
+  hubSOL: number
+  vSOL: number
+  bSOL: number
+  veMNDE: number
+  veBLZE: number
+  referrals: number
+  ambassador: number
+  hubSOLDeFiBoost: {
+    orca: number
+    solblaze: number
+    kamino: number
+    meteora: number
+    "the-vault": number
+    raydium: number
+    mango: number
+    solayer: number
+    texture: number
+    rainfi: number
+  }
+  questBonusPoints: {
+    loyalBoost: {
+      degen: number
+      manlet: number
+      maxi: number
+      diamondHand: number
     }
+    hubDomain: number
+  }
+  date: string
 }
+
 
 export interface Season{
   airdrop: number
@@ -31,17 +45,19 @@ export interface Season{
 export interface LeaderBoard {
   loyaltyLeagueMembers: loyaltyLeagueMember[]
   totalPoints: number
+  totalParticipants: number
 }
 export interface loyaltyLeagueMember {
+  prizePoolShare?: number
   hubDomain?: string,
+  referralCode?: string,
+  ambassadorPts?: number,
   walletOwner: string,
   totalPts: number,
   stakingPts: number,
   daoPts: number,
   questsPts: number,
-  ambassadorPts: number,
   referralPts: number,
-  referralCode: string,
   daysLoyal: number,
 }
 

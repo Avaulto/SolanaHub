@@ -122,3 +122,9 @@
         color: var(--ion-color-dark);
     }
 }
+@media only screen and (max-width: 992px) {
+#btns-container {
+    display: flex;
+    flex-direction: column;
+}
+}

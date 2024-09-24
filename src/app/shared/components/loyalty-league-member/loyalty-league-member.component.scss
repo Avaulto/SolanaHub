@@ -1,68 +1,64 @@
 #ll-member-wrapper {
-
-    padding: var(--spacing-2xl, 20px) var(--spacing-xl, 16px);
-    border-radius: var(--radius-md, 8px);
-    background: var(--ion-color-ll);
-    text-transform: capitalize;
+    border-radius: 8px;
+    border: 1px solid var(--Gray-Modern-200, #E3E8EF);
+    background: #FFF;
+    padding: 16px;
+    position: relative;
 }
 
 ion-label {
-    color: var(--colors-text-text-primary-900, var(--ion-color-text-2));
+    color: #101828;
     font-size: 13px;
-    font-weight: 600;
-    line-height: 18px;
-  
-    /* 138.462% */
-    display: flex;
-    align-items: center;
-    margin-block-end: 4px;
-}
-
-#score {
-    color: var(--ion-color-ll-title);
-    height: 44px;
-    font-size: 36px;
-    font-weight: 600;
-    line-height: 44px;
-    /* 122.222% */
-    letter-spacing: -0.72px;
-    border-radius: 4px;
-    & ion-skeleton-text{
-        height: 38px;
-    }
-}
-
-#rank {
-    color: var(--ion-color-ll-title);
-    font-size: 12px;
     font-weight: 500;
+    line-height: 18px;
+    margin-block-end: 4px;
+    display: block;
+}
+#ll-memeber-pts{
     display: flex;
     align-items: center;
-    /* 12px */
-    margin-block-end: 16px;
-    ion-skeleton-text{
-        margin-inline: 2px;
-        width: 30px;
-        border-radius: 4px;
-    }
+    margin-block-end: 17px;
+    justify-content: space-between;
 }
-ion-progress-bar{
-    --background: var(--ion-color-ll-pb);
-    --progress-background: var(--ion-color-secondary);
-    height: 8px;
-    border-radius: 8px;
-    margin-block-end: 20px;
+loyalty-badge{
+    margin-inline-end: 8px;
+}
+ion-text {
+    color: #101828;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 32px;
+    min-width: 40%;
+    /* 133.333% */
+}
+ion-skeleton-text {
+    height: 20px;
+    border-radius: 4px;
+}
+.badge {
+    width: 66px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: -12px;
+    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
+    align-items: center;
+    border-radius: var(--radius-full, 9999px);
+    border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
+    background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
+    
+    text-align: center;
+    font-size: 11px;
+    text-transform: capitalize;
+    font-weight: 500;
+    line-height: 18px; 
 }
 a {
     color: var(--ion-color-secondary);
-    text-decoration: none;
     font-size: 13px;
     font-weight: 600;
     line-height: 18px;
-    align-items: center;
-    display: flex;
-    ion-icon{
-        margin-inline: 5px;
-    }
+    text-decoration: none;
     /* 138.462% */
 }

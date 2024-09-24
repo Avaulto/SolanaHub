@@ -41,6 +41,7 @@
         text-transform: none;
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         span {
           margin-inline-end: 16px;
         }
@@ -48,6 +49,12 @@
             display: flex;
         }
       }
+      ion-skeleton-text {
+        width: 150px;
+        height: 36px;
+        border-radius: 4px;
+        margin-inline-end: 6px;
+    }
     }
     .divider{
        height: 100%;
@@ -113,8 +120,10 @@
 .hidden-content {
     position: relative;
     overflow: hidden;
-    padding: 5px 10px;
+    padding: 10px 20px;
     background: linear-gradient(90deg, #f0f0f0, #e0e0e0, #f0f0f0);
+
+    // background: linear-gradient(200deg, #FF50C8 5.53%, #7100FF 88.66%, #8E00FF 88.66%), radial-gradient(100.27% 100.27% at 50% -0.27%, #000355 0%, #09001D 100%);
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
     border-radius: 4px;
@@ -126,12 +135,14 @@
     }
   
     &::before {
-      content:"? ? ? ? ?";
+      content:"🧑‍🍳  🍳 ⏲️";
+      font-size: 20px;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #888;
+    //   color: white;
+    color: #888;
       text-shadow: 0 0 5px rgba(0,0,0,0.3);
     }
   }
@@ -140,7 +151,7 @@
     .hidden-content {
       background: none;
       animation: none;
-  
+      padding: 0;
       &::before {
         content: "";
       }
@@ -163,6 +174,7 @@
 
   
 @media only screen and (max-width: 992px) {
+    
     .member-stats{
         display: block !important;
     }

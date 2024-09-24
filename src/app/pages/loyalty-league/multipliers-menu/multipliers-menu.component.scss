@@ -12,7 +12,7 @@
 }
 #multipliers-menu-container {
     background: #FFF;
-    width: 459px;
+    width: 470px;
     max-width: 100%;
     overflow: auto;
 }
@@ -41,6 +41,10 @@
     font-weight: 500;
     line-height: 18px;
     margin-block-end: 8px;
+    .badge{
+        font-weight: 600;
+        margin-inline-start: 4px;
+    }
 }
 
 .group-subtitle {
@@ -112,6 +116,7 @@
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
+        text-transform: capitalize;
     }
 
     ion-text {
@@ -127,7 +132,10 @@
         }
     }
 }
-
+.badges-container {
+    display: flex;
+    flex-wrap: wrap;
+}
 .badge {
     padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
     align-items: center;
@@ -137,6 +145,7 @@
     
     text-align: center;
     margin-inline-end: 4px;
+    margin-block-end: 4px;
     font-size: 11px;
     text-transform: capitalize;
     font-weight: 500;

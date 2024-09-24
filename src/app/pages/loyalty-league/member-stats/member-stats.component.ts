@@ -1,21 +1,29 @@
 import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 
-import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel } from '@ionic/angular/standalone';
+import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { copyOutline, discOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
-import { Tier } from 'src/app/models';
-import { LoyaltyPathComponent,LoyaltyBadgeComponent,ReferAFriendModalComponent} from '../';
+import { loyaltyLeagueMember, Tier } from 'src/app/models';
+import { ReferAFriendModalComponent, LoyaltyPathComponent, LoyaltyBadgeComponent } from '../';
+import { NumberCounterComponent } from "../../../shared/components/number-counter/number-counter.component";
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { SolanaHelpersService, UtilService } from 'src/app/services';
+// import { LoyaltyBadgeComponent } from './loyalty-badge/loyalty-badge.component';
 
 @Component({
   selector: 'app-member-stats',
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [IonLabel, IonTitle, 
+  imports: [IonSkeletonText, 
+    NumberCounterComponent,
+    IonLabel,
+    IonTitle,
     LoyaltyPathComponent,
     IonImg,
     LoyaltyBadgeComponent,
@@ -28,26 +36,42 @@ import { LoyaltyPathComponent,LoyaltyBadgeComponent,ReferAFriendModalComponent} 
     IonCol,
     NgStyle,
     IonIcon,
-    CopyTextDirective
-  ]
+    CopyTextDirective, NumberCounterComponent]
 })
 export class MemberStatsComponent implements OnChanges {
 
-  constructor(private _modalCtrl: ModalController) { addIcons({ copyOutline, discOutline }); }
+  constructor(
+    private _modalCtrl: ModalController,
+    private _loyaltyLeagueService: LoyaltyLeagueService,
+    private _utilsService: UtilService,
+    private _shs: SolanaHelpersService,
+  ) {
+
+    addIcons({ copyOutline, discOutline });
+  }
   @Input() tiers: Tier[] = null;
-  public hiddenPts = signal('? ? ? ? ?')
-  @Input() loyalMember = signal<any>({
-    staking: 15000,
-    dao: 15000,
-    quests: 15000,
-    referrals: 15000,
-    totalPts: 15000,
-  });
-  @Input() isAmbassador: boolean = false;
-  public daysLoyal = 47;
+  public hiddenPts = signal('🍳 🧑‍🍳 🍳 👨‍🍳 🍳')
+  public wallet$ = this._shs.walletExtended$
+  public member$: Observable<loyaltyLeagueMember> = this.wallet$.pipe(
+    this._utilsService.isNotNullOrUndefined,
+    switchMap(wallet => {
+      if (wallet) {
+        return this._loyaltyLeagueService.getMember(wallet.publicKey.toBase58()).pipe(
+          map(member => {
+            if (member) {
+              return member;
+            }
+            return {} as loyaltyLeagueMember;
+          })
+        );
+      } else {
+        return of({} as loyaltyLeagueMember);
+      }
+    }),
+    shareReplay()
+  );
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.loyalMember());
 
 
   }
@@ -73,12 +97,12 @@ export class MemberStatsComponent implements OnChanges {
     return numStr;
   }
 
-  public async openReferAFriendModal(){
+  public async openReferAFriendModal() {
     const refCode = '123'
     const modal = await this._modalCtrl.create({
       component: ReferAFriendModalComponent,
       componentProps: {
-        data: {refCode},
+        data: { refCode },
       },
       cssClass: 'refer-a-friend-modal'
     });

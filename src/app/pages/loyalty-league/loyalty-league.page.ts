@@ -14,11 +14,10 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
 
 import { ModalComponent } from 'src/app/shared/components';
-import { TableComponent } from "./table/table.component";
 import { flashOutline, flaskOutline } from 'ionicons/icons';
-import { SeasonStatsComponent } from './season-stats/season-stats.component';
-import { MultipliersMenuComponent } from './multipliers-menu/multipliers-menu.component';
+import { MultipliersMenuComponent, SeasonStatsComponent, TableComponent } from './';
 import { Tier } from 'src/app/models';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-loyalty-league',
@@ -53,6 +52,7 @@ export class LoyaltyLeaguePage implements OnInit {
   public loyalMember = signal(null)
   public isAmbassador: boolean = false;
   public openMenu = false
+  public multipliers = this._loyaltyLeagueService.getBoosters()
   constructor(
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,

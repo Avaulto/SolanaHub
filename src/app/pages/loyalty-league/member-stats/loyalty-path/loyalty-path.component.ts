@@ -1,28 +1,28 @@
-import { NgClass, NgStyle } from '@angular/common';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { NgClass, NgFor, NgStyle } from '@angular/common';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Tier } from 'src/app/models';
-import { IonImg, IonButton } from "@ionic/angular/standalone";
-
+import { IonImg, IonButton, IonSkeletonText } from "@ionic/angular/standalone";
 @Component({
   selector: 'loyalty-path',
   templateUrl: './loyalty-path.component.html',
   styleUrls: ['./loyalty-path.component.scss'],
   standalone: true,
-  imports: [IonButton, IonImg, NgStyle,NgClass]
+  imports: [IonSkeletonText, IonButton, IonImg, NgStyle,NgClass, NgFor],
 })
-export class LoyaltyPathComponent  implements OnInit {
+export class LoyaltyPathComponent  implements OnChanges {
   @Input() tiers: Tier[] = [];
-  @Input() daysLoyal: number = 0;
+  @Input() daysLoyal: number;
   @Output() openReferAFriendModal: EventEmitter<void> = new EventEmitter<void>();
   public nextTier: Tier | null = null;
-  public daysRemainingToNextTier: number = 0;
-  constructor() { }
+  public daysRemainingToNextTier: number;
+  constructor() {
+   }
 
-  ngOnInit() {
-    this.nextTier = this._getNextTier();
-    console.log(this.nextTier);
-    
-    this.daysRemainingToNextTier = this._daysRemainingToNextTier(this.nextTier);
+  ngOnChanges() {
+    if(this.daysLoyal) {
+        this.nextTier = this._getNextTier();
+        this.daysRemainingToNextTier = this._daysRemainingToNextTier(this.nextTier);  
+    }
   }
   // get next tier
   private _getNextTier(): Tier {

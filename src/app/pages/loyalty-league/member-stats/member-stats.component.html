@@ -2,12 +2,12 @@
   <ion-row class="loyal-member">
     <ion-col size="12" sizeLg="5" class="member-stats">
       <div id="points-container">
-        
-      
-      <div class="total-points">
-        <ion-label class="total-points__title">
-          Your Total Points
-          @if(isAmbassador){
+
+
+        <div class="total-points">
+          <ion-label class="total-points__title">
+            Your Total Points
+            @if((member$ | async)?.ambassadorPts; as member){
             <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
             <ng-template #toolTipTpl>
               <div class="tooltip">
@@ -15,43 +15,64 @@
                   <span class="tooltip__icon"></span>
                   Ambassador program
                 </div>
-                <div class="tooltip__description">You have received 1000 loyalty points boost as a SolanaHub Ambassador.</div>
+                <div class="tooltip__description">You have received {{(member$ | async)?.ambassadorPts | number:'1.0-0'
+                  }} loyalty points boost as a SolanaHub Ambassador.</div>
               </div>
             </ng-template>
-          }
-        </ion-label>
-        <div class="total-points__value">
-          <span>15,000</span>
-          <loyalty-badge [tiers]="tiers" [daysLoyal]="daysLoyal" />
+            }
+          </ion-label>
+          <div class="total-points__value">
+            <span>
+              @if(member$ | async){
+              <number-counter [startNumber]="(member$ | async)?.totalPts / 2" [targetNumber]="(member$ | async)?.totalPts" [duration]="1000" />
+              }@else{
+              <ion-skeleton-text animated></ion-skeleton-text>
+              }
+            </span>
+            <loyalty-badge [tiers]="tiers" [daysLoyal]="(member$ | async)?.daysLoyal" />
+          </div>
+        </div>
+
+        <div class="points-breakdown">
+          <h3 class="points-breakdown__title">Points breakdown</h3>
+          <ion-row class="points-breakdown__grid">
+
+            <ion-col size="4">
+              <div class="points-category">
+                <div class="points-category__title">Staking</div>
+                <div class="points-category__value">{{ (member$ | async)?.stakingPts | number:'1.0-0' }}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="points-category">
+                <div class="points-category__title">DAO </div>
+                <div class="points-category__value">{{ (member$ | async)?.daoPts | number:'1.0-0' }}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="points-category">
+                <div class="points-category__title">Referrals</div>
+                <div class="points-category__value">{{ (member$ | async)?.referralPts | number:'1.0-0' }}</div>
+              </div>
+            </ion-col>
+
+            <ion-col sizeLg="11" size="12">
+              <div class="points-category" [class.reveal-content]="hiddenPts() !== '🍳 🧑‍🍳 🍳 👨‍🍳 🍳'"
+                (click)="hiddenPts.set('More ways to earn points is cooking!')">
+                <div class=" hidden-content">
+                  <span class="content">{{hiddenPts()}}</span>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
         </div>
       </div>
-      
-      <div class="points-breakdown">
-        <h3 class="points-breakdown__title">Points breakdown</h3>
-        <ion-row class="points-breakdown__grid">
-          @for (category of ['Staking', 'DAO', 'Referrals']; track category) {
-          <ion-col size="4" >
-            <div class="points-category">
-              <div class="points-category__title">{{ category }}</div>
-              <div class="points-category__value">10,000</div>
-            </div>
-          </ion-col>
-        }
-        <ion-col size="4" >
-          <div class="points-category" [class.reveal-content]="hiddenPts() !== '? ? ? ? ?'" (click)="hiddenPts.set('More ways to earn points is cooking!')">
-            <div class="points-category__title hidden-content">
-              <span class="content">{{hiddenPts()}}</span>
-            </div>
-          </div>
-        </ion-col>
-        </ion-row>
-      </div>
-    </div>
-      <div class="divider" ></div>
-    
+      <div class="divider"></div>
+
     </ion-col>
     <ion-col size="12" sizeLg="7">
-      <loyalty-path (openReferAFriendModal)="openReferAFriendModal()" [tiers]="tiers" [daysLoyal]="daysLoyal" />
+      <loyalty-path (openReferAFriendModal)="openReferAFriendModal()" [tiers]="tiers"
+        [daysLoyal]="(member$ | async)?.daysLoyal" />
     </ion-col>
   </ion-row>
 </div>

@@ -4,9 +4,18 @@
     <div id="loyalty-path-header-title">Ranking tiers</div>
     <div id="loyalty-path-header-subtitle">
      
-        <span id="days-remaining">{{daysRemainingToNextTier}} days left</span> 
-        <span id="to">To</span> 
-        <div id="tier-name" [ngStyle]="{'color': getColor(nextTier?.title)}">{{nextTier?.title}}</div>
+        <span id="days-remaining">
+          @if (daysRemainingToNextTier) {
+            {{daysRemainingToNextTier}} 
+            
+          } @else {
+            <ion-skeleton-text animated></ion-skeleton-text>
+          } days left
+        </span> 
+        <div style="display: flex;">
+          <span id="to">To</span> 
+          <div id="tier-name" [ngStyle]="{'color': getColor(nextTier?.title)}">{{nextTier?.title}}</div>
+        </div>
    
       <!-- <div id="next-tier-icon">
         <ion-img [src]="nextTier?.iconFull"></ion-img>

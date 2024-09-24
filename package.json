@@ -51,6 +51,7 @@
     "ngx-easy-table": "^15.5.0",
     "ngx-turnstile": "^0.2.3",
     "rxjs": "~7.8.0",
+    "swiper": "^11.1.14",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
