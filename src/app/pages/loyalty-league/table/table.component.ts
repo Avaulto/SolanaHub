@@ -2,10 +2,11 @@ import { AfterViewInit, Component, Input, OnInit, Signal, signal, TemplateRef, V
 import { IonIcon, IonImg } from '@ionic/angular/standalone';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
-import {  loyaltyLeagueMember, Tier } from 'src/app/models';
+import {  LeaderBoard, loyaltyLeagueMember, Tier } from 'src/app/models';
 import { DecimalPipe } from '@angular/common';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'll-table',
   templateUrl: './table.component.html',
@@ -24,65 +25,11 @@ export class TableComponent implements OnInit, AfterViewInit {
   @Input() tiers: Tier[] = [];
   constructor(
     private _loyaltyLeagueService: LoyaltyLeagueService,
-    private _shs: SolanaHelpersService,
-    private _utilService: UtilService) {
+  ) {
 
   }
-  public mockLeaderBoard = [
-    {
-      hubDomain: 'user1.hub',
-      walletOwner: '8xH3....dGwL',
-      daysLoyal: 60,
-      stakingPts: this._utilService.decimalPipe.transform(10230),
-      daoPts: this._utilService.decimalPipe.transform(2523),
-      referralPts: this._utilService.decimalPipe.transform(512),
-      totalPoints: this._utilService.decimalPipe.transform(15765),
-    },
-    {
-      hubDomain: 'user2.hub',
-      walletOwner: '3xK2....dGwL',
-      daysLoyal: 52,
-      stakingPts: this._utilService.decimalPipe.transform(9800),
-      daoPts: this._utilService.decimalPipe.transform(2412),
-      referralPts: this._utilService.decimalPipe.transform(468),
-      totalPoints: this._utilService.decimalPipe.transform(14980),
-    },
-    {
-      hubDomain: 'user3.hub',
-      walletOwner: '5xM2....dGwL',
-      daysLoyal: 25,
-      stakingPts: this._utilService.decimalPipe.transform(9100),
-      daoPts: this._utilService.decimalPipe.transform(2189),
-      referralPts: this._utilService.decimalPipe.transform(361),
-      totalPoints: this._utilService.decimalPipe.transform(13750),
-    },
-    {
-      walletOwner: '7xF5....dGwL',
-      daysLoyal: 27,
-      stakingPts: this._utilService.decimalPipe.transform(6500),
-      daoPts: this._utilService.decimalPipe.transform(1645),
-      referralPts: this._utilService.decimalPipe.transform(225),
-      totalPoints: this._utilService.decimalPipe.transform(9870),
-    },
-    {
-      walletOwner: '6xJ7....dGwL',
-      daysLoyal: 31,
-      stakingPts: this._utilService.decimalPipe.transform(4800),
-      daoPts: this._utilService.decimalPipe.transform(1287),
-      referralPts: this._utilService.decimalPipe.transform(133),
-      totalPoints: this._utilService.decimalPipe.transform(7320),
-    },
-    {
-      hubDomain: 'user9.hub',
-      walletOwner: '4xL8....dGwL',
-      daysLoyal: 9,
-      stakingPts: this._utilService.decimalPipe.transform(4100),
-      daoPts: this._utilService.decimalPipe.transform(1054),
-      referralPts: this._utilService.decimalPipe.transform(126),
-      totalPoints: this._utilService.decimalPipe.transform(6180),
-    },
-  ];
-  public leaderBoard = signal<[]>(this.mockLeaderBoard as any);
+
+  public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard());
 
 
 
@@ -135,7 +82,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       { key: 'daoPts', title: 'DAO points', cssClass: { name: 'ion-text-center', includeHeader: true } },
       // { key: 'questsPts', title: 'Quests', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'referralPts', title: 'Referrals', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'totalPoints', title: 'Total Points', cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'totalPts', title: 'Total Points', cssClass: { name: 'bold-text', includeHeader: true } },
     ]
   }
 }

@@ -52,11 +52,11 @@ export interface loyaltyLeagueMember {
   hubDomain?: string,
   referralCode?: string,
   ambassadorPts?: number,
+  questsPts?: number,
   walletOwner: string,
   totalPts: number,
   stakingPts: number,
   daoPts: number,
-  questsPts: number,
   referralPts: number,
   daysLoyal: number,
 }

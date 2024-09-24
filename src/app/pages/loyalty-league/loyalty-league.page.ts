@@ -69,31 +69,31 @@ export class LoyaltyLeaguePage implements OnInit {
   public tiers: Tier[] = [
     {
       title: 'degen',
-      points: 1000,
+      points: 0,
       icon: 'assets/images/ll/badge-1.svg',
       iconFull: 'assets/images/ll/badge-full-1.svg',
-      loyaltyDaysRequirement: 15,
+      loyaltyDaysRequirement: 0,
     },
     {
       title: 'manlet',
       points: 1000,
       icon: 'assets/images/ll/badge-2.svg',
       iconFull: 'assets/images/ll/badge-full-2.svg',
-      loyaltyDaysRequirement: 30,
+      loyaltyDaysRequirement: 15,
     },
     {
       title: 'maxi',
       points: 1000,
       icon: 'assets/images/ll/badge-3.svg',
       iconFull: 'assets/images/ll/badge-full-3.svg',
-      loyaltyDaysRequirement: 45,
+      loyaltyDaysRequirement: 30,
     },
     {
       title: 'diamond-hands',
       points: 1000,
       icon: 'assets/images/ll/badge-4.svg',
       iconFull: 'assets/images/ll/badge-full-4.svg',
-      loyaltyDaysRequirement: 60,
+      loyaltyDaysRequirement: 45,
     },
   ];
   ngOnInit() {

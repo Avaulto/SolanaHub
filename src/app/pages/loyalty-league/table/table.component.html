@@ -9,9 +9,9 @@
           <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
             <div class="addr-item ion-text-left">
               <div class="tier-icon">
-                @if(row.daysLoyal > 14) {
+            
                 <ion-img [src]="getTierIcon(row.daysLoyal)"></ion-img>
-              }
+              
               </div>
               <span>
                 {{row.walletOwner}}

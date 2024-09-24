@@ -1,7 +1,7 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import {  catchError, Observable, of, throwError } from 'rxjs';
+import {  catchError, map, Observable, of, throwError } from 'rxjs';
 import { LeaderBoard, loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 
@@ -108,47 +108,35 @@ export class LoyaltyLeagueService {
     }
    
   }
-  public getLeaderBoard(): Observable<LeaderBoard> {
-    return of(
-      {
-        totalPoints: 1000,
-        loyaltyLeagueMembers: [
-      {
-        walletOwner: 'CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP',
-          
-        hubDomain: 'amir.hub',
-        totalPts: 123,
-        stakingPts: 3422,
-        daoPts: 456,
-        questsPts: 456,
-        ambassadorPts: 0,
-        referralPts: 100,
-        referralCode: 'cds21',
-        daysLoyal: 20,
-      },
-      {
-        walletOwner: 'jqmFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVY1234',
-        hubDomain: 'amir.hub',
-        totalPts: 123,
-        stakingPts: 3422,
-        daoPts: 456,
-        questsPts: 456,
-        ambassadorPts: 0,
-        referralPts: 100,
-        referralCode: 'cds21',
-        daysLoyal: 20,
-      },
-    ],
-    totalParticipants: 2
-  })
-    // return this._apiService.get(`${this.api}/leader-board`).pipe(
-    //   this._utilService.isNotNull,
-    //   map((loyaltyLeaderBoard: LoyaltyLeaderBoard) => {
-    //     return loyaltyLeaderBoard
-    //   }),
-    //   shareReplay(),
-    //   // catchError((err) => this._formatErrors(err))
-    // )
+  public getLeaderBoard(): Observable<loyaltyLeagueMember[]> {
+
+    return this._apiService.get(`${this.api}/leader-board`).pipe(
+      this._utilService.isNotNull,
+      map((loyaltyLeaderBoard: LeaderBoard) => {
+
+        // {
+        //   hubDomain: 'user1.hub',
+        //   walletOwner: '8xH3....dGwL',
+        //   daysLoyal: 60,
+        //   stakingPts: this._utilService.decimalPipe.transform(10230),
+        //   daoPts: this._utilService.decimalPipe.transform(2523),
+        //   referralPts: this._utilService.decimalPipe.transform(512),
+        //   totalPoints: this._utilService.decimalPipe.transform(15765),
+        // }
+        const llEdited = loyaltyLeaderBoard.loyaltyLeagueMembers.map((member: loyaltyLeagueMember) => {
+          return {
+            walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
+            stakingPts: this._utilService.decimalPipe.transform(member.stakingPts) as any,
+            daoPts: this._utilService.decimalPipe.transform(member.daoPts) as any,
+            referralPts: this._utilService.decimalPipe.transform(member.referralPts)as any,
+            totalPts: this._utilService.decimalPipe.transform(member.totalPts) as any,
+            daysLoyal: member.daysLoyal,
+          }
+        })
+        return llEdited
+      }),
+      catchError((err) => this._formatErrors(err))
+    )
   }
   // public getPrizePool(): Observable<PrizePool> {
   //   return this._apiService.get(`${this.api}/prize-pool`).pipe(
