@@ -11,8 +11,13 @@ defineElement(lottie.loadAnimation);
 })
 export class AnimatedIconComponent  implements OnInit {
   @Input() icon: string;
+  @Input() color: string ='primary:#9b3678,secondary:#804FB3;'
+  @Input() state: string;
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.color);
+    
+  }
 
 }

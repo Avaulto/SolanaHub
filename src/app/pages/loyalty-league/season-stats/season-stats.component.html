@@ -1,0 +1,34 @@
+<div id="season-stats">
+  <div id="season-stats-header">
+    <div id="season-stats-title">Season <ion-img src="assets/images/ll/1.svg" /></div>
+  </div>
+  <div class="ion-padding" id="season-stats-content">
+    <div class="season-stats-card">
+      <div class="season-stats-card-title">Total Participants Points</div>
+      <div class="season-stats-card-body">
+        @if(seasonStats | async; as seasonStats){
+        <number-counter [startNumber]="seasonStats.totalPoints / 2" [targetNumber]="seasonStats.totalPoints" [duration]="100000" />
+        }@else{
+            <ion-skeleton-text animated style="--border-radius: 10px;" />
+        }
+      
+      </div>
+    </div>
+    <div class="season-stats-card">
+      <div class="season-stats-card-title">Total Participants</div>
+      <div class="season-stats-card-body">
+        @if(seasonStats | async; as seasonStats){
+          {{seasonStats.totalParticipants | number}}
+        }@else{
+            <ion-skeleton-text animated style="--border-radius: 10px;" />
+        }
+      </div>
+    </div>
+    <div class="season-stats-card">
+      <div class="season-stats-card-title">Prize Pool</div>
+      <div class="season-stats-card-body">
+        <ion-img src="assets/images/ll/demo-pp.svg" />
+      </div>
+    </div>
+  </div>
+</div>

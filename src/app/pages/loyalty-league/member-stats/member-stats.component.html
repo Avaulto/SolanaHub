@@ -1,40 +1,78 @@
-<div id="loyal-member">
-  <div id="score-head">
-    <div>
-      <div id="total-pts-title">Your weekly airdrop 
-        @if(isAmbassador){
-          <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
-          <ng-template #toolTipTpl>
-                    
-            <div class="tool-tip">
-              <div style="text-transform: capitalize; display: flex;align-items: center;margin-block-end: 4px;font-weight: 600;color:var(--ion-color-dark);">
-                <span 
-                style="background-color: var(--ion-color-warning); width:12px;height: 12px;border-radius: 50%;margin-inline-end: 6px;"
-                >
-              </span> 
-              Ambassador program</div>
-              <div class="tool-tip-desc">you have received 100 loyalty points boost as a SolanaHub Ambassador.</div>
-            </div>
-          </ng-template>
-        }
-      </div>
-      <div id="total-pts-value">{{airdrop }} hubSOL</div>
-    </div>
+<div class="loyal-member-container">
+  <ion-row class="loyal-member">
+    <ion-col size="12" sizeLg="5" class="member-stats">
+      <div id="points-container">
 
-    <div id="referral-btn">
-      <ion-button fill="clear" appCopyText [copyText]="'https://solanahub.app/staking?refWallet='+loyalMember()?.walletOwner" >
-        Copy referral link <ion-icon name="copy-outline"></ion-icon>
-      </ion-button>
-    </div>
-  </div>
-  <div id="score-body">
-    <ion-row>
-      @for (points of loyalMember().pointsBreakDown; track $index) {
-      <ion-col size="4" [ngStyle]="{'margin-block-end': $index < 3 ? '10px' : ''}">
-        <div class="pts-title">{{points.label}}</div>
-        <div class="pts-value">{{points.value}}</div>
-      </ion-col>
-      }
-    </ion-row>
-  </div>
+
+        <div class="total-points">
+          <ion-label class="total-points__title">
+            Your Total Points
+            @if((member$ | async)?.ambassadorPts; as member){
+            <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
+            <ng-template #toolTipTpl>
+              <div class="tooltip">
+                <div class="tooltip__header">
+                  <span class="tooltip__icon"></span>
+                  Ambassador program
+                </div>
+                <div class="tooltip__description">You have received {{(member$ | async)?.ambassadorPts | number:'1.0-0'
+                  }} loyalty points boost as a SolanaHub Ambassador.</div>
+              </div>
+            </ng-template>
+            }
+          </ion-label>
+          <div class="total-points__value">
+            <span>
+              @if(member$ | async){
+              <number-counter [startNumber]="(member$ | async)?.totalPts / 2" [targetNumber]="(member$ | async)?.totalPts" />
+              }@else{
+              <ion-skeleton-text animated></ion-skeleton-text>
+              }
+            </span>
+            <loyalty-badge [tiers]="tiers" [daysLoyal]="(member$ | async)?.daysLoyal" />
+          </div>
+        </div>
+
+        <div class="points-breakdown">
+          <h3 class="points-breakdown__title">Points breakdown</h3>
+          <ion-row class="points-breakdown__grid">
+
+            <ion-col size="4">
+              <div class="points-category">
+                <div class="points-category__title">Staking</div>
+                <div class="points-category__value">{{ (member$ | async)?.stakingPts | number:'1.0-0' }}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="points-category">
+                <div class="points-category__title">DAO </div>
+                <div class="points-category__value">{{ (member$ | async)?.daoPts | number:'1.0-0' }}</div>
+              </div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="points-category">
+                <div class="points-category__title">Referrals</div>
+                <div class="points-category__value">{{ (member$ | async)?.referralPts | number:'1.0-0' }}</div>
+              </div>
+            </ion-col>
+
+            <ion-col sizeLg="11" size="12">
+              <div class="points-category" [class.reveal-content]="hiddenPts() !== '🍳 🧑‍🍳 🍳 👨‍🍳 🍳'"
+                (click)="hiddenPts.set('More ways to earn points is cooking!')">
+                <div class=" hidden-content">
+                  <span class="content">{{hiddenPts()}}</span>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+      <div class="divider"></div>
+
+    </ion-col>
+    <ion-col size="12" sizeLg="7">
+      <loyalty-path (openReferAFriendModal)="openReferAFriendModal()" [tiers]="tiers"
+        [daysLoyal]="(member$ | async)?.daysLoyal" />
+    </ion-col>
+  </ion-row>
 </div>

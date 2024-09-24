@@ -1,29 +1,27 @@
-@if(connectedWallet$ | async ){
+@if((wallet$ | async) && !hideLLv2()){
+
 
 
 <div id="ll-member-wrapper">
-  Loyalty league
-  <!-- <ion-label>Loyalty Points  <ion-icon id="tooltip" [position]="tooltipDirection" [tooltip]="toolTipTpl" class="tooltip-icon" name="information-circle-outline"></ion-icon></ion-label> -->
-  <!-- <ng-template #toolTipTpl >
-    The points tracker runs 3 times a day, so don't panic if you can't see your score immediately. 😊✨
-   </ng-template>
-  <div id="score">
-    @if((llScore$ | async); as loyaltyLeagueMember){
-    {{ loyaltyLeagueMember?.loyaltyPoints || 0 | number: '1.0-2'}}
-    }@else{
-    <ion-skeleton-text [animated]="true" />
-    }
+  <div class="badge"> Season 1</div>
+  <ion-label>
+    Your total points
+  </ion-label>
+  <div id="ll-memeber-pts">
 
+    <ion-text>
+      @if(member$ | async; as member){
+        {{member?.totalPts}}
+      <!-- <number-counter [startNumber]="startNumber" [targetNumber]="endNumber" [duration]="duration" /> -->
+      }@else{
+      <ion-skeleton-text animated></ion-skeleton-text>
+      }
+    </ion-text>
+    @if(member$ | async; as member){  
+    <loyalty-badge [daysLoyal]="member.daysLoyal" [tiers]="tiers" />
+  }
   </div>
-  <div id="rank">Rank  
-    @if((rank$ | async) ; as rank){
-    {{ rank.rank  | number: '1.0-0' }}/{{rank?.totalParticipant | number: '1.0-0'}}
-    }@else{
-    <ion-skeleton-text [animated]="true" />/<ion-skeleton-text [animated]="true" />
-    }</div>
-  <div id="bar">
-    <ion-progress-bar [value]="timeToAirdrop | async"/>
-  </div> -->
-  <a routerDirection="root" routerLink="loyalty-league" id="leader-board-link">view leaderboard <ion-icon name="trophy-outline"/></a>
+  <a routerDirection="root" routerLink="loyalty-league" id="leader-board-link"> Loyalty league HUB <ion-icon
+      name="chevron-forward-outline"></ion-icon></a>
 </div>
 }

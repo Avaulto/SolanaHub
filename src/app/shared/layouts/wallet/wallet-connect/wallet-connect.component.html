@@ -20,10 +20,10 @@
     </div>
   }
   <div>
-    @if((llScore$ |async); as loyaltyLeagueMember){
+    <!-- @if((llScore$ |async); as loyaltyLeagueMember){
 
     <ion-label id="wallet-domain">{{loyaltyLeagueMember?.hubDomainHolder}}</ion-label>
-    }
+    } -->
     <div id="wallet-address">
       {{shortenAddress(wallet?.adapter?.publicKey?.toBase58() || wallet.publicKey?.toBase58())}}
     </div>

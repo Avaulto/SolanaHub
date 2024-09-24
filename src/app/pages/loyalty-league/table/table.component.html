@@ -1,0 +1,24 @@
+<app-mft 
+          [tableId]="'loyalty-league'"
+          [label]="'Leader Board'" 
+          desc="Obtain a comprehensive overview for your loyalty points from each source" 
+          [tableRows]="10" 
+          [tableColumns]="columns" 
+          [tableData]="leaderBoard" />
+
+          <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="addr-item ion-text-left">
+              <div class="tier-icon">
+            
+                <ion-img [src]="getTierIcon(row.daysLoyal)"></ion-img>
+              
+              </div>
+              <span>
+                {{row.walletOwner}}
+              </span>
+              <ion-icon style="cursor: pointer;" appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
+              <!-- @if(row.liquidStake.msol) -->
+            </div>
+
+          </ng-template>
+  

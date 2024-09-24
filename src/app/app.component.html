@@ -1,7 +1,5 @@
 <ngx-turnstile #turnStile [siteKey]="turnStileKey" (errored)="log($event)" (resolved)="sendCaptchaResponse($event)" theme="auto"
   [tabIndex]="0" />
-  <!-- <div class="cf-turnstile"#turnStile></div> -->
-
 <ion-header mode="md" [translucent]="true">
   <app-menu />
 
@@ -27,7 +25,7 @@
             <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'" style="opacity: 1;"
               routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
               @if(p.title === 'hubSOL'){
-                <ion-img src="/assets/images/hubsol-icon.png"/>
+                <ion-img src="/assets/images/hubSOL.svg"/>
               }@else {
                 <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
               }

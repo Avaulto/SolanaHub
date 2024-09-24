@@ -11,7 +11,7 @@ import { addIcons } from 'ionicons';
 import { chevronDownOutline } from 'ionicons/icons';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { PortfolioService } from 'src/app/services/portfolio.service';
-import { loyalMember } from 'src/app/models';
+
 import { WatchModeService } from 'src/app/services/watch-mode.service';
 @Component({
   selector: 'app-wallet-connect',
@@ -42,21 +42,21 @@ export class WalletConnectComponent {
   }
   // public profilePic;
   // loyalty league member score
-  public llScore$ = this._shs.walletExtended$.pipe(
-    this._utilsService.isNotNullOrUndefined,
-    combineLatestWith(this._loyaltyLeagueService.llb$),
-    map(([wallet, lllb]) => {
+  // public llScore$ = this._shs.walletExtended$.pipe(
+  //   this._utilsService.isNotNullOrUndefined,
+  //   combineLatestWith(this._loyaltyLeagueService.llb$),
+  //   map(([wallet, lllb]) => {
 
 
-      const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-      if (loyalMember) {
-        return loyalMember
-      }
+  //     const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
+  //     if (loyalMember) {
+  //       return loyalMember
+  //     }
     
 
-      return {} as loyalMember
+  //     return {} as loyalMember
 
-    }))
+  //   }))
 
 
   readonly wallets$ = this._walletStore.wallets$.pipe(shareReplay(1));

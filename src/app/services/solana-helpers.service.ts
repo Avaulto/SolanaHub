@@ -8,12 +8,10 @@ import {
   getAssociatedTokenAddress,
   createAssociatedTokenAccountInstruction,
   TokenOwnerOffCurveError,
-  burnChecked,
-  createBurnCheckedInstruction,
 } from 'node_modules/@solana/spl-token';
 
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, Stake, NFT, StakeAccountShyft, PrizePool } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft } from '../models';
 import { ApiService } from './api.service';
 
 import { SessionStorageService } from './session-storage.service';
@@ -84,7 +82,7 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
-        const prizePool$ = 1//:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
+        // const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
 
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 

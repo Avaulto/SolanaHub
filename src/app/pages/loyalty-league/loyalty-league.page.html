@@ -1,164 +1,58 @@
+@if(hideLLv2()){
+  <ll-v2-loader/>
+}
 
-<ll-v2-loader/>
-<ion-content [fullscreen]="true">
-    <ion-row id="promo">
-      <ion-col id="promo-text">
-        <div id="title">Loyalty League</div>
-        <div id="slogen">
-          Stake with SolanaHub and gain <span>extra</span> rewards
-        </div>
-        <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
-          Boost your score to unlock weekly SOL rewards. <span (click)="openFaqPopOver()">How it works?</span></div>
-        @if(loyaltyLeagueMember$ | async){
-        <app-member-stats [isAmbassador]="isAmbassador" [loyalMember]="loyalMember" />
-        }@else {
-          <div id="no-stake-box">
-            <ion-label>total points</ion-label>
-            <ion-text>0</ion-text>
-           
-          </div>
-        <ion-button
-        routerDirection="root" 
-        routerLink="/staking" 
-        id="stake-redirect">Start Stake with SolanaHub</ion-button>
-        }
-      </ion-col>
-      <ion-col class="ion-hide-sm-down" id="promo-media">
-        <ion-img src="assets/images/ll-top-img.svg"></ion-img>
-      </ion-col>
-    </ion-row>
-    <ion-grid>
-    <!-- <div id="loyalty-league-info">
-      
+@if (openMenu) {
+  <multipliers-menu id="multipliers-menu-wrapper" (click)="dismissModal($event)" (menuToggle)="openMenu = false"/>
+}
+
+<ion-content [ngStyle]="{'filter': !hideLLv2() ? 'blur(0px)' : 'blur(7px)'}" class="loyalty-league-content" [fullscreen]="true" >
+  
+  <ion-row id="promo">
+    <ion-col id="promo-text">
+      <div id="title">Loyalty League</div>
+      <div id="slogen">
+        Stake with SolanaHub and gain <span>extra</span> rewards
+      </div>
+      <div id="intro">Earn points for staking, voting, and other exciting opportunities.<br />
+        Boost your score to unlock weekly SOL rewards. </div>
+      <div id="btns-container">
+        <ion-button id="multipliers-btn" (click)="openMenu = true"> <ion-icon name="flash-outline" />Earn more
+          with multipliers</ion-button>
+        <ion-button fill="clear" id="faq-btn" (click)="openFaqPopOver()">How it works</ion-button>
+      </div>
+    </ion-col>
+
+    <ion-col>
+      <season-stats />
+    </ion-col>
+  </ion-row>
+  @if(!hideLLv2()){
+  <ion-grid>
+    <div id="loyalty-league-info">
+      <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button>
+
+          <ion-icon name="flask-outline" />
+        </ion-fab-button>
+      </ion-fab> -->
       <ion-row class="ion-justify-content-between ion-align-items-stretch">
-        <ion-col sizeXl="5.9" size="12" class="ion-margin-bottom">
-          
-          <app-pool-stats [hubSOLrebates]="(prizePool$ | async)?.hubSOLrebates" [avgApyBoost]="(prizePool$ | async)?.avgApyBoost" [totalPts]="totalPts" />
-          
+        <ion-col size="12" class="ion-margin-bottom">
+
 
         </ion-col>
-        <ion-col id="points-multiplier" sizeXl="5.9" size="12" class="gap data-set ion-margin-bottom">
-          <app-points-stats [prizePool]="prizePool$ | async"/>
+        <ion-col id="points-multiplier" size="12" class="ion-margin-bottom">
+          <app-member-stats [tiers]="tiers" />
         </ion-col>
       </ion-row>
       <ion-row>
+
         <ion-col size="12" class="data-set">
-          <app-mft 
-          [tableId]="'loyalty-league'"
-          [label]="'Leader Board'" 
-          desc="Obtain a comprehensive overview for your loyalty points from each source" 
-          [tableRows]="10" [tableColumns]="columns" 
-          [tableData]="leaderBoard" />
-
-          <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="addr-item">
-              <span>
-                {{row.walletOwner.addrShort}}
-              </span>
-              <ion-icon style="cursor: pointer;" appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
-            </div>
-
-          </ng-template>
-          <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="token-pts">
-
-              <div class="token-pts">
-                <ion-img [tooltip]="hubSOLtoolTipTpl" src="assets/images/hubsol-small.webp" />
-                <span>
-                  {{row.liquidStake.hubSOL}}
-                </span>
-              </div>
-
-              <span class="ion-hide-lg-down">
-                +
-              </span> 
-
-              <div>
-                <ion-img  [tooltip]="vSOLtoolTipTpl" src="assets/images/vsol-small.webp" />
-                <span>
-                  {{row.liquidStake.vSOL}}
-                </span>
-              </div>
-              <span class="ion-hide-lg-down">
-                +
-              </span> 
-              <div class="token-pts">
-                <ion-img  [tooltip]="bSOLtoolTipTpl" src="assets/images/bsol-small.webp" />
-                <span>
-                  {{row.liquidStake.bSOL}}
-                </span>
-              </div>  
-        
-          
-            </div>
-            
-          </ng-template>
-          <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="token-pts">
-              <div>
-                <ion-img [tooltip]="mndetoolTipTpl" src="assets/images/mnde-small.webp" />
-                <span>
-                  {{row.dao.veMNDE}}
-                </span>
-              </div>
-              <span class="ion-hide-lg-down">
-                +
-              </span> 
-              <div>
-                <ion-img [tooltip]="blzetoolTipTpl" src="assets/images/blze-small.webp" />
-                <span>
-                  {{row.dao.veBLZE}}
-                </span>
-              </div>
-            </div>
-          </ng-template>
-          <ng-template #hubDomainHolderTpl let-row let-rowIndex="rowIndex" let-column="column">
-            @if(row.hubDomainHolder){
-           
-            <ion-icon style="font-size:20px;color:#079455;" name="checkmark-circle-outline"></ion-icon>
-            } @else{
-         
-            <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
-            }
-
-
-          </ng-template>
-
-          <ng-template #airdropTpl let-row let-rowIndex="rowIndex" let-column="column">
-            <div class="airdrop">
-              {{row.weeklyAirdrop | number: '1.3'}}
-              <ion-img src="assets/images/hubsol-small.webp" />
-            </div>
-
-          </ng-template>
-
+          <ll-table [tiers]="tiers" />
         </ion-col>
       </ion-row>
-    </div> -->
+    </div> 
   </ion-grid>
 
-</ion-content>
-
-
-
-<ng-template #hubSOLtoolTipTpl>
-  hubSOL
-</ng-template>
-
-
-<ng-template #vSOLtoolTipTpl>
-  vSOL
-</ng-template>
-
-
-<ng-template #bSOLtoolTipTpl>
-  bSOL
-</ng-template>
-
-<ng-template #mndetoolTipTpl>
-  MNDE
-</ng-template>
-
-<ng-template #blzetoolTipTpl>
-  BLZE
-</ng-template>
+}
+</ion-content> 
