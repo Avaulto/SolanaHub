@@ -8,28 +8,62 @@ import { UtilService } from 'src/app/services';
   template: `
   <div class="ion-hide-sm-down">{{ currentNumber | number:'1.0-2' }}</div>
   <div class="ion-hide-sm-up">{{ _utilsService.formatBigNumbers(currentNumber) }}</div>`,
-  standalone:true,
-  imports:[DecimalPipe]
+  standalone: true,
+  imports: [DecimalPipe]
 })
-export class NumberCounterComponent  implements OnInit {
-  @Input() duration: number = 1000000
-  @Input() startNumber = 50; // Define the starting number
+export class NumberCounterComponent implements OnInit {
+  @Input() set nextSnapshotTime(value: Date) {
+    if (value) {
+      const nextDay = new Date(value);
+      nextDay.setDate(nextDay.getDate() + 1);
+      this._nextSnapshotTime = nextDay;
+      
+      
+    }
+  }
+  private _nextSnapshotTime: Date;
+
   @Input() targetNumber = 100;
   
-  public currentNumber: number = this.startNumber;
-  public _utilsService = inject(UtilService)
+  public currentNumber: number;
+  public _utilsService = inject(UtilService);
+
+  private minutesLeft: number;
+  private duration: number;
+  private startNumber: number;
 
   ngOnInit(): void {
-    
-    const totalNumbers = this.targetNumber - this.startNumber; // Numbers to increment
-    const stepDuration = this.duration / totalNumbers; // Calculate interval time
+    this.calculateMinutesLeft();
+    this.setDurationAndStartNumber();
+    this.startCounter();
+  }
 
-    // Using interval to increase the number by 1 at each step
+  private calculateMinutesLeft(): void {
+    const now = new Date();
+    this.minutesLeft = Math.max(0, (this._nextSnapshotTime.getTime() - now.getTime()) / (1000 * 60));
+  console.log(this.minutesLeft);
+  }
+
+  private setDurationAndStartNumber(): void {
+    // Set duration to the time until next snapshot
+    this.duration = this.minutesLeft * 60000;
+    
+    // Set start number as a percentage of the target number based on minutes left
+    // Assuming 1440 minutes (24 hours) is 0% and increasing linearly
+    const percentageCompleted = Math.max(0, Math.min(1 - (this.minutesLeft / 1440), 1));
+    this.startNumber = Math.floor(this.targetNumber * percentageCompleted);
+    this.currentNumber = this.startNumber;
+  }
+
+  private startCounter(): void {
+    const remainingNumbers = this.targetNumber - this.startNumber;
+    const stepDuration = this.duration / remainingNumbers;
+
     interval(stepDuration)
       .pipe(
-        take(totalNumbers + 1), // Ensure it stops at the target number
-        map(step => this.startNumber + step), // Start from the start number and increment by 1
-        startWith(this.startNumber) // Start with the start number
+        take(remainingNumbers + 1),
+        map(step => this.startNumber + step),
+        startWith(this.startNumber)
       )
       .subscribe(value => {
         this.currentNumber = value;

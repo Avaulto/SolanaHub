@@ -23,8 +23,13 @@
           </ion-label>
           <div class="total-points__value">
             <span>
-              @if(member$ | async){
-              <number-counter [startNumber]="(member$ | async)?.totalPts / 2" [targetNumber]="(member$ | async)?.totalPts" />
+              @if(member$ | async; as member){
+              @if(member.totalPts){
+              <number-counter [targetNumber]="member.totalPts"
+                [nextSnapshotTime]="member.lastUpdated" />
+              }@else{
+              0
+              }
               }@else{
               <ion-skeleton-text animated></ion-skeleton-text>
               }
@@ -36,34 +41,37 @@
         <div class="points-breakdown">
           <h3 class="points-breakdown__title">Points breakdown</h3>
           <ion-row class="points-breakdown__grid">
+            @for (category of pointCategories; track category.title) {
+              <ion-col size="4">
+                <div class="points-category">
+                  <div class="points-category__title">{{ category.title }} <ion-icon [tooltip]="toolTipTpl" name="information-circle-outline"></ion-icon></div>
+                  <ng-template #toolTipTpl>
+                    {{category.tooltip}}
+                  </ng-template>
+                  <div class="points-category__value">
+                    @if (member$ | async; as member) {
+                      @if (member[category.key]) {
+                        {{ member[category.key] | number:'1.0-0' }}
+                      } @else {
+                        0
+                      }
+                    } @else {
+                      <ion-skeleton-text style="width: 50px;" animated></ion-skeleton-text>
+                    }
+                  </div>
+                </div>
+              </ion-col>
+            }
 
-            <ion-col size="4">
-              <div class="points-category">
-                <div class="points-category__title">Staking</div>
-                <div class="points-category__value">{{ (member$ | async)?.stakingPts | number:'1.0-0' }}</div>
-              </div>
-            </ion-col>
-            <ion-col size="4">
-              <div class="points-category">
-                <div class="points-category__title">DAO </div>
-                <div class="points-category__value">{{ (member$ | async)?.daoPts | number:'1.0-0' }}</div>
-              </div>
-            </ion-col>
-            <ion-col size="4">
-              <div class="points-category">
-                <div class="points-category__title">Referrals</div>
-                <div class="points-category__value">{{ (member$ | async)?.referralPts | number:'1.0-0' }}</div>
-              </div>
-            </ion-col>
-
-            <ion-col sizeLg="11" size="12">
-              <div class="points-category" [class.reveal-content]="hiddenPts() !== '🍳 🧑‍🍳 🍳 👨‍🍳 🍳'"
-                (click)="hiddenPts.set('More ways to earn points is cooking!')">
-                <div class=" hidden-content">
+            <!-- <ion-col size="12">
+              <div class="points-category" 
+                   [class.reveal-content]="hiddenPts() !== '🍳 🧑‍🍳 🍳 👨‍🍳 🍳'"
+                   (click)="hiddenPts.set('More ways to earn points is cooking!')">
+                <div class="hidden-content">
                   <span class="content">{{hiddenPts()}}</span>
                 </div>
               </div>
-            </ion-col>
+            </ion-col> -->
           </ion-row>
         </div>
       </div>

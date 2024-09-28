@@ -6,8 +6,12 @@
     <div class="season-stats-card">
       <div class="season-stats-card-title">Total Participants Points</div>
       <div class="season-stats-card-body">
-        @if(seasonStats | async; as seasonStats){
-        <number-counter [startNumber]="seasonStats.totalPoints / 2" [targetNumber]="seasonStats.totalPoints" [duration]="100000" />
+        @if(seasonStats$ | async; as seasonStats){
+        <number-counter 
+       
+         [targetNumber]="seasonStats.totalPoints" 
+         [nextSnapshotTime]="seasonStats.lastUpdate"
+         />
         }@else{
             <ion-skeleton-text animated style="--border-radius: 10px;" />
         }
@@ -17,18 +21,18 @@
     <div class="season-stats-card">
       <div class="season-stats-card-title">Total Participants</div>
       <div class="season-stats-card-body">
-        @if(seasonStats | async; as seasonStats){
+        @if(seasonStats$ | async; as seasonStats){
           {{seasonStats.totalParticipants | number}}
         }@else{
             <ion-skeleton-text animated style="--border-radius: 10px;" />
         }
       </div>
     </div>
-    <div class="season-stats-card">
+    <!-- <div class="season-stats-card">
       <div class="season-stats-card-title">Prize Pool</div>
       <div class="season-stats-card-body">
         <ion-img src="assets/images/ll/demo-pp.svg" />
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

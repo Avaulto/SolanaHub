@@ -13,3 +13,9 @@
   width: 32px;
   margin-inline-end: 8px;
 }
+
+:host ::ng-deep app-mft {
+  table .ngx-table__header-cell:first-child, table tbody > tr > td:first-child {
+    padding-inline-start: 0;
+  }
+}

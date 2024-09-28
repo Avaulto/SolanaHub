@@ -2,7 +2,7 @@
   <div id="multipliers-menu" class="ion-padding">
     <ion-img id="close-icon" src="assets/images/close-icon.svg" (click)="dismissModal($event)" />
     <div id="multipliers-title">Boost your score with multipliers</div>
-    <div class="group-title">LST</div>
+    <div class="group-title">Stake</div>
     <div class="multipliers-container">
       @for (lst of defaultMultipliers.LSTs; track $index) {
       <div class="asset-item">
@@ -45,7 +45,7 @@
       @for (defi of defaultMultipliers.hubSOLBoosters; track $index) {
       <div class="asset-item">
         <ion-img [src]="defi.img" />
-        <div class="defi-info">
+        <div class="defi-info ion-text-capitalize">
 
           <ion-label>{{defi.title}}</ion-label>
           <div class="badges-container">

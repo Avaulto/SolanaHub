@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { IonImg, IonRow, IonCol, IonSkeletonText } from "@ionic/angular/standalone";
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { map } from 'rxjs';
-import { LeaderBoard } from 'src/app/models';
+import { map, shareReplay } from 'rxjs';
+import { LeaderBoard, Season } from 'src/app/models';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { NumberCounterComponent } from 'src/app/shared/components/number-counter/number-counter.component';
 
@@ -15,15 +15,7 @@ import { NumberCounterComponent } from 'src/app/shared/components/number-counter
 })
 export class SeasonStatsComponent  implements OnInit {
 
-  public seasonStats = inject(LoyaltyLeagueService).getLeaderBoard().pipe(
-    map((leaderboard: LeaderBoard) => {
-      return {
-        totalPoints: leaderboard.totalPoints,
-        totalParticipants: leaderboard.totalParticipants,
-        // prizePool: leaderboard.prizePool
-      }
-    })
-  );
+  public seasonStats$ = inject(LoyaltyLeagueService).getSessionMetrics().pipe(shareReplay())
 
   ngOnInit() {}
 

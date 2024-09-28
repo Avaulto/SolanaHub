@@ -1,32 +1,48 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import {  catchError, map, Observable, of, throwError } from 'rxjs';
+import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, throwError } from 'rxjs';
 import { LeaderBoard, loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
+import { SolanaHelpersService } from './solana-helpers.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoyaltyLeagueService {
-  // private _loyaltyLeagueLeaderBoard$ = new BehaviorSubject(null as LoyaltyLeaderBoard);
-  // public llb$ = this._loyaltyLeagueLeaderBoard$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
-
-  // private _loyaltyLeaguePrizePool$ = new BehaviorSubject(null as PrizePool);
-  // public llPrizePool$ = this._loyaltyLeaguePrizePool$.asObservable().pipe(this._utilService.isNotNullOrUndefined)
   public hideLLv2 = signal(true);
   protected api = this._utilService.serverlessAPI + '/api/loyalty-league-v2'
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService,
-    private _toasterService:ToasterService
+    private _toasterService:ToasterService,
+    private _shs: SolanaHelpersService
   ) {
     // if (!this._loyaltyLeagueLeaderBoard$.value) {
     //   firstValueFrom(this.getLoyaltyLeaderBoard()).then(lllb => this._loyaltyLeagueLeaderBoard$.next(lllb))
     //   firstValueFrom(this.getPrizePool()).then(llPrizePool => this._loyaltyLeaguePrizePool$.next(llPrizePool))
     // }
   }
-
+  // public member$ = new Subject<loyaltyLeagueMember>();
+  public member$: Observable<loyaltyLeagueMember> = this._shs.walletExtended$.pipe(
+    this._utilService.isNotNullOrUndefined,
+    switchMap(wallet => {
+      if (wallet) {
+        return this.getMember(wallet.publicKey.toBase58()).pipe(
+          map(member => {
+            if (member) {
+              return member;
+            }
+            return {} as loyaltyLeagueMember;
+          })
+        );
+      } else {
+        return of({} as loyaltyLeagueMember);
+      }
+    }),
+    shareReplay()
+  );
+  
   private _formatErrors(error: any) {
     console.warn('my err', error)
     this._toasterService.msg.next({
@@ -67,7 +83,7 @@ export class LoyaltyLeagueService {
   ];
   public getSessionMetrics(): Observable<Season> {
     // return this._loyaltyLeagueLeaderBoard$.value.totalPoints
-    return this._apiService.get(`${this.api}/session-metrics`).pipe(
+    return this._apiService.get(`${this.api}/get-season-metrics`).pipe(
       this._utilService.isNotNull,
       catchError(err => this._formatErrors(err))
     )
@@ -82,13 +98,6 @@ export class LoyaltyLeagueService {
       catchError(err => this._formatErrors(err))
     )
   }
-  // public getNextAirdrop(): Observable<NextAirdrop> {
-  //   return this._apiService.get(`${this.api}/get-next-airdrop`).pipe(
-  //     this._utilService.isNotNull,
-  //     shareReplay(),
-  //     // catchError((err) => this._formatErrors(err))
-  //   )
-  // }
   public multipliers: Multipliers = null
   public async getBoosters(): Promise<Multipliers> {
     if (this.multipliers) {
@@ -111,16 +120,6 @@ export class LoyaltyLeagueService {
       catchError((err) => this._formatErrors(err))
     )
   }
-  // public getPrizePool(): Observable<PrizePool> {
-  //   return this._apiService.get(`${this.api}/prize-pool`).pipe(
-  //     this._utilService.isNotNull,
-  //     map((prizePool: PrizePool) => {
-  //       return prizePool
-  //     }),
-  //     shareReplay(),
-  //     // catchError((err) => this._formatErrors(err))
-  //   )
-  // }
 
   public async addReferral(refCode: string, participantAddress: string) {
     let data = null
@@ -131,5 +130,16 @@ export class LoyaltyLeagueService {
       console.warn(error);
     }
     return data
+  }
+
+  private _counterAnimation(startNumber: number, targetNumber: number, duration: number): Observable<number> {
+    const totalNumbers = targetNumber - startNumber;
+    const stepDuration = duration / totalNumbers;
+  
+    return interval(stepDuration).pipe(
+      take(totalNumbers + 1),
+      map(step => startNumber + step),
+      startWith(startNumber)
+    );
   }
 }

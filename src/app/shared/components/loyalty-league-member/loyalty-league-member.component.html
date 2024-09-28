@@ -1,4 +1,4 @@
-@if((wallet$ | async) && !hideLLv2()){
+@if(!hideLLv2() && (wallet$ | async)){
 
 
 
@@ -11,8 +11,15 @@
 
     <ion-text>
       @if(member$ | async; as member){
-        {{member?.totalPts}}
-      <!-- <number-counter [startNumber]="startNumber" [targetNumber]="endNumber" [duration]="duration" /> -->
+        @if(member.totalPts){
+        <number-counter 
+          [nextSnapshotTime]="member.lastUpdated "
+         [targetNumber]="member.totalPts" 
+   
+         />
+        }@else{
+        0
+        }
       }@else{
       <ion-skeleton-text animated></ion-skeleton-text>
       }

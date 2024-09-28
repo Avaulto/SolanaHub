@@ -1,3 +1,4 @@
+import { Observable } from "rxjs"
 
 export interface Multipliers {
   _id?: string
@@ -37,6 +38,7 @@ export interface Multipliers {
 export interface Season{
   airdrop: number
   season: number
+  lastUpdate: Date
   totalPoints: number
   totalParticipants: number
   startDate: Date
@@ -49,6 +51,8 @@ export interface LeaderBoard {
 }
 export interface loyaltyLeagueMember {
   prizePoolShare?: number
+  lastUpdated?: Date,
+  totalPtsAnimation?: Observable<number>
   hubDomain?: string,
   referralCode?: string,
   ambassadorPts?: number,

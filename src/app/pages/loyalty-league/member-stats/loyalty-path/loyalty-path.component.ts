@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgStyle } from '@angular/common';
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Tier } from 'src/app/models';
 import { IonImg, IonButton, IonSkeletonText } from "@ionic/angular/standalone";
 @Component({
@@ -9,20 +9,58 @@ import { IonImg, IonButton, IonSkeletonText } from "@ionic/angular/standalone";
   standalone: true,
   imports: [IonSkeletonText, IonButton, IonImg, NgStyle,NgClass, NgFor],
 })
-export class LoyaltyPathComponent  implements OnChanges {
+export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
+  @ViewChild('loyaltyPathBody') loyaltyPathBody: ElementRef;
+  private isDragging = false;
+  private startX: number;
+  private scrollLeft: number;
+
   @Input() tiers: Tier[] = [];
-  @Input() daysLoyal: number;
+  @Input() daysLoyal: number = -1;
   @Output() openReferAFriendModal: EventEmitter<void> = new EventEmitter<void>();
   public nextTier: Tier | null = null;
-  public daysRemainingToNextTier: number;
+  public daysRemainingToNextTier: number = 0;
   constructor() {
    }
+ngAfterViewInit() {
+    this.initDragToScroll();
+  }
 
+  private initDragToScroll() {
+    const slider = this.loyaltyPathBody.nativeElement;
+
+    const mouseDownHandler = (e: MouseEvent) => {
+      this.isDragging = true;
+      slider.classList.add('active');
+      this.startX = e.pageX - slider.offsetLeft;
+      this.scrollLeft = slider.scrollLeft;
+    };
+
+    const mouseUpHandler = () => {
+      this.isDragging = false;
+      slider.classList.remove('active');
+    };
+
+    const mouseMoveHandler = (e: MouseEvent) => {
+      if (!this.isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - this.startX) * 2; // Scroll-fast
+      slider.scrollLeft = this.scrollLeft - walk;
+    };
+
+    slider.addEventListener('mousedown', mouseDownHandler);
+    slider.addEventListener('mouseleave', mouseUpHandler);
+    slider.addEventListener('mouseup', mouseUpHandler);
+    slider.addEventListener('mousemove', mouseMoveHandler);
+  }
   ngOnChanges() {
+    console.log('daysLoyal', this.daysLoyal);
     if(this.daysLoyal) {
         this.nextTier = this._getNextTier();
         this.daysRemainingToNextTier = this._daysRemainingToNextTier(this.nextTier);  
-    }
+      
+      }
   }
   // get next tier
   private _getNextTier(): Tier {
@@ -50,6 +88,8 @@ export class LoyaltyPathComponent  implements OnChanges {
   }
   public isTierSurpassed(tier: Tier): number {
     // determine if the tier is surpassed
+    console.log(this.daysLoyal >= tier.loyaltyDaysRequirement ? 1 : 0);
+    
     return this.daysLoyal >= tier.loyaltyDaysRequirement ? 1 : 0;
   }
   getTierContainerClasses(tier: Tier): { [key: string]: any } {

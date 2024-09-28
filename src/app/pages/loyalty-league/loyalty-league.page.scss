@@ -1,6 +1,4 @@
-ion-content{
-    filter: blur(7px);
-}
+
 #promo {
     background-color: var(--ion-color-page-top);
     align-items: center;
@@ -101,6 +99,7 @@ ion-content{
 
 // v2 style
 #btns-container {
+    margin-block-end: 10px;
     ion-button {
         text-transform: capitalize;
         --padding-bottom: 16px;
@@ -111,7 +110,6 @@ ion-content{
         font-weight: 600;
         line-height: 24px;
         height: 52px;
-        margin-inline-end: 10px;
         ion-icon {
             margin-inline-end: 10px;
         }

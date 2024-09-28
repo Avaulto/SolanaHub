@@ -33,6 +33,7 @@
       }
 
       &__value {
+        justify-content: space-between;
         color: var(--ion-color-text-2);
         font-size: 36px;
         font-weight: 600;
@@ -61,7 +62,7 @@
        height: 100%;
        background-color: #E3E8EF;
        width: 1px;
-       margin-inline-end:  50px;
+       margin-inline:  50px;
     }
     .points-breakdown {
       &__title {
@@ -85,6 +86,13 @@
         font-size: 11px;
         font-weight: 500;
         line-height: 16px;
+        display: flex;
+        align-items: center;
+        ion-icon {
+         
+          cursor: pointer;
+          margin-inline-start: 6px;
+        }
       }
 
       &__value {
@@ -182,7 +190,7 @@
     .divider {
         width: 100% !important;
         height: 1px !important;
-        margin-inline-end: 0 !important;
+        margin-inline: 0 !important;
         margin-block: 25px !important;
     }
 }

@@ -48,7 +48,6 @@ export class SolanaHelpersService {
     private _sessionStorageService: SessionStorageService,
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
-    private _lls:LoyaltyLeagueService
   ) {
     const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)

@@ -67,8 +67,9 @@ $color-diamond-hands: #2E90FA;
     width: 100%; // Ensure it takes full width
     max-width: 100vw; // Prevent overflow beyond viewport
     cursor: grab;
-    &:hover{
-      cursor: grab;  
+    user-select: none; // Prevent text selection while dragging
+    &:active {
+      cursor: grabbing;
     }
 }
 
@@ -90,6 +91,7 @@ $color-diamond-hands: #2E90FA;
         height: 100%;
         top: 25%;
         left: 82%;
+        
     }
     &.tier-previous-completed:not(:last-child)::after {
         background-image: url('../../../../../assets/images/ll/path-full.svg');

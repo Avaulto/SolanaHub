@@ -147,7 +147,7 @@ export class MultipliersMenuComponent implements OnInit {
   
   }
   constructor(){
-    addIcons({ diamondOutline })
+    addIcons({diamondOutline});
   }
   async updateMultipliers() {
     const fetchedMultipliers = await this.multipliersFetched

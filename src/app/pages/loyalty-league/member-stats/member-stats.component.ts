@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/cor
 import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { copyOutline, discOutline } from 'ionicons/icons';
+import { copyOutline, discOutline, informationCircleOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
@@ -20,7 +20,9 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [IonSkeletonText, 
+  imports: [
+    TooltipModule,
+    IonSkeletonText, 
     NumberCounterComponent,
     IonLabel,
     IonTitle,
@@ -47,29 +49,12 @@ export class MemberStatsComponent implements OnChanges {
     private _shs: SolanaHelpersService,
   ) {
 
-    addIcons({ copyOutline, discOutline });
+    addIcons({discOutline,informationCircleOutline,copyOutline});
   }
   @Input() tiers: Tier[] = null;
   public hiddenPts = signal('🍳 🧑‍🍳 🍳 👨‍🍳 🍳')
   public wallet$ = this._shs.walletExtended$
-  public member$: Observable<loyaltyLeagueMember> = this.wallet$.pipe(
-    this._utilsService.isNotNullOrUndefined,
-    switchMap(wallet => {
-      if (wallet) {
-        return this._loyaltyLeagueService.getMember(wallet.publicKey.toBase58()).pipe(
-          map(member => {
-            if (member) {
-              return member;
-            }
-            return {} as loyaltyLeagueMember;
-          })
-        );
-      } else {
-        return of({} as loyaltyLeagueMember);
-      }
-    }),
-    shareReplay()
-  );
+  public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$
 
   ngOnChanges(changes: SimpleChanges): void {
 
@@ -108,4 +93,10 @@ export class MemberStatsComponent implements OnChanges {
     });
     modal.present();
   }
+
+  pointCategories = [
+    { title: 'Staking', key: 'stakingPts', tooltip: 'Staking points are earned by staking your SOL or LST with SolanaHub validator.' },
+    { title: 'DAO', key: 'daoPts', tooltip: 'DAO points are earned by participating in marinade and solablaze DAO tokens voting stake allocation towards SolanaHub validator. (check SolanaHub docs for more details)' },
+    { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referring friends to stake with SolanaHub validator.' }
+  ];
 }

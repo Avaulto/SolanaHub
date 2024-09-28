@@ -34,7 +34,8 @@ export interface Rank {
     DecimalPipe,
     IonLabel,
     IonSkeletonText,
-    RouterLink
+    RouterLink,
+    
   ]
 })
 export class LoyaltyLeagueMemberComponent {
@@ -49,27 +50,7 @@ export class LoyaltyLeagueMemberComponent {
   }
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   public wallet$ =this._shs.walletExtended$
-  public member$: Observable<loyaltyLeagueMember> = this.wallet$.pipe(
-    this._utilsService.isNotNullOrUndefined,
-    switchMap(wallet => {
-      console.log(wallet)
-      if (wallet) {
-        return this._loyaltyLeagueService.getMember(wallet.publicKey.toBase58()).pipe(
-          
-          map(member => {
-            if (member) {
-              member.totalPts  = this._utilsService.formatBigNumbers(member.totalPts) as any
-              return member
-            }
-            return {} as loyaltyLeagueMember
-          })
-        )
-      } else {
-        return of({} as loyaltyLeagueMember)
-      }
-    }),
-    shareReplay()
-  )
+  public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$
 
   public tiers = this._loyaltyLeagueService.tiers;
   ngOnInit() {

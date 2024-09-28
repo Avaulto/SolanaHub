@@ -33,8 +33,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard().pipe(      map((loyaltyLeaderBoard: LeaderBoard) => {
 
-    const llEdited = loyaltyLeaderBoard.loyaltyLeagueMembers.map((member: loyaltyLeagueMember) => {
-      return {
+    const llEdited = loyaltyLeaderBoard.loyaltyLeagueMembers.map((member: loyaltyLeagueMember, i: number) => {
+      return {  
+        rank: i + 1,
         walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
         stakingPts: this._utilService.decimalPipe.transform(member.stakingPts, '1.0-2') as any,
         daoPts: this._utilService.decimalPipe.transform(member.daoPts, '1.0-2') as any,
@@ -91,13 +92,13 @@ export class TableComponent implements OnInit, AfterViewInit {
   ngOnInit() { }
   public regularTemplate() {
     return [
-      // { key: 'rank', title: 'Rank', width: '10%', cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'walletOwner', title: 'Wallet address', width: '40%', cellTemplate: this.addressTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'stakingPts', title: 'Staking points', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'daoPts', title: 'DAO points', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'rank', title: 'Rank', width: '5%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'walletOwner', title: 'Wallet address', width: '30%', cellTemplate: this.addressTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'stakingPts', title: 'Staking points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'daoPts', title: 'DAO points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } },
       // { key: 'questsPts', title: 'Quests', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'referralPts', title: 'Referrals', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'totalPts', title: 'Total Points', cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'referralPts', title: 'Referrals', width: '15%',cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'totalPts', title: 'Total Points',  width: '15%',cssClass: { name: 'bold-text', includeHeader: true } },
     ]
   }
 }
