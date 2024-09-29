@@ -142,7 +142,7 @@ export class AssetsTableComponent implements OnInit {
         })
       }
       return acc
-    }, [])
+    }, []).sort((a, b) => b.value - a.value)
     console.log(collections);
     return collections
   }
