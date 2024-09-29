@@ -13,7 +13,14 @@
     height: 100%;
     align-items: center;
 }
-
+.asset-group {
+    cursor: pointer;
+    
+    &.excluded {
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+  }
 .asset-group {
     display: flex;
     justify-content: space-between;

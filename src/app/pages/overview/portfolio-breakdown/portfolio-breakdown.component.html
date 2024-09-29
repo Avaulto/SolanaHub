@@ -1,21 +1,18 @@
 <div id="chart-breakdown">
-  @if (assetClassValue()) {
+  @if (assetClassValue().length) {
   <ion-row style="width: 100%" class="ion-justify-content-between ion-align-items-start">
     
     <ion-col sizeXl="4" size="12">
-
         <div style="height: 140px; width: 140px;">
-          <canvas #breakdownChart></canvas>
-          
+          <canvas style="cursor: pointer;" #breakdownChart (click)="onChartClick($event)"></canvas>
         </div>
- 
     </ion-col>
     <ion-col sizeXl="8"  size="12" id="legend">
       <div id="title" class="ion-margin-bottom">
         Assets breakdown
       </div>
       @for (item of assetClassValue(); track $index) {
-      <div class="asset-group">
+      <div class="asset-group" (click)="toggleAssetExclusion(item.group)" [class.excluded]="item.excluded">
         <div class="asset-type">
           <div class="group-color">
             <span [ngStyle]="{'background': item.color}"></span>
@@ -32,7 +29,6 @@
         </div>
       </div>
       }
-     
     </ion-col>
   </ion-row>
 }@else{

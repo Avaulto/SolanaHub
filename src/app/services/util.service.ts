@@ -117,7 +117,7 @@ export class UtilService {
      
       // res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
 
-      const token = tokensInfo.find(token => token.address === res.data.address)
+      const token = tokensInfo.find(token => token?.address === res?.data?.address)
       res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
       
       res.name = token?.name ? token.name : '';

@@ -30,7 +30,12 @@ export class NetWorthComponent {
     
   }
   public walletAssets = inject(PortfolioService).walletAssets
-  public portfolioTotalUsdValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
+  public portfolioTotalUsdValue = signal(0);
+
+  onTotalAssetsChange(newTotal: number) {
+    this.portfolioTotalUsdValue.set(newTotal);
+  }
+
   public portfolioValueInSOL = computed(() => this.portfolioTotalUsdValue() / this._jupStore.solPrice())
 
   public simulatePortfolio = signal('usd')

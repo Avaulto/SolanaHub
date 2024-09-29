@@ -41,6 +41,10 @@ export class MftComponent implements OnInit {
   public tabSelected(tab: string) {
     this.tab.set(tab);
     this.onTabSelected.emit(tab);
+    this.table.apiEvent({
+      type: API.setPaginationCurrentPage,
+      value: 1,
+    });
   }
 
   public configuration: Config = {
