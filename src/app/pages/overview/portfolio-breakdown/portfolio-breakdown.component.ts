@@ -43,7 +43,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     }
     // console.log(a);
     return a;
-  }, []))
+  }, []).filter(asset => asset.value > 0).sort((a, b) => b.value - a.value))
   public colorPicker(assetClass: string) {
     let color = ''
 
