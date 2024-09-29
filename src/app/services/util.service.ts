@@ -118,14 +118,14 @@ export class UtilService {
       // res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
 
       const token = tokensInfo.find(token => token?.address === res?.data?.address)
-      res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
+      res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res?.data?.address
       
       res.name = token?.name ? token.name : '';
       res.name === 'Wrapped SOL' ? res.name = 'Solana' : res.name
       res.symbol = token?.symbol ? token.symbol : '';
       res.imgUrl = token?.logoURI ? token.logoURI : 'assets/images/unknown.svg';
       res.decimals = token?.decimals ? token.decimals : '';;
-      res.balance = res.data.amount
+      res.balance = res.data?.amount ? res.data?.amount : 0
       return res
     }).map((item: any) => {
       Object.assign(item, item.data)
