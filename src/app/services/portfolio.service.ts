@@ -429,17 +429,18 @@ export class PortfolioService {
   }
 
   public clearWallet() {
+
+    // clear state of wallet connect
+    this._watchModeService.watchedWallet$.next(null)
+
+    // clean session storage
+    this._sessionStorageService.clearData()
+
     this.walletAssets.set(null)
     this.tokens.set(null)
     this.nfts.set(null)
     this.defi.set(null)
     this.staking.set(null)
     this.walletHistory.set(null)
-    // clear state of wallet connect
-    this._watchModeService.watchedWallet$.next(null)
-
-    // clean session storage
-    this._sessionStorageService.clearData()
-    console.log('clear session')
   }
 }
