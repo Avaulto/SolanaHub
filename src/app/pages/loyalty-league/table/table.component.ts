@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Input, OnInit, Signal, signal, TemplateRef, V
 import { IonIcon, IonImg } from '@ionic/angular/standalone';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
-import {  LeaderBoard, loyaltyLeagueMember, Tier } from 'src/app/models';
+import {  loyaltyLeagueMember, Tier } from 'src/app/models';
 import { DecimalPipe } from '@angular/common';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
@@ -23,17 +23,19 @@ import { map } from 'rxjs';
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
-  @Input() tiers: Tier[] = [];
+  public tiers: Tier[] = this._loyaltyLeagueService.tiers
   constructor(
     private _utilService: UtilService,
     private _loyaltyLeagueService: LoyaltyLeagueService,
+    private _shs: SolanaHelpersService,
   ) {
 
   }
 
-  public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard().pipe(      map((loyaltyLeaderBoard: LeaderBoard) => {
+  public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard().pipe(      
+    map((loyaltyLeaderBoard: loyaltyLeagueMember[]) => {
 
-    const llEdited = loyaltyLeaderBoard.loyaltyLeagueMembers.map((member: loyaltyLeagueMember, i: number) => {
+    const llEdited = loyaltyLeaderBoard.map((member: loyaltyLeagueMember, i: number) => {
       return {  
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
@@ -43,9 +45,18 @@ export class TableComponent implements OnInit, AfterViewInit {
         totalPts: this._utilService.decimalPipe.transform(member.totalPts, '1.0-2') as any,
         daysLoyal: member.daysLoyal,
       }
+    }).sort((a, b) => {
+      if (a.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
+        return -1;
+      }
+      if (b.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
+        return 1;
+      }
+      return 0;
     })
     return llEdited
-  }),));
+  }),
+));
 
 
 

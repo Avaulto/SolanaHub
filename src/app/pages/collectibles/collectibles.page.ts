@@ -54,9 +54,7 @@ export class CollectiblesPage implements OnInit {
   constructor(private _portfolio:PortfolioService,    private _modalCtrl: ModalController) { }
 
   ngOnInit() {
-    
-    this._portfolio.getNFTdata()
-    
+    this._portfolio.nfts()
   }
   searchNft(term){
 

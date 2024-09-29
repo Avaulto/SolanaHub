@@ -51,7 +51,7 @@ export class MemberStatsComponent implements OnChanges {
 
     addIcons({discOutline,informationCircleOutline,copyOutline});
   }
-  @Input() tiers: Tier[] = null;
+  tiers: Tier[] = this._loyaltyLeagueService.tiers
   public hiddenPts = signal('🍳 🧑‍🍳 🍳 👨‍🍳 🍳')
   public wallet$ = this._shs.walletExtended$
   public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$
@@ -97,6 +97,8 @@ export class MemberStatsComponent implements OnChanges {
   pointCategories = [
     { title: 'Staking', key: 'stakingPts', tooltip: 'Staking points are earned by staking your SOL or LST with SolanaHub validator.' },
     { title: 'DAO', key: 'daoPts', tooltip: 'DAO points are earned by participating in marinade and solablaze DAO tokens voting stake allocation towards SolanaHub validator. (check SolanaHub docs for more details)' },
-    { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referring friends to stake with SolanaHub validator.' }
+    { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referred friends who stake with SolanaHub validator.' },
+    { title: 'Quests', key: 'questsPts', tooltip: 'Bonus points earned from loyalty tier boost and quests.' }
   ];
+
 }

@@ -1,11 +1,6 @@
-<app-mft 
-[tableId]="'assets'" 
-[label]="'your assets'"
-  [desc]="'Obtain a comprehensive and detailed overview of your assets'" 
-  [tableMenuOptions]="tableMenuOptions"
-  (onTabSelected)="selectedTab.set($event)" 
-  (onRowClicked)="eventEmitted($event)" 
-  [tableColumns]="columns"
+<app-mft [tableId]="'assets'" [label]="'your assets'"
+  [desc]="'Obtain a comprehensive and detailed overview of your assets'" [tableMenuOptions]="tableMenuOptions"
+  (onTabSelected)="selectedTab.set($event)" (onRowClicked)="eventEmitted($event)" [tableColumns]="columns"
   [tableData]="tableData">
 </app-mft>
 
@@ -14,38 +9,37 @@
   <div class="collection-info">
     <div class="collection-img">
       @if (row) {
-      <ion-img class="img-ph" [src]="row.data.imageUri" />
+      <ion-img class="img-ph" [src]="row.image_uri ? row.image_uri : row.nfts[0].image_uri" (ionError)="img.src = 'assets/images/unknown.svg'" #img />
       } @else {
       <ion-skeleton-text animated class="img-ph" />
       }
     </div>
     <div class="collection-name">
-      @if (row.data?.collection?.name) {
-      {{row.data.collection.name}}
+      @if (row?.collectionName) {
+      {{row.collectionName}}
       } @else {
       <ion-skeleton-text animated />
       }
     </div>
   </div>
 </ng-template>
+<ng-template #simpleFloorPrice let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item-light ion-text-center">{{row.floorPrice | number: '1.2-2'}}</div>
+</ng-template>
 <!-- nft table templates -->
 <ng-template #nftListTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="nft-list">
-    <!-- @for (nft of row.nfts; track $index) {
-    @if($index < 5){ <div>
-      @if (false) {
-      <ion-img [src]="'awdaw'" />
-      } @else {
-      <ion-skeleton-text animated class="img-ph border-ph" />
-      }
+    @for (nft of row.nfts; track $index) {
+    @if($index < 5){ <div class="nft-item">
+      <ion-img [src]="nft.image_uri" (ionError)="img.src = 'assets/images/unknown.svg'" #img />
   </div>
   }
-  } -->
-  <!-- @if(row.nfts.length > 5) {
+  }
+  @if(row.nfts.length > 5) {
   <div class="nft-remaining">
     +{{row.nfts.length - 5}}
   </div>
-  } -->
+  }
   </div>
 </ng-template>
 <ng-template #nftOffersTpl let-row let-rowIndex="rowIndex" let-column="column">
@@ -69,7 +63,7 @@
 </ng-template>
 <ng-template #typeDefiTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="defi-type ion-text-center ion-text-capitalize">
-    <ion-chip >{{row.type}}</ion-chip>
+    <ion-chip>{{row.type}}</ion-chip>
   </div>
 </ng-template>
 <!-- validator tpl -->
@@ -87,11 +81,12 @@
 
 
 <ng-template #simpleUsdValue let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item-light ion-text-center"  [ngClass]="{'private-balance': showBalance | async }">{{row.value | currency}}</div>
+  <div class="item-light ion-text-center" [ngClass]="{'private-balance': showBalance | async }">{{row.value | currency}}
+  </div>
 </ng-template>
 
 <ng-template #simplePriceValue let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item-light" >{{row.price | currency: 'USD':'symbol':'1.2-5'}}</div>
+  <div class="item-light">{{row.price | currency: 'USD':'symbol':'1.2-5'}}</div>
 </ng-template>
 
 <ng-template #validatorBalanceTpl let-row let-rowIndex="rowIndex" let-column="column">
@@ -119,36 +114,37 @@
 <!-- defi table templates -->
 <ng-template #tokenPoolTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="pool-item">
-    
+
     <div class="pool-img-wrapper">
-    @for (item of row.poolTokens; track $index) {
-        <ion-img [src]="item.imgURL" alt="image" />
+      @for (item of row.poolTokens; track $index) {
+      <ion-img [src]="item.imgURL" alt="image" />
       }
     </div>
     <div class="pool-symbol-wrapper">
       @for (item of row.poolTokens; track $index) {
-        <div class="pool-item-info ion-text-center">
-          <div class="asset-symbol">{{item.symbol}}@if ($index +1 < row.poolTokens.length) {-}</div>
+      <div class="pool-item-info ion-text-center">
+        <div class="asset-symbol">{{item.symbol}}@if ($index +1 < row.poolTokens.length) {-}</div>
         </div>
-      }
-    </div>
+        }
+      </div>
     </div>
 </ng-template>
 
 <ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="platform-icon-wrapper ion-text-center"> 
+  <div class="platform-icon-wrapper ion-text-center">
     <ion-img [src]="row.imgURL" alt="platform icon"></ion-img>
   </div>
 </ng-template>
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center" [ngClass]="{'private-balance': showBalance | async }"  (mouseenter)="showLong =true" (mouseleave)="showLong=false">
+  <div class="ion-text-center" [ngClass]="{'private-balance': showBalance | async }" (mouseenter)="showLong =true"
+    (mouseleave)="showLong=false">
 
     @if (showLong) {
-      {{row.balance | number: '1.1-3'}}
+    {{row.balance | number: '1.1-3'}}
     }
-    
+
     @else {
-      {{utils.formatBigNumbers(row.balance)}}
+    {{utils.formatBigNumbers(row.balance)}}
     }
 
     {{row.symbol}}
@@ -158,18 +154,16 @@
 
 <ng-template #holdingsTpl let-row let-rowIndex="rowIndex" let-column="column">
   @for (asset of row.holdings; track $index) {
-    <div class="ion-text-center"
-    [ngClass]="{'private-balance': showBalance | async }"
-    [ngStyle]="{
+  <div class="ion-text-center" [ngClass]="{'private-balance': showBalance | async }" [ngStyle]="{
       'color': asset?.condition === 'credit' ? '#17B26A' : asset?.condition === 'debt' ? '#F04438' : '' 
       }">
-      {{utils.formatBigNumbers(asset.balance)}} {{asset.symbol}}
-    </div>
+    {{utils.formatBigNumbers(asset.balance)}} {{asset.symbol}}
+  </div>
   }
 </ng-template>
 
 
 <ng-template #priceChart let-row let-rowIndex="rowIndex" let-column="column">
 
-  <app-price-chart type="lean" [token]="row"/>
+  <app-price-chart type="lean" [token]="row" />
 </ng-template>

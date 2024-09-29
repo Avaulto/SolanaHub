@@ -1,7 +1,7 @@
 
 <div class="nft">
   <div class="nft-img-wrapper">
-    @if(nft?.image_uri){
+    @if(nft?.cached_image_uri){
       <ion-img (ionImgDidLoad)="loadImage()" (ionError)="img.src = 'assets/images/unknown.svg'" #img [src]="nft?.image_uri" />
     }
     @if (!imagesLoaded) {
@@ -18,16 +18,23 @@
     </ion-text>
     <div>
 
-<span></span>
-      <!-- <div class="floor-price">
-        @if (nft?.data?.price) {
-        {{nft?.data?.price}}
-        }@else{
-        <ion-skeleton-text style="width: 100%;" [animated]="true" />
-        }
 
-        32 SOL
-      </div> -->
+      <div class="floor-price">
+        @if (nft?.floorPrice || nft?.floorPrice === 0) {
+          @if (nft?.floorPrice === 0) {
+            
+              N/A
+           
+          }@else{
+            {{nft?.floorPrice | number:'1.2-2'}} SOL
+          }
+        }@else{
+          <ion-skeleton-text style="width: 20px; height: 10px;" [animated]="true" />
+        }
+        
+        <ion-icon style="font-size: 12px;margin-inline-start: 4px;" name="pricetag-outline"/>
+       
+      </div>
       <!-- <ion-text>
 
     </ion-text> -->

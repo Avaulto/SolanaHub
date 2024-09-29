@@ -2,7 +2,7 @@
 // <div class="asset">
 
 //   <div class="asset-img-wrapper">
-//     <ion-img [src]="row.imgUrl" alt="image" />
+//     <ion-img [src]="row.imageUri" alt="image" />
 //   </div>
 //   <div class="asset-info">
 //     <div class="asset-symbol">{{row.symbol}}</div>
@@ -37,7 +37,7 @@ export const tokenDummyPlaceholder = [
         "attributes": {},
         "name": "",
         "symbol": "",
-        "imgUrl": "",
+        "imageUri": "",
         "decimals": "",
         "address": "",
         "amount": "",
@@ -50,7 +50,7 @@ export const tokenDummyPlaceholder = [
         "attributes": {},
         "name": "",
         "symbol": "",
-        "imgUrl": "",
+        "imageUri": "",
         "decimals": "",
         "address": "",
         "amount": "",
@@ -63,95 +63,104 @@ export const nftDummyPlaceholder = [
     {
         collectionName: 'mad lads',
         floor: 142,
-        listed: 1,
-        offers: 24,
+        imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+        listed: 5,
         nfts: [
             {
-                imgUrl: '',
+                listed: true,
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                listed: true,
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                listed: true,
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             }, {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
             {
-                imgURL: '',
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
             },
         ],
-        totalValue: 110332
+        value: 110332
     },
     {
-        collection: 'mad lads',
+        collectionName: 'mad lads',
         floor: 142,
-        listed: 1,
-        offers: 24,
-        nfts: [{
-            imgURL: '',
-        }],
-        totalValue: 110332
-    },
-    {
-        collection: 'famous fox federation',
-        floor: 57,
-        listed: 7,
-        offers: 14,
-        nfts: [{
-            imgURL: '',
-        },
-        {
-            imgURL: '',
-        },
-        {
-            imgURL: '',
-        }
+        imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+        listed: 5,
+        nfts: [
+            {
+                listed: true,
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            },
+            {
+                listed: true,
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            },
+            {
+                listed: true,
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            },
+            {
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            },
+            {
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            },
+            {
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            }, {
+                imageUri: 'https://madlads.s3.us-west-2.amazonaws.com/images/2253.png',
+            },
+
         ],
-        totalValue: 43514
-    }
+        value: 110332
+    },
 ]
 
 export const defiDummyPlaceholder = [
     {
         poolTokens: [
             {
-                imgURL: 'assets/images/usdc.svg',
+                imageUri: 'assets/images/usdc.svg',
                 symbol: 'USDC'
             },
             {
-                imgURL: 'assets/images/sol.svg',
+                imageUri: 'assets/images/sol.svg',
                 symbol: 'SOL'
             },
         ],
-        imgURL:'https://assets.coingecko.com/coins/images/17547/large/Orca_Logo.png?1696517083',
+        imageUri:'https://assets.coingecko.com/coins/images/17547/large/Orca_Logo.png?1696517083',
         platform: 'orca',
         type: 'farm',
         holdings: [{symbol: 'USDC', balance: 123 }, {symbol: 'SOL', balance: 567 }],
@@ -163,11 +172,11 @@ export const defiDummyPlaceholder = [
         poolTokens: [
 
             {
-                imgURL: 'assets/images/sol.svg',
+                imageUri: 'assets/images/sol.svg',
                 symbol: 'SOL'
             },
         ],
-        imgURL:'https://assets.coingecko.com/coins/images/17547/large/Orca_Logo.png?1696517083',
+        imageUri:'https://assets.coingecko.com/coins/images/17547/large/Orca_Logo.png?1696517083',
         pool: 'meteora',
         type: 'farm',
         holdings: [ {symbol: 'SOL', balance: 567 }],
@@ -178,19 +187,19 @@ export const defiDummyPlaceholder = [
     {
         poolTokens: [
             {
-                imgURL: 'assets/images/usdc.svg',
+                imageUri: 'assets/images/usdc.svg',
                 symbol: 'USDC'
             },
             {
-                imgURL: 'assets/images/usdc.svg',
+                imageUri: 'assets/images/usdc.svg',
                 symbol: 'USDC'
             },
             {
-                imgURL: 'assets/images/sol.svg',
+                imageUri: 'assets/images/sol.svg',
                 symbol: 'SOL'
             },
         ],
-        imgURL:'https://styles.redditmedia.com/t5_6qrg6t/styles/communityIcon_92h259miw7l91.png',
+        imageUri:'https://styles.redditmedia.com/t5_6qrg6t/styles/communityIcon_92h259miw7l91.png',
         dex: 'kamino',
         type: 'providing liquidity',
         holdings: [{symbol: 'USDC', balance: 123 }, {symbol: 'SOL', balance: 567 }, {symbol: 'SOL', balance: 567 }],
@@ -203,7 +212,7 @@ export const defiDummyPlaceholder = [
 export const stakingDummyPlaceholder = [
     {
         name: 'SolanaHub',
-        imgUrl: 'assets/images/solanahub-logo.png',
+        imageUri: 'assets/images/solanahub-logo.png',
         apy: 7+'%',
         balance: { sol: 1545, usd: 3452 },
         accumulatedRewards: 1+ ' SOL',
@@ -212,7 +221,7 @@ export const stakingDummyPlaceholder = [
     },
     {
         name: 'Solana Compass',
-        imgUrl: 'assets/images/solana-compass.webp',
+        imageUri: 'assets/images/solana-compass.webp',
         apy: 7.5+'%',
         balance: { sol: 234, usd: 65756 },
         accumulatedRewards: 56+ ' SOL',
@@ -221,7 +230,7 @@ export const stakingDummyPlaceholder = [
     },
     {
         name: 'Solana Compass',
-        imgUrl: 'assets/images/solana-compass.webp',
+        imageUri: 'assets/images/solana-compass.webp',
         apy: 7.5+'%',
         balance: { sol: 3256, usd: 5675834 },
         accumulatedRewards: 234 + ' SOL',
@@ -230,7 +239,7 @@ export const stakingDummyPlaceholder = [
     },
     {
         name: 'SolanaHub',
-        imgUrl: 'assets/images/solanahub-logo.png',
+        imageUri: 'assets/images/solanahub-logo.png',
         apy: 7+'%',
         balance: { sol: 1545, usd: 3452 },
         accumulatedRewards: 1+ ' SOL',
@@ -239,7 +248,7 @@ export const stakingDummyPlaceholder = [
     },
     {
         name: 'Solana Compass',
-        imgUrl: 'assets/images/solana-compass.webp',
+        imageUri: 'assets/images/solana-compass.webp',
         apy: 7.5+'%',
         balance: { sol: 8799, usd: 3456346 },
         accumulatedRewards: 56+ ' SOL',

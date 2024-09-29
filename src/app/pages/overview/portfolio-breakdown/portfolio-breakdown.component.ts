@@ -28,7 +28,8 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   public assetClassValue = computed(() => this.walletAssets()?.map(assetClass => {
 
     return {
-      group: assetClass.label,
+      // add space between capital letters
+      group: assetClass.label ? assetClass.label === 'NFTs' ? 'NFTs' : assetClass.label.replace(/([A-Z])/g, ' $1').trim() : assetClass.label,
       value: assetClass.value,
       color: this.colorPicker(assetClass.label)
     }
@@ -50,11 +51,15 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
       case 'Wallet':
         color = '#341663'
         break;
-      case 'LiquidityPool':
-        color = '#560BAD'
-        break;
       case 'Staked':
         color = '#7209B7'
+        break;
+      case 'NFTs':
+        color = '#F7E8FF'
+        break;
+
+      case 'LiquidityPool':
+        color = '#560BAD'
         break;
       case 'Lending':
         color = '#B5179E'

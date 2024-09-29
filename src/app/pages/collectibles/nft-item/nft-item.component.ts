@@ -3,14 +3,15 @@ import { NFT } from 'src/app/models';
 import { IonImg, IonButton,IonSkeletonText, IonLabel,IonText,IonChip,IonIcon,    IonCheckbox } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { ModalController } from '@ionic/angular';
-import {  ellipsisHorizontal } from 'ionicons/icons';
+import {  ellipsisHorizontal, pricetagOutline } from 'ionicons/icons';
 import { NftPreviewComponent } from '../nft-preview/nft-preview.component';
+import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'nft-item',
   templateUrl: './nft-item.component.html',
   styleUrls: ['./nft-item.component.scss'],
   standalone: true,
-  imports:[IonImg, IonButton,IonSkeletonText, IonLabel,IonText,IonChip,IonIcon ,    IonCheckbox]
+  imports:[DecimalPipe, IonImg, IonButton,IonSkeletonText, IonLabel,IonText,IonChip,IonIcon ,    IonCheckbox]
 })
 export class NftItemComponent  implements OnInit {
   @Input() nft: NFT
@@ -21,10 +22,11 @@ export class NftItemComponent  implements OnInit {
     this.imagesLoaded = true;
   }
   constructor() {
-    addIcons({ellipsisHorizontal})
+    addIcons({pricetagOutline,ellipsisHorizontal});
    }
 
   ngOnInit() {
+ 
     
   }
   async openNftPreview(){

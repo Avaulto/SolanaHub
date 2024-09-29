@@ -15,7 +15,10 @@
                 }@else {
                     {{portfolioValueInSOL()  | number: '1.0-1' }} SOL
                 }
-            </div> <ion-icon (click)="toggleShowBalance()" [name]="hideBalance ?  'eye-off-outline' : 'eye-outline'"/>
+            </div> 
+            <div class="toggle-balance">
+              <ion-icon (click)="toggleShowBalance()" [name]="hideBalance ?  'eye-off-outline' : 'eye-outline'"/>
+            </div>
         </div>
     }@else {
         <ion-skeleton-text [animated]="true" />

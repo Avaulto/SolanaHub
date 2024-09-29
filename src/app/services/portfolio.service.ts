@@ -116,6 +116,7 @@ export class PortfolioService {
 
       }
       const portfolio = portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
+      const tempNft = portfolio?.elements?.find(group => group.platformId === 'wallet-nfts-v2')
       const excludeNFTv2 = portfolio?.elements?.filter(e => e.platformId !== 'wallet-nfts-v2')
       const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
       
@@ -129,9 +130,9 @@ export class PortfolioService {
       this._portfolioDeFi(portfolio.elements, tokenJupData)
 
 
-      // const extendNftData: any = portfolio.elements.find(group => group.platformId === 'wallet-nfts-v2')
+      mergeDuplications.push(tempNft)
 
-      // this.nfts.set(extendNftData.data.assets)
+      this.nfts.set(tempNft.data.assets)
       // this._portfolioNft(extendNftData)
       // console.log(editedData);
       this.walletAssets.set(mergeDuplications)

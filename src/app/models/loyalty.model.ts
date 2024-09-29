@@ -44,11 +44,7 @@ export interface Season{
   startDate: Date
   endDate: Date
 }
-export interface LeaderBoard {
-  loyaltyLeagueMembers: loyaltyLeagueMember[]
-  totalPoints: number
-  totalParticipants: number
-}
+
 export interface loyaltyLeagueMember {
   prizePoolShare?: number
   lastUpdated?: Date,

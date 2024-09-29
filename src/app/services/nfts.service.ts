@@ -35,7 +35,7 @@ export class NftsService {
   }
   async transferNft(nfts: NFT[], from_address: string, to_address: string): Promise<Transaction[]> {
     try {
-      const aggregateNFTs =  nfts.map(nft => nft.mint)
+        const aggregateNFTs =  nfts.map(nft => nft.mint)
       const getTransferIns = await fetch(this._utils.serverlessAPI + '/api/nft/transfer',{
         method:'POST',
         body: JSON.stringify({token_addresses: aggregateNFTs, from_address, to_address})

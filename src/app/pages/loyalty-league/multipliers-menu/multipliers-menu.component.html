@@ -37,8 +37,9 @@
       <span>
         hubSOL Boosters
       </span>
-      <div class="group-subtitle">Deposit your hubSOL into DeFi platforms to get more points <ion-img
-          [tooltip]="platformToolTipTpl" src="assets/images/info-icon.svg" /> </div>
+      <div class="group-subtitle">Deposit your hubSOL into DeFi platforms to get more points
+         <!-- <ion-img [tooltip]="toolTipTpl" [position]="tooltipPosition" src="assets/images/info-icon.svg" />  -->
+        </div>
     </div>
 
     <div class="multipliers-container defi-container">
@@ -82,6 +83,30 @@
 
   </div>
 </div>
-<ng-template #platformToolTipTpl>
-  test
+<ng-template #toolTipTpl>
+
+  <div class="tool-tip" style="width: 400px;z-index: 22222;">
+    <div style="text-transform: capitalize; display: flex;align-items: center;margin-block-end: 4px;font-weight: 600;color:var(--ion-color-dark);">
+      <span 
+      style="background-color: var(--ion-color-primary);width:12px;height: 12px;border-radius: 50%;margin-inline-end: 6px;"
+      >
+    </span> 
+    DeFi Safety Tips
+    <div class="tool-tip-desc">
+      Here are things to keep in mind when using DeFi protocols
+    </div>
+    <ul>
+      <li>
+        <span>
+          <ion-img src="assets/images/ll/check.svg" />
+        </span>
+        @for (tip of defiSafetyTips; track $index) {
+        <span>
+          {{tip}}
+        </span>
+        }
+      </li>
+    </ul>
+  </div>
+  </div>
 </ng-template>

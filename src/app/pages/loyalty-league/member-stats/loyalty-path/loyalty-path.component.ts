@@ -16,12 +16,11 @@ export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
   private scrollLeft: number;
 
   @Input() tiers: Tier[] = [];
-  @Input() daysLoyal: number = -1;
+  @Input() daysLoyal: number;
   @Output() openReferAFriendModal: EventEmitter<void> = new EventEmitter<void>();
   public nextTier: Tier | null = null;
-  public daysRemainingToNextTier: number = 0;
-  constructor() {
-   }
+  public daysRemainingToNextTier: number = null
+
 ngAfterViewInit() {
     this.initDragToScroll();
   }
@@ -55,7 +54,6 @@ ngAfterViewInit() {
     slider.addEventListener('mousemove', mouseMoveHandler);
   }
   ngOnChanges() {
-    console.log('daysLoyal', this.daysLoyal);
     if(this.daysLoyal) {
         this.nextTier = this._getNextTier();
         this.daysRemainingToNextTier = this._daysRemainingToNextTier(this.nextTier);  
@@ -88,7 +86,6 @@ ngAfterViewInit() {
   }
   public isTierSurpassed(tier: Tier): number {
     // determine if the tier is surpassed
-    console.log(this.daysLoyal >= tier.loyaltyDaysRequirement ? 1 : 0);
     
     return this.daysLoyal >= tier.loyaltyDaysRequirement ? 1 : 0;
   }

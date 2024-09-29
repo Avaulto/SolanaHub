@@ -21,6 +21,8 @@ export interface Token extends JupToken{
     extraData?: any
 }
 export interface NFT{
+  collectionMagicEdenStatSymbol?: string
+  listStatus: string
   name: string
   symbol: string
   royalty: number
@@ -41,6 +43,46 @@ export interface NFT{
   collection: {
     address: string
     verified: boolean
+    name: string
+    symbol: string
+    royalty: number
+    image_uri: string
+    cached_image_uri: string
+    animation_url: string
+    cached_animation_url: string
+    metadata_uri: string
+    description: string
+    mint: string
+    owner: string
+    update_authority: string
+    creators: Array<{
+      address: string
+      share: number
+      verified: boolean
+    }>
+    collection: {
+      name: string
+      family: string
+    }
+    attributes: {}
+    attributes_array: Array<any>
+    external_url: string
+    is_loaded_metadata: boolean
+    primary_sale_happened: boolean
+    is_mutable: boolean
+    token_standard: string
+    is_compressed: boolean
+    merkle_tree: string
+    is_burnt: boolean
+    token_record: {
+      address: string
+      key: string
+      state: string
+      rule_set_revision: any
+      delegate: string
+      token_delegate_role: string
+      locked_transfer: string
+    }
   }
   attributes: {
     Gender: string
@@ -69,8 +111,7 @@ export interface NFT{
   is_compressed: boolean
   merkle_tree: string
   is_burnt: boolean
-  type: string
-  value: any
+  floorPrice: number
 }
 
 // export interface NFT{

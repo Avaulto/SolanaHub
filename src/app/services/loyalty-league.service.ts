@@ -2,7 +2,7 @@ import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
 import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, throwError } from 'rxjs';
-import { LeaderBoard, loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
+import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
 
@@ -64,18 +64,18 @@ export class LoyaltyLeagueService {
       points: 1000,
       icon: 'assets/images/ll/badge-2.svg',
       iconFull: 'assets/images/ll/badge-full-2.svg',
-      loyaltyDaysRequirement: 30,
+      loyaltyDaysRequirement: 15,
     },
     {
       title: 'maxi',
-      points: 1000,
+      points: 2500,
       icon: 'assets/images/ll/badge-3.svg',
       iconFull: 'assets/images/ll/badge-full-3.svg',
-      loyaltyDaysRequirement: 45,
+      loyaltyDaysRequirement: 30,
     },
     {
       title: 'diamond-hands',
-      points: 1000,
+      points: 10000,
       icon: 'assets/images/ll/badge-4.svg',
       iconFull: 'assets/images/ll/badge-full-4.svg',
       loyaltyDaysRequirement: 60,
@@ -113,7 +113,7 @@ export class LoyaltyLeagueService {
     }
    
   }
-  public getLeaderBoard(): Observable<LeaderBoard> {
+  public getLeaderBoard(): Observable<loyaltyLeagueMember[]> {
 
     return this._apiService.get(`${this.api}/leader-board`).pipe(
       this._utilService.isNotNull,

@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DecimalPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe, NgClass, NgFor, NgStyle, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
@@ -8,12 +8,23 @@ import { ModalController } from '@ionic/angular';
 import { AssetModalComponent } from './asset-modal/asset-modal.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { Token } from 'src/app/models';
+import { NFT, Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
 import { tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder } from './table-options-helper'
 import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 
+interface nftTable {
+  collectionName: string
+  floor: number
+  imageUri: string
+  listed: number
+  nfts: Array<{
+    listed?: boolean
+    imageUri: string
+  }>
+  value: number
+}
 @Component({
   selector: 'app-assets-table',
   templateUrl: './assets-table.component.html',
@@ -33,7 +44,8 @@ import { PriceChartComponent } from './asset-modal/price-chart/price-chart.compo
     IonChip,
     NgClass,
     NgStyle,
-    PriceChartComponent
+    PriceChartComponent,
+    JsonPipe
   ]
 })
 export class AssetsTableComponent implements OnInit {
@@ -53,7 +65,7 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('collectionInfoTpl', { static: true }) collectionInfoTpl: TemplateRef<any> | any;
   @ViewChild('nftListTpl', { static: true }) nftListTpl: TemplateRef<any> | any;
   @ViewChild('nftOffersTpl', { static: true }) nftOffersTpl: TemplateRef<any> | any;
-
+  @ViewChild('simpleFloorPrice', { static: true }) simpleFloorPrice: TemplateRef<any> | any;
   // defi tpls
   @ViewChild('tokenPoolTpl', { static: true }) tokenPoolTpl: TemplateRef<any> | any;
   @ViewChild('typeDefiTpl', { static: true }) typeDefiTpl: TemplateRef<any> | any;
@@ -63,7 +75,7 @@ export class AssetsTableComponent implements OnInit {
   public solPrice = this._jupStore.solPrice;
   tableMenuOptions: string[] = [
     'Tokens',
-    //  'NFTs', 
+     'NFTs', 
     'Staking',
     'DeFi'
   ];
@@ -89,11 +101,10 @@ export class AssetsTableComponent implements OnInit {
     // if(tableType === 'tokens'){
     //   return tokenDummyPlaceholder
     // }
-    // console.log(tableType, this._portfolioService[tableType]());
-    // if (tableType === 'nfts') {
-    //   return nftDummyPlaceholder
+    if (tableType === 'nfts') {
+      return this.nftDataAggregator(this._portfolioService[tableType]())
 
-    // }
+    }
 
     return this._portfolioService[tableType]()
   })
@@ -104,6 +115,37 @@ export class AssetsTableComponent implements OnInit {
   }
   showLong: boolean=false
 
+  nftDataAggregator(nfts: NFT[]): nftTable[]{
+    // aggregate nfts and do the following:
+    // 1. get the floor price for each collection
+    // 2. get the listed nfts for each collection
+    // 3. get the total value for each collection by adding the floor price of each nft
+    // 4. set collection image
+    // 5. return the data
+    console.log(nfts);
+    
+    const collections = nfts.reduce((acc, nft) => {
+      const collection = acc.find(c => c.collectionName === nft.collection.name)
+      if (collection) {
+        collection.nfts.push(nft)
+        collection.value += (Number(nft.floorPrice) || 0) * this.solPrice()
+        collection.listed = collection.nfts.filter(nft => nft.listStatus === "listed").length
+      } else {
+        acc.push({
+          // replace underscore with space
+          collectionName: nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown',
+          nfts: [nft],
+          value: (Number(nft.floorPrice) || 0) * this.solPrice(),
+          image_uri: nft.collection.image_uri,
+          listed: nft.listStatus === "listed" ? 1 : 0,
+          floorPrice: Number(nft.floorPrice) || 0
+        })
+      }
+      return acc
+    }, [])
+    console.log(collections);
+    return collections
+  }
   async ngOnInit() {
 
     this._columnsOptions = {
@@ -122,14 +164,13 @@ export class AssetsTableComponent implements OnInit {
         { key: 'status', title: 'Account Status', cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
         { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl }
       ],
-      // nfts: [
-      //   { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
-      //   { key: 'nfts', title: 'NFT', cellTemplate: this.nftListTpl, cssClass: { name: 'ion-text-left', includeHeader: true }, width: '30%' },
-      //   { key: 'floor', title: 'Floor(SOL)', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'offers', title: 'Offers', cellTemplate: this.nftOffersTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      //   { key: 'totalValue', title: 'Total Value', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } }
-      // ],
+      nfts: [
+        { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
+        { key: 'nfts', title: 'NFT', cellTemplate: this.nftListTpl, cssClass: { name: 'ion-text-left', includeHeader: true }, width: '30%' },
+        { key: 'floor', title: 'Floor(SOL)',cellTemplate:this.simpleFloorPrice, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'listed', title: 'Listed', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+        { key: 'totalValue', title: 'Total Value', width: '15%',cellTemplate:this.simpleUsdValue, cssClass: { name: 'ion-text-center', includeHeader: true } }
+      ],
       defi: [
         { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '40%' },
         { key: 'type', title: 'Type', cellTemplate: this.typeDefiTpl, width: '10%' },

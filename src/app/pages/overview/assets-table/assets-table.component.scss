@@ -11,16 +11,19 @@
     ion-img {
         width: 40px;
         height: 40px;
+        object-fit: cover;
         border-radius: 50%;
         overflow: hidden;
     }
 }
+
 .item-info {
- 
+
     display: flex;
     flex-direction: column;
 
 }
+
 .item-bold {
     color: var(--ion-color-dark);
     /* Text sm/Medium */
@@ -40,6 +43,7 @@
     line-height: 20px;
     /* 166.667% */
 }
+
 .tx-out {
     display: flex;
     justify-content: center;
@@ -49,42 +53,54 @@
     display: flex;
     align-items: center;
 }
-.img-ph{
+
+.img-ph {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-inline-end: 4px;
     overflow: hidden;
     background-color: #CDD5DF;
-    ion-img{
+    object-fit: cover;
+
+    ion-img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         margin-inline-end: 4px;
         overflow: hidden;
-        background-color: #CDD5DF;
+        object-fit: cover;
     }
+
     &.border-ph {
-            margin-inline-end: 4px;
-            border-radius: 4px;
-        }
-    
-    
+        margin-inline-end: 4px;
+        border-radius: 4px;
+    }
+
+
 }
 
 
 
 .collection-name {
-    width: 30%;
     text-transform: capitalize;
     color: #101828;
     font-size: 14px;
     font-weight: 500;
+    margin-inline-start: 12px;
 }
 
 .nft-list {
     display: flex;
     align-items: center;
+
+    .nft-item {
+        overflow: hidden;
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+        margin-inline-end: 4px;
+    }
 
     .nft-remaining {
         color: var(--ion-color-medium);
@@ -108,16 +124,18 @@ ion-chip {
     border-radius: var(--radius-full, 1000px);
     border: 1px solid #D5D9EB;
     background: #F8F9FC;
+
     &.primary {
         border: 1px solid #FDD1EE;
-        background: var(--ion-color-btn-bg);;
+        background: var(--ion-color-btn-bg);
+        ;
         color: var(--ion-color-primary);
     }
 
 
     &.green {
-        border: 1px solid  #ABEFC6;
-        background:  #ECFDF3;
+        border: 1px solid #ABEFC6;
+        background: #ECFDF3;
         color: var(--ion-color-success);
     }
 
@@ -132,18 +150,21 @@ ion-chip {
 .pool-item {
     display: flex;
     align-items: center;
-    margin-inline-end:15px;
-    .pool-img-wrapper{
+    margin-inline-end: 15px;
+
+    .pool-img-wrapper {
         display: flex;
         margin-inline-end: 12px;
-        ion-img{
+
+        ion-img {
             margin-inline-end: 4px;
             width: 30px;
             border-radius: 50%;
             overflow: hidden;
         }
     }
-    .pool-item-info{
+
+    .pool-item-info {
         text-align: center;
         color: var(--ion-color-dark);
 
@@ -153,17 +174,19 @@ ion-chip {
     }
 }
 
-.pool-img-wrapper,.pool-symbol-wrapper {
+.pool-img-wrapper,
+.pool-symbol-wrapper {
     max-width: 250px;
     flex-wrap: wrap;
     display: flex;
     flex-direction: row;
 }
 
-.platform-icon-wrapper{
+.platform-icon-wrapper {
     display: flex;
     justify-content: center;
-    ion-img{
+
+    ion-img {
         width: 30px;
         border-radius: 50%;
         overflow: hidden;

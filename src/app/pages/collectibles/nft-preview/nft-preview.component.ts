@@ -7,18 +7,19 @@ import { copyOutline }  from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { UtilService } from 'src/app/services';
+
 @Component({
   selector: 'nft-preview',
   templateUrl: './nft-preview.component.html',
   styleUrls: ['./nft-preview.component.scss'],
   standalone: true,
-  imports:[ IonGrid,IonRow,IonCol,IonImg,IonButton, IonLabel,IonText, IonChip, IonIcon,CopyTextDirective]
+  imports:[  IonGrid,IonRow,IonCol,IonImg,IonButton, IonLabel,IonText, IonChip, IonIcon,CopyTextDirective]
 })
 export class NftPreviewComponent  implements OnInit {
   @Input() nft: NFT;
 
   constructor( private _modalCtrl: ModalController, public util: UtilService){
-    addIcons({copyOutline})
+    addIcons({copyOutline});
   }
   ngOnInit() {
     console.log(this.nft);

@@ -8,6 +8,7 @@ import { map, Observable, ReplaySubject, shareReplay, switchMap, of, BehaviorSub
 import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { diamondOutline } from 'ionicons/icons';
+import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 
 @Component({
   selector: 'multipliers-menu',
@@ -39,6 +40,7 @@ import { diamondOutline } from 'ionicons/icons';
 })
 export class MultipliersMenuComponent implements OnInit {
   @Output() menuToggle = new EventEmitter();
+  tooltipPosition = TooltipPosition.LEFT;
   public defaultMultipliers = {
     LSTs: [
       {
@@ -51,16 +53,16 @@ export class MultipliersMenuComponent implements OnInit {
         title: 'hubSOL',
         pts: 0,
       },
-      {
-        img: 'assets/images/vSOL.svg',
-        title: 'vSOL',
-        pts: 0,
-      },
-      {
-        img: 'assets/images/bSOL.svg',
-        title: 'bSOL',
-        pts: 0,
-      }
+      // {
+      //   img: 'assets/images/vSOL.svg',
+      //   title: 'vSOL',
+      //   pts: 0,
+      // },
+      // {
+      //   img: 'assets/images/bSOL.svg',
+      //   title: 'bSOL',
+      //   pts: 0,
+      // }
     ],
     daoTokens: [
       {
@@ -163,16 +165,16 @@ export class MultipliersMenuComponent implements OnInit {
           title: 'hubSOL',
           pts: fetchedMultipliers.hubSOL,
         },
-        {
-          img: 'assets/images/vSOL.svg',
-          title: 'vSOL',
-          pts: fetchedMultipliers.vSOL,
-        },
-        {
-          img: 'assets/images/bSOL.svg',
-          title: 'bSOL',
-          pts: fetchedMultipliers.bSOL,
-        }
+        // {
+        //   img: 'assets/images/vSOL.svg',
+        //   title: 'vSOL',
+        //   pts: fetchedMultipliers.vSOL,
+        // },
+        // {
+        //   img: 'assets/images/bSOL.svg',
+        //   title: 'bSOL',
+        //   pts: fetchedMultipliers.bSOL,
+        // }
       ],
       daoTokens: [
         {
@@ -254,4 +256,11 @@ export class MultipliersMenuComponent implements OnInit {
     console.log('dismissModal', event)
     this.menuToggle.emit()
   }
+  defiSafetyTips = [
+    'Do your own research before participating in DeFi projects',
+    'All of those DeFi projects are independent entities, SolanaHub is not affiliated with any of them',
+    'Understand liquidity risks, including slippage, impermanent loss, and other risks',
+    'Yield farming and staking carries risks, including potential rewards and losses',
+    'Make sure to check a platform has an Audit done'
+  ]
 }
