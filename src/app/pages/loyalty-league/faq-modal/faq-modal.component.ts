@@ -13,7 +13,7 @@ import { exitOutline } from 'ionicons/icons';
 export class FaqModalComponent  implements OnInit {
 
   constructor() {
-    addIcons({exitOutline})
+    addIcons({exitOutline});
    }
 
   ngOnInit() {}
