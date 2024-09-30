@@ -4,6 +4,7 @@ export enum RoutingPath {
     COLLECTIBLES = 'collectibles',
     BRIDGE = 'bridge',
     HUBSOL = 'hubSOL',
+    STASH = 'stash',
     LOYALTY_LEAGUE = 'loyalty-league',
     SWAP = 'swap',
     STAKING = 'staking',

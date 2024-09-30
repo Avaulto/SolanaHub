@@ -1,0 +1,39 @@
+<div class="data-set">
+  <ion-accordion-group [multiple]="true"  [value]="['first']">
+  <ion-accordion  value="first" toggleIcon="arrow-up-outline" toggleIconSlot="end">
+   <ion-row slot="header" (click)="alternateClick($event)" class="gap table-head ion-align-items-center ion-justify-content-between">
+   <div class="">
+      <div id="head-line">
+        <ion-label>{{tableName}}</ion-label> 
+        <ion-chip>{{tableData().length}} • {{10.1 | currency}}</ion-chip>
+      </div>
+
+        <p>
+          {{tableDescription}}
+          <!-- SolanaHub a 1% fee for this service, and the amount reclaimed is paid in SOL. -->
+        </p>
+      
+      <div class="ion-margin-button ion-hide-lg-down"></div>
+    </div>
+    <!-- <ion-col  size="6" sizeLg="2">
+      <div id="toggle-swap">
+        <ion-toggle mode="md" /><span>Swap to hubSOL</span>
+      </div>
+    </ion-col> -->
+    
+      <ion-button id="action-btn" [disabled]="true" class="ion-text-capitalize">{{actionTitle}}</ion-button>
+    
+      <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow" name="arrow-up-outline"/></ion-button>
+ 
+  </ion-row>
+  <app-mft 
+    slot="content"
+    (onEmitData)="selectedRows($event)"
+    [tableRows]="100"
+    [tableId]="'savings-table'" 
+    [tableColumns]="columns" 
+    [tableData]="tableData"
+     />
+    </ion-accordion>
+  </ion-accordion-group>
+</div>

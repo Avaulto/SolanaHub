@@ -203,20 +203,14 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/jkgunhbs.json',
           active: false
         },
-        // {
-        //   title: 'Liquidity pools',
-        //   url: `/${RoutingPath.LIQUIDITY_POOLS}`,
-        //   icon: 'https://cdn.lordicon.com/rlrlhrme.json',
-        //   active: false
-        // },
+        {
+          title: 'Stash',
+          url: `/${RoutingPath.STASH}`,
+          icon: 'https://cdn.lordicon.com/hpveozzh.json',
+          active: true
+        },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
-        // {title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
-        // {
-        //   title: 'Airdrops finder',
-        //   url: `/${RoutingPath.AIRDROP_FINDER}`,
-        //   icon: 'https://cdn.lordicon.com/unukghxb.json',
-        //   active: true
-        // },
+   
       ],
     },
     {
