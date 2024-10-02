@@ -28,10 +28,13 @@ export class MftComponent implements OnInit {
     //@ts-ignore
   @Input('tableData') tableData 
 
+  @Input('checkBox') checkBox: boolean = false;
+
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
   @Output('onRowClicked') onRowClicked = new EventEmitter()
   @Output('onTabSelected') onTabSelected = new EventEmitter()
   @Output('onSearch') onSearch = new EventEmitter()
+  
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
@@ -53,17 +56,17 @@ export class MftComponent implements OnInit {
     // threeWaySort: true,
     showDetailsArrow: true,
     paginationRangeEnabled: false,
-    paginationEnabled: true,
+    paginationEnabled: false,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
-    isLoading: false,
+    isLoading: true,
   };
   ngOnInit(): void {
+    this.configuration.checkboxes = this.checkBox
     this.configuration.rows = this.tableRows;
     if(this._platform.width() < 992){
       this.configuration.horizontalScroll = true;
     }
-
   }
   previousPage() {
   
@@ -103,11 +106,13 @@ export class MftComponent implements OnInit {
       } else{
         this.configuration.isLoading = true;
       }
-      if(this.tableData && this.tableData()?.length < this.tableRows){
-        this.configuration.paginationEnabled = false
-      }else{
-        this.configuration.paginationEnabled = true
-      }
+
+        if(this.tableData && this.tableData()?.length < this.tableRows){
+          this.configuration.paginationEnabled = false
+        }else{
+          this.configuration.paginationEnabled = true
+        }
+   
 
     })
   }
@@ -120,5 +125,14 @@ export class MftComponent implements OnInit {
       type: API.onGlobalSearch,
       value: this.searchTerm(),
     });
+  }
+  public selected = new Set();
+  onChange(row: any): void {
+    const index = this.tableData.indexOf(row);
+    if (this.selected.has(index)) {
+      this.selected.delete(index);
+    } else {
+      this.selected.add(index);
+    }
   }
 }

@@ -14,6 +14,7 @@ import { StashService } from './stash.service';
 import { TableComponent } from './table/table.component';
 import { PortfolioBreakdownComponent } from '../overview/portfolio-breakdown/portfolio-breakdown.component';
 import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
+import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 
 
 @Component({
@@ -35,6 +36,7 @@ import { AnimatedIconComponent } from "../../shared/components/animated-icon/ani
     ])
   ],
   imports: [
+    ChipComponent,
     AnimatedIconComponent,
     JsonPipe,
     IonCheckbox,
@@ -91,10 +93,10 @@ export class StashPage implements OnInit {
   public emptyAccountsColumn = signal([])
   ngOnInit() {
     this.emptyAccountsColumn = signal([
-      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: false } },
+      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'asset', title: 'Asset', width: '40%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'tokenAccount', title: 'Account', cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
+      { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
       { key: 'value', title: 'Extracted Value',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'source', title: 'Source', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'action', title: '', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },

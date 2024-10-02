@@ -131,6 +131,7 @@ stash-table{
         border-radius: var(--radius-full, 1000px);
         border: 1px solid #D5D9EB;
         background: #F8F9FC;
+        margin: 0;
         &.primary {
             border: 1px solid #FDD1EE;
             background: var(--ion-color-btn-bg);;

@@ -140,32 +140,8 @@
 .badges-container {
     display: flex;
     flex-wrap: wrap;
-}
-.badge {
-    padding: var(--spacing-xxs, 2px) var(--spacing-md, 8px);
-    align-items: center;
-    border-radius: var(--radius-full, 9999px);
-    border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
-    background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
-    
-    text-align: center;
-    margin-inline-end: 4px;
+    chip{
+             margin-inline-end: 4px; 
     margin-block-end: 4px;
-    font-size: 11px;
-    text-transform: capitalize;
-    font-weight: 500;
-    line-height: 18px; /* 163.636% */
-    &.sh-boosted {
-        border-radius: var(--radius-full, 9999px);
-        border: 1px solid #FDD1EE;
-        background: #FFF3FB;
-        color: #763261;
-    }
-
-    &.protocol-boosted {
-        border-radius: var(--radius-full, 9999px);
-        border: 1px solid var(--Component-colors-Utility-Blue-utility-blue-200, #B2DDFF);
-        background: var(--Component-colors-Utility-Blue-utility-blue-50, #EFF8FF);
-        color: #175CD3;
     }
 }

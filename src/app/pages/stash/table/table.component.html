@@ -27,6 +27,7 @@
  
   </ion-row>
   <app-mft 
+    [checkBox]="true"
     slot="content"
     (onEmitData)="selectedRows($event)"
     [tableRows]="100"
@@ -37,3 +38,4 @@
     </ion-accordion>
   </ion-accordion-group>
 </div>
+

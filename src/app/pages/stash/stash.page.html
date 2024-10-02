@@ -113,6 +113,6 @@ here
 
 <ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="source-type ion-text-left ion-text-capitalize">
-    <ion-chip>{{row.source}}</ion-chip>
+    <chip  [name]="row.source" [color]="row.source === 'empty account' ? 'focus' : ''" />
   </div>
 </ng-template>
