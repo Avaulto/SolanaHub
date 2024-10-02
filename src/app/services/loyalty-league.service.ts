@@ -5,12 +5,13 @@ import {  catchError, interval, map, Observable, of, shareReplay, startWith, Sub
 import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoyaltyLeagueService {
-  public hideLLv2 = signal(true);
+  public hideLLv2 = signal(environment.production);
   protected api = this._utilService.serverlessAPI + '/api/loyalty-league-v2'
   constructor(
     private _utilService: UtilService,
