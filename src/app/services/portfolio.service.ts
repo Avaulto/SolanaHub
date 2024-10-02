@@ -119,7 +119,7 @@ export class PortfolioService {
     this._portfolioDeFi(excludeNFTv2, tokenJupData);
 
     mergeDuplications.push(tempNft);
-    this.nfts.set(tempNft.data.assets);
+    tempNft ? this.nfts.set(tempNft.data.assets) : this.nfts.set([])  ;
     this.walletAssets.set(mergeDuplications);
   }
 

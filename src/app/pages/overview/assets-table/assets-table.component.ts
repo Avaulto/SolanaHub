@@ -115,36 +115,45 @@ export class AssetsTableComponent implements OnInit {
   }
   showLong: boolean=false
 
-  nftDataAggregator(nfts: NFT[]): nftTable[]{
-    // aggregate nfts and do the following:
-    // 1. get the floor price for each collection
-    // 2. get the listed nfts for each collection
-    // 3. get the total value for each collection by adding the floor price of each nft
-    // 4. set collection image
-    // 5. return the data
+  nftDataAggregator(nfts: NFT[]): nftTable[] {
     console.log(nfts);
     
     const collections = nfts.reduce((acc, nft) => {
-      const collection = acc.find(c => c.collectionName === nft.collection.name)
-      if (collection) {
-        collection.nfts.push(nft)
-        collection.value += (Number(nft.floorPrice) || 0) * this.solPrice()
-        collection.listed = collection.nfts.filter(nft => nft.listStatus === "listed").length
+      const collectionName = nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown';
+      const collectionSymbol = nft.collection.symbol || nft.collectionMagicEdenStatSymbol || '';
+      const collectionKey = collectionName.toLowerCase().slice(0, 5);
+
+      const existingCollection = acc.find(c => 
+        c.collectionName.toLowerCase() === collectionName.toLowerCase() ||
+        c.collectionSymbol.toLowerCase() === collectionSymbol.toLowerCase() ||
+        c.collectionKey === collectionKey
+      );
+
+      if (existingCollection) {
+        existingCollection.nfts.push(nft);
+        existingCollection.value += (Number(nft.floorPrice) || 0) * this.solPrice();
+        existingCollection.listed += nft.listStatus === "listed" ? 1 : 0;
+        existingCollection.floorPrice = Math.min(existingCollection.floorPrice, Number(nft.floorPrice) || Infinity);
       } else {
         acc.push({
-          // replace underscore with space
-          collectionName: nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown',
+          collectionName,
+          collectionSymbol,
+          collectionKey,
           nfts: [nft],
           value: (Number(nft.floorPrice) || 0) * this.solPrice(),
-          image_uri: nft.collection.image_uri,
+          imageUri: nft.collection.image_uri,
           listed: nft.listStatus === "listed" ? 1 : 0,
           floorPrice: Number(nft.floorPrice) || 0
-        })
+        });
       }
-      return acc
-    }, []).sort((a, b) => b.value - a.value)
-    console.log(collections);
-    return collections
+      return acc;
+    }, []);
+
+    const mergedCollections = collections.map(({ collectionSymbol, collectionKey, ...rest }) => rest);
+    const sortedCollections = mergedCollections.sort((a, b) => b.value - a.value);
+
+    console.log(sortedCollections);
+    return sortedCollections;
   }
   async ngOnInit() {
 
