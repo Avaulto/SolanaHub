@@ -56,7 +56,6 @@ export class LoyaltyLeaguePage implements OnInit {
   public loyalMember = signal(null)
   public isAmbassador: boolean = false;
   public openMenu = false
-  public multipliers = this._loyaltyLeagueService.getBoosters()
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   constructor(
     public popoverController: PopoverController,

@@ -45,7 +45,7 @@
         <div class="tier-icon"><ion-img [src]="tier.iconFull"></ion-img></div>
         <div class="tier-title" [ngStyle]="{'color': getColor(tier.title)}">{{tier.title}}</div>
         @if(tier.title !== 'degen'){
-          <div class="tier-points">+{{tier.points}} pts</div>
+          <div class="tier-points">+{{tier.points | number:'1.0-0' }} pts</div>
         }
       </div>
     }

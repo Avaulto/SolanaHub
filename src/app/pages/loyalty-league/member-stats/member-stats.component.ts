@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 
-import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
+import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText, IonInput } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { copyOutline, discOutline, informationCircleOutline } from 'ionicons/icons';
@@ -20,7 +20,7 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonInput, 
     TooltipModule,
     IonSkeletonText, 
     NumberCounterComponent,
@@ -98,7 +98,7 @@ export class MemberStatsComponent implements OnChanges {
     { title: 'Staking', key: 'stakingPts', tooltip: 'Staking points are earned by staking your SOL or LST with SolanaHub validator.' },
     { title: 'DAO', key: 'daoPts', tooltip: 'DAO points are earned by participating in marinade and solablaze DAO tokens voting stake allocation towards SolanaHub validator. (check SolanaHub docs for more details)' },
     { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referred friends who stake with SolanaHub validator.' },
-    { title: 'Quests', key: 'questsPts', tooltip: 'Bonus points earned from loyalty tier boost and quests.' }
+    // { title: 'Quests', key: 'questsPts', tooltip: 'Bonus points earned from loyalty tier boost and quests.' }
   ];
 
 }

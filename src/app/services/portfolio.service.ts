@@ -39,110 +39,99 @@ export class PortfolioService {
     private _fetchPortfolioService: PortfolioFetchService,
     private _watchModeService: WatchModeService
   ) {
-    // this._fetchPortfolioService.getTurnStileToken().subscribe(token => {
-    // this._watchModeService.watchedWallet$.subscribe(async (wallet:WalletExtended) => {
-    //   if (wallet){
-
-    //     // while (!this._utils.turnStileToken) await this._utils.sleep(500);
-    //     // this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken,true,true)
-    //   }
-    // })
-    this._shs.walletExtended$.subscribe(async (wallet: WalletExtended) => {
-      if (wallet) {
-
-        while (!this._utils.turnStileToken) await this._utils.sleep(500);
-
-        this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken)
-
-        this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
-          const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
-
-          let forceFetch = true;
-
-          while (!this._utils.turnStileToken) await this._utils.sleep(500);
-          shouldRefresh && this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, forceFetch)
-
-        })
-      }
-    })
-
-    // })
+    this._shs.walletExtended$.subscribe(this.handleWalletChange.bind(this));
   }
 
-  private _portfolioData = () => {
-    const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData')
+  private async handleWalletChange(wallet: WalletExtended) {
+    if (wallet) {
+      await this.waitForTurnStileToken();
+      this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken);
 
-    if (portfolioLocalRecord) {
-      const portfolioJson = JSON.parse(portfolioLocalRecord)
-      const currentTime = Math.floor(new Date().getTime() / 1000)
-      const expiredRecord = portfolioJson.lastSave + 600
-      // if expired timestamp is bigger than current time frame, return it.
-      if (expiredRecord > currentTime) {
-        return portfolioJson.portfolioData
-      } else {
-        return null
-      }
-    }
-    return null
-  }
-  // public turnStileRefresh = new Subject()
-  public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
-
-    // while (!this._utils.turnStileToken) await this._utils.sleep(500);
-    // let jupTokens = await this._utils.getJupTokens('all');
-    // if user switch wallet - clean the session storage
-
-    let portfolioData = forceFetch === false && this._portfolioData()?.owner == walletAddress ? this._portfolioData() : null
-    try {
-
-      if (!portfolioData) {
-
-        let res = await Promise.all([
-          // this._utils.getJupTokens('all'),
-          await (await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`)).json()
-        ])
-        // this.turnStileRefresh.next(false)
-        this._utils.turnStileToken = null
-        va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode })
-        // jupTokens = res[0];
-        portfolioData = res[0]
-        // console.log(portfolioData.elements);
-        
-        portfolioData.elements = portfolioData.elements.filter(e => e?.platformId !== 'wallet-nfts')
-        const storageCap = 4073741824 // 5 mib
-        if (this._utils.memorySizeOf(portfolioData) < storageCap) {
-          this._sessionStorageService.saveData('portfolioData', JSON.stringify({ portfolioData, lastSave: Math.floor(new Date().getTime() / 1000) }))
+      this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
+        if (shouldRefresh) {
+          const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
+          await this.waitForTurnStileToken();
+          this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true);
         }
-
-      }
-      const portfolio = portfolioData//await (await fetch(`${this.restAPI}/api/portfolio/portfolio?address=${walletAddress}`)).json()
-      const tempNft = portfolio?.elements?.find(group => group.platformId === 'wallet-nfts-v2')
-      const excludeNFTv2 = portfolio?.elements?.filter(e => e.platformId !== 'wallet-nfts-v2')
-      const mergeDuplications: PortfolioElementMultiple[] = mergePortfolioElementMultiples(excludeNFTv2);
-      
-      const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens')
-      const tokenJupData = Object.keys(portfolio.tokenInfo.solana).map(key => {
-        return portfolio.tokenInfo.solana[key];
-      })
-      
-      this._portfolioStaking(walletAddress)
-      this._portfolioTokens(extendTokenData, tokenJupData);
-      this._portfolioDeFi(portfolio.elements, tokenJupData)
-
-
-      mergeDuplications.push(tempNft)
-
-      this.nfts.set(tempNft.data.assets)
-      // this._portfolioNft(extendNftData)
-      // console.log(editedData);
-      this.walletAssets.set(mergeDuplications)
-
-    } catch (error) {
-      console.error(error);
-      this.walletAssets.set([])
-      va.track('fetch portfolio', { status: 'failed', wallet: walletAddress })
-      this._toastService.msg.next({ segmentClass: 'toastError', message: 'fail to import wallet info, please contact support', duration: 5000 })
+      });
     }
+  }
+
+  private async waitForTurnStileToken() {
+    while (!this._utils.turnStileToken) {
+      await this._utils.sleep(500);
+    }
+  }
+
+  private _portfolioData(): any {
+    const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData');
+    if (!portfolioLocalRecord) return null;
+
+    const { portfolioData, lastSave } = JSON.parse(portfolioLocalRecord);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return currentTime < lastSave + 600 ? portfolioData : null;
+  }
+
+  public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
+    let portfolioData = !forceFetch && this._portfolioData()?.owner === walletAddress ? this._portfolioData() : null;
+
+    try {
+      if (!portfolioData) {
+        portfolioData = await this.fetchPortfolioData(walletAddress, turnStileToken);
+        this.savePortfolioData(portfolioData);
+      }
+
+      this.processPortfolioData(portfolioData, walletAddress);
+      va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode });
+    } catch (error) {
+      this.handlePortfolioError(error, walletAddress);
+    }
+  }
+
+  private async fetchPortfolioData(walletAddress: string, turnStileToken: string) {
+    const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`);
+    const data = await response.json();
+    this._utils.turnStileToken = null;
+    data.elements = data.elements.filter(e => e?.platformId !== 'wallet-nfts');
+    return data;
+  }
+
+  private savePortfolioData(portfolioData: any) {
+    const storageCap = 4073741824; // 5 MiB
+    if (this._utils.memorySizeOf(portfolioData) < storageCap) {
+      this._sessionStorageService.saveData('portfolioData', JSON.stringify({
+        portfolioData,
+        lastSave: Math.floor(Date.now() / 1000)
+      }));
+    }
+  }
+
+  private processPortfolioData(portfolioData: any, walletAddress: string) {
+    const tempNft = portfolioData.elements.find(group => group.platformId === 'wallet-nfts-v2');
+    const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts-v2');
+    const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
+    
+    const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
+    const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
+
+    this._portfolioStaking(walletAddress);
+    this._portfolioTokens(extendTokenData as any, tokenJupData as any);
+    this._portfolioDeFi(excludeNFTv2, tokenJupData);
+
+    mergeDuplications.push(tempNft);
+    this.nfts.set(tempNft.data.assets);
+    this.walletAssets.set(mergeDuplications);
+  }
+
+  private handlePortfolioError(error: any, walletAddress: string) {
+    console.error(error);
+    this.walletAssets.set([]);
+    va.track('fetch portfolio', { status: 'failed', wallet: walletAddress });
+    this._toastService.msg.next({
+      segmentClass: 'toastError',
+      message: 'Failed to import wallet info, please contact support',
+      duration: 5000
+    });
   }
 
   private async _portfolioTokens(tokens: any, jupTokens: JupToken[]): Promise<void> {
@@ -413,8 +402,7 @@ export class PortfolioService {
   }
 
   public async _portfolioStaking(walletAddress: string) {
-    console.log(walletAddress, 'get stake');
-    
+
     const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
     this.staking.set(stakeAccounts)
 

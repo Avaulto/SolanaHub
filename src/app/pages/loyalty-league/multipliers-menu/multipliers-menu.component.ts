@@ -15,7 +15,7 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
   templateUrl: './multipliers-menu.component.html',
   styleUrls: ['./multipliers-menu.component.scss'],
   standalone: true,
-  imports: [IonIcon, IonSkeletonText, 
+  imports: [IonIcon, IonSkeletonText,
     TooltipModule,
     IonChip,
     IonLabel,
@@ -53,16 +53,16 @@ export class MultipliersMenuComponent implements OnInit {
         title: 'hubSOL',
         pts: 0,
       },
-      // {
-      //   img: 'assets/images/vSOL.svg',
-      //   title: 'vSOL',
-      //   pts: 0,
-      // },
-      // {
-      //   img: 'assets/images/bSOL.svg',
-      //   title: 'bSOL',
-      //   pts: 0,
-      // }
+      {
+        img: 'assets/images/vSOL.svg',
+        title: 'vSOL',
+        pts: 0,
+      },
+      {
+        img: 'assets/images/bSOL.svg',
+        title: 'bSOL',
+        pts: 0,
+      }
     ],
     daoTokens: [
       {
@@ -82,7 +82,7 @@ export class MultipliersMenuComponent implements OnInit {
         title: 'orca',
         pts: 0,
         link: 'https://www.orca.so/pools?tokens=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-        badges: [{ strategy: 'All LP pools', protocolBoosted: true, solanahubboosted: false }]
+        badges: [{ strategy: 'Liquidity pools', protocolBoosted: true, solanahubboosted: false }]
       },
       {
         img: 'assets/images/ll/kamino.svg',
@@ -93,8 +93,8 @@ export class MultipliersMenuComponent implements OnInit {
 
       },
       {
-        img: 'assets/images/ll/mango.svg',
-        title: 'mango',
+        img: 'assets/images/ll/yieldfan.webp',
+        title: 'yield.fan',
         pts: 0,
         link: 'https://yield.fan/dashboard',
         badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: true }]
@@ -104,15 +104,15 @@ export class MultipliersMenuComponent implements OnInit {
         title: 'raydium',
         pts: 0,
         link: 'https://raydium.io/liquidity-pools/?token=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-        badges: [{ strategy: 'LP', protocolBoosted: false, solanahubboosted: false }]
+        badges: [{ strategy: 'Liquidity pools', protocolBoosted: false, solanahubboosted: false }]
 
       },
       {
         img: 'assets/images/ll/meteora.svg',
         title: 'meteora',
         pts: 0,
-        link: 'https://app.meteora.ag/dlmm',
-        badges: [{ strategy: 'All LP pools', protocolBoosted: false, solanahubboosted: false }]
+        link: 'https://app.meteora.ag',
+        badges: [{ strategy: 'Liquidity pools', protocolBoosted: false, solanahubboosted: false }]
 
       },
       {
@@ -129,7 +129,7 @@ export class MultipliersMenuComponent implements OnInit {
         title: 'texture',
         pts: 0,
         link: 'https://texture.finance/lendy/lend',
-        badges: [{ strategy: 'p2p Lending', protocolBoosted: false, solanahubboosted: false }]
+        badges: [{ strategy: 'P2P Lending', protocolBoosted: false, solanahubboosted: false }]
       },
 
       {
@@ -137,22 +137,25 @@ export class MultipliersMenuComponent implements OnInit {
         title: 'rainfi',
         pts: 0,
         link: 'https://rain.fi/swap/hubSOL-SOL',
-        badges: [{ strategy: 'p2p Lending', protocolBoosted: false, solanahubboosted: false }]
+        badges: [{ strategy: 'P2P Lending', protocolBoosted: false, solanahubboosted: false }]
       },
     ]
   }
   private multipliersFetched = inject(LoyaltyLeagueService).getBoosters()
 
   ngOnInit(): void {
-    console.log('init');
+    console.log('load multiplier menu');
+    
     this.updateMultipliers()
-  
   }
-  constructor(){
-    addIcons({diamondOutline});
+  constructor() {
+    addIcons({ diamondOutline });
   }
   async updateMultipliers() {
+
     const fetchedMultipliers = await this.multipliersFetched
+    console.log(fetchedMultipliers);
+    
     this.defaultMultipliers = {
       LSTs: [
         {
@@ -165,16 +168,16 @@ export class MultipliersMenuComponent implements OnInit {
           title: 'hubSOL',
           pts: fetchedMultipliers.hubSOL,
         },
-        // {
-        //   img: 'assets/images/vSOL.svg',
-        //   title: 'vSOL',
-        //   pts: fetchedMultipliers.vSOL,
-        // },
-        // {
-        //   img: 'assets/images/bSOL.svg',
-        //   title: 'bSOL',
-        //   pts: fetchedMultipliers.bSOL,
-        // }
+        {
+          img: 'assets/images/vSOL.svg',
+          title: 'vSOL',
+          pts: fetchedMultipliers.vSOL,
+        },
+        {
+          img: 'assets/images/bSOL.svg',
+          title: 'bSOL',
+          pts: fetchedMultipliers.bSOL,
+        }
       ],
       daoTokens: [
         {
@@ -190,64 +193,36 @@ export class MultipliersMenuComponent implements OnInit {
       ],
       hubSOLBoosters: [
         {
-          img: 'assets/images/ll/orca.svg',
-          title: 'orca',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.orca,
-          link: 'https://www.orca.so/pools?tokens=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-          badges: [{ strategy: 'All LP pools', protocolBoosted: true, solanahubboosted: false }]
+          ...this.defaultMultipliers.hubSOLBoosters[0],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.orca / fetchedMultipliers.hubSOL,
         },
         {
-          img: 'assets/images/ll/mango.svg',
-          title: 'mango',
-          pts: "3x" as any,
-          link: 'https://yield.fan/dashboard',
-          badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: true }]
+          ...this.defaultMultipliers.hubSOLBoosters[1],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.kamino / fetchedMultipliers.hubSOL,
         },
         {
-          img: 'assets/images/ll/meteora.svg',
-          title: 'meteora',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.meteora,
-          link: 'https://app.meteora.ag/dlmm',
-          badges: [{ strategy: 'All LP pools', protocolBoosted: false, solanahubboosted: false }]
-  
+          ...this.defaultMultipliers.hubSOLBoosters[2],
+          pts: "up to 3x" as any,
         },
         {
-          img: 'assets/images/ll/kamino.svg',
-          title: 'kamino',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.kamino,
-          link: 'https://app.kamino.finance/liquidity/7ycAn4vg4eZ82zeRWHey5qLQ53htEmeGq8CJ2tVXpPt9',
-          badges: [{ strategy: 'vault', protocolBoosted: false, solanahubboosted: false }]
-  
+          ...this.defaultMultipliers.hubSOLBoosters[3],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.meteora / fetchedMultipliers.hubSOL,
         },
         {
-          img: 'assets/images/ll/solayer.svg',
-          title: 'solayer',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.solayer,
-          link: 'https://app.solayer.org/dashboard',
-          badges: [{ strategy: 'Restaking', protocolBoosted: false, solanahubboosted: false }]
-  
+          ...this.defaultMultipliers.hubSOLBoosters[4],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.kamino / fetchedMultipliers.hubSOL,
         },
         {
-          img: 'assets/images/ll/raydium.svg',
-          title: 'raydium',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.raydium,
-          link: 'https://raydium.io/liquidity-pools/?token=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-          badges: [{ strategy: 'LP', protocolBoosted: false, solanahubboosted: false }]
+          ...this.defaultMultipliers.hubSOLBoosters[5],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.solayer / fetchedMultipliers.hubSOL,
         },
         {
-          img: 'assets/images/ll/texture.svg',
-          title: 'texture',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.texture,
-          link: 'https://texture.finance/lendy/lend',
-          badges: [{ strategy: 'p2p Lending', protocolBoosted: false, solanahubboosted: false }]
+          ...this.defaultMultipliers.hubSOLBoosters[6],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.raydium / fetchedMultipliers.hubSOL,
         },
-  
         {
-          img: 'assets/images/ll/rainfi.svg',
-          title: 'rainfi',
-          pts: fetchedMultipliers.hubSOLDeFiBoost.rainfi,
-          link: 'https://rain.fi/swap/hubSOL-SOL',
-          badges: [{ strategy: 'p2p Lending', protocolBoosted: false, solanahubboosted: false }]
+          ...this.defaultMultipliers.hubSOLBoosters[7],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.texture / fetchedMultipliers.hubSOL,
         },
       ] // .sort((a: any, b: any) => b.pts - a.pts)
     };

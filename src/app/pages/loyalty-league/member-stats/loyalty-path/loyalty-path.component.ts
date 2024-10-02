@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgStyle } from '@angular/common';
+import { DecimalPipe, NgClass, NgFor, NgStyle } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Tier } from 'src/app/models';
 import { IonImg, IonButton, IonSkeletonText } from "@ionic/angular/standalone";
@@ -7,7 +7,7 @@ import { IonImg, IonButton, IonSkeletonText } from "@ionic/angular/standalone";
   templateUrl: './loyalty-path.component.html',
   styleUrls: ['./loyalty-path.component.scss'],
   standalone: true,
-  imports: [IonSkeletonText, IonButton, IonImg, NgStyle,NgClass, NgFor],
+  imports: [DecimalPipe ,IonSkeletonText, IonButton, IonImg, NgStyle,NgClass, NgFor],
 })
 export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
   @ViewChild('loyaltyPathBody') loyaltyPathBody: ElementRef;

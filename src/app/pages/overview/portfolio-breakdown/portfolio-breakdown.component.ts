@@ -19,7 +19,6 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     effect(() => {
       if (this.walletAssets()) {
         setTimeout(() => {
-
           this.createGroupCategory()
         }, 300);
       }
@@ -35,7 +34,10 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     const totalAssets = assets
       .filter(data => data.value && !this.excludedAssets().has(data.label))
       .reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
-    this.totalAssetsChange.emit(totalAssets);
+    
+    // Move this outside of the computed signal
+    queueMicrotask(() => this.totalAssetsChange.emit(totalAssets));
+    
     return totalAssets;
   });
 
