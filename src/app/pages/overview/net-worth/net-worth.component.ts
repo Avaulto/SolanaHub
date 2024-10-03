@@ -6,6 +6,7 @@ import { PopoverController } from '@ionic/angular';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { IonSkeletonText, IonIcon, IonText, IonSelectOption,IonSelect, IonToggle, IonImg } from '@ionic/angular/standalone';
 import { AnimatedIconComponent } from 'src/app/shared/components';
+import { JupStoreService } from 'src/app/services';
 
 @Component({
   selector: 'app-net-worth',
@@ -18,6 +19,7 @@ export class NetWorthComponent {
   @Input() totalValueUSD: Signal<number>;
   @Input() totalValueInSOL: Signal<number>;
   constructor(
+    private _jupStore: JupStoreService,
     private _portfolioService:PortfolioService,
   ){
     addIcons({eyeOutline, eyeOffOutline });
@@ -30,8 +32,6 @@ export class NetWorthComponent {
     this._portfolioService.privateMode.next(this.hideBalance)
 
   }
-<<<<<<< HEAD
-=======
   public walletAssets = inject(PortfolioService).walletAssets
   public portfolioTotalUsdValue = signal(0);
 
@@ -40,7 +40,6 @@ export class NetWorthComponent {
   }
 
   public portfolioValueInSOL = computed(() => this.portfolioTotalUsdValue() / this._jupStore.solPrice())
->>>>>>> main
 
   public simulatePortfolio = signal('usd')
   async simulateNetWorth(ev){

@@ -11,7 +11,6 @@
     <div id="nw-val" [ngClass]="{'private-balance': showBalance | async }">
         @if(simulatePortfolio() === 'usd'){
 
-<<<<<<< HEAD
         {{totalValueUSD() | currency }}
         }@else {
         {{totalValueInSOL() | number: '1.0-1' }} SOL
@@ -21,17 +20,3 @@
 }@else {
 <ion-skeleton-text [animated]="true" />
 }
-=======
-                    {{portfolioTotalUsdValue() | currency }}
-                }@else {
-                    {{portfolioValueInSOL()  | number: '1.0-1' }} SOL
-                }
-            </div> 
-            <div class="toggle-balance">
-              <ion-icon (click)="toggleShowBalance()" [name]="hideBalance ?  'eye-off-outline' : 'eye-outline'"/>
-            </div>
-        </div>
-    }@else {
-        <ion-skeleton-text [animated]="true" />
-    }
->>>>>>> main
