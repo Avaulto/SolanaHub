@@ -50,6 +50,10 @@ export const routes: Routes = [
     
   },
   {
+    path: RoutingPath.STASH,
+    loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage)
+  },
+  {
     path: RoutingPath.LENDING,
     loadComponent: () => import('./pages/lending/lending.page').then( m => m.LendingPage),
     
@@ -77,6 +81,8 @@ export const routes: Routes = [
     path:"**",
     redirectTo: RoutingPath.OVERVIEW
   },
+<<<<<<< HEAD
+=======
 
 
 
@@ -84,4 +90,5 @@ export const routes: Routes = [
 
 
 
+>>>>>>> main
 ];

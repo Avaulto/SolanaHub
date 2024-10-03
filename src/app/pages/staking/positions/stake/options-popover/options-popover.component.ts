@@ -81,7 +81,7 @@ export class OptionsPopoverComponent implements OnInit {
   }
   public async withdraw() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
-    await this._nss.withdraw(this.stake, walletOwner)
+    await this._nss.withdraw([this.stake], walletOwner , this.stake.accountLamport)
   }
   public async setDirectStakevSOL() {
     const walletOwner = this._shs.getCurrentWallet()

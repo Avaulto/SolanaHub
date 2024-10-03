@@ -45,7 +45,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 ion-grid {
     padding-block-start: 20px;
-    padding-block-end:66px ;
+    // padding-block-end:66px ;
     padding-inline: 3vw;
     margin: 0;
 }
@@ -95,7 +95,7 @@ ion-header {
 }
 
 .gap {
-    padding: 20px 32px;
+    padding: 20px 24px;
 }
 
 #asset-modal {
@@ -125,7 +125,7 @@ ion-input {
 
     overflow: hidden;
     --color: var(-ion-color-dark);
-    --placeholder-color: #697586 !important;
+    --placeholder-color: var(--ion-light-gray) !important;
     text-overflow: ellipsis;
     font-weight: 400;
     line-height: 18px;

@@ -45,7 +45,102 @@
           <app-member-stats />
         </ion-col>
       </ion-row>
+<<<<<<< HEAD
+      <ion-row class="ion-margin-bottom">
+        <ion-col size="12" class="data-set">
+          <app-mft 
+          [tableId]="'loyalty-league'"
+          [label]="'Leader Board'" 
+          desc="Obtain a comprehensive overview for your loyalty points from each source" 
+          [tableRows]="10" [tableColumns]="columns" 
+          [tableData]="leaderBoard" />
+
+          <ng-template #addressTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="addr-item">
+              <span>
+                {{row.walletOwner.addrShort}}
+              </span>
+              <ion-icon style="cursor: pointer;" appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
+              <!-- @if(row.liquidStake.msol) -->
+            </div>
+
+          </ng-template>
+          <ng-template #LSTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="token-pts">
+
+              <div class="token-pts">
+                <ion-img [tooltip]="hubSOLtoolTipTpl" src="assets/images/hubsol-small.webp" />
+                <span>
+                  {{row.liquidStake.hubSOL}}
+                </span>
+              </div>
+
+              <span class="ion-hide-lg-down">
+                +
+              </span> 
+
+              <div>
+                <ion-img  [tooltip]="vSOLtoolTipTpl" src="assets/images/vsol-small.webp" />
+                <span>
+                  {{row.liquidStake.vSOL}}
+                </span>
+              </div>
+              <span class="ion-hide-lg-down">
+                +
+              </span> 
+              <div class="token-pts">
+                <ion-img  [tooltip]="bSOLtoolTipTpl" src="assets/images/bsol-small.webp" />
+                <span>
+                  {{row.liquidStake.bSOL}}
+                </span>
+              </div>  
+        
+          
+            </div>
+            
+          </ng-template>
+          <ng-template #daoTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="token-pts">
+              <div>
+                <ion-img [tooltip]="mndetoolTipTpl" src="assets/images/mnde-small.webp" />
+                <span>
+                  {{row.dao.veMNDE}}
+                </span>
+              </div>
+              <span class="ion-hide-lg-down">
+                +
+              </span> 
+              <div>
+                <ion-img [tooltip]="blzetoolTipTpl" src="assets/images/blze-small.webp" />
+                <span>
+                  {{row.dao.veBLZE}}
+                </span>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #hubDomainHolderTpl let-row let-rowIndex="rowIndex" let-column="column">
+            @if(row.hubDomainHolder){
+           
+            <ion-icon style="font-size:20px;color:#079455;" name="checkmark-circle-outline"></ion-icon>
+            } @else{
+         
+            <ion-icon style="font-size:20px;" name="close-circle-outline"></ion-icon>
+            }
+
+
+          </ng-template>
+
+          <ng-template #airdropTpl let-row let-rowIndex="rowIndex" let-column="column">
+            <div class="airdrop">
+              {{row.weeklyAirdrop | number: '1.3'}}
+              <ion-img src="assets/images/hubsol-small.webp" />
+              <!-- @if(row.liquidStake.msol) -->
+            </div>
+
+          </ng-template>
+=======
       <ion-row>
+>>>>>>> main
 
         <ion-col size="12" class="data-set">
           <ll-table />

@@ -1,0 +1,66 @@
+:host{
+    display: block;
+    width: 100%;
+}
+#container {
+    border-radius: 12px;
+    background: #FFF;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    display: flex;
+    justify-content: center;
+    transform: translateY(-70px);
+    margin: 0 auto;
+    min-height: 600px;
+}
+#stash-box .inner{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 50px;
+    max-width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/assets/images/bg-decorative.svg');
+}
+
+ion-img {
+    margin-bottom: 20px;
+    width: 295.21px;
+}
+
+ion-label {
+    color: var(--Gray-900, #101828);
+    text-align: center;
+    width: 100%;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    margin-bottom: 8px;
+}
+
+ion-text {
+    color: var(--Gray-600, #475467);
+    text-align: justify;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    margin-bottom: 32px;
+    span{
+        color: var(--ion-color-primary);
+    }
+}
+
+#btn-wrapper {
+    text-align: center;
+    width: 100%;
+    ion-button{
+        text-transform: capitalize;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+#container{
+    transform: translateY(-42px);
+}
+    
+}
