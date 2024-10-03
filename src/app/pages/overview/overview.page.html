@@ -3,10 +3,17 @@
     <div id="head-bg"></div>
     <ion-row class="ion-justify-content-between">
       <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
+<<<<<<< HEAD
+        <app-net-worth [totalValueUSD]="portfolioTotalUsdValue" [totalValueInSOL]="portfolioValueInSOL" />
+      </ion-col>
+      <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
+        <app-portfolio-breakdown [assets]="walletAssets" />
+=======
         <app-net-worth #netWorthComponent></app-net-worth>
       </ion-col>
       <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
         <app-portfolio-breakdown (totalAssetsChange)="netWorthComponent.onTotalAssetsChange($event)"></app-portfolio-breakdown>
+>>>>>>> main
       </ion-col>
     </ion-row>
     <ion-row class="ion-margin-vertical">

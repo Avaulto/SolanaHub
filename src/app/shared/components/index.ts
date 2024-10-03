@@ -11,3 +11,4 @@ export * from './transactions-history-table/transactions-history-table.component
 export * from './time-diff/time-diff.component'
 export * from './settings-button/settings-button.component'
 export * from './loyalty-league-member/loyalty-league-member.component'
+export * from './portfolio-breakdown/portfolio-breakdown.component'

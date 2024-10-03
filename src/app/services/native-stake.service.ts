@@ -45,24 +45,24 @@ export class NativeStakeService {
     // const parsedData = account.account.data.parsed.info || null//.delegation.stake
     const validatorVoteKey = account.stake.delegation?.voter
     const stake = Number(account.stake?.delegation?.stake) || 0;
-    const startEpoch =account.stake?.delegation?.activationEpoch || "0";
+    const startEpoch = account.stake?.delegation?.activationEpoch || "0";
     const rentReserve = Number(account.meta.rentExemptReserve);
     const accountLamport = Number(account._lamports);
     const excessLamport = accountLamport - stake - rentReserve
-
+    
     try {
-      var { active, state }: Partial<StakeActivationData> = await this._shs.connection?.getStakeActivation(pk) || {state:"inactive"};
-      
+      var { active, state }: Partial<StakeActivationData> = await this._shs.connection?.getStakeActivation(pk) || { state: "inactive" };
+
     } catch (error) {
-       state = "inactive";
+      state = "inactive";
       console.log(error);
-      
+
     }
 
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
     const validatorName = account.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
-    const imgUrl = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image  || "assets/images/unknown.svg")
+    const imgUrl = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image || "assets/images/unknown.svg")
 
     const stakeAccountInfo: Stake = {
       link: this._utils.explorer + '/account/' + address,
@@ -79,7 +79,7 @@ export class NativeStakeService {
       excessLamport,
       delegatedLamport,
       startEpoch,
-      lastReward : null,
+      lastReward: null,
       stakeAuth: account.meta.authorized.staker,
       withdrawAuth: account.meta.authorized.withdrawer,
       validatorName: validatorName || null,
@@ -90,15 +90,15 @@ export class NativeStakeService {
     return stakeAccountInfo
   }
 
-  public async getStakeRewardsInflation(stakeAccounts: Stake[]): Promise<Stake[]>{
-    const stakeAccountsPk: PublicKey[] = stakeAccounts.map(acc =>  new PublicKey(acc.address));
-  
+  public async getStakeRewardsInflation(stakeAccounts: Stake[]): Promise<Stake[]> {
+    const stakeAccountsPk: PublicKey[] = stakeAccounts.map(acc => new PublicKey(acc.address));
+
 
     const infReward = await this._shs.connection.getInflationReward(stakeAccountsPk);
 
-    const extendStakeAccount = stakeAccounts.map( (acc, i) => {
-      acc.lastReward =  this._utils.decimalPipe.transform(infReward[i]?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0 || 0
-      return acc 
+    const extendStakeAccount = stakeAccounts.map((acc, i) => {
+      acc.lastReward = this._utils.decimalPipe.transform(infReward[i]?.amount / LAMPORTS_PER_SOL, '1.2-5') || 0 || 0
+      return acc
     })
 
     return extendStakeAccount
@@ -218,16 +218,16 @@ export class NativeStakeService {
 
   }
 
-  public async withdraw(stakeAccount: Stake, walletOwnerPK: PublicKey): Promise<any> {
-    const withdrawTx = StakeProgram.withdraw({
-      stakePubkey: new PublicKey(stakeAccount.address),
+  public async withdraw(stakeAccount: Stake[] , walletOwnerPK: PublicKey, lamports): Promise<any> {
+    const withdrawTx = stakeAccount.map(acc =>  StakeProgram.withdraw({
+      stakePubkey: new PublicKey(acc.address),
       authorizedPubkey: walletOwnerPK,
       toPubkey: walletOwnerPK,
-      lamports: stakeAccount.accountLamport, // Withdraw the full balance at the time of the transaction
-    });
+      lamports, // Withdraw the full balance at the time of the transaction
+    }));
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
-      return await this._txi.sendTx([withdrawTx], walletOwnerPK, null, record)
+      return await this._txi.sendTx([...withdrawTx], walletOwnerPK, null, record)
     } catch (error) {
       console.error(error)
     }
@@ -280,7 +280,7 @@ export class NativeStakeService {
     }
     return null
   }
-  public reStake(stakeAccount: Stake,vote_identity:string, walletOwnerPK: PublicKey) {
+  public reStake(stakeAccount: Stake, vote_identity: string, walletOwnerPK: PublicKey) {
     try {
       const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, vote_identity, walletOwnerPK)
       const record = { message: 'account', data: { action: 'reStake' } }
@@ -308,7 +308,21 @@ export class NativeStakeService {
     return null
   }
 
+  // public async withdrawFromStakeAccount(stakeAccount: string, walletOwnerPK: PublicKey, lamports: number): Promise<any> {
+  //   const withdrawTx = StakeProgram.withdraw({
+  //     stakePubkey: new PublicKey(stakeAccount),
+  //     authorizedPubkey: walletOwnerPK,
+  //     toPubkey: walletOwnerPK,
+  //     lamports, // Withdraw the full balance at the time of the transaction
+  //   });
+  //   try {
+  //     const record = { message: 'account', data: { action: 'reStake' } }
+  //     return this._txi.sendTx([withdrawTx], walletOwnerPK, null, record)
 
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
+  // }
   // instant unstake by sanctum
   public async initSanctum() {
 

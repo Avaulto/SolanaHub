@@ -1,0 +1,95 @@
+<ion-content [fullscreen]="true">
+  <page-header title="Stash" description="
+  Discover innovative ways to maximize the potential of your idle assets on Solana.
+    "></page-header>
+  <ion-grid>
+    @if(analyzeStage() === 0){
+    <promo  (onStartAnalyze)="getSavingData()" />
+    }@else{
+   
+
+
+    <ion-row id="stat-wrapper" class="ion-justify-content-between">
+      <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
+        <div class="icon-wrapper ion-hide-lg-down">
+          <ion-img src="assets/images/vault-icon.svg" />
+        </div>
+        <div class="stat-title">Total stash</div>
+        <div class="stat-desc">
+          {{stashTotalUsdValue() | currency}}
+          <!-- @if (stat.desc === '') {
+        <ion-skeleton-text [animated]="true" />
+        } -->
+        </div>
+      </ion-col>
+      <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
+        <app-portfolio-breakdown [assets]="assets" />
+      </ion-col>
+
+    </ion-row>
+    <div class="ion-hide-lg-down">
+    <stash-table class="ion-margin-bottom" [hasFees]="true" tableName="low value assets" actionTitle="swap" [columns]="emptyAccountsColumn"
+      [stash]="emptyAccounts" />
+
+      <stash-table class="ion-margin-bottom" [hasFees]="true" tableName="Staking" actionTitle="withdraw" [columns]="emptyAccountsColumn"
+      [stash]="emptyAccounts" />
+
+      <stash-table class="ion-margin-bottom" [hasFees]="true" tableName="DeFi Positions" actionTitle="withdraw" [columns]="emptyAccountsColumn"
+      [stash]="emptyAccounts" />
+      <stash-table class="ion-margin-bottom" tableName="empty accounts" actionTitle="close" [columns]="emptyAccountsColumn"
+      [stash]="emptyAccounts" />
+    </div>
+    <div class="ion-hide-lg-up">
+here
+    </div>
+    }
+  </ion-grid>
+
+</ion-content>
+
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item">
+    <div class="item-img-wrapper">
+      <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
+    </div>
+    <div class="item-info">
+
+      <div class="item-bold">{{row.symbol || 'unknown'}}</div>
+      <div class="item-light">{{row.token }}</div>
+
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-center">
+    <ion-checkbox />
+  </div>
+</ng-template>
+
+<ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left">
+    {{row.balance | number: '1.0'}} {{row.symbol}}
+  </div>
+</ng-template>
+
+<ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left">
+    {{row.value | number: '1.0'}} {{row['extract-asset']}}
+  </div>
+</ng-template>
+<ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left account-info">
+    {{row?.tokenAccount?.short}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img>
+    </a>
+  </div>
+</ng-template>
+<ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <ion-button class="ion-text-capitalize close-single">{{row.action}}</ion-button>
+</ng-template>
+
+<ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="source-type ion-text-left ion-text-capitalize">
+    <ion-chip>{{row.source}}</ion-chip>
+  </div>
+</ng-template>

@@ -57,8 +57,16 @@ export class MemberStatsComponent implements OnChanges {
   public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$
 
   ngOnChanges(changes: SimpleChanges): void {
+<<<<<<< HEAD
+    
+    if (this.loyalMember()) {
+      console.log(this.loyalMember());
+      this.airdrop = this.formatToSignificantDigit(this.loyalMember().airdrop)
+    }
+=======
 
 
+>>>>>>> main
   }
   formatToSignificantDigit(num) {
     console.log('original num:', num);

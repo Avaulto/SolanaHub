@@ -34,6 +34,17 @@ export interface Multipliers {
   date: string
 }
 
+<<<<<<< HEAD
+export interface loyalMember {
+    walletOwner:     string;
+    loyaltyPoints:   any;
+    pointsBreakDown: PointsBreakDown;
+    hubDomainHolder: string;
+    prizePoolShare:  number;
+    airdrop?: number
+}
+=======
+>>>>>>> main
 
 export interface Season{
   airdrop: number

@@ -1,4 +1,6 @@
-<table-head [label]="label" [desc]="desc"></table-head>
+@if(label){
+  <table-head [label]="label" [desc]="desc"></table-head>
+}
 
 <ion-row class="ion-align-items-center ">
 
@@ -19,11 +21,32 @@
 
 
 
+<!-- <ng-template #selectAllTemplate let-changeEvent>
+  <label class="ngx-form-checkbox">
+    <input type="checkbox" (input)="changeEvent()" />
+    <i class="ngx-form-icon custom-checkbox-color" id="selectAllCheckbox"></i>
+  </label>
+</ng-template> -->
+<ng-template #selectAllTemplate let-changeEvent>
 
+    <ion-checkbox (ionChange)="changeEvent($event)" />
+
+</ng-template>
 
 <div id="table-wrapper">
-  <ngx-table #table [id]="tableId" (event)="onRowClicked.emit($event)" [configuration]="configuration"
-    [data]="tableData()" [columns]="tableColumns()" [loadingTemplate]="loadingTemplate">
+  <ngx-table 
+  [class.checkbox-on]="checkboxes"
+  #table 
+  [id]="tableId"
+   (event)="onRowClicked.emit($event)"
+    [configuration]="configuration"
+    [selectAllTemplate]="selectAllTemplate"
+    
+    [data]="tableData()" 
+    [columns]="tableColumns()" 
+    (event)="tableEventEmitted($event)"
+    [loadingTemplate]="loadingTemplate">
+    
   </ngx-table>
   @if (configuration.paginationEnabled) {
   <div id="table-controls">
