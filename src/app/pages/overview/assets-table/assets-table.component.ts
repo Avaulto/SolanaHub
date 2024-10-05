@@ -121,12 +121,12 @@ export class AssetsTableComponent implements OnInit {
     const collections = nfts.reduce((acc, nft) => {
       const collectionName = nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown';
       const collectionSymbol = nft.collection.symbol || nft.collectionMagicEdenStatSymbol || '';
-      const collectionKey = collectionName.toLowerCase().slice(0, 5);
+      // const collectionKey = collectionName.toLowerCase().slice(0, 5);
 
       const existingCollection = acc.find(c => 
         c.collectionName.toLowerCase() === collectionName.toLowerCase() ||
-        c.collectionSymbol.toLowerCase() === collectionSymbol.toLowerCase() ||
-        c.collectionKey === collectionKey
+        c.collectionSymbol.toLowerCase() === collectionSymbol.toLowerCase()
+        // c.collectionKey === collectionKey
       );
 
       if (existingCollection) {
@@ -138,7 +138,7 @@ export class AssetsTableComponent implements OnInit {
         acc.push({
           collectionName,
           collectionSymbol,
-          collectionKey,
+          // collectionKey,
           nfts: [nft],
           value: (Number(nft.floorPrice) || 0) * this.solPrice(),
           imageUri: nft.collection.image_uri,

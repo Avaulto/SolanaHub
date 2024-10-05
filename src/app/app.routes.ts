@@ -81,8 +81,6 @@ export const routes: Routes = [
     path:"**",
     redirectTo: RoutingPath.OVERVIEW
   },
-<<<<<<< HEAD
-=======
 
 
 
@@ -90,5 +88,4 @@ export const routes: Routes = [
 
 
 
->>>>>>> main
 ];
