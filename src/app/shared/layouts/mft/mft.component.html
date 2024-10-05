@@ -7,7 +7,9 @@
   @if(tableMenuOptions.length){
     <div class="ion-margin-start ion-hide-lg-down"></div>
   <ion-col >
-    <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"/>
+    <app-table-menu 
+    [menu]="tableMenuOptions"
+     [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"/>
   </ion-col>
   }
   @if(searchBoxEnable){
@@ -35,6 +37,7 @@
 
 <div id="table-wrapper">
   <ngx-table 
+<<<<<<< HEAD
   [class.checkbox-on]="checkboxes"
   #table 
   [id]="tableId"
@@ -47,8 +50,17 @@
     (event)="tableEventEmitted($event)"
     [loadingTemplate]="loadingTemplate">
     
+=======
+    #table 
+    [id]="tableId" 
+    (event)="onRowClicked.emit($event)" 
+    [configuration]="configuration"
+    [data]="tableData()" 
+    [columns]="tableColumns()" 
+    [loadingTemplate]="loadingTemplate">
+>>>>>>> stashUp2
   </ngx-table>
-  @if (configuration.paginationEnabled) {
+  @if (configuration.paginationEnabled && !configuration.isLoading) {
   <div id="table-controls">
     <ion-button mode="md" fill="clear" (click)="previousPage()">
       <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" />

@@ -1,4 +1,9 @@
 <div class="loyal-member-container">
+  @if(showCommunityCodeBanner()){
+  <div class="community-banner" [@slideInOut]>
+    <ion-img src="/assets/images/ll/community-banner/ml.png" />
+  </div>
+  }
   <ion-row class="loyal-member">
     <ion-col size="12" sizeLg="5" class="member-stats">
       <div id="points-container">
@@ -83,11 +88,12 @@
               </div>
             </ion-col> -->
             <div id="community-member-code">
-            <ion-label>  
+            <ion-label (click)="showCodeInput = !showCodeInput">  
             community member? <br/> 
             </ion-label>
-            INSERT YOUR CODE HERE: 
-            <ion-input/>
+            @if(showCodeInput){
+            <ion-input placeholder="INSERT YOUR CODE" (ionInput)="insertCode($event)"/>
+            }
             </div>
           </ion-row>
         </div>

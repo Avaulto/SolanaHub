@@ -6,7 +6,10 @@ import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { environment } from 'src/environments/environment';
+<<<<<<< HEAD
 
+=======
+>>>>>>> stashUp2
 @Injectable({
   providedIn: 'root'
 })

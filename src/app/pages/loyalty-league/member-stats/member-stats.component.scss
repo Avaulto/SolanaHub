@@ -1,3 +1,8 @@
+.community-banner {
+  margin-block-end: 20px;
+  overflow: hidden;
+  border-radius: 4px;
+}
 .loyal-member-container {
   .loyal-member {
     text-transform: capitalize;
@@ -181,7 +186,25 @@
     }
   }
 
-  
+  #community-member-code {
+    display: flex;
+    ion-label{
+      color: var(--ion-color-primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    ion-input{
+      min-height: 20px !important;
+      height: 20px;
+      width: 120px;
+      border-radius: 4px;
+      margin-inline-start: 4px;
+      --padding-start: 5px !important;
+      text-transform: capitalize;
+      font-size: 11px;
+  }
+}
+
 @media only screen and (max-width: 992px) {
     
     .member-stats{

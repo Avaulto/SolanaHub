@@ -51,14 +51,15 @@
           <ion-label>{{defi.title}}</ion-label>
           <div class="badges-container">
             @for (badge of defi.badges; track $index) {
-            <span class="badge">
-              {{badge.strategy}}
-            </span>
+            <chip [name]="badge.strategy" [color]="" />
+            
+           
             @if (badge.solanahubboosted) {
-            <span class="badge sh-boosted">SolanaHub Boosted</span>
+              <chip [name]="'SolanaHub Boosted'" [color]="'primary'" />
+
             }
             @if (badge.protocolBoosted) {
-            <span class="badge protocol-boosted">Protocol Boosted</span>
+              <chip [name]="'Protocol Boosted'" [color]="'focus'" />
             }
             }
           </div>

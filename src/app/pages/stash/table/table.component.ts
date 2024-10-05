@@ -35,10 +35,18 @@ export class TableComponent  implements OnInit {
   @Input() columns;
   @Input() stash;
   @Input() tableName: string;
+<<<<<<< HEAD
   @Input() actionTitle: string;
   public tableData = signal([])
   constructor() { 
     addIcons({arrowUpOutline})
+=======
+  @Input() tableDescription: string;
+  @Input() actionTitle: string;
+  public tableData = signal([])
+  constructor() { 
+    addIcons({arrowUpOutline});
+>>>>>>> stashUp2
   }
 
   ngOnInit() {
@@ -68,4 +76,12 @@ export class TableComponent  implements OnInit {
       nativeEl.value = 'first';
     }
   };
+<<<<<<< HEAD
+=======
+
+  handleSelectAll(selectAll: boolean) {
+    // Handle select all logic in the parent component if needed
+    console.log('Select all:', selectAll);
+  }
+>>>>>>> stashUp2
 }

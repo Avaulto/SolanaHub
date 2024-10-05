@@ -19,6 +19,11 @@ export const routes: Routes = [
     
   },
   {
+    path: RoutingPath.STASH,
+    loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage),
+    
+  },
+  {
     path: RoutingPath.COLLECTIBLES,
     loadComponent: () => import('./pages/collectibles/collectibles.page').then( m => m.CollectiblesPage),
     
@@ -47,15 +52,6 @@ export const routes: Routes = [
   {
     path: RoutingPath.STAKING,
     loadComponent: () => import('./pages/staking/staking.page').then( m => m.StakingPage),
-    
-  },
-  {
-    path: RoutingPath.STASH,
-    loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage)
-  },
-  {
-    path: RoutingPath.LENDING,
-    loadComponent: () => import('./pages/lending/lending.page').then( m => m.LendingPage),
     
   },
   {

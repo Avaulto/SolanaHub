@@ -30,11 +30,17 @@ export class MftComponent implements OnInit {
     //@ts-ignore
   @Input('tableData') tableData 
 
+  @Input('checkBox') checkBox: boolean = false;
+
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
   @Output('onRowClicked') onRowClicked = new EventEmitter()
   @Output('onTabSelected') onTabSelected = new EventEmitter()
   @Output('onSearch') onSearch = new EventEmitter()
+<<<<<<< HEAD
   @Output('onEmitData') onEmitData = new EventEmitter()
+=======
+  
+>>>>>>> stashUp2
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
@@ -56,13 +62,18 @@ export class MftComponent implements OnInit {
     // threeWaySort: true,
     showDetailsArrow: true,
     paginationRangeEnabled: false,
+<<<<<<< HEAD
     paginationEnabled: this.paginationEnabled,
     rows: this.tableRows,
+=======
+    paginationEnabled: false,
+>>>>>>> stashUp2
     // fixedColumnWidth: true,
     // horizontalScroll: true,
-    isLoading: false,
+    isLoading: true,
   };
   ngOnInit(): void {
+    this.configuration.checkboxes = this.checkBox
     this.configuration.rows = this.tableRows;
     this.configuration.checkboxes = this.checkboxes;
     if(this._platform.width() < 992){
@@ -110,11 +121,21 @@ export class MftComponent implements OnInit {
       } else{
         this.configuration.isLoading = true;
       }
+<<<<<<< HEAD
       if(!this.paginationEnabled && this.tableData && this.tableData()?.length < this.tableRows){
         this.configuration.paginationEnabled = false
       }else{
         this.configuration.paginationEnabled = true
       }
+=======
+
+        if(this.tableData && this.tableData()?.length < this.tableRows){
+          this.configuration.paginationEnabled = false
+        }else{
+          this.configuration.paginationEnabled = true
+        }
+   
+>>>>>>> stashUp2
 
     })
     console.log(this.configuration.isLoading);
@@ -129,6 +150,7 @@ export class MftComponent implements OnInit {
       value: this.searchTerm(),
     });
   }
+<<<<<<< HEAD
   allSelected = false;
   tableEventEmitted(event: { event: string; value: any }): void {
     console.log(event);
@@ -161,5 +183,15 @@ export class MftComponent implements OnInit {
   // }
   eventEmitted($event: { event: string; value: any }): void {
 
+=======
+  public selected = new Set();
+  onChange(row: any): void {
+    const index = this.tableData.indexOf(row);
+    if (this.selected.has(index)) {
+      this.selected.delete(index);
+    } else {
+      this.selected.add(index);
+    }
+>>>>>>> stashUp2
   }
 }

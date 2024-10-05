@@ -45,6 +45,7 @@ export interface Season{
   endDate: Date
 }
 
+
 export interface loyaltyLeagueMember {
   prizePoolShare?: number
   lastUpdated?: Date,

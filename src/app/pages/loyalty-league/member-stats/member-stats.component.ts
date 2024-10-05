@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText, IonInput } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
@@ -38,7 +39,20 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
     IonCol,
     NgStyle,
     IonIcon,
-    CopyTextDirective, NumberCounterComponent]
+    CopyTextDirective, NumberCounterComponent],
+  animations: [
+    trigger('slideInOut', [
+      state('void', style({
+        transform: 'translateY(-100%)',
+        opacity: 0
+      })),
+      state('*', style({
+        transform: 'translateY(0)',
+        opacity: 1
+      })),
+      transition('void <=> *', animate('300ms ease-in-out'))
+    ])
+  ]
 })
 export class MemberStatsComponent implements OnChanges {
 
@@ -100,5 +114,12 @@ export class MemberStatsComponent implements OnChanges {
     { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referred friends who stake with SolanaHub validator.' },
     // { title: 'Quests', key: 'questsPts', tooltip: 'Bonus points earned from loyalty tier boost and quests.' }
   ];
-
+  insertCode(ev){
+    console.log('insert code', ev);
+    if(ev.detail.value === 'madladHubbie'){
+    this.showCommunityCodeBanner.set(true)
+    }
+  }
+  showCodeInput = false
+  showCommunityCodeBanner = signal(false)
 }
