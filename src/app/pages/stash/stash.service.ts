@@ -15,11 +15,7 @@ export class StashService {
     const filterExceedBalance = filterActiveAccounts.filter(acc => acc.excessLamport)
     const acc = filterExceedBalance[0]
 
-<<<<<<< HEAD
-    await this._nss.withdraw([acc], publicKey, acc.excessLamport)
-=======
     // await this._nss.withdraw([acc], publicKey, acc.excessLamport)
->>>>>>> stashUp2
     return filterExceedBalance
   }
 }

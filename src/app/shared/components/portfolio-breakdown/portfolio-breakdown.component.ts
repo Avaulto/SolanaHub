@@ -6,7 +6,7 @@ import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
 import { IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/angular/standalone';
 
 @Component({
-  selector: 'app-portfolio-breakdown',
+  selector: 'portfolio-breakdown',
   templateUrl: './portfolio-breakdown.component.html',
   styleUrls: ['./portfolio-breakdown.component.scss'],
   standalone: true,
@@ -87,19 +87,15 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         color = '#B5179E'
         break;
       case 'Rewards':
-      case 'NFTs':
         color = '#F72585'
         break;
       case 'Airdrop':
         color = '#b82568'
         break;
       case 'Deposit':
-      case 'Tokens':
-      case 'Empty accounts':
         color = '#E9CDC2'
         break;
       case 'Farming':
-      case 'Positions':
         color = '#341663'
         break;
       case 'Vesting':

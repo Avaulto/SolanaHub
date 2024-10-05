@@ -1,26 +1,22 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
-import { Component, Input, OnInit, Signal, computed, effect, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { addIcons } from 'ionicons';
 import {eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { PopoverController } from '@ionic/angular';
 import { PortfolioService } from 'src/app/services/portfolio.service';
-import { IonSkeletonText, IonIcon, IonText, IonSelectOption,IonSelect, IonToggle, IonImg } from '@ionic/angular/standalone';
-import { AnimatedIconComponent } from 'src/app/shared/components';
-import { JupStoreService } from 'src/app/services';
-
+import { IonSkeletonText, IonIcon, IonText, IonSelectOption,IonSelect, IonToggle } from '@ionic/angular/standalone';
+import { JupStoreService, PriceHistoryService } from 'src/app/services';
 @Component({
   selector: 'app-net-worth',
   templateUrl: './net-worth.component.html',
   styleUrls: ['./net-worth.component.scss'],
   standalone: true,
-  imports:[AnimatedIconComponent ,DecimalPipe, CurrencyPipe,NgClass,IonText, IonToggle, IonSelectOption,IonSelect ,IonImg, AsyncPipe, IonSkeletonText, IonIcon]
+  imports:[DecimalPipe, CurrencyPipe,NgClass,IonText, IonToggle, IonSelectOption,IonSelect , AsyncPipe, IonSkeletonText, IonIcon]
 })
 export class NetWorthComponent {
-  @Input() totalValueUSD: Signal<number>;
-  @Input() totalValueInSOL: Signal<number>;
   constructor(
-    private _jupStore: JupStoreService,
     private _portfolioService:PortfolioService,
+    private _jupStore:JupStoreService
   ){
     addIcons({eyeOutline, eyeOffOutline });
   }
@@ -30,7 +26,8 @@ export class NetWorthComponent {
   toggleShowBalance(){
     this.hideBalance = !this.hideBalance;
     this._portfolioService.privateMode.next(this.hideBalance)
-
+    // console.log(this._portfolio.privateMode());
+    
   }
   public walletAssets = inject(PortfolioService).walletAssets
   public portfolioTotalUsdValue = signal(0);

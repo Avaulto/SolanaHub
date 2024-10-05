@@ -2,27 +2,18 @@ import { CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
 import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, signal } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
-import { PageHeaderComponent } from 'src/app/shared/components';
+import { PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { TableHeadComponent } from 'src/app/shared/layouts/mft/table-head/table-head.component';
 import { TableMenuComponent } from 'src/app/shared/layouts/mft/table-menu/table-menu.component';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { PromoComponent } from './promo/promo.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-<<<<<<< HEAD
-import { single } from 'rxjs';
-import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-modal.component";
-import { PortfolioBreakdownComponent } from 'src/app/shared/components';
-import { StashService } from './stash.service';
-import { TableComponent } from './table/table.component';
-=======
 import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-modal.component";
 import { StashService } from './stash.service';
 import { TableComponent } from './table/table.component';
-import { PortfolioBreakdownComponent } from '../overview/portfolio-breakdown/portfolio-breakdown.component';
 import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
->>>>>>> stashUp2
 
 
 @Component({
@@ -44,11 +35,8 @@ import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
     ])
   ],
   imports: [
-<<<<<<< HEAD
-=======
     ChipComponent,
     AnimatedIconComponent,
->>>>>>> stashUp2
     JsonPipe,
     IonCheckbox,
     IonText,
@@ -75,12 +63,8 @@ import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
     MftModule,
     TooltipModule,
     BurnNftModalComponent,
-<<<<<<< HEAD
-  ]
-=======
     AnimatedIconComponent
 ]
->>>>>>> stashUp2
 })
 export class StashPage implements OnInit {
   @ViewChild('checkboxTpl', { static: true }) checkboxTpl: TemplateRef<any> | any;
@@ -108,17 +92,10 @@ export class StashPage implements OnInit {
   public emptyAccountsColumn = signal([])
   ngOnInit() {
     this.emptyAccountsColumn = signal([
-<<<<<<< HEAD
-      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: false } },
-      { key: 'asset', title: 'Asset', width: '40%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'tokenAccount', title: 'Account', cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
-=======
       // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'asset', title: 'Asset', width: '40%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
->>>>>>> stashUp2
       { key: 'value', title: 'Extracted Value',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'source', title: 'Source', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'action', title: '', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },

@@ -3,6 +3,7 @@ import { Component, Input, OnInit, signal, TemplateRef, ViewChild } from '@angul
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowUpOutline } from 'ionicons/icons';
+import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 
 @Component({
@@ -11,6 +12,7 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
   styleUrls: ['./table.component.scss'],
   standalone: true,
   imports:[
+    ChipComponent,
     IonRow,
     IonIcon,
     IonItem,
@@ -35,18 +37,11 @@ export class TableComponent  implements OnInit {
   @Input() columns;
   @Input() stash;
   @Input() tableName: string;
-<<<<<<< HEAD
-  @Input() actionTitle: string;
-  public tableData = signal([])
-  constructor() { 
-    addIcons({arrowUpOutline})
-=======
   @Input() tableDescription: string;
   @Input() actionTitle: string;
   public tableData = signal([])
   constructor() { 
     addIcons({arrowUpOutline});
->>>>>>> stashUp2
   }
 
   ngOnInit() {
@@ -76,12 +71,9 @@ export class TableComponent  implements OnInit {
       nativeEl.value = 'first';
     }
   };
-<<<<<<< HEAD
-=======
 
   handleSelectAll(selectAll: boolean) {
     // Handle select all logic in the parent component if needed
     console.log('Select all:', selectAll);
   }
->>>>>>> stashUp2
 }

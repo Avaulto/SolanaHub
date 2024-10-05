@@ -12,7 +12,7 @@
     <ion-row id="stat-wrapper" class="ion-justify-content-between">
       <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
         <div class="icon-wrapper ion-hide-lg-down">
-          <!-- <animated-icon  icon="https://cdn.lordicon.com/hpveozzh.json" /> -->
+          <animated-icon  icon="https://cdn.lordicon.com/hpveozzh.json" />
         </div>
         <div class="stat-title">Total stash</div>
         <div class="stat-desc">
@@ -113,6 +113,6 @@ here
 
 <ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="source-type ion-text-left ion-text-capitalize">
-    <!-- <chip  [name]="row.source" [color]="row.source === 'empty account' ? 'focus' : ''" /> -->
+    <chip  [name]="row.source" [color]="row.source === 'empty account' ? 'focus' : ''" />
   </div>
 </ng-template>

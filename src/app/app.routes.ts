@@ -4,6 +4,8 @@ import { IsConnectedGuard } from './shared/guards/is-connected.guard';
 import { inject } from '@angular/core';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
+import { environment } from '../environments/environment';
+
 export const canActivate = (isConnected: boolean, walletService = inject(WalletStore)) => walletService.connected$;
 
 export const routes: Routes = [
@@ -21,7 +23,7 @@ export const routes: Routes = [
   {
     path: RoutingPath.STASH,
     loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage),
-    
+    canActivate: [() => !environment.production]
   },
   {
     path: RoutingPath.COLLECTIBLES,

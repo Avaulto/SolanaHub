@@ -13,6 +13,7 @@ import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.direc
 import { tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder } from './table-options-helper'
 import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
+import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 
 interface nftTable {
   collectionName: string
@@ -31,6 +32,7 @@ interface nftTable {
   styleUrls: ['./assets-table.component.scss'],
   standalone: true,
   imports: [
+    ChipComponent,
     AsyncPipe,
     SkeletonPhDirective,
     MftModule,

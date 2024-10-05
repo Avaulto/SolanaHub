@@ -241,11 +241,10 @@ ion-spinner {
 }
 
 
-
 .toastStyle {
     text-transform: capitalize;
     --color: var(--ion-text-color);
-    --background: var(--notif-background);
+    // --background: var(--notif-background);
     --min-height: 50px;
     --width: 310px;
     --box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -267,8 +266,8 @@ ion-spinner {
     }
 
     &.toastError {
-        --border-color: #FBBC05;
-        --button-color: #FBBC05;
+        --border-color: var(--ion-color-error);
+        --button-color: var(--ion-color-error);
     }
 
     &.toastInfo {

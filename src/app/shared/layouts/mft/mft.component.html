@@ -37,20 +37,6 @@
 
 <div id="table-wrapper">
   <ngx-table 
-<<<<<<< HEAD
-  [class.checkbox-on]="checkboxes"
-  #table 
-  [id]="tableId"
-   (event)="onRowClicked.emit($event)"
-    [configuration]="configuration"
-    [selectAllTemplate]="selectAllTemplate"
-    
-    [data]="tableData()" 
-    [columns]="tableColumns()" 
-    (event)="tableEventEmitted($event)"
-    [loadingTemplate]="loadingTemplate">
-    
-=======
     #table 
     [id]="tableId" 
     (event)="onRowClicked.emit($event)" 
@@ -58,7 +44,6 @@
     [data]="tableData()" 
     [columns]="tableColumns()" 
     [loadingTemplate]="loadingTemplate">
->>>>>>> stashUp2
   </ngx-table>
   @if (configuration.paginationEnabled && !configuration.isLoading) {
   <div id="table-controls">

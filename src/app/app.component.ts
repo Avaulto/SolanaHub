@@ -42,6 +42,7 @@ import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league
 import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
+import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
 
 
 @Component({
@@ -81,7 +82,8 @@ import { DonateComponent } from './shared/layouts/donate/donate.component';
     IonLabel,
     IonRouterOutlet,
     IonImg,
-    LoyaltyLeagueMemberComponent
+    LoyaltyLeagueMemberComponent,
+    FloatJupComponent
   ],
 })
 export class AppComponent implements OnInit {
@@ -184,24 +186,24 @@ export class AppComponent implements OnInit {
     {
       group: 'DeFi',
       pages: [
-        { title: 'Swap', url: `/${RoutingPath.SWAP}`, icon: 'https://cdn.lordicon.com/whczgeys.json', active: true },
+        // { title: 'Swap', url: `/${RoutingPath.SWAP}`, icon: 'https://cdn.lordicon.com/whczgeys.json', active: true },
         {
           title: 'Staking',
           url: `/${RoutingPath.STAKING}`,
           icon: 'https://cdn.lordicon.com/xoaqvsym.json',
           active: true
         },
-        {
-          title: 'Lending',
-          url: `/${RoutingPath.LENDING}`,
-          icon: 'https://cdn.lordicon.com/jkgunhbs.json',
-          active: false
-        },
+        // {
+        //   title: 'Lending',
+        //   url: `/${RoutingPath.LENDING}`,
+        //   icon: 'https://cdn.lordicon.com/jkgunhbs.json',
+        //   active:  environment.production ? false : true
+        // },
         {
           title: 'Stash',
           url: `/${RoutingPath.STASH}`,
           icon: 'https://cdn.lordicon.com/hpveozzh.json',
-          active: true
+          active: environment.production ? false : true
         },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
    

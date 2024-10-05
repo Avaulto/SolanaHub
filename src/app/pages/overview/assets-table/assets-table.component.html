@@ -43,7 +43,7 @@
   </div>
 </ng-template>
 <ng-template #nftOffersTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-chip>{{row.offers}}</ion-chip>
+  <chip [name]="row.offers" color="active"/>
 </ng-template>
 <!-- tokens table templates -->
 <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
@@ -63,7 +63,7 @@
 </ng-template>
 <ng-template #typeDefiTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="defi-type ion-text-center ion-text-capitalize">
-    <ion-chip>{{row.type}}</ion-chip>
+    <chip [name]="row.type"/>
   </div>
 </ng-template>
 <!-- validator tpl -->
@@ -103,11 +103,11 @@
   </div>
 </ng-template>
 <ng-template #statusTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-chip class="ion-text-capitalize" [ngClass]="{
+  <chip [name]="row.state" class="ion-text-capitalize" [ngClass]="{
     'green': row.state.toLowerCase() === 'active',
     'primary': row.state.toLowerCase() === 'deactive',
     'blue': row.state.toLowerCase() === 'activated',
-}">{{row.state}}</ion-chip>
+}"/>
 </ng-template>
 
 

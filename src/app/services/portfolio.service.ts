@@ -430,5 +430,7 @@ export class PortfolioService {
     this.defi.set(null)
     this.staking.set(null)
     this.walletHistory.set(null)
+
+    this._fetchPortfolioService.triggerFetch()
   }
 }

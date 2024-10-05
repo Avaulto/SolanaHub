@@ -5,22 +5,15 @@
    <div class="">
       <div id="head-line">
         <ion-label>{{tableName}}</ion-label> 
-        <ion-chip>{{tableData().length}} • {{10.1 | currency}}</ion-chip>
+        <chip [name]="tableData().length + ' • ' + (10.1 | currency)"></chip>
+
       </div>
-<<<<<<< HEAD
-      @if(hasFees){
-        <p>
-          SolanaHub a 1% fee for this service, and the amount reclaimed is paid in SOL.
-        </p>
-      }
-=======
 
         <p>
           {{tableDescription}}
           <!-- SolanaHub a 1% fee for this service, and the amount reclaimed is paid in SOL. -->
         </p>
       
->>>>>>> stashUp2
       <div class="ion-margin-button ion-hide-lg-down"></div>
     </div>
     <!-- <ion-col  size="6" sizeLg="2">
@@ -35,18 +28,10 @@
  
   </ion-row>
   <app-mft 
-<<<<<<< HEAD
-    slot="content"
-    (onEmitData)="selectedRows($event)"
-    [tableRows]="100"
-    [checkboxes]="true" 
-    [paginationEnabled]="false"
-=======
     [checkBox]="true"
     slot="content"
     (onEmitData)="selectedRows($event)"
     [tableRows]="100"
->>>>>>> stashUp2
     [tableId]="'savings-table'" 
     [tableColumns]="columns" 
     [tableData]="tableData"
@@ -54,7 +39,3 @@
     </ion-accordion>
   </ion-accordion-group>
 </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> stashUp2

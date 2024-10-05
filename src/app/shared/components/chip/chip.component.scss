@@ -15,19 +15,23 @@
     font-weight: 500;
     width: fit-content;
     &.primary {
-        border-radius: var(--radius-full, 9999px);
         border: 1px solid #FDD1EE;
         background: #FFF3FB;
         color: #763261;
     }
     &.secondary {
-        border-radius: var(--radius-full, 9999px);
         border: 1px solid  var(--ion-color-secondary);
         background: #f5f2f9;
         color: var(--ion-color-secondary);
     }
+    &.active {
+
+        border: 1px solid #ABEFC6;
+        background: #ECFDF3;
+        color: var(--ion-color-success);
+
+    }
     &.focus {
-        border-radius: var(--radius-full, 9999px);
         border: 1px solid var(--Component-colors-Utility-Blue-utility-blue-200, #B2DDFF);
         background: var(--Component-colors-Utility-Blue-utility-blue-50, #EFF8FF);
         color: #175CD3;
