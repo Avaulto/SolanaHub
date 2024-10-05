@@ -3,6 +3,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { toastData } from 'src/app/models';
 import { ToasterService, UtilService } from 'src/app/services';
 import { environment } from 'src/environments/environment';
+import va from '@vercel/analytics';
 declare global {
   interface Window {
     Jupiter: JupiterTerminal;
@@ -143,6 +144,7 @@ export class FloatJupComponent implements OnInit {
       endpoint: this._utils.RPC,
       platformFeeAndAccounts,
       onSuccess: ({ txid, swapResult }) => {
+        va.track('swap', { txid });
         const url = `${this._utils.explorer}/tx/${txid}?cluster=${environment.solanaEnv}`
 
         const txSend: toastData = {
