@@ -1,7 +1,7 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, throwError } from 'rxjs';
+import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError } from 'rxjs';
 import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
@@ -23,12 +23,16 @@ export class LoyaltyLeagueService {
     //   firstValueFrom(this.getPrizePool()).then(llPrizePool => this._loyaltyLeaguePrizePool$.next(llPrizePool))
     // }
   }
-  // public member$ = new Subject<loyaltyLeagueMember>();
+  public _member = null
   public member$: Observable<loyaltyLeagueMember> = this._shs.walletExtended$.pipe(
     this._utilService.isNotNullOrUndefined,
     switchMap(wallet => {
       if (wallet) {
+        if (this._member) {
+          return of(this._member)
+        }
         return this.getMember(wallet.publicKey.toBase58()).pipe(
+          tap(member => this._member = member),
           map(member => {
             if (member) {
               return member;

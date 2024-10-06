@@ -13,7 +13,7 @@ import { ModalController } from '@ionic/angular';;
 
 })
 export class ReferAFriendModalComponent implements AfterViewInit {
-  @Input() refCode: string = 'sdf3a'
+  @Input() refCode: string;
   constructor(private _modalCtrl: ModalController) {
     addIcons({ shareOutline, copyOutline })
   }

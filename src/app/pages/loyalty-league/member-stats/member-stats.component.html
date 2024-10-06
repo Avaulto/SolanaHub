@@ -1,17 +1,23 @@
+<!-- lazy load codes component -->
+<img class="ion-hide" src="/assets/images/ll/community-banner/ml.png" />
+
 <div class="loyal-member-container">
-  @if(showCommunityCodeBanner()){
+  @if(communityBanner()){
   <div class="community-banner" [@slideInOut]>
-    <ion-img src="/assets/images/ll/community-banner/ml.png" />
+   <ion-img [src]="'/assets/images/ll/community-banner/'+communityBanner()+'.png'" />
   </div>
   }
+
   <ion-row class="loyal-member">
     <ion-col size="12" sizeLg="5" class="member-stats">
       <div id="points-container">
 
 
         <div class="total-points">
-          <ion-label class="total-points__title">
-            Your Total Points
+          <div class="total-points__title-container">
+            <ion-label class="total-points__title">
+              Your Total Points
+      
             @if((member$ | async)?.ambassadorPts; as member){
             <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
             <ng-template #toolTipTpl>
@@ -25,7 +31,9 @@
               </div>
             </ng-template>
             }
-          </ion-label>
+          </ion-label>  
+          <codes (communityCodeBanner)="communityBanner.set($event)" />
+          </div>
           <div class="total-points__value">
             <span>
               @if(member$ | async; as member){
@@ -88,12 +96,10 @@
               </div>
             </ion-col> -->
             <div id="community-member-code">
-            <ion-label (click)="showCodeInput = !showCodeInput">  
-            community member? <br/> 
-            </ion-label>
-            @if(showCodeInput){
+        
+            <!-- @if(showCodeInput()){
             <ion-input placeholder="INSERT YOUR CODE" (ionInput)="insertCode($event)"/>
-            }
+            } -->
             </div>
           </ion-row>
         </div>

@@ -10,7 +10,7 @@
         <div class="pool-profile">
           <ion-avatar>
 
-            <ion-img [src]="pool?.tokenImageURL" />
+            <ion-img [src]="pool?.tokenImageURL" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
           </ion-avatar>
           <div class="pool-name">
             <ion-label>{{pool?.poolName}}</ion-label>
@@ -22,11 +22,7 @@
           <ion-chip color="primary">
 
             @if(pool?.poolName === 'hub'){
-<<<<<<< HEAD
-            {{ pool?.apy * (1 ) | percent : '1.2-2'}}
-=======
             {{ pool?.apy | percent : '1.2-2'}}
->>>>>>> ll-v2
              
             
             }@else {

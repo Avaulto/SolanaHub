@@ -18,7 +18,11 @@
     }
     .total-points {
       margin-bottom: 24px;
-
+      &__title-container{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
       &__title {
         display: flex;
         align-items: center;

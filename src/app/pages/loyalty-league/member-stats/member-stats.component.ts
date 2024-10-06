@@ -14,6 +14,7 @@ import { NumberCounterComponent } from "../../../shared/components/number-counte
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { CodesComponent } from './codes/codes.component';
 // import { LoyaltyBadgeComponent } from './loyalty-badge/loyalty-badge.component';
 
 @Component({
@@ -39,7 +40,9 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
     IonCol,
     NgStyle,
     IonIcon,
-    CopyTextDirective, NumberCounterComponent],
+    CopyTextDirective, 
+    NumberCounterComponent,
+    CodesComponent],
   animations: [
     trigger('slideInOut', [
       state('void', style({
@@ -55,7 +58,7 @@ import { SolanaHelpersService, UtilService } from 'src/app/services';
   ]
 })
 export class MemberStatsComponent implements OnChanges {
-
+  public communityBanner = signal('')
   constructor(
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
@@ -97,11 +100,13 @@ export class MemberStatsComponent implements OnChanges {
   }
 
   public async openReferAFriendModal() {
-    const refCode = '123'
+    const refCode = this._loyaltyLeagueService._member.referralCode
+    console.log(refCode);
+    
     const modal = await this._modalCtrl.create({
       component: ReferAFriendModalComponent,
       componentProps: {
-        data: { refCode },
+        refCode ,
       },
       cssClass: 'refer-a-friend-modal'
     });
@@ -112,14 +117,8 @@ export class MemberStatsComponent implements OnChanges {
     { title: 'Staking', key: 'stakingPts', tooltip: 'Staking points are earned by staking your SOL or LST with SolanaHub validator.' },
     { title: 'DAO', key: 'daoPts', tooltip: 'DAO points are earned by participating in marinade and solablaze DAO tokens voting stake allocation towards SolanaHub validator. (check SolanaHub docs for more details)' },
     { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referred friends who stake with SolanaHub validator.' },
-    // { title: 'Quests', key: 'questsPts', tooltip: 'Bonus points earned from loyalty tier boost and quests.' }
+    { title: '? ? ? ?', key: 'questsPts', tooltip: 'its not a bug, were cooking something up!'  }
   ];
-  insertCode(ev){
-    console.log('insert code', ev);
-    if(ev.detail.value === 'madladHubbie'){
-    this.showCommunityCodeBanner.set(true)
-    }
-  }
-  showCodeInput = false
-  showCommunityCodeBanner = signal(false)
+  //'Bonus points earned from loyalty tier boost and quests.'
+
 }

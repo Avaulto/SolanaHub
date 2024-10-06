@@ -120,6 +120,7 @@ export class PortfolioService {
 
     mergeDuplications.push(tempNft);
     tempNft ? this.nfts.set(tempNft.data.assets) : this.nfts.set([])  ;
+    console.log('nfts', this.nfts())
     this.walletAssets.set(mergeDuplications);
   }
 
