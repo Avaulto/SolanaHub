@@ -47,17 +47,18 @@ export interface Season{
 
 
 export interface loyaltyLeagueMember {
-  prizePoolShare?: number
+  message?: string,
+  communityCode?: string,
   lastUpdated?: Date,
-  totalPtsAnimation?: Observable<number>
+  prizePoolShare?: number
   hubDomain?: string,
   referralCode?: string,
   ambassadorPts?: number,
-  questsPts?: number,
   walletOwner: string,
-  totalPts: number,
+  totalPts: any,
   stakingPts: number,
   daoPts: number,
+  questsPts: number,
   referralPts: number,
   daysLoyal: number,
 }

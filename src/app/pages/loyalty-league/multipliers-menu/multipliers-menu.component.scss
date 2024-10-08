@@ -33,6 +33,7 @@
     position: absolute;
     top: 15px;
     right: 15px;
+    z-index: 222;
 }
 
 .group-title {
@@ -41,6 +42,11 @@
     font-weight: 500;
     line-height: 18px;
     margin-block-end: 8px;
+    display: flex;
+    align-items: center;
+    chip{
+        margin-inline-start: 4px;
+    }
     .badge{
         font-weight: 600;
         margin-inline-start: 4px;
@@ -53,7 +59,7 @@
     font-weight: 400;
     line-height: 18px;
     display: flex;
-
+    width: 100%;
     ion-img {
         margin-inline-start: 8px;
         width: 16px;
@@ -66,6 +72,7 @@
     gap: var(--spacing-md, 8px);
 
     &.defi-container {
+        margin-block-end: 60px;
         display: block;
     }
 }
@@ -98,14 +105,23 @@
 .asset-item {
     flex: 3;
     display: flex;
-    padding: 16px;
+    padding-block: 16px;
+    padding-inline: 10px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 8px;
     border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
     background: var(--Colors-Background-bg-primary_alt, #FFF);
-
+    position: relative; 
+    #boosted-lst-icon {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: gold;
+        width: 16px;
+        height: 16px;
+    }
     ion-img {
         width: 36px;
         margin-block-end: 8px;

@@ -14,7 +14,10 @@ ion-text{
     text-transform: capitalize;
     display: block;
 }
-
+#not-available{
+    opacity:0.7;
+   cursor: pointer;
+}
 .input-container{
     margin-block: 4px;
 }

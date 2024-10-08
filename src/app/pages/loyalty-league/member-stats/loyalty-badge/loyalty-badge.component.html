@@ -1,5 +1,7 @@
 @if(currentTier){
-<div id="badge-container" [class]="currentTier.title">
+<div id="badge-container"
+[ngStyle]="{'filter': 'grayscale(' + (!daysLoyal ? 1 : 0) + ')'}"
+[class]="currentTier.title">
   <div id="badge-img">
     <ion-img [src]="currentTier.icon" alt="badge"/>
   </div>

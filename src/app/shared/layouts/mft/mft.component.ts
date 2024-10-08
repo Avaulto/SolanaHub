@@ -104,7 +104,7 @@ export class MftComponent implements OnInit {
       if (this.tableData) {
         const data = this.tableData();
         // Check if data is defined and either has length or is an empty array
-        if (data !== undefined && (data.length > 0 || Array.isArray(data))) {
+        if (data !== undefined && (data?.length > 0 || Array.isArray(data))) {
           this.configuration.isLoading = false;
         } else {
           this.configuration.isLoading = true;

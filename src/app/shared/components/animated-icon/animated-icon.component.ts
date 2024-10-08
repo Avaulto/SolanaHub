@@ -13,11 +13,10 @@ export class AnimatedIconComponent  implements OnInit {
   @Input() icon: string;
   @Input() color: string ='primary:#9b3678,secondary:#804FB3;'
   @Input() state: string;
+  @Input() trigger: string = 'hover';
   constructor() { }
 
   ngOnInit() {
-    console.log(this.color);
-    
   }
 
 }

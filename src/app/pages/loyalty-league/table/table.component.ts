@@ -42,9 +42,10 @@ export class TableComponent implements OnInit, AfterViewInit {
         stakingPts: this._utilService.decimalPipe.transform(member.stakingPts, '1.0-2') as any,
         daoPts: this._utilService.decimalPipe.transform(member.daoPts, '1.0-2') as any,
         referralPts: this._utilService.decimalPipe.transform(member.referralPts, '1.0-2')as any,
+        // questsPts: this._utilService.decimalPipe.transform(member.questsPts, '1.0-2')as any,
         totalPts: this._utilService.decimalPipe.transform(member.totalPts, '1.0-2') as any,
         daysLoyal: member.daysLoyal,
-      }
+      } as any
     }).sort((a, b) => {
       if (a.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
         return -1;

@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewChild, computed, effect, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, computed, effect, signal } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { combineLatestWith, distinctUntilChanged, firstValueFrom, map, Observable, of, shareReplay, single, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged as rxDistinctUntilChanged } from 'rxjs/operators';
 import { WalletAdapterOptionsComponent } from '../wallet-adapter-options/wallet-adapter-options.component';
 
 import va from '@vercel/analytics';
 import { ConnectionStore, Wallet, WalletStore } from '@heavy-duty/wallet-adapter';
-import { SolanaHelpersService, UtilService, ToasterService } from 'src/app/services';
+import { SolanaHelpersService, UtilService, ToasterService, PortfolioFetchService } from 'src/app/services';
 import { WalletConnectedDropdownComponent } from '../wallet-connected-dropdown/wallet-connected-dropdown.component';
 import { addIcons } from 'ionicons';
 import { chevronDownOutline } from 'ionicons/icons';
-import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
-import { PortfolioService } from 'src/app/services/portfolio.service';
 
 import { WatchModeService } from 'src/app/services/watch-mode.service';
 @Component({
@@ -18,55 +18,31 @@ import { WatchModeService } from 'src/app/services/watch-mode.service';
   templateUrl: './wallet-connect.component.html',
   styleUrls: ['./wallet-connect.component.scss'],
 })
-export class WalletConnectComponent {
+export class WalletConnectComponent implements OnInit, OnDestroy {
+  private walletChangeSubscription: Subscription;
+
   showSkeleton = true
   constructor(
+    private _portfolioFetchService: PortfolioFetchService,
     private _watchModeService: WatchModeService,
     public _utilsService: UtilService,
     private _walletStore: WalletStore,
     private _toasterService: ToasterService,
     public popoverController: PopoverController,
     private _shs: SolanaHelpersService,
-    private _loyaltyLeagueService: LoyaltyLeagueService,
-    private _portfolioService: PortfolioService
   ) {
     addIcons({ chevronDownOutline });
-    effect(() => {
-      //@ts-ignore
-      // if (this._portfolioService.nfts()) {
-
-      //   // get the first nft that has img
-      //   this.profilePic = this._portfolioService.nfts().find(nft => nft.image_uri)?.image_uri || 'assets/images/unknown.svg'
-      // }
-    })
   }
-  // public profilePic;
-  // loyalty league member score
-  // public llScore$ = this._shs.walletExtended$.pipe(
-  //   this._utilsService.isNotNullOrUndefined,
-  //   combineLatestWith(this._loyaltyLeagueService.llb$),
-  //   map(([wallet, lllb]) => {
-
-
-  //     const loyalMember = lllb.loyaltyLeagueMembers.find(staker => staker.walletOwner === wallet.publicKey.toBase58())
-  //     if (loyalMember) {
-  //       return loyalMember
-  //     }
-    
-
-  //     return {} as loyalMember
-
-  //   }))
-
 
   readonly wallets$ = this._walletStore.wallets$.pipe(shareReplay(1));
   readonly watchMode$ = this._watchModeService.watchMode$
+
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
       if (wallet || watchMode) {
         
-        // va.track('wallet connected');
+        va.track('wallet connected');
         this._toasterService.msg.next({
           message: `Wallet connected`,
           segmentClass: "toastInfo",
@@ -76,6 +52,10 @@ export class WalletConnectComponent {
       }
       return wallet || watchMode;
     }))
+
+
+  //  p = this._walletStore.wallet$.subscribe((r) => console.log('r::',r));  
+  //  p2 = this._walletStore.connected$.subscribe((r) => console.log('r::',r));  
   public shortedAddress = ''
   public watchModeWallet$ = this._watchModeService.watchedWallet$
   public connectedWallet$: Observable<any> = this._walletStore.wallet$.pipe(
@@ -85,10 +65,22 @@ export class WalletConnectComponent {
     distinctUntilChanged(),
     shareReplay(),
     map(([wallet, watchModeWallet]: any) => {
+      // this._portfolioFetchService.triggerFetch()
+
       return wallet || watchModeWallet
     }),
     shareReplay()
   )
+
+  ngOnInit() {
+ 
+  }
+
+  ngOnDestroy() {
+    if (this.walletChangeSubscription) {
+      this.walletChangeSubscription.unsubscribe();
+    }
+  }
 
   public async showWalletAdapters() {
 

@@ -6,6 +6,15 @@
     <div class="multipliers-container">
       @for (lst of defaultMultipliers.LSTs; track $index) {
       <div class="asset-item">
+
+        @if(lst.title === 'hubSOL' && lst.pts){
+           <animated-icon 
+           color="primary:#ffd700;" 
+           trigger="in"
+           id="boosted-lst-icon" 
+           icon="https://cdn.lordicon.com/tlagakau.json" 
+           state="loop-charging"/>
+          }
         <ion-img [src]="lst.img" />
         <ion-label>{{lst.title}}</ion-label>
         @if (lst.pts) {
@@ -16,7 +25,8 @@
       </div>
       }
     </div>
-    <div class="group-title">DAO Tokens<span class="badge sh-boosted">Boosted</span></div>
+    <div class="group-title">DAO Tokens <chip [name]="'Boosted'" [color]="'primary'" />
+    </div>
     <div class="multipliers-container">
       @for (dao of defaultMultipliers.daoTokens; track $index) {
       <div class="asset-item">
@@ -33,8 +43,8 @@
       }
     </div>
 
-    <div class="group-title">
-      <span>
+    <div class="group-title" style="flex-direction: column;">
+      <span style="width: 100%;">
         hubSOL Boosters
       </span>
       <div class="group-subtitle">Deposit your hubSOL into DeFi platforms to get more points
@@ -51,7 +61,7 @@
           <ion-label>{{defi.title}}</ion-label>
           <div class="badges-container">
             @for (badge of defi.badges; track $index) {
-            <chip [name]="badge.strategy" [color]="" />
+            <chip [name]="badge.strategy" />
             
            
             @if (badge.solanahubboosted) {

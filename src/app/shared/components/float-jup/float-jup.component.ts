@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, Input, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { toastData } from 'src/app/models';
 import { ToasterService, UtilService } from 'src/app/services';
@@ -19,7 +19,7 @@ interface IInit {
   /** TODO: Update to use the new platform fee and accounts */
   platformFeeAndAccounts?: any; // PlatformFeeAndAccounts;
   /** Configure Terminal's behaviour and allowed actions for your user */
-  formProps?:  any;
+  formProps?: any;
   /** Only allow strict token by [Jupiter Token List API](https://station.jup.ag/docs/token-list/token-list-api) */
   strictTokenList?: boolean;
   /** Default explorer for your user */
@@ -114,15 +114,19 @@ interface JupiterTerminal {
 @Component({
   selector: 'float-jup',
   template: '<div id="integrated-terminal"></div>',
-  styles:`#jupiter-terminal-instance  button{    background: var(--ion-color-secondary) !important;color:white !important;}`,
+  styles: `#jupiter-terminal-instance  button{    background: var(--ion-color-secondary) !important;color:white !important;}`,
   standalone: true,
   encapsulation: ViewEncapsulation.None
 })
-export class FloatJupComponent implements OnInit {
-
+export class FloatJupComponent implements OnInit, OnChanges {
+  @Input() path: string = '';
   private _utils = inject(UtilService);
   private _toast = inject(ToasterService);
   async ngOnInit() {
+
+
+  }
+  async initJupiter() {
     await this.importJupiterTerminal();
 
     const platformFeeAndAccounts = {
@@ -136,8 +140,8 @@ export class FloatJupComponent implements OnInit {
         [new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'), new PublicKey('96BHVJVpzU9XJ1FtAZxXVHvoTYp54x1pwFZwuDkXBzBz')],
       ]),
     };
-    
-   
+
+
     window.Jupiter.init({
       displayMode: "widget",
       integratedTargetId: "integrated-terminal",
@@ -154,7 +158,7 @@ export class FloatJupComponent implements OnInit {
           duration: 3000,
           cb: () => window.open(url)
         }
-    
+
         this._toast.msg.next(txSend);
         console.log({ txid, swapResult });
       },
@@ -166,19 +170,29 @@ export class FloatJupComponent implements OnInit {
           duration: 3000,
           // cb: () => window.open(txid)
         }
-    
+
         this._toast.msg.next(txSend);
         console.log('onSwapError', error);
       },
       defaultExplorer: 'solscan',
       widgetStyle: {
-        position:"bottom-right",
-        size:"sm"
+        position: "bottom-right",
+        size: "sm"
       }
     });
-    
   }
-
+  ngOnChanges(): void {
+    if (this.path) {
+      if (this.path === '/loyalty-league') {
+        delete window.Jupiter;
+        document.getElementById('jupiter-terminal-instance')?.remove();
+      } else {
+        if (!window.Jupiter) {
+          this.initJupiter()
+        }
+      }
+    }
+  }
   async importJupiterTerminal() {
     // create a script element and turn it to promise
     const script = document.createElement('script');

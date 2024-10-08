@@ -7,16 +7,19 @@ import { Multipliers } from 'src/app/models';
 import { map, Observable, ReplaySubject, shareReplay, switchMap, of, BehaviorSubject, combineLatestWith, Subscription } from 'rxjs';
 import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { diamondOutline } from 'ionicons/icons';
+import { diamondOutline, flash, flashOutline } from 'ionicons/icons';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+import { AnimatedIconComponent } from 'src/app/shared/components';
 
 @Component({
   selector: 'multipliers-menu',
   templateUrl: './multipliers-menu.component.html',
   styleUrls: ['./multipliers-menu.component.scss'],
   standalone: true,
-  imports: [IonIcon,
+  imports: [
+    AnimatedIconComponent,
+    IonIcon,
     ChipComponent, 
     IonSkeletonText,
     TooltipModule,
@@ -152,7 +155,7 @@ export class MultipliersMenuComponent implements OnInit {
     this.updateMultipliers()
   }
   constructor() {
-    addIcons({ diamondOutline });
+    addIcons({flash,diamondOutline,flashOutline});
   }
   async updateMultipliers() {
 

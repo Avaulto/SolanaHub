@@ -4,7 +4,9 @@
   <app-menu />
 
 </ion-header>
-<float-jup/>
+<!-- @if((path | async) !== '/loyalty-league'){ -->
+<float-jup [path]="path | async"/>
+
 <ion-app>
 
   <ion-split-pane contentId="main-content">

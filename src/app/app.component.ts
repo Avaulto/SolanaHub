@@ -94,10 +94,6 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-      console.log('wallet connected', wallet);
-      // if(wallet){
-      //   this._router.navigate(['/overview']);
-      // }
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()

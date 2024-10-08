@@ -1,3 +1,4 @@
+import { NgStyle } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, SimpleChange } from '@angular/core';
 import { IonImg } from "@ionic/angular/standalone";
 import { Tier } from 'src/app/models';
@@ -7,7 +8,7 @@ import { Tier } from 'src/app/models';
   templateUrl: './loyalty-badge.component.html',
   styleUrls: ['./loyalty-badge.component.scss'],
   standalone: true,
-  imports: [IonImg]
+  imports: [IonImg,NgStyle]
 })
 export class LoyaltyBadgeComponent  implements OnChanges {
   @Input() daysLoyal: number = 0;

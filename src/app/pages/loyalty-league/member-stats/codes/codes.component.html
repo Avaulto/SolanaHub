@@ -1,7 +1,8 @@
-<ion-label id="click-trigger">
+
+@if(!member?.message){
+<ion-label id='click-trigger'>
   got code? <br />
 </ion-label>
-
 
 <ion-popover #popover showBackdrop="false" trigger="click-trigger" triggerAction="click">
   <ng-template>
@@ -30,3 +31,10 @@
     </ion-content>
   </ng-template>
 </ion-popover>
+}@else{
+
+  <ng-template #toolTipTpl>cant use community code before you are a loyalty league member</ng-template>
+  <ion-label [tooltip]="toolTipTpl" [position]="tooltipDirection" id="not-available">
+    got code? <br />
+  </ion-label>
+}

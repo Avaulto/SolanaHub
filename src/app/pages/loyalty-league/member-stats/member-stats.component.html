@@ -32,15 +32,20 @@
             </ng-template>
             }
           </ion-label>  
-          <codes (communityCodeBanner)="communityBanner.set($event)" />
+         
+            @if((member$ | async)?.communityCode === '' || (member$ | async)?.message){
+            <codes [member]="member$ | async" (communityCodeBanner)="communityBanner.set($event)" />
+            
+            }
+          
           </div>
           <div class="total-points__value">
             <span>
               @if(member$ | async; as member){
               @if(member.totalPts){
-                {{member.totalPts | number:'1.0-0'}}
-              <!-- <number-counter [targetNumber]="member.totalPts"
-                [nextSnapshotTime]="member.lastUpdated" /> -->
+                <!-- {{member.totalPts | number:'1.0-0'}} -->
+              <number-counter [targetNumber]="member.totalPts"
+                [nextSnapshotTime]="member.lastUpdated" />
               }@else{
               0
               }
@@ -74,7 +79,8 @@
                   <div class="points-category__value">
                     @if (member$ | async; as member) {
                       @if (member[category.key]) {
-                        {{ member[category.key] | number:'1.0-0' }}
+                        <number-counter [targetNumber]="member[category.key]"
+                [nextSnapshotTime]="member.lastUpdated" />  
                       } @else {
                         0
                       }
