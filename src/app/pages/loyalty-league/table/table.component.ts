@@ -91,7 +91,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       { key: 'stakingPts', title: 'Staking points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
       { key: 'daoPts', title: 'DAO points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
       // { key: 'questsPts', title: 'Quests', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'referralPts', title: 'Referrals', width: '15%',cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'referralPts', title: 'Referrals', width: '15%',cssClass: { name: 'ion-text-center', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
       { key: 'totalPts', title: 'Total Points',  width: '15%',cssClass: { name: 'bold-text', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
     ]
   }
