@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon, IonChip, IonText } from "@ionic/angular/standalone";
+import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon, IonChip, IonText, IonImg } from "@ionic/angular/standalone";
 import { RouterLink } from '@angular/router';
 import { TooltipModule } from '../../layouts/tooltip/tooltip.module';
 import { addIcons } from 'ionicons';
@@ -22,7 +22,7 @@ export interface Rank {
   templateUrl: './loyalty-league-member.component.html',
   styleUrls: ['./loyalty-league-member.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonImg, 
     NumberCounterComponent,
     LoyaltyBadgeComponent,
     IonText,
@@ -51,4 +51,12 @@ export class LoyaltyLeagueMemberComponent {
 
   public tiers = this._loyaltyLeagueService.tiers;
 
+  public getTierIcon(daysLoyal: number) {
+    for (let i = this.tiers.length - 1; i >= 0; i--) {
+      if (daysLoyal >= this.tiers[i].loyaltyDaysRequirement) {
+        return this.tiers[i].iconFull;
+      }
+    }
+    return  ''
+  }
 }

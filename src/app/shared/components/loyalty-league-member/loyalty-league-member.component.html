@@ -26,7 +26,7 @@
       }
     </ion-text>
     @if(member$ | async; as member){  
-    <loyalty-badge [daysLoyal]="member.daysLoyal" [tiers]="tiers" />
+      <ion-img [src]="getTierIcon(member.daysLoyal)"></ion-img>
   }
   </div>
   <a routerDirection="root" routerLink="loyalty-league" id="leader-board-link"> Loyalty league HUB <ion-icon

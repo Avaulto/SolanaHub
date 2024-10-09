@@ -3,11 +3,12 @@
     <div>
     <div id="loyalty-path-header-title">Ranking tiers</div>
     <div id="loyalty-path-header-subtitle">
-     
-        <span id="days-remaining">
-          @if (daysLoyal) {
 
-            @if (daysRemainingToNextTier) {
+        <span id="days-remaining">
+          
+          @if (daysLoyal !== null) {
+
+            @if (daysRemainingToNextTier !== null) {
               {{daysRemainingToNextTier}} 
               
             } @else {
@@ -18,6 +19,7 @@
             0
           } days left
         </span> 
+        
         <div style="display: flex;">
           <span id="to">To</span> 
           <div id="tier-name" [ngStyle]="{'color': getColor(nextTier?.title)}">{{nextTier?.title || 'Degen'}}</div>

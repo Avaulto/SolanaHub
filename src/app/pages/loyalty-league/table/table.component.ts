@@ -3,11 +3,12 @@ import { IonIcon, IonImg } from '@ionic/angular/standalone';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import {  loyaltyLeagueMember, Tier } from 'src/app/models';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, JsonPipe } from '@angular/common';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
+import { NumberCounterComponent } from 'src/app/shared/components/number-counter/number-counter.component';
 @Component({
   selector: 'll-table',
   templateUrl: './table.component.html',
@@ -18,11 +19,14 @@ import { map } from 'rxjs';
     IonImg,
     IonIcon,
     DecimalPipe,
-    CopyTextDirective
+    CopyTextDirective,
+    NumberCounterComponent,
+    JsonPipe
   ]
 })
 export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('addressTpl', { static: true }) addressTpl: TemplateRef<any> | any;
+  @ViewChild('animatedNumberTpl', { static: true }) animatedNumberTpl: TemplateRef<any> | any;
   public tiers: Tier[] = this._loyaltyLeagueService.tiers
   constructor(
     private _utilService: UtilService,
@@ -39,12 +43,13 @@ export class TableComponent implements OnInit, AfterViewInit {
       return {  
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
-        stakingPts: this._utilService.decimalPipe.transform(member.stakingPts, '1.0-2') as any,
-        daoPts: this._utilService.decimalPipe.transform(member.daoPts, '1.0-2') as any,
-        referralPts: this._utilService.decimalPipe.transform(member.referralPts, '1.0-2')as any,
+        stakingPts: member.stakingPts,
+        daoPts: member.daoPts,
+        referralPts: member.referralPts,
         // questsPts: this._utilService.decimalPipe.transform(member.questsPts, '1.0-2')as any,
-        totalPts: this._utilService.decimalPipe.transform(member.totalPts, '1.0-2') as any,
+        totalPts: member.totalPts,
         daysLoyal: member.daysLoyal,
+        lastUpdated: member.lastUpdated
       } as any
     }).sort((a, b) => {
       if (a.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
@@ -55,6 +60,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       return 0;
     })
+    console.log(llEdited);
+    
     return llEdited
   }),
 ));
@@ -74,43 +81,18 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.columns.set(this.regularTemplate())
-    // this.leaderBoard = toSignal(this._loyaltyLeagueService.getLeaderBoard().pipe(
-    //   combineLatestWith(this._shs.walletExtended$),
-    //   switchMap(async ([ll, wallet]) => {
   
-  
-    //     // const prizePool = await firstValueFrom(this._loyaltyLeagueService.getPrizePool())
-    //     let loyaltyLeagueExtended = ll.loyaltyLeagueMembers.map((staker: loyaltyLeagueMember, i: number) => {
-    //       let loyaltyPoints = staker.totalPts
-    //       return {
-    //         rank: i + 1,
-    //         walletOwner: this._utilService.addrUtil(staker.walletOwner),
-    //         tierIcon: this.getTierIcon(staker.daysLoyal),
-    //         daysLoyal: staker.daysLoyal,
-    //         stakingPts: staker.stakingPts,
-    //         daoPts: staker.daoPts,
-    //         referrals: staker.referralPts,
-    //         // questsPts: staker.questsPts,
-    //         totalPoints: this._utilService.formatBigNumbers(loyaltyPoints),
-    //       }
-    //     })
-    //     if (wallet) {
-    //       loyaltyLeagueExtended.sort((x, y) => { return x.walletOwner.addr === wallet.publicKey.toBase58() ? -1 : y.walletOwner === wallet.publicKey.toBase58() ? 1 : 0; });
-  
-    //     }
-    //     return loyaltyLeagueExtended
-    //   }))) as any
   }
   ngOnInit() { }
   public regularTemplate() {
     return [
       { key: 'rank', title: 'Rank', width: '5%', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'walletOwner', title: 'Wallet address', width: '30%', cellTemplate: this.addressTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'stakingPts', title: 'Staking points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'daoPts', title: 'DAO points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true } },
+      { key: 'stakingPts', title: 'Staking points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
+      { key: 'daoPts', title: 'DAO points', width: '15%', cssClass: { name: 'ion-text-center', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
       // { key: 'questsPts', title: 'Quests', cssClass: { name: 'ion-text-center', includeHeader: true } },
       { key: 'referralPts', title: 'Referrals', width: '15%',cssClass: { name: 'ion-text-center', includeHeader: true } },
-      { key: 'totalPts', title: 'Total Points',  width: '15%',cssClass: { name: 'bold-text', includeHeader: true } },
+      { key: 'totalPts', title: 'Total Points',  width: '15%',cssClass: { name: 'bold-text', includeHeader: true }, cellTemplate: this.animatedNumberTpl },
     ]
   }
 }
