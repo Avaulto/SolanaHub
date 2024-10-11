@@ -219,11 +219,12 @@ export class NativeStakeService {
   }
 
   public async withdraw(stakeAccount: Stake[] , walletOwnerPK: PublicKey, lamports): Promise<any> {
+    console.log(stakeAccount, walletOwnerPK, lamports);
     const withdrawTx = stakeAccount.map(acc =>  StakeProgram.withdraw({
       stakePubkey: new PublicKey(acc.address),
       authorizedPubkey: walletOwnerPK,
       toPubkey: walletOwnerPK,
-      lamports, // Withdraw the full balance at the time of the transaction
+      lamports: acc.delegatedLamport, // Withdraw the full balance at the time of the transaction
     }));
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }

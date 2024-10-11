@@ -1,5 +1,5 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, Input, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowUpOutline } from 'ionicons/icons';
@@ -42,17 +42,17 @@ export class TableComponent  implements OnInit {
   public tableData = signal([])
   constructor() { 
     addIcons({arrowUpOutline});
+    effect(()=>{
+      console.log(this.selectedData());
+      
+    })
   }
 
   ngOnInit() {
     this.tableData.set(this.stash.data.assets)
-    console.log(this.columns(), this.tableData());
-    
+
   }
-  selectedRows(event){
-    console.log(event);
-    
-  }
+
 
   @ViewChild('accordionGroup', { static: true }) accordionGroup: IonAccordionGroup;
 
@@ -71,9 +71,6 @@ export class TableComponent  implements OnInit {
       nativeEl.value = 'first';
     }
   };
+  public selectedData = signal([])
 
-  handleSelectAll(selectAll: boolean) {
-    // Handle select all logic in the parent component if needed
-    console.log('Select all:', selectAll);
-  }
 }

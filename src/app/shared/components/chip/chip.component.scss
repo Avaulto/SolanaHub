@@ -36,4 +36,9 @@
         background: var(--Component-colors-Utility-Blue-utility-blue-50, #EFF8FF);
         color: #175CD3;
     }
+    &.danger {
+        border: 1px solid var(--Component-colors-Utility-Red-utility-red-200, #FECDCA);
+        background: var(--Component-colors-Utility-Red-utility-red-50, #FEF3F2);
+        color: #B42318;
+    }
 }

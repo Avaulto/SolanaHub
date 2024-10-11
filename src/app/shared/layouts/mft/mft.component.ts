@@ -18,24 +18,22 @@ import { Platform } from '@ionic/angular';
 })
 // multi functional table
 export class MftComponent implements OnInit {
-  @Input() label:string;
-  @Input() desc:string;
+  @Input() label: string;
+  @Input() desc: string;
   @Input() tableId: string;
   @Input() checkBox: boolean = false
   @Input() paginationEnabled: boolean = false
-  @Input('tableRows') tableRows = 5;
-  @Input('tableMenuOptions') tableMenuOptions: string[] = []
-    //@ts-ignore
-  @Input('tableColumns') tableColumns 
-    //@ts-ignore
-  @Input('tableData') tableData 
+  @Input() tableRows = 5;
+  @Input() tableMenuOptions: string[] = []
+  @Input() tableColumns
+  @Input() tableData
 
 
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
-  @Output('onRowClicked') onRowClicked = new EventEmitter()
+  @Output() onData = new EventEmitter()
   @Output('onTabSelected') onTabSelected = new EventEmitter()
   @Output('onSearch') onSearch = new EventEmitter()
-  
+
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
@@ -66,11 +64,11 @@ export class MftComponent implements OnInit {
     this.configuration.checkboxes = this.checkBox
     this.configuration.rows = this.tableRows;
     this.configuration.checkboxes = this.checkBox;
-    if(this._platform.width() < 992){
+    if (this._platform.width() < 992) {
       this.configuration.horizontalScroll = true;
     }
   }
-  
+
   previousPage() {
     const res = this.table.apiEvent({
       type: API.getPaginationCurrentPage,
@@ -99,7 +97,7 @@ export class MftComponent implements OnInit {
 
 
   }
-  constructor(private _platform: Platform) { 
+  constructor(private _platform: Platform) {
     effect(() => {
       if (this.tableData) {
         const data = this.tableData();
@@ -112,9 +110,9 @@ export class MftComponent implements OnInit {
       } else {
         this.configuration.isLoading = true;
       }
-      if(this.tableData && this.tableData()?.length < this.tableRows){
+      if (this.tableData && this.tableData()?.length < this.tableRows) {
         this.configuration.paginationEnabled = false
-      }else{
+      } else {
         this.configuration.paginationEnabled = true
       }
     });
@@ -130,12 +128,39 @@ export class MftComponent implements OnInit {
     });
   }
   public selected = new Set();
-  onChange(row: any): void {
-    const index = this.tableData.indexOf(row);
-    if (this.selected.has(index)) {
-      this.selected.delete(index);
-    } else {
-      this.selected.add(index);
+
+  eventEmitted($event: { event: string; value: any }): void {
+    if (['onCheckboxSelect', 'onSelectAll', 'onClick'].includes($event.event)) {
+    let data = $event.value;
+    switch ($event.event) {
+      case 'onCheckboxSelect':
+
+        if (this.selected.has($event.value.rowId)) {
+          this.selected.delete($event.value.rowId);
+        } else {
+          this.selected.add($event.value.rowId);
+        }
+        data = this.tableData().filter((_, index) => this.selected.has(index))
+        break;
+      case 'onSelectAll':
+        if ($event.value) {
+          data = this.tableData()
+        } else {
+          data = []
+        }
+        break;
+      case 'onClick':
+        // check if the data is an array, if yes, remove it from the array if it exists, if data is not an array, return data as new array and with selected data
+        if (Array.isArray(data)) {
+          data = data.filter(item => item !== $event.value)
+        } else {
+          data = []
+          data.push($event.value.row)
+        }
+        break;
+    }
+    // emit data only if its on of the above cases
+      this.onData.emit(data)
     }
   }
 }

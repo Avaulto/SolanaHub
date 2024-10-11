@@ -153,10 +153,19 @@ stash-table{
     }
 }
 ion-button.close-single {
-    --background: var(--ion-color-dark);
-    --color: white;
+    --box-shadow: none;
+    --color: var(--ion-color-dark);
 }
-
+.sol-value{
+    color: var(--ion-color-medium);
+    font-size: 13px;
+    line-height: 18px;
+}
+.usd-value{
+    color: var(--ion-color-dark);
+    font-size: 13px;
+    line-height: 18px;
+}
 
 :host ::ng-deep {
     .ngx-table__table--normal > tbody > tr > td, .ngx-table__table--normal > thead > tr > th{

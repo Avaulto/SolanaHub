@@ -22,7 +22,7 @@
       </div>
     </ion-col> -->
     
-      <ion-button id="action-btn" [disabled]="true" class="ion-text-capitalize">{{actionTitle}}</ion-button>
+      <ion-button id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{actionTitle}} | {{selectedData().length}}</ion-button>
     
       <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow" name="arrow-up-outline"/></ion-button>
  
@@ -30,7 +30,7 @@
   <app-mft 
     [checkBox]="true"
     slot="content"
-    (onEmitData)="selectedRows($event)"
+    (onData)="selectedData.set($event)"
     [tableRows]="100"
     [tableId]="'savings-table'" 
     [tableColumns]="columns" 

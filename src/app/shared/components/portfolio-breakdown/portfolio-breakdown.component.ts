@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild, computed, effect, inject, Signal, signal, Output, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, ViewChild, computed, effect, inject, Signal, signal, Output, EventEmitter, Input } from '@angular/core';
 import { PortfolioService, UtilService } from 'src/app/services';
 import { ChartConfiguration } from 'chart.js';
 import Chart from 'chart.js/auto'
@@ -14,10 +14,10 @@ import { IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/angular/standalone';
 })
 export class PortfolioBreakdownComponent implements AfterViewInit {
   @Output() totalAssetsChange = new EventEmitter<number>();
-
+  @Input() assets: Signal<any[]>;
   constructor(private _portfolioService: PortfolioService) {
     effect(() => {
-      if (this.walletAssets()) {
+      if (this.assets()) {
         setTimeout(() => {
           this.createGroupCategory()
         }, 300);
@@ -26,9 +26,9 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   }
   
   public showBalance = this._portfolioService.privateMode
-  public walletAssets = inject(PortfolioService).walletAssets
+  // public walletAssets = inject(PortfolioService).walletAssets
   public portfolioTotalValue: Signal<number> = computed(() => {
-    const assets = this.walletAssets();
+    const assets = this.assets();
     if (!assets) return 0;
     
     const totalAssets = assets
@@ -42,7 +42,9 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
   });
 
   public assetClassValue = computed(() => {
-    const assets = this.walletAssets();
+    const assets = this.assets();
+    console.log(assets);
+    
     if (!assets) return [];
 
     return assets
@@ -65,7 +67,14 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
       .filter(asset => asset.value > 0)
       .sort((a, b) => b.value - a.value);
   });
-
+   getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
   public colorPicker(assetClass: string) {
     let color = ''
 
@@ -105,8 +114,12 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
         color = '#8ea3f2'
         break;
       default:
+        color = this.getRandomColor()
+        
+        
         break;
     }
+
     return color
   }
   public utilService = inject(UtilService)

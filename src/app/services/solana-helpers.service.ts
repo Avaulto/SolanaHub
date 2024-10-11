@@ -87,7 +87,7 @@ export class SolanaHelpersService {
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
         
-        validatorsList[0].apy_estimate = (validatorsList[0].apy_estimate * (1 )).toFixedNoRounding(2)
+        validatorsList[0].total_apy = (validatorsList[0].total_apy * (1 )).toFixedNoRounding(2)
         
 
       } catch (error) {

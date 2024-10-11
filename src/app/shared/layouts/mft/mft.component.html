@@ -39,7 +39,7 @@
   <ngx-table 
     #table 
     [id]="tableId" 
-    (event)="onRowClicked.emit($event)" 
+    (event)="eventEmitted($event)" 
     [configuration]="configuration"
     [data]="tableData()" 
     [columns]="tableColumns()" 

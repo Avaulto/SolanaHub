@@ -6,7 +6,7 @@
         <app-net-worth #netWorthComponent></app-net-worth>
       </ion-col>
       <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
-        <portfolio-breakdown (totalAssetsChange)="netWorthComponent.onTotalAssetsChange($event)"/>
+        <portfolio-breakdown [assets]="walletAssets" (totalAssetsChange)="netWorthComponent.onTotalAssetsChange($event)"/>
       </ion-col>
     </ion-row>
     <ion-row class="ion-margin-vertical">

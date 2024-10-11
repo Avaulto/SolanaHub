@@ -23,7 +23,7 @@
         </div>
       </ion-col>
       <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
-        <!-- <app-portfolio-breakdown /> -->
+        <portfolio-breakdown [assets]="assets" />
       </ion-col>
 
     </ion-row>
@@ -36,24 +36,26 @@
      [columns]="emptyAccountsColumn"
       [stash]="emptyAccounts" /> -->
 
+      @if(unstakedOverflow){
       <stash-table 
       class="ion-margin-bottom" 
       [hasFees]="true" 
-      tableName="Staking"
+      tableName="Unstaked overflow"
       tableDescription="This dataset includes stake accounts that are not fully optimize and have unused balance that you can withdraw."
       actionTitle="withdraw" 
-      [columns]="emptyAccountsColumn"
-      [stash]="emptyAccounts" />
+      [columns]="tableColumn"
+      [stash]="unstakedOverflow" />
+      }
 
-      <!-- <stash-table 
+     <stash-table 
       class="ion-margin-bottom" 
       [hasFees]="true" 
-      tableName="DeFi Positions" 
+      tableName="zero yield zones" 
       tableDescription="This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal."
       actionTitle="withdraw" 
-      [columns]="emptyAccountsColumn"
+      [columns]="tableColumn"
       [stash]="emptyAccounts" />
-
+ <!-- 
       <stash-table 
       class="ion-margin-bottom" 
       tableName="empty accounts" 
@@ -77,7 +79,7 @@ here
     </div>
     <div class="item-info">
 
-      <div class="item-bold">{{row.symbol || 'unknown'}}</div>
+      <div class="item-bold">{{row.name || 'unknown'}}</div>
       <div class="item-light">{{row.token }}</div>
 
     </div>
@@ -98,21 +100,26 @@ here
 
 <ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-left">
-    {{row.value | number: '1.0'}} {{row['extract-asset']}}
+    <div class="sol-value">{{row.extractedValue.SOL | number: '1.0'}} SOL</div>
+    <div class="usd-value">{{row.extractedValue.USD | currency}}</div>
   </div>
 </ng-template>
 <ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-left account-info">
-    {{row?.tokenAccount?.short}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img>
+    {{row?.account?.addrShort}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img>
     </a>
   </div>
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-button class="ion-text-capitalize close-single">{{row.action}}</ion-button>
+  <ion-button fill="clear" class="ion-text-capitalize close-single">
+     {{row.action}}
+  </ion-button>
 </ng-template>
 
 <ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="source-type ion-text-left ion-text-capitalize">
-    <chip  [name]="row.source" [color]="row.source === 'empty account' ? 'focus' : ''" />
+    <chip 
+     [name]="row.source" 
+     [color]="row.source === 'empty account' ? 'focus'  : row.source === 'zero yield zone' ? 'secondary' : row.source == 'excess balance' ? 'active' : ''" />
   </div>
 </ng-template>

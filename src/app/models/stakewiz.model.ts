@@ -2,6 +2,7 @@ export interface Validator {
   rank: number
   identity: string
   vote_identity: string
+  total_apy: number
   last_vote: number
   root_slot: number
   credits: number

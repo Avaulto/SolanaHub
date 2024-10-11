@@ -1,7 +1,7 @@
 import { CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
 import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, signal } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { TableHeadComponent } from 'src/app/shared/layouts/mft/table-head/table-head.component';
@@ -14,6 +14,9 @@ import { StashService } from './stash.service';
 import { TableComponent } from './table/table.component';
 import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+import { addIcons } from 'ionicons';
+import { closeOutline } from 'ionicons/icons';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 
 @Component({
@@ -86,24 +89,41 @@ export class StashPage implements OnInit {
   constructor(
     private _stashService: StashService,
     private _shs: SolanaHelpersService,
-    private _util: UtilService
-  ) { }
-
-  public emptyAccountsColumn = signal([])
-  ngOnInit() {
-    this.emptyAccountsColumn = signal([
-      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'asset', title: 'Asset', width: '40%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
-      { key: 'value', title: 'Extracted Value',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      // { key: 'action', title: '', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-    ])
-    // this._stashService.findExtractAbleSOLAccounts()
-  
+    private _util: UtilService,
+    private _jupService: JupStoreService
+  ) { 
+    addIcons({closeOutline})
   }
+  // public dustBalanceAccounts = signal([])
+  // // public emptyAccounts = signal([])
+  // public zeroYieldZones = signal([])
+  // public unstakedOverflow= signal([])
+
+  public tableColumn = signal([])
+
   public stashTotalUsdValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
+  public dustBalanceAccounts = {
+    "networkId": "solana",
+    "platformId": "wallet-tokens",
+    "type": "multiple",
+    "label": "dust balance accounts",
+    "value": 173.00551050908487,
+    "data": {
+      "assets": []
+    }
+  }
+  
+  public zeroYieldZones = {
+    "networkId": "solana",
+    "platformId": "wallet-tokens",
+    "type": "multiple",
+    "label": "zero yield zones",
+    "value": 173.00551050908487,
+    "data": {
+      "assets": []
+    }
+  }
+  public unstakedOverflow = null;
   public emptyAccounts = {
     "networkId": "solana",
     "platformId": "wallet-tokens",
@@ -115,14 +135,17 @@ export class StashPage implements OnInit {
         {
           "type": "token",
           "networkId": "solana",
-          "value": 96.0869375886,
+          "extractedValue": {
+            "SOL": 96.0869375886,
+            "USD": 173.00551050908487
+          },
           "attributes": {},
           "name": "SolanaHub staked SOL",
           "symbol": "hubSOL",
           "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX.webp",
           "decimals": 9,
           "balance": 0.512956105,
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+          "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
           "price": 187.32,
           "source": 'empty account',
           "action": "close"
@@ -131,14 +154,17 @@ export class StashPage implements OnInit {
         {
           "type": "token",
           "networkId": "solana",
-          "value": 0.025552454802054175,
+          "extractedValue": {
+            "SOL": 0.025552454802054175,
+            "USD": 0.025552454802054175
+          },
           "attributes": {},
           "name": "Bee Wif Hat",
           "symbol": "Bee",
           "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
           "decimals": 9,
           "balance": 10000,
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+          "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
           "price": 0.0000025552454802054177,
           "source": 'empty account',
           "action": "close"
@@ -146,14 +172,17 @@ export class StashPage implements OnInit {
         {
           "type": "token",
           "networkId": "solana",
-          "value": 4.44e-8,
+          "extractedValue": {
+            "SOL": 4.44e-8,
+            "USD": 4.44e-8
+          },
           "attributes": {},
           "name": "catwifhat",
           "symbol": "$CWIF",
           "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1.webp",
           "decimals": 2,
           "balance": 0.04,
-          "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+          "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
           "price": 0.00000111,
           "source": 'no liquidity',
           "action": "close"
@@ -173,7 +202,10 @@ export class StashPage implements OnInit {
           {
             "type": "token",
             "networkId": "solana",
-            "value": 96.0869375886,
+            "value": {
+              "sol": 96.0869375886,
+              "usd": 173.00551050908487
+            },
             "attributes": {},
             "name": "SolanaHub staked SOL",
             "symbol": "hubSOL",
@@ -187,7 +219,10 @@ export class StashPage implements OnInit {
           {
             "type": "token",
             "networkId": "solana",
-            "value": 0.025552454802054175,
+            "value": {
+              "sol": 0.025552454802054175,
+              "usd": 0.025552454802054175
+            },
             "attributes": {},
             "name": "Bee Wif Hat",
             "symbol": "Bee",
@@ -200,7 +235,10 @@ export class StashPage implements OnInit {
           }, {
             "type": "token",
             "networkId": "solana",
-            "value": 0.025552454802054175,
+            "value": {
+              "sol": 0.025552454802054175,
+              "usd": 0.025552454802054175
+            },
             "attributes": {},
             "name": "Bee Wif Hat",
             "symbol": "Bee",
@@ -210,60 +248,6 @@ export class StashPage implements OnInit {
             "balance": 10000,
             "address": "Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2",
             "price": 0.0000025552454802054177
-          }, {
-            "type": "token",
-            "networkId": "solana",
-            "value": 0.025552454802054175,
-            "attributes": {},
-            "name": "Bee Wif Hat",
-            "symbol": "Bee",
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-            "decimals": 9,
-            "balance": 10000,
-            "address": "Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2",
-            "price": 0.0000025552454802054177
-          }, {
-            "type": "token",
-            "networkId": "solana",
-            "value": 0.025552454802054175,
-            "attributes": {},
-            "name": "Bee Wif Hat",
-            "symbol": "Bee",
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-            "decimals": 9,
-            "balance": 10000,
-            "address": "Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2",
-            "price": 0.0000025552454802054177
-          },
-          {
-            "type": "token",
-            "networkId": "solana",
-            "value": 0.025552454802054175,
-            "attributes": {},
-            "name": "Bee Wif Hat",
-            "symbol": "Bee",
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-            "decimals": 9,
-            "balance": 10000,
-            "address": "Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2",
-            "price": 0.0000025552454802054177
-          },
-          {
-            "type": "token",
-            "networkId": "solana",
-            "value": 4.44e-8,
-            "attributes": {},
-            "name": "catwifhat",
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "symbol": "$CWIF",
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1.webp",
-            "decimals": 2,
-            "balance": 0.04,
-            "address": "7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1",
-            "price": 0.00000111
           }
         ]
       }
@@ -272,8 +256,8 @@ export class StashPage implements OnInit {
       "networkId": "solana",
       "platformId": "marinade",
       "type": "multiple",
-      "label": "Staked",
-      "value": 5.31576382446,
+      "label": "Unstaked Overflow",
+      "value": 27.59,
       "data": {
         "assets": [
           {
@@ -320,7 +304,7 @@ export class StashPage implements OnInit {
       "networkId": "solana",
       "platformId": "meteora",
       "type": "liquidity",
-      "label": "Positions",
+      "label": "Zero Yield Zones",
       "value": 1.8467960965557,
       "data": {
         "assets": [
@@ -361,9 +345,20 @@ export class StashPage implements OnInit {
       }
     }
   ])
-  selectedRows(event) {
-    console.log(event);
 
+   async ngOnInit() {
+    this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
+    this.tableColumn = signal([
+      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
+      { key: 'value', title: 'Extracted Value',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+    ])
+
+  
   }
   async getSavingData() {
     const { publicKey } = this._shs.getCurrentWallet()
