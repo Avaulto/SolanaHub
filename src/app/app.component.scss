@@ -122,6 +122,27 @@ ion-img{
   }
 }
 
+#social {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: var(--ion-color-dark);
+  text-transform: capitalize;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  right: 0;
+  margin: 0 auto;
+  a{
+    cursor: pointer;
+  }
+  img {
+    width: 20px;
+    margin-inline: 4px;
+}
+}
 @media only screen and (max-width: 992px) {
   ion-menu {
     width: auto;

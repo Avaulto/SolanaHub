@@ -84,7 +84,7 @@ export class NativeStakeService {
       withdrawAuth: account.meta.authorized.withdrawer,
       validatorName: validatorName || null,
       imgUrl: imgUrl || null,
-      apy: validator?.apy_estimate || null
+      apy: validator?.total_apy || null
     }
 
     return stakeAccountInfo
@@ -224,7 +224,7 @@ export class NativeStakeService {
       stakePubkey: new PublicKey(acc.address),
       authorizedPubkey: walletOwnerPK,
       toPubkey: walletOwnerPK,
-      lamports: acc.delegatedLamport, // Withdraw the full balance at the time of the transaction
+      lamports, // Withdraw the full balance at the time of the transaction
     }));
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }

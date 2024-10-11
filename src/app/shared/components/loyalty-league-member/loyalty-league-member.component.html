@@ -14,7 +14,7 @@
         @if(member.totalPts){
           <!-- {{totalPts}} -->
         <number-counter 
-          [nextSnapshotTime]="member.lastUpdated "
+          [nextSnapshotTime]="member.nextUpdate "
          [targetNumber]="member.totalPts" 
         [showFormatNumber]="true"
          />

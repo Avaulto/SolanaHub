@@ -45,7 +45,7 @@
               @if(member.totalPts){
                 <!-- {{member.totalPts | number:'1.0-0'}} -->
               <number-counter [targetNumber]="member.totalPts"
-                [nextSnapshotTime]="member.lastUpdated" />
+                [nextSnapshotTime]="member.nextUpdate" />
               }@else{
               0
               }
@@ -80,7 +80,7 @@
                     @if (member$ | async; as member) {
                       @if (member[category.key]) {
                         <number-counter [targetNumber]="member[category.key]"
-                [nextSnapshotTime]="member.lastUpdated" />  
+                [nextSnapshotTime]="member.nextUpdate" />  
                       } @else {
                         0
                       }

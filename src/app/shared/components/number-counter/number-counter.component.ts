@@ -27,9 +27,7 @@ export class NumberCounterComponent implements OnInit {
   @Input() targetNumber = 100;
   @Input() set nextSnapshotTime(value: Date) {
     if (value) {
-      const nextDay = new Date(value);
-      nextDay.setDate(nextDay.getDate() + 1);
-      this._nextSnapshotTime = nextDay;
+      this._nextSnapshotTime = new Date(value);
     }
   }
   private _nextSnapshotTime: Date;

@@ -41,15 +41,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     const llEdited = loyaltyLeaderBoard.map((member: loyaltyLeagueMember, i: number) => {
       return {  
+        ...member,
         rank: i + 1,
         walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
-        stakingPts: member.stakingPts,
-        daoPts: member.daoPts,
-        referralPts: member.referralPts,
-        // questsPts: this._utilService.decimalPipe.transform(member.questsPts, '1.0-2')as any,
-        totalPts: member.totalPts,
-        daysLoyal: member.daysLoyal,
-        lastUpdated: member.lastUpdated
+    
       } as any
     }).sort((a, b) => {
       if (a.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {

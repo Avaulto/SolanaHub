@@ -49,7 +49,7 @@ export interface Season{
 export interface loyaltyLeagueMember {
   message?: string,
   communityCode?: string,
-  lastUpdated?: Date,
+  nextUpdate?: Date,
   prizePoolShare?: number
   hubDomain?: string,
   referralCode?: string,

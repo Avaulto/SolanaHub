@@ -161,7 +161,7 @@ export class AssetsTableComponent implements OnInit {
 
     this._columnsOptions = {
       tokens: [
-        { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '40%' },
+        { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '50%' },
         { key: 'balance', title: 'Balance', cellTemplate: this.balanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'price', title: 'Price', cellTemplate: this.simplePriceValue, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'value', title: 'Value', cellTemplate: this.simpleUsdValue, width: '10%', cssClass: { name: 'ion-text-center bold-text', includeHeader: false } },

@@ -1,4 +1,8 @@
-
+.ngx-icon {
+    margin: 0 auto;
+    text-align: center;
+    display: block;
+}
 div#table-wrapper {
     position: relative;
     #table-controls {
@@ -101,7 +105,7 @@ ion-button {
         }
      
         tbody>tr>td {
-            min-width: 100px;
+            min-width: 50px;
             color: var(--ion-color-medium);
             font-size: 12px;
             font-weight: 400;

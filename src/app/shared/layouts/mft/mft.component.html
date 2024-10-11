@@ -1,22 +1,20 @@
 @if(label){
-  <table-head [label]="label" [desc]="desc"></table-head>
+<table-head [label]="label" [desc]="desc"></table-head>
 }
 
 <ion-row class="ion-align-items-center ">
 
   @if(tableMenuOptions.length){
-    <div class="ion-margin-start ion-hide-lg-down"></div>
-  <ion-col >
-    <app-table-menu 
-    [menu]="tableMenuOptions"
-     [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)"/>
+  <div class="ion-margin-start ion-hide-lg-down"></div>
+  <ion-col>
+    <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)" />
   </ion-col>
   }
   @if(searchBoxEnable){
-    <ion-col size="3.9" sizeLg="auto">
-      <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
-    </ion-col>
-    <div class="ion-margin-end ion-hide-lg-down"></div>
+  <ion-col size="3.9" sizeLg="auto">
+    <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
+  </ion-col>
+  <div class="ion-margin-end ion-hide-lg-down"></div>
   }
 
 </ion-row>
@@ -31,20 +29,31 @@
 </ng-template> -->
 <ng-template #selectAllTemplate let-changeEvent>
 
-    <ion-checkbox (ionChange)="changeEvent($event)" />
+  <ion-checkbox (ionChange)="changeEvent($event)" />
 
 </ng-template>
 
 <div id="table-wrapper">
-  <ngx-table 
-    #table 
-    [id]="tableId" 
-    (event)="eventEmitted($event)" 
-    [configuration]="configuration"
-    [data]="tableData()" 
-    [columns]="tableColumns()" 
-    [loadingTemplate]="loadingTemplate">
+  <ngx-table #table [id]="tableId" (event)="eventEmitted($event)" [configuration]="configuration" [data]="tableData()"
+    [columns]="tableColumns()" [loadingTemplate]="loadingTemplate" [detailsTemplate]="detailsTemplate">
   </ngx-table>
+  <ng-template #detailsTemplate let-row>
+    @for(asset of [1,2,3]; track asset){
+    <div class="wallet-breakdown" style="padding-inline-end: 32px;display: flex;">
+      <div style="    flex: 4.15;">
+        wallet 1: awxa...456a
+
+      </div>
+      <div style="flex: 2;">
+        12,345.67
+      </div>
+      <div style="flex: 2.1;">
+        $100
+      </div>
+    </div>
+    }
+  </ng-template>
+
   @if (configuration.paginationEnabled && !configuration.isLoading) {
   <div id="table-controls">
     <ion-button mode="md" fill="clear" (click)="previousPage()">

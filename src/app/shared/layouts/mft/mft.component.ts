@@ -27,6 +27,7 @@ export class MftComponent implements OnInit {
   @Input() tableMenuOptions: string[] = []
   @Input() tableColumns
   @Input() tableData
+  @Input() expandDetails: boolean = false
 
 
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
@@ -56,6 +57,8 @@ export class MftComponent implements OnInit {
     showDetailsArrow: true,
     paginationRangeEnabled: false,
     paginationEnabled: false,
+    detailsTemplate: false,
+    // showDetailsArrow: this.expandDetails,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
     isLoading: true,
@@ -64,6 +67,7 @@ export class MftComponent implements OnInit {
     this.configuration.checkboxes = this.checkBox
     this.configuration.rows = this.tableRows;
     this.configuration.checkboxes = this.checkBox;
+    this.configuration.detailsTemplate = this.expandDetails
     if (this._platform.width() < 992) {
       this.configuration.horizontalScroll = true;
     }
@@ -150,6 +154,13 @@ export class MftComponent implements OnInit {
         }
         break;
       case 'onClick':
+        console.log($event);
+        
+        this.table.apiEvent({
+          type: API.toggleRowIndex,
+          value: $event.value.rowId,
+        });
+        
         // check if the data is an array, if yes, remove it from the array if it exists, if data is not an array, return data as new array and with selected data
         if (Array.isArray(data)) {
           data = data.filter(item => item !== $event.value)

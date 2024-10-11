@@ -25,7 +25,7 @@
           <ng-template #animatedNumberTpl  let-row let-rowIndex="rowIndex" let-column="column">
             
             <number-counter 
-            [nextSnapshotTime]="row.lastUpdated"
+            [nextSnapshotTime]="row.nextUpdate"
            [targetNumber]="row[column.key]" 
            />
           </ng-template>
