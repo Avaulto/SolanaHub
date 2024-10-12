@@ -72,6 +72,8 @@ export class PortfolioService {
     return currentTime < lastSave + 600 ? portfolioData : null;
   }
 
+
+  
   public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
     let portfolioData = !forceFetch && this._portfolioData()?.owner === walletAddress ? this._portfolioData() : null;
 

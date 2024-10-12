@@ -8,6 +8,7 @@ import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/serv
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { TransactionHistory } from 'src/app/models';
 import { NgxTurnstileModule } from 'ngx-turnstile';
+import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
 
 
 @Component({
@@ -21,7 +22,8 @@ import { NgxTurnstileModule } from 'ngx-turnstile';
     NetWorthComponent,
     PortfolioBreakdownComponent,
     AssetsTableComponent,
-    TransactionsHistoryTableComponent
+    TransactionsHistoryTableComponent,
+    PortfolioMenuComponent
   ]
 
 })

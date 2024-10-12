@@ -1,0 +1,11 @@
+.portfolio-box {
+    border-radius: 4px;
+    padding: 12px;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid var(--ion-color-primary);
+}
+.ripple-parent {
+    position: relative;
+    overflow: hidden;
+  }
