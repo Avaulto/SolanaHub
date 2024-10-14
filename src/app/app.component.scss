@@ -30,9 +30,12 @@ ion-menu {
   #menu-top {
     display: flex;
     margin-block-end: 12px;
+  }
+  #menu-upper {
+    display: flex;
+    margin-block-end: 12px;
     flex-direction: column;
   }
-
   ion-list-header {
     color: var(--ion-color-medium);
     font-size: 10px;
