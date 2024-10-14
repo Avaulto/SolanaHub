@@ -13,6 +13,7 @@ export enum PriorityFee {
 }
 
 export interface BaseConfig {
+  platformFeeCollector: string;
   rpcs: Config[],
   explorers: Config[],
   PriorityFee: Config[],

@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
@@ -43,6 +43,8 @@ import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
+import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
+import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
 
 @Component({
@@ -83,10 +85,12 @@ import { FloatJupComponent } from './shared/components/float-jup/float-jup.compo
     IonRouterOutlet,
     IonImg,
     LoyaltyLeagueMemberComponent,
-    FloatJupComponent
+    FloatJupComponent,
+    FreemiumModule
   ],
 })
 export class AppComponent implements OnInit {
+  public adShouldShow = this._freemiumService.adShouldShow;
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
   // readonly isReady$ = this._walletStore.connected$.pipe
@@ -104,6 +108,7 @@ export class AppComponent implements OnInit {
 
   public notifIndicator = this._notifService.notifIndicator
   constructor(
+    private _freemiumService: FreemiumService,
     public router: Router,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,

@@ -1,0 +1,46 @@
+:host{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 35px;
+}
+#freemium-ad{
+    height: inherit;
+    
+    border: 1px solid #FDD1EE;
+    font-weight: 500;
+    background: #FFF3FB;
+    color: var(--ion-color-primary);
+    font-size: 14px;
+   #ad-text{
+    // flex: 10;
+    height: inherit;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+}
+ion-button{
+    height: 25px;
+    font-size: 12px;
+    margin-inline-start: 5px;
+    --border-radius: 4px;
+    text-transform: capitalize;
+}
+a{
+    margin-inline-start: 4px;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+}
+.close-ad {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+ion-img{
+    width: 25px;
+    cursor: pointer;
+}

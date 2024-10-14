@@ -1,0 +1,33 @@
+:host{
+  display: block;
+  height: 135px;
+}
+.divider{
+  height: 1px;
+  background-color:#E3E8EF;
+}
+#afr-header-title{
+  color: var(--ion-color-primary);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  margin-block-end: 2px;
+}
+#afr-body-title {
+  width: 340px;
+  margin-block-end: 12px;
+}
+#afr-body{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+  line-height: 18px;
+}
+#afr-link{
+  color: var(--ion-color-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 13px;
+}

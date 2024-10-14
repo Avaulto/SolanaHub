@@ -1,65 +1,70 @@
-<div style="position: relative;" class="ion-padding">
-  <div id="modal-intro">
-    <div>
+<ion-content class="ion-padding modal-content">
+  <div class="modal-wrapper">
+    <div style="position: relative;">
+      <div id="modal-intro">
+        <div>
 
-      @if(config.imgUrl){
-      <div class="icon-wrapper">
-          <ion-img [src]="config.imgUrl" />
+          @if(config.imgUrl){
+          <div class="icon-wrapper">
+            <ion-img [src]="config.imgUrl" />
+          </div>
+          }
+          <div id="title">{{config.title}}</div>
+          <div id="desc">{{config.desc}}</div>
         </div>
+
+        <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+      </div>
+      @switch (componentName) {
+      @case ("validators-modal") {
+      <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
       }
-      <div id="title">{{config.title}}</div>
-      <div id="desc">{{config.desc}}</div>
+      @case ("delegate-lst-modal") {
+      <delegate-lst-modal [stake]="data.stake" (onSelectPool)="emittedValue.set($event)" />
+      }
+      @case ("unstake-lst-modal") {
+      <unstake-lst-modal [stake]="data.stake" (onAmountSet)="emittedValue.set($event)" />
+      }
+      @case ("merge-modal") {
+      <merge-modal [targetStake]="data.stake" [stakeAccounts]="data.stakeAccounts"
+        (onAccountsSelected)="emittedValue.set($event)" />
+      }
+
+      @case ("split-modal") {
+      <split-modal [stake]="data.stake" (onAmountSet)="emittedValue.set($event)" />
+      }
+      @case ("instant-unstake-modal") {
+      <instant-unstake-modal [stake]="data.stake" />
+      }
+      @case ("transfer-auth-modal") {
+      <transfer-auth-modal [stake]="data.stake" (onAuthSet)="emittedValue.set($event)" />
+      }
+      @case ("token-list") {
+      <token-list (onSelectToken)="emittedValue.set($event)" [jupTokens]="data.jupTokens" />
+      }
+
+      @case ('list-nft-modal') {
+      <list-nft-modal />
+      }
+      @case ('send-nft-modal') {
+      <send-nft-modal (toSendNFTs)="emittedValue.set($event)" [nfts]="data.nfts" />
+      }
+      @case ('burn-nft-modal') {
+      <burn-nft-modal (toBurnNFTs)="emittedValue.set($event)" [nfts]="data.nfts" />
+      }
+      @case ('ll-faq-modal') {
+      <faq-modal />
+      }
+      }
+      <ng-container #containerBeforeTemplate></ng-container>
+      @if (componentName !== 'token-list' && componentName !== 'll-faq-modal') {
+
+      <div id="modal-controls">
+        <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
+        <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
+      </div>
+      }
     </div>
-
-    <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+    <freemium-road />
   </div>
-  @switch (componentName) {
-  @case ("validators-modal") {
-  <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
-  }
-  @case ("delegate-lst-modal") {
-  <delegate-lst-modal [stake]="data.stake" (onSelectPool)="emittedValue.set($event)" />
-  }
-  @case ("unstake-lst-modal") {
-  <unstake-lst-modal [stake]="data.stake" (onAmountSet)="emittedValue.set($event)" />
-  }
-  @case ("merge-modal") {
-  <merge-modal [targetStake]="data.stake" [stakeAccounts]="data.stakeAccounts"
-    (onAccountsSelected)="emittedValue.set($event)" />
-  }
-
-  @case ("split-modal") {
-  <split-modal [stake]="data.stake" (onAmountSet)="emittedValue.set($event)" />
-  }
-  @case ("instant-unstake-modal") {
-  <instant-unstake-modal [stake]="data.stake" />
-  }
-  @case ("transfer-auth-modal") {
-  <transfer-auth-modal [stake]="data.stake" (onAuthSet)="emittedValue.set($event)" />
-  }
-  @case ("token-list") {
-  <token-list (onSelectToken)="emittedValue.set($event)" [jupTokens]="data.jupTokens" />
-  }
-
-  @case ('list-nft-modal') {
-  <list-nft-modal />
-  }
-  @case ('send-nft-modal') {
-  <send-nft-modal (toSendNFTs)="emittedValue.set($event)" [nfts]="data.nfts" />
-  }
-  @case ('burn-nft-modal') {
-  <burn-nft-modal (toBurnNFTs)="emittedValue.set($event)" [nfts]="data.nfts" />
-  }
-  @case ('ll-faq-modal') {
-    <faq-modal/>
-  }
-  }
-  <ng-container #containerBeforeTemplate></ng-container>
-  @if (componentName !== 'token-list' && componentName !== 'll-faq-modal') {
-
-  <div id="modal-controls">
-    <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
-    <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
-  </div>
-  }
-</div>
+</ion-content>

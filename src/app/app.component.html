@@ -1,3 +1,4 @@
+
 <ngx-turnstile #turnStile [siteKey]="turnStileKey" (errored)="log($event)" (resolved)="sendCaptchaResponse($event)" theme="auto"
   [tabIndex]="0" />
 <ion-header mode="md" [translucent]="true">
@@ -18,8 +19,12 @@
             <span>SolanaHub</span>
           </div>
           <div id="menu-top">
-            <app-wallet-connect />
-            <settings-button/>
+            <div style="display: flex;">
+
+              <app-wallet-connect />
+              <settings-button/>
+            </div>
+  
           </div>
           <ion-menu-toggle auto-hide="false" *ngFor="let g of appPages; let i = index">
             <ion-list-header *ngIf="g.group">{{g.group}}</ion-list-header>
@@ -75,8 +80,10 @@
         </div>
       </ion-content>
     </ion-menu>
-    <ion-content class="ion-page" id="main-content">
+    <ion-content class="ion-page" id="main-content" [class.ad-offset]="adShouldShow()">
+      <freemium-ad/>
       @if ((isReady$ | async ) || (path | async) === '/hubSOL') {
+      
         <ion-router-outlet></ion-router-outlet>
         }@else {
         <not-connected />

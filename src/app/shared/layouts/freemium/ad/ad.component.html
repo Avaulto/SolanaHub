@@ -1,0 +1,15 @@
+
+@if(adShouldShow() != null) {
+<div id="freemium-ad">
+<div id="ad-text">
+
+  <div> Upgrade your stake to enjoy all solanahub perks </div>
+  
+  <a (click)="openFreemumAccessPopup()">see why</a>
+</div>
+  <div class="close-ad">
+    <ion-img (click)="hideAd()" id="close-modal" src="assets/images/close-icon.svg" />
+  </div>
+  </div>
+}
+

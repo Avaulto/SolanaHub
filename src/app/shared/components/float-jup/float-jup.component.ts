@@ -131,12 +131,13 @@ export class FloatJupComponent implements OnInit, OnChanges {
 
     const platformFeeAndAccounts = {
       feeBps: 50,
-      referralAccount: new PublicKey('4M9K4ZpVHdUTT4PBM66LhyhZzPgYPs6V3qBtjoBpqLRY'),
+      referralAccount: new PublicKey('68xFR3RfPvV4NpP1wd546j5vCWrFmVhw4PgmXZBcayP1'),
       feeAccounts: new Map([
-        [new PublicKey('So11111111111111111111111111111111111111112'), new PublicKey('4BrAZD1Uqq148ujcoVZy2qhmdGcGkzvJRcu75b44ejKE')],
-        [new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), new PublicKey('DVgrTkRy3ViwPsA4txefiAmNXY762SxVPbQa9cLHtcjG')],
-        [new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'), new PublicKey('DfjVMWbTKCjr8SvGQtrwSfQHWYnUQBZsqrDhzB6QGRNh')],
-        [new PublicKey('USDH1SM1ojwWUga67PGrgFWUHibbjqMvuMaDkRJTgkX'), new PublicKey('Be9QTGzXNcohJdaNoxZFraqkzhLudsYesUbNWfphDVnM')],
+        [new PublicKey('So11111111111111111111111111111111111111112'), new PublicKey('HDZf2M4WSG7QjtGXYm1sB5ppdF75kxnBtPNcecDQzsWv')],
+        [new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), new PublicKey('133bwVgQTojGvM1ZV5Jv3roERdG1U2vnHgjDQv1Bsr7N')],
+        [new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'), new PublicKey('D9b86zb6sEy5di9Aihnid8bhfBSDVzUsxMpmfmrabnMi')],
+        [new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'), new PublicKey('5SUGzqWdr9mPxQa9FuNJAwdW1xq74mg1PYZKsFhW9QqL')],
+        [new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'), new PublicKey('7fPHGWSJk7UXyU8Xic9GS1ZKu7iCJ5CTNnZYWs4z71eo')],
         [new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'), new PublicKey('96BHVJVpzU9XJ1FtAZxXVHvoTYp54x1pwFZwuDkXBzBz')],
       ]),
     };

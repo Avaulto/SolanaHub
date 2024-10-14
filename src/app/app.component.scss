@@ -25,7 +25,8 @@ ion-menu {
   #menu-top {
     display: flex;
     margin-block-end: 12px;
-
+    flex-direction: column;
+    flex-wrap: nowrap;
   }
 
   ion-list-header {
@@ -60,6 +61,9 @@ ion-menu {
   }
 
 
+}
+.ad-offset{
+  --offset-top: -35px !important;
 }
 ion-item {
   cursor: pointer;

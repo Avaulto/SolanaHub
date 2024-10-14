@@ -2,6 +2,7 @@ import { BaseConfig, PriorityFee } from "../app/models";
 
 export const getBaseConfig = (): BaseConfig => {
   return {
+    platformFeeCollector:'HUBpmKPsZaXWCDoWh1SScYMneVSQJve99NamntdsEovP',
     rpcs: [
       // {
       //   name: "QuickNode",

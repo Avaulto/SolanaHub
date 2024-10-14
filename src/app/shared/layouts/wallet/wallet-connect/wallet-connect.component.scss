@@ -95,7 +95,12 @@ ion-button {
     }
   }
 }
-
+freemium-badge{
+  position: absolute;
+  top: -13px;
+  right: 12px;
+  z-index: 5;
+}
 ion-chip{
   position: absolute;
   top: -16px;

@@ -193,12 +193,12 @@ ion-spinner {
     --height: auto;
     --max-width: 95%;
     --max-height: 90%;
-    --overflow: auto;
+    // --overflow: auto;
 
-    >.ion-page {
-        position: static;
-        contain: initial;
-    }
+    // >.ion-page {
+    //     position: static;
+    //     contain: initial;
+    // }
 }
 
 // .ll-loader{
@@ -217,7 +217,12 @@ ion-spinner {
     --max-width: 95%;
     --max-height: 90%;
 }
-
+.freemium-popup{
+    --width: 480px;
+    --border-radius: 12px;
+    --max-width: 95%;
+    --max-height: 90%;
+}
 .swap-setting-modal {
     --width: 340px;
     --height: 300px;

@@ -45,17 +45,11 @@
   
   #modal-controls {
     display: flex;
-    justify-content: space-between;
-    position: absolute;
-    width: 100%;
-    bottom: 0;
-    height: 95px;
-    left: 0;
-    padding: 0 24px;
+    height: 85px;
     align-items: center;
     background: white;
     border-top: 1px solid #E3E8EF;
-  
+    margin-block-start: 16px;
     ion-button {
       width: 100%;
       font-size: 16px;
@@ -103,4 +97,21 @@
     .stake-details {
         display: none !important;
     }
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.modal-content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+.modal-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }

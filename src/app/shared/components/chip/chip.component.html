@@ -1,6 +1,10 @@
 <div class="chip-container">
   <div class="badge ion-activatable ripple-parent rectangle" [class]="color">
-    {{name}}
+    @if(!name) {
+    <ng-content/>
+    }@else {
+      {{name}}
+    }
     <ion-ripple-effect></ion-ripple-effect>
   </div>
   </div>

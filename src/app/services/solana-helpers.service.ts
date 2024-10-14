@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { ConnectionStore, WalletStore, connectionConfigProviderFactory } from '@heavy-duty/wallet-adapter';
 import { AccountInfo, Connection, GetProgramAccountsFilter, LAMPORTS_PER_SOL, ParsedAccountData, PublicKey, TokenBalance, TransactionInstruction } from '@solana/web3.js';
 
@@ -19,11 +19,11 @@ import { UtilService } from './util.service';
 import { LoyaltyLeagueService } from './loyalty-league.service';
 import { WatchModeService } from './watch-mode.service';
 ;
-
 @Injectable({
   providedIn: 'root'
 })
 export class SolanaHelpersService {
+  public wallet = signal<WalletExtended | null>(null);
   readonly restAPI = this._utils.serverlessAPI
   readonly SolanaHubVoteKey: string = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public connection: Connection;
@@ -59,6 +59,7 @@ export class SolanaHelpersService {
     this._connectionStore.setEndpoint(rpcURL)
   }
   public getCurrentWallet(): WalletExtended | Partial<WalletExtended> {
+    this.wallet.set(this._walletExtended$.value as WalletExtended)
     return this._walletExtended$.value
   }
 

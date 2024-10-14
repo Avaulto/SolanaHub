@@ -2,25 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {   WalletAdapterOptionsComponent, WalletConnectComponent, WalletConnectedDropdownComponent } from './index';
 import { IonicModule } from '@ionic/angular';
-import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
-import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { RouterLink } from '@angular/router';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
+import { FreemiumModule } from '../freemium/freemium.module';
 
 
 @NgModule({
-  // providers:[
-  //   provideWalletAdapter({
-  //     autoConnect: true,
-  //     adapters: [new UnsafeBurnerWalletAdapter()],
-  //   }),
-  // ],
   declarations: [
     WalletConnectComponent,
     WalletAdapterOptionsComponent,
     WalletConnectedDropdownComponent,
   ],
   imports: [
+    FreemiumModule,
     CopyTextDirective,
     CommonModule,
     RouterLink,

@@ -304,7 +304,7 @@ export class LiquidStakeService {
       }
       const { transaction } = await this.marinadeSDK.liquidUnstake(lamportsBN)
       // sign and send the `transaction`
-      await this._txi.sendTx([transaction], publicKey, null, record)
+      await this._txi.sendTx([transaction], publicKey, null, record, 'unstake-lst')
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
       console.log(pool);
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
@@ -321,7 +321,7 @@ export class LiquidStakeService {
         false
       );
 
-      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record)
+      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, 'unstake-lst')
     } else {
 
       let transaction = await withdrawStake(
@@ -332,7 +332,7 @@ export class LiquidStakeService {
         false
       );
 
-      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record)
+      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, 'unstake-lst')
 
     }
   }

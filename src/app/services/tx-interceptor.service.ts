@@ -8,6 +8,7 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
+import { FreemiumService } from '../shared/layouts/freemium/freemium.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class TxInterceptorService {
   // private _shs = inject(SolanaHelpersService);
   // private _wallet = this._shs.getCurrentWallet()
   constructor(
+    private _freemiumService: FreemiumService,
     private _toasterService:ToasterService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
@@ -34,13 +36,16 @@ export class TxInterceptorService {
       return [ addPriorityFee, modifyComputeUnits]
 
   }
-  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
+  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record, type: string = ''): Promise<string> {
 
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
     const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
     let transaction: Transaction = new Transaction(txArgs).add(...txParam);
     const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
     if (priorityFeeInst?.length > 0) transaction.add(...priorityFeeInst)
+    const serviceFeeInst = this._freemiumService.addServiceFee(walletOwner, type)
+    console.log(serviceFeeInst);
+    if (serviceFeeInst) transaction.add(serviceFeeInst)
     let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 
     if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
