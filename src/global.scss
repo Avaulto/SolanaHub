@@ -191,8 +191,7 @@ ion-spinner {
     --width: 540px;
     --border-radius: 12px;
     --height: auto;
-    --max-width: 95%;
-    --max-height: 90%;
+    overflow-y: auto;
     // --overflow: auto;
 
     // >.ion-page {
@@ -201,15 +200,7 @@ ion-spinner {
     // }
 }
 
-// .ll-loader{
-//     --width: 450px;
-//     --border-radius: 12px;
-//     --max-width: 95%;
-//     --max-height: 90%;
-// }
-// app-loyalty-league{
-//     filter: blur(7px);
-// }
+
 
 .nft-modal {
     --width: 884px;
