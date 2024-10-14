@@ -1,19 +1,26 @@
-<div id="account-freemium-road" >
+<div id="account-freemium-road">
   <div class="divider ion-margin-bottom"></div>
-  <div id="afr-header-title">
-    Wave platform fees
-  </div>
-  <div id="afr-body">
+  <div id="afr-container">
     <div id="afr-content">
-      <div id="afr-body-title">
-        Level up your Stake and enjoy our premium features, all for free.
-      </div>
-      <div id="afr-link" (click)="openFreemumAccessPopup()">
-        learn more about our premium status
-      </div>
+    <div id="afr-header-title">
+      Wave platform fees
     </div>
+    <div id="afr-body">
+      <div id="afr-content">
+        <div id="afr-body-title">
+          Level up your Stake and enjoy our premium features, all for free.
+        </div>
+        <div id="afr-link" (click)="openFreemumAccessPopup()">
+          learn more about our premium status
+        </div>
+      </div>
+
+    </div>
+  </div>
     <div id="afr-status">
-      0/100
+      <div class="progress-bar" [style.--end-value]="stakeSize()">
+        <div class="progress-value">{{stakeSize() | number:'1.0-0'}}/100</div>
+      </div>
     </div>
   </div>
 </div>

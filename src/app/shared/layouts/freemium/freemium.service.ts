@@ -4,17 +4,22 @@ import va from '@vercel/analytics';
 import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 
+interface Account {
+  isPremium: boolean;
+  stake: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class FreemiumService {
-  public readonly isPremium = computed(() => this._isPremium());
-
+  public readonly isPremium = computed(() => this._account()?.isPremium ?? null);
+  public readonly stake = computed(() => this._account()?.stake ?? null);
+  private _account = signal<Account | null>(null);
   private _premiumServices: string[] = [];
   private _platformFee: number | null = null;
   private _hideAd = signal(this.getAdConfig());
-  private _isPremiumCache = new Map<string, boolean>();
-  private _isPremium = signal<boolean | null>(null);
+  private _isPremiumCache = new Map<string, Account>();
 
   constructor(
     private _shs: SolanaHelpersService,
@@ -22,7 +27,7 @@ export class FreemiumService {
   ) {
     this._initializeService();
     effect(() => {
-      this._updateIsPremium();
+      this._updateAccount();
     });
   }
 
@@ -42,8 +47,6 @@ export class FreemiumService {
       console.error('Error fetching premium services:', error);
     }
   }
-
-
 
   private async _fetchPlatformFee(): Promise<void> {
     try {
@@ -68,39 +71,32 @@ export class FreemiumService {
     });
   }
 
-  // public isPremium = computed(async () => {
-  //   const walletAddress = this._shs.wallet()?.publicKey?.toString();
-  //   if (!walletAddress) return null;
-  //   return await this._fetchIsPremium(walletAddress);
-  // });
-  private async _fetchIsPremium(walletAddress: string): Promise<boolean | null> {
+  private async _fetchAccount(walletAddress: string): Promise<Account | null> {
     if (this._isPremiumCache.has(walletAddress)) {
       return this._isPremiumCache.get(walletAddress)!;
     }
   
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-is-premium?walletAddress=${walletAddress}`);
-      const data = await response.json();
-      this._isPremiumCache.set(walletAddress, data.isPremium);
-      this._isPremium.set(data.isPremium);
-      return data.isPremium;
+      const data: Account = await response.json();
+      this._isPremiumCache.set(walletAddress, data);
+      this._account.set(data);
+      return data;
     } catch (error) {
-      console.error('Error fetching premium status:', error);
+      console.error('Error fetching account data:', error);
       return null;
     }
   }
 
-
-  private async _updateIsPremium(): Promise<void> {
+  private async _updateAccount(): Promise<void> {
     const walletAddress = this._shs.wallet()?.publicKey?.toString();
     if (!walletAddress) {
-      this._isPremium.set(null);
+      this._account.set(null);
       return;
     }
-    const isPremium = await this._fetchIsPremium(walletAddress);
-    this._isPremium.set(isPremium);
+    const account = await this._fetchAccount(walletAddress);
+    this._account.set(account);
   }
-
 
   public hideAd(): void {
     const expirationDate = new Date();

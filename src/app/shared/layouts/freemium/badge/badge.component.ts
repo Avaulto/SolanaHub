@@ -15,7 +15,7 @@ export class BadgeComponent {
     addIcons({starOutline})
    }
 
-  public isPremium = signal(true);//this._freemiumService.isPremium;
+  public isPremium = this._freemiumService.isPremium;
   private _modalCtrl= inject(ModalController);
   async openFreemumAccessPopup(){
     const modal = await this._modalCtrl.create({

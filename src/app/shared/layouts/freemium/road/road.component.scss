@@ -6,6 +6,13 @@
   height: 1px;
   background-color:#E3E8EF;
 }
+#afr-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+}
 #afr-header-title{
   color: var(--ion-color-primary);
   font-size: 18px;
@@ -14,7 +21,11 @@
   margin-block-end: 2px;
 }
 #afr-content{
-  max-width: 75%;
+  max-width: 83%;
+}
+#afr-status {
+  margin-inline-end: 8px;
+  
 }
 #afr-body-title {
   margin-block-end: 12px;
@@ -32,4 +43,34 @@
   cursor: pointer;
   text-decoration: underline;
   font-size: 13px;
+}
+
+@property --progress-value {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.progress-bar {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: 
+    radial-gradient(closest-side, white 70%, transparent 70% 100%),
+    conic-gradient(var(--ion-color-secondary) calc(var(--progress-value) * 1%), #f5f2f9 0);
+  position: relative;
+  animation: progress .5s ease-out forwards;
+}
+
+@keyframes progress {
+  0% { --progress-value: 0; }
+  100% { --progress-value: var(--end-value); }
+}
+.progress-value {
+  position: absolute;
+  font-size: 12px;
+  color: var(--ion-color-medium);
 }
