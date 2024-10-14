@@ -21,7 +21,7 @@
         
           <ion-chip color="primary">
 
-            @if(pool?.poolName === 'hub'){
+            @if(pool?.poolName.toLowerCase() == 'solanahub staked sol'){
             {{ pool?.apy | percent : '1.2-2'}}
              
             
@@ -32,7 +32,7 @@
           </ion-chip>
       
           </div>
-          @if(pool.poolName === 'hub'){
+          @if(pool.poolName.toLowerCase() == 'solanahub staked sol'){
             <div id="boosted" class="ion-hide-lg-down">Boosted</div>
           
           }

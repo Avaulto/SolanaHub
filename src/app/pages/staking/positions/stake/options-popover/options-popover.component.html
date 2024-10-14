@@ -87,7 +87,7 @@
         </div>
       </ion-button>
     }
-    @if(stake.pool.poolName == 'the vault'){
+    @if(stake.pool.poolName.toLowerCase() == 'the vault'){
 
       <ion-button (click)="setDirectStakevSOL()"  expand="block" fill="clear">
         <div class="ion-text-left">
