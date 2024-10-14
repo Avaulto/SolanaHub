@@ -12,6 +12,8 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <ion-content>
+        <div id="menu-container">
+        <div id="menu-top">
         <ion-list id="inbox-list">
           <div id="logo">
             <ion-img [src]="SolanaHubLogo"></ion-img>
@@ -60,6 +62,7 @@
           </ion-menu-toggle>
         </ion-list>
         <loyalty-league-member />
+        </div>
         <div id="social">
             <div id="title">Join the Hub</div>
             <div>
@@ -73,6 +76,7 @@
               
             </div>
         </div>
+      </div>
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content">

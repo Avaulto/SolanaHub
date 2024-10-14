@@ -21,11 +21,16 @@ ion-menu {
     padding-top: 0px;
     padding-bottom: 0px;
   }
-
+#menu-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
   #menu-top {
     display: flex;
     margin-block-end: 12px;
-
+    flex-direction: column;
   }
 
   ion-list-header {
@@ -129,11 +134,9 @@ ion-img{
   justify-content: space-around;
   color: var(--ion-color-dark);
   text-transform: capitalize;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+ 
   width: 100%;
-  right: 0;
+ 
   margin: 0 auto;
   a{
     cursor: pointer;
