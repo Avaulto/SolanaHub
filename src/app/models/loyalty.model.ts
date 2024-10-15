@@ -39,6 +39,7 @@ export interface Season{
   airdrop: number
   season: number
   lastUpdate: Date
+  nextUpdate: Date
   totalPoints: number
   totalParticipants: number
   startDate: Date
