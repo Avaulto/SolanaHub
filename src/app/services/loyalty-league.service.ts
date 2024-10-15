@@ -1,7 +1,7 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError } from 'rxjs';
+import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError, retry } from 'rxjs';
 import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
@@ -118,11 +118,15 @@ export class LoyaltyLeagueService {
    
   }
   public getLeaderBoard(): Observable<loyaltyLeagueMember[]> {
-
     return this._apiService.get(`${this.api}/leader-board`).pipe(
+      retry({
+        count: 3,
+        delay: 1000,
+        resetOnSuccess: true
+      }),
       this._utilService.isNotNull,
       catchError((err) => this._formatErrors(err))
-    )
+    );
   }
 
   public async addReferral(refCode: string, participantAddress: string) {
