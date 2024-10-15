@@ -1,11 +1,17 @@
 ion-button{
     height: 100%;
     border: 1px solid var(--gray-modern-200, #E3E8EF);
-    width: 55px;
+    width: 45px;
+    --width: 45px;
     margin-inline-start: 4px;
-    --background:transparent;
+    --background: transparent;
+    display: flex;
+    justify-content: center;
+    --background-activated: transparent;
+    --background-hover: transparent;
+    --background-focused: transparent;
 }
 animated-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }

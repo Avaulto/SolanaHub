@@ -103,22 +103,17 @@ export class MftComponent implements OnInit {
   }
   constructor(private _platform: Platform) {
     effect(() => {
-      if (this.tableData) {
-        const data = this.tableData();
-        // Check if data is defined and either has length or is an empty array
-        if (data !== undefined && (data?.length > 0 || Array.isArray(data))) {
-          this.configuration.isLoading = false;
-        } else {
-          this.configuration.isLoading = true;
-        }
-      } else {
+      if (!this.tableData) {
         this.configuration.isLoading = true;
+        this.configuration.paginationEnabled = false;
+        return;
       }
-      if (this.tableData && this.tableData()?.length < this.tableRows) {
-        this.configuration.paginationEnabled = false
-      } else {
-        this.configuration.paginationEnabled = true
-      }
+
+      const data = this.tableData();
+      this.configuration.isLoading = data === undefined;
+      this.configuration.paginationEnabled = data?.length >= this.tableRows;
+
+      console.log(data);
     });
   }
   public searchTerm = signal('')
