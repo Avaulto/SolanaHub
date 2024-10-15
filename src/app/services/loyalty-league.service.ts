@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class LoyaltyLeagueService {
-  public hideLLv2 = signal(environment.production);
+  public hideLLv2 = signal(false);//environment.production);
   protected api = this._utilService.serverlessAPI + '/api/loyalty-league-v2'
   constructor(
     private _utilService: UtilService,
