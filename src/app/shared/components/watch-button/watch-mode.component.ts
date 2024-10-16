@@ -58,7 +58,6 @@ export class WatchModeComponent implements OnInit {
     if (!!new PublicKey(walletAddress) || PublicKey.isOnCurve(walletAddress)) {
       const publicKey = new PublicKey(walletAddress)
       this._watchModeService.watchedWallet$.next({ publicKey })
-      va.track('loyalty league', { event: 'watch wallet', walletAddress: walletAddress })
     }
   }
 }
