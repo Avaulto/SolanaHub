@@ -22,7 +22,6 @@ export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
   public daysRemainingToNextTier: number = 0
 
 ngAfterViewInit() {
-  console.log(this.tiers)
     this.initDragToScroll();
   }
 
