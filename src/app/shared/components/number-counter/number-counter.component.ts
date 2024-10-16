@@ -63,7 +63,6 @@ export class NumberCounterComponent implements OnInit {
   private calculateStartNumber(): number {
     const totalSeconds = 24 * 60 * 60; // Total seconds in a day
     const progressPercentage = 1 - (this.secondsLeft / totalSeconds);
-    console.log('Progress percentage:', progressPercentage);
     
     // Start from half of the target number
     const halfTarget = this.targetNumber / 2;
@@ -71,7 +70,6 @@ export class NumberCounterComponent implements OnInit {
     const additionalProgress = halfTarget * progressPercentage;
     
     const startNumber = Math.floor(halfTarget + additionalProgress);
-    console.log('Start number:', startNumber);
     return startNumber;
   }
 
@@ -89,7 +87,6 @@ export class NumberCounterComponent implements OnInit {
       )
       .subscribe(value => {
         this.currentNumber = value;
-        console.log('Current number:', this.currentNumber);
       });
   }
 }

@@ -2,7 +2,7 @@
 <!-- <ngx-turnstile #turnStile [siteKey]="turnStileKey" (resolved)="sendCaptchaResponse($event)" theme="auto" [tabIndex]="0" /> -->
 <div>
 
-    <ion-input placeholder="Search address" (ionInput)="watchPortfolio($event)" (ionChange)="watchPortfolio($event)"/>
+    <ion-input placeholder="Search address or domain" (ionInput)="watchPortfolio($event)" debounce="1000" (ionChange)="watchPortfolio($event)"/>
     <!-- <ion-button fill="clear"> -->
 
         <!-- <ion-icon name="search-circle-outline"></ion-icon> -->

@@ -5,7 +5,7 @@ import {  catchError, interval, map, Observable, of, shareReplay, startWith, Sub
 import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
-import { environment } from 'src/environments/environment';
+import va from '@vercel/analytics'; 
 @Injectable({
   providedIn: 'root'
 })
@@ -48,6 +48,8 @@ export class LoyaltyLeagueService {
   );
   
   private _formatErrors(error: any) {
+    va.track('loyalty league', { error: error.message })
+
     console.warn('my err', error)
     this._toasterService.msg.next({
       message: error.message || 'fail to load loyalty league data',

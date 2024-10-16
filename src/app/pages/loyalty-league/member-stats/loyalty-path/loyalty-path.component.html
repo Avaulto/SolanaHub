@@ -19,12 +19,14 @@
       </div>
     </div>
     <div id="referral-btn">
+      @if(daysLoyal > 0){
       <ion-button (click)="openReferAFriendModal.emit()">
         <ion-img src="assets/images/ll/users-plus.svg" />
         <span class="ion-hide-md-down">
           Refer a friend
         </span>
       </ion-button>
+      }
     </div>
   </div>
   <div id="loyalty-path-body" #loyaltyPathBody>

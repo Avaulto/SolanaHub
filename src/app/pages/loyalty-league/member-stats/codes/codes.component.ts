@@ -4,7 +4,7 @@ import { loyaltyLeagueMember } from 'src/app/models';
 import { PortfolioService } from 'src/app/services';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
-
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'codes',
   templateUrl: './codes.component.html',
@@ -12,7 +12,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
   standalone: true,
   imports: [TooltipModule, IonSpinner, IonInput, IonText, IonContent, IonPopover, IonButton, IonLabel, ],
 })
-export class CodesComponent {
+export class CodesComponent implements OnInit {
   @Output() communityCodeBanner = new EventEmitter<string>()
   @Input() member: loyaltyLeagueMember = null
   tooltipDirection = TooltipPosition.ABOVE
@@ -22,6 +22,9 @@ export class CodesComponent {
   public errorMessage = signal('')
   public walletNfts = this._portfolioService.nfts
   constructor(private _portfolioService: PortfolioService) { }
+  ngOnInit() {
+    va.track('loyalty league', { event: 'codes open' })
+  }
 
 
   insertCode(value){

@@ -94,7 +94,6 @@ export class LoyaltyLeaguePage implements OnInit {
     modal.present();
   }
   dismissModal(event: any) {
-    console.log('dismissModal', event)
     // close model only if click is outside the menu
     if (event.target.id === 'multipliers-menu-wrapper') {
       this.openMenu = false
