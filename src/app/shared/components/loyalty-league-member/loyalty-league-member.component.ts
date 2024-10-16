@@ -62,7 +62,7 @@ export class LoyaltyLeagueMemberComponent {
     return  ''
   }
   goToLoyaltyLeague() {
-    va.track('loyalty league', { event: 'go to loyalty league' })
+    va.track('loyalty league', { event: 'navigated to page' })
     this.navCtrl.navigateForward('loyalty-league',{animated:true})
   }
 }
