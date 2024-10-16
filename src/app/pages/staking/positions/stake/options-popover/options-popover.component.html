@@ -9,14 +9,6 @@
         </div>
       </ion-button>
     }
-    @if(stake.state === 'inactive' || stake.state === 'deactivating'){
-      <ion-button (click)="reStake()" expand="block" fill="clear">
-        <div class="ion-text-left">
-          <ion-icon name="arrow-down"></ion-icon>
-          ReStake
-        </div>
-      </ion-button>
-    }
     @if(stake.state === 'inactive'){
       <ion-button (click)="withdraw()" expand="block" fill="clear">
         <div class="ion-text-left">
@@ -25,6 +17,15 @@
         </div>
       </ion-button>
     }
+    @if(stake.state === 'inactive' || stake.state === 'deactivating'){
+      <ion-button (click)="reStake()" expand="block" fill="clear">
+        <div class="ion-text-left">
+          <ion-icon name="arrow-down"></ion-icon>
+          Reactivate stake
+        </div>
+      </ion-button>
+    }
+ 
     
     
     
@@ -87,7 +88,7 @@
         </div>
       </ion-button>
     }
-    @if(stake.pool.poolName == 'the vault'){
+    @if(stake.pool.poolName.toLowerCase() == 'the vault'){
 
       <ion-button (click)="setDirectStakevSOL()"  expand="block" fill="clear">
         <div class="ion-text-left">

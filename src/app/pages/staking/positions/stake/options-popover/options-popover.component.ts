@@ -56,6 +56,10 @@ export class OptionsPopoverComponent implements OnInit {
     });
     modal.present();
     const { data, role } = await modal.onWillDismiss();
+    console.log(data, role);
+    if(role === 'backdrop' || role === undefined){
+      return null
+    }
     let validator: Validator = data
     // if(validator){
       return validator
@@ -77,7 +81,9 @@ export class OptionsPopoverComponent implements OnInit {
       validatorVoteIdentity = (await this.openValidatorModal('select validator & stake')).vote_identity;
 
     }
-    await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)
+    if(validatorVoteIdentity){
+      await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)
+    }
   }
   public async withdraw() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
@@ -93,10 +99,12 @@ export class OptionsPopoverComponent implements OnInit {
       validatorVoteIdentity = (await this.openValidatorModal('Set direct stake validator')).vote_identity;
 
     }
-   const ins = await this._lss.setvSOLDirectStake(walletOwner, validatorVoteIdentity)
-   const record = { message: 'vSOL direct stake', data: { validatorId: validatorVoteIdentity } }
+    if(validatorVoteIdentity){
+      const ins = await this._lss.setvSOLDirectStake(walletOwner, validatorVoteIdentity)
+      const record = { message: 'vSOL direct stake', data: { validatorId: validatorVoteIdentity } }
 
-   await this._txi.sendTx(ins,walletOwner.publicKey, null,record )
+      await this._txi.sendTx(ins,walletOwner.publicKey, null,record )
+    }
   }
   async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'unstake-lst-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
     let config = {

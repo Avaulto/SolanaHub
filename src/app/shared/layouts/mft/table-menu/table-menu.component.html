@@ -1,5 +1,9 @@
   @for (tab of menu; track $index) {
-    <ion-button [fill]="currentTab == tab ? 'clear' : ''" (click)="setTab(tab)" [class.active]="currentTab == tab">{{tab}}</ion-button>
+    <ion-button 
+    [fill]="currentTab == tab ? 'clear' : ''" (click)="setTab(tab)"
+    [class.active]="currentTab == tab"
+    [style.background]="currentTab == tab ? 'var(--ion-color-menu)' : ''"
+    >{{tab}}</ion-button>
   }
 <ng-content>
   </ng-content>

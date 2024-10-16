@@ -118,8 +118,7 @@ export class AssetsTableComponent implements OnInit {
   showLong: boolean=false
 
   nftDataAggregator(nfts: NFT[]): nftTable[] {
-    console.log(nfts);
-    
+
     const collections = nfts.reduce((acc, nft) => {
       const collectionName = nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown';
       const collectionSymbol = nft.collection.symbol || nft.collectionMagicEdenStatSymbol || '';
@@ -153,8 +152,6 @@ export class AssetsTableComponent implements OnInit {
 
     const mergedCollections = collections.map(({ collectionSymbol, collectionKey, ...rest }) => rest);
     const sortedCollections = mergedCollections.sort((a, b) => b.value - a.value);
-
-    console.log(sortedCollections);
     return sortedCollections;
   }
   async ngOnInit() {

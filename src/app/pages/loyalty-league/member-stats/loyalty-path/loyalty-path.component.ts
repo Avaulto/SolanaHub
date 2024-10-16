@@ -16,13 +16,12 @@ export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
   private scrollLeft: number;
 
   @Input() tiers: Tier[] = [];
-  @Input() daysLoyal: number = null;
+  @Input() daysLoyal: number = 0;
   @Output() openReferAFriendModal: EventEmitter<void> = new EventEmitter<void>();
   public nextTier: Tier | null = null;
-  public daysRemainingToNextTier: number = null
+  public daysRemainingToNextTier: number = 0
 
 ngAfterViewInit() {
-  console.log(this.tiers)
     this.initDragToScroll();
   }
 

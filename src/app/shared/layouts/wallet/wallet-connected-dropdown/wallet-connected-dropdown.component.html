@@ -5,13 +5,13 @@
   <ion-button expand="block" appCopyText [copyText]="walletAddress"  fill="clear">
     <div class="div-left">
       <ion-icon name="copy"/>
-      copy wallet address
+      <span>copy address</span>
       </div>
   </ion-button>
   <ion-button expand="block" (click)="showWalletAdapters()" fill="clear">
     <div class="div-left">
       <ion-icon name="repeat"/>
-      change wallet 
+      <span>change wallet</span>
     </div>
   </ion-button>
 }
@@ -19,7 +19,7 @@
   <ion-button expand="block" (click)="disconnectWallet()" fill="clear">
     <div class="div-left">
       <ion-icon name="log-out"/>
-      disconnect
+      <span>disconnect</span>
     </div>
   </ion-button>
  </div>

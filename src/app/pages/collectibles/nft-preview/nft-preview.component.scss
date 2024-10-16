@@ -149,8 +149,8 @@
         line-height: 18px;
         border-radius: var(--radius-sm, 6px);
         --border-color: #CDD5DF;
-        --background-hover: #fff;
-        --background: #FFF;
+        --background-hover: var(--ion-color-light);
+        --background: var(--ion-color-light);
         --border-width: 1px;
         --border-style: solid;
         --border-radius: 6px;

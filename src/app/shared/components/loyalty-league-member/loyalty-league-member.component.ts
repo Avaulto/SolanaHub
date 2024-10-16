@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { IonLabel, IonSkeletonText, IonProgressBar, IonIcon, IonChip, IonText, IonImg } from "@ionic/angular/standalone";
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { TooltipModule } from '../../layouts/tooltip/tooltip.module';
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline } from 'ionicons/icons';
@@ -11,7 +12,7 @@ import { NumberCounterComponent } from '../number-counter/number-counter.compone
 import { loyaltyLeagueMember } from 'src/app/models';
 import {  map, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
-
+import va from '@vercel/analytics'; 
 
 export interface Rank {
   rank: number
@@ -42,6 +43,7 @@ export class LoyaltyLeagueMemberComponent {
   constructor(
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
+    private navCtrl: NavController
   ) {
     addIcons({ chevronForwardOutline });
   }
@@ -58,5 +60,9 @@ export class LoyaltyLeagueMemberComponent {
       }
     }
     return  ''
+  }
+  goToLoyaltyLeague() {
+    va.track('loyalty league', { event: 'navigated to page' })
+    this.navCtrl.navigateForward('loyalty-league',{animated:true})
   }
 }

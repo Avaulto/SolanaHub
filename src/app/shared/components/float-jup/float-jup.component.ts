@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { toastData } from 'src/app/models';
-import { ToasterService, UtilService } from 'src/app/services';
+import { PortfolioFetchService, ToasterService, UtilService } from 'src/app/services';
 import { environment } from 'src/environments/environment';
 import va from '@vercel/analytics';
 declare global {
@@ -119,9 +119,11 @@ interface JupiterTerminal {
   encapsulation: ViewEncapsulation.None
 })
 export class FloatJupComponent implements OnInit, OnChanges {
+  
   @Input() path: string = '';
   private _utils = inject(UtilService);
   private _toast = inject(ToasterService);
+  private _portfolioFetchService = inject(PortfolioFetchService);
   async ngOnInit() {
 
 
@@ -143,6 +145,7 @@ export class FloatJupComponent implements OnInit, OnChanges {
     };
 
 
+
     window.Jupiter.init({
       displayMode: "widget",
       integratedTargetId: "integrated-terminal",
@@ -161,6 +164,9 @@ export class FloatJupComponent implements OnInit, OnChanges {
         }
 
         this._toast.msg.next(txSend);
+        setTimeout(() => {
+          this._portfolioFetchService.triggerFetch();
+        }, 3000);
         console.log({ txid, swapResult });
       },
       onSwapError: ({ error }) => {

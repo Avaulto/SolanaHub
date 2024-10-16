@@ -12,7 +12,7 @@
 }
 
 #season-stats-title {
-    color: #FFF;
+    color: var(--ion-color-light);
     font-size: 32px;
     font-style: italic;
     font-weight: 900;
@@ -43,14 +43,14 @@
     border: 1px solid rgba(255, 255, 255, 0.28);
 
     .season-stats-card-title {
-        color: #FFF;
+        color: var(--ion-color-light);
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
         margin-block-end: 2px;
     }
     .season-stats-card-body {
-        color: #FFF;
+        color: var(--ion-color-light);
         font-size: 20px;
         font-style: italic;
         font-weight: 600;

@@ -4,6 +4,7 @@ import { addIcons } from 'ionicons';
 import { copyOutline, shareOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive'
 import { ModalController } from '@ionic/angular';;
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'refer-a-friend-modal',
   templateUrl: './refer-a-friend-modal.component.html',
@@ -23,7 +24,8 @@ export class ReferAFriendModalComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.baseReferralLink += this.refCode
     this.blinkLink += this.refCode
-  }
+    va.track('loyalty league', { event: 'refer a friend open' })
+  } 
   selectLink(event: any) {
     this.defaultLink = event.detail.value
   }

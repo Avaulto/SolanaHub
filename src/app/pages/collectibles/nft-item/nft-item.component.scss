@@ -28,7 +28,7 @@
 
 .nft-body {
     border-top: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-    background: #FFF;
+    background: var(--ion-color-light);
     padding: 12px;
     div {
         display: flex;

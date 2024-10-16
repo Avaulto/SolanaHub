@@ -205,6 +205,8 @@ export class PortfolioService {
       .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
       .map(async group => {
         let records: defiHolding[] = [];
+        // add if id =juptier jupiter-governance 
+        group.platformId = group.platformId === 'jupiter-governance' ? 'jupiter-exchange' : group.platformId
         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
         Object.assign(group, platformData);
 

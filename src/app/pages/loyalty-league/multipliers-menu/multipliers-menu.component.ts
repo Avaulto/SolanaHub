@@ -4,14 +4,13 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { Multipliers } from 'src/app/models';
-import { map, Observable, ReplaySubject, shareReplay, switchMap, of, BehaviorSubject, combineLatestWith, Subscription } from 'rxjs';
 import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { diamondOutline, flash, flashOutline } from 'ionicons/icons';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { AnimatedIconComponent } from 'src/app/shared/components';
-
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'multipliers-menu',
   templateUrl: './multipliers-menu.component.html',
@@ -151,7 +150,7 @@ export class MultipliersMenuComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('load multiplier menu');
-    
+    va.track('loyalty league', { event: 'multipliers menu open' })
     this.updateMultipliers()
   }
   constructor() {

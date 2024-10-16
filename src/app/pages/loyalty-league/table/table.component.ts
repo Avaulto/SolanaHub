@@ -55,8 +55,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       return 0;
     })
-    console.log(llEdited);
-    
     return llEdited
   }),
 ));

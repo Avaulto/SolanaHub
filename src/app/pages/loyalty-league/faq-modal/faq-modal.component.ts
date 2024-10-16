@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IonAccordionGroup, IonItem, IonAccordion, IonLabel, IonText, IonIcon, IonButton, IonRow, IonCol } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { exitOutline } from 'ionicons/icons';
-
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'faq-modal',
   templateUrl: './faq-modal.component.html',
@@ -16,6 +16,8 @@ export class FaqModalComponent  implements OnInit {
     addIcons({exitOutline});
    }
 
-  ngOnInit() {}
+  ngOnInit() {
+    va.track('loyalty league', { event: 'faq open' })
+  }
 
 }

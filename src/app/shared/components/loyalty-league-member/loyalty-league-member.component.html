@@ -26,10 +26,12 @@
       }
     </ion-text>
     @if(member$ | async; as member){  
-      <ion-img [src]="getTierIcon(member.daysLoyal)"></ion-img>
+      @if(member.daysLoyal){
+        <ion-img [src]="getTierIcon(member.daysLoyal)"></ion-img>
+      }
   }
   </div>
-  <a routerDirection="root" routerLink="loyalty-league" id="leader-board-link"> Loyalty league HUB <ion-icon
+  <a (click)="goToLoyaltyLeague()" id="leader-board-link"> Loyalty league HUB <ion-icon
       name="chevron-forward-outline"></ion-icon></a>
 </div>
 }

@@ -162,7 +162,7 @@ export class FormComponent implements OnInit {
         this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
       }
     } else if (stakingPath === 'liquid') {
-      if(pool.poolName === 'hub'){
+      if(pool.poolName.toLowerCase() == 'solanahub staked sol'){
         this._lss.depositSolHubSolPool(walletOwner,lamportsToDelegate)
       }else{ 
         const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
