@@ -137,7 +137,7 @@
 
     ion-text {
         display: block;
-        color: var(--Colors-Gray-modern-700, #364152);
+        color: var(--ion-color-dark);
         font-size: 16px;
         line-height: 24px;
         margin-block-end: 14px;
@@ -318,7 +318,7 @@
             }
 
             .DEX {
-                background: #FFF1F3;
+                background: var(--ion-color-light)1F3;
                 color: #C01048;
             }
             .other {

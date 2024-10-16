@@ -84,7 +84,7 @@ ion-segment {
         --track-background: var(--ion-color-app-bg-2);
         --track-background-checked: var(--ion-color-app-bg-2);
 
-        --handle-background: #FFF;
+        --handle-background: var(--ion-color-light);
         --handle-background-checked: var(--ion-color-primary);
 
         --handle-width: 16px;

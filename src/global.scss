@@ -26,6 +26,7 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -56,8 +57,7 @@ ion-col {
 }
 
 ion-button {
-    // --background: var(--ion-color-card-bg);
-    // --color: var(--ion-color-btn);
+    // --color: var(--ion-color-primary-contrast);
     --transition: 0.3s ease all;
     padding: 0;
     margin: 0;
@@ -76,13 +76,9 @@ ion-skeleton-text{
  
     --background-rgb: 188, 0, 255;
 }
-ion-content,
-ion-header {
-    --background: var(--ion-color-app-bg);
-    background: var(--ion-color-app-bg);
-}
+
 .header-md{
-    background: #FFF;
+    background: var(--ion-color-light);
     box-shadow: none;
 }
 .backdrop-no-scroll ion-header{

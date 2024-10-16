@@ -1,12 +1,38 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+
+// :root {
+//     --ion-item-border-color: var(--ion-background-color-step-200);
+//   }
+  
+//   /* This sets a different background and item background for the default theme on ios */
+//   :root.ios {
+//     --ion-background-color: var(--ion-background-color-step-50, #f2f2f6);
+//     --ion-toolbar-background: var(--ion-background-color);
+//     --ion-item-background: #fff;
+//   }
+  
+//   /* This sets a different background and item background for the default theme on md */
+//   :root.md {
+//     --ion-background-color: var(--ion-background-color-step-100, #f9f9f9);
+//     --ion-toolbar-background: var(--ion-background-color);
+//     --ion-item-background: #fff;
+//   }
+  
+//   /* This sets a different item background when dark mode is enabled on ios and md */
+//   .ion-palette-dark.ios,
+//   .ion-palette-dark.md {
+//     --ion-item-background: #1c1c1d;
+//   }
+
+
 /** Ionic CSS Variables **/
 :root {
 	// --text-color:;
 	--ion-padding: 20px;
 	--ion-font-family: 'Inter', sans-serif;
-	--ion-color-app-bg: #f3f4f6;
+	--ion-background-color: #f3f4f6;
 	--ion-color-app-bg-2: #EEF2F6;
 	--ion-color-page-top: #E9E9E6;
 	--ion-color-menu: #fff;
@@ -85,32 +111,27 @@
 	--ion-color-dark-tint: #4a5463;
 }
 
-:root .dark-theme {
-	--ion-color-app-bg: #131313; // #121a35;
-	--ion-color-page-top: #1D1D1D;
-	--ion-color-btn-bg: #1E131B;
-	--ion-color-medium: #f3f3f3;
-	--ion-color-menu: #0D0D0D;
-	--ion-color-app-bg-2: #1A1A1A;
-	--ion-color-hard-hard: #FFFFFF;
-	--ion-color-dark: #898E95;
-	--ion-color-text-2: #925FCC;
-	--ion-color-card-bg: #B84794;
-	--ion-color-btn: #0D0D0D;
+// :root .dark-theme {
+// 	--ion-color-app-bg: #131313; // #121a35;
+// 	--ion-color-page-top: #1D1D1D;
+// 	--ion-color-btn-bg: #1E131B;
+// 	--ion-color-medium: #f3f3f3;
+// 	--ion-color-menu: #0D0D0D;
+// 	--ion-color-app-bg-2: #1A1A1A;
+// 	--ion-color-hard-hard: #FFFFFF;
+// 	--ion-color-dark: #898E95;
+// 	--ion-color-text-2: #925FCC;
+// 	--ion-color-card-bg: #B84794;
+// 	--ion-color-btn: #0D0D0D;
 
-	// ll page
-	--ion-color-ll: #1A1520;
-	--ion-color-ll-title: #FFFFFF; 
-	--ion-color-ll-pb: #322442;
+// 	// ll page
+// 	--ion-color-ll: #1A1520;
+// 	--ion-color-ll-title: #FFFFFF; 
+// 	--ion-color-ll-pb: #322442;
 
 
-	--ion-color-primary: #B84794;
-	--ion-color-primary-rgb: 184, 71, 148;
-	--ion-color-primary-contrast: #1D1D1D;
-	--ion-color-primary-contrast-rgb: 255, 255, 255;
-	--ion-color-primary-shade: #a23e82;
-	--ion-color-primary-tint: #bf599f;
-}
+// }
+@import "./dark.theme.scss";
 
 // @media (prefers-color-scheme: dark) {
 //   /*

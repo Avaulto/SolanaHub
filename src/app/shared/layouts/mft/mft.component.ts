@@ -113,7 +113,6 @@ export class MftComponent implements OnInit {
       this.configuration.isLoading = data === undefined;
       this.configuration.paginationEnabled = data?.length >= this.tableRows;
 
-      console.log(data);
     });
   }
   public searchTerm = signal('')

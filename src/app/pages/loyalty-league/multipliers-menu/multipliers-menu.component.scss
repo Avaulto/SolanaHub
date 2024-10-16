@@ -11,7 +11,7 @@
     overflow: auto;
 }
 #multipliers-menu-container {
-    background: #FFF;
+    background: var(--ion-color-light);
     width: 470px;
     max-width: 100%;
     overflow: auto;
@@ -27,7 +27,7 @@
 }
 
 #close-icon {
-    background: #FFF;
+    background: var(--ion-color-light);
     width: 24px;
     cursor: pointer;
     position: absolute;
@@ -112,7 +112,7 @@
     align-items: center;
     border-radius: 8px;
     border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-    background: var(--Colors-Background-bg-primary_alt, #FFF);
+    background: var(--Colors-Background-bg-primary_alt, var(--ion-color-light));
     position: relative; 
     #boosted-lst-icon {
         position: absolute;

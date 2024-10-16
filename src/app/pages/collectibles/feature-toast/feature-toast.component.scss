@@ -18,7 +18,7 @@
         margin-inline-end: 12px;
         border-radius: var(--radius-sm, 6px);
         --border-color: #CDD5DF;
-        --background: #FFF;
+        --background: var(--ion-color-light);
         --border-width: 1px;
         --border-style: solid;
         --border-radius: 6px;
@@ -41,7 +41,7 @@
     text-transform: capitalize;
     --border-radius: 6px;
     --border-color: #CDD5DF;
-    --background: #FFF;
+    --background: var(--ion-color-light);
     --border-width: 1px;
     --border-style: solid;
     --color: var(--ion-color-dark);

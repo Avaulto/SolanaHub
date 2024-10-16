@@ -1,7 +1,7 @@
 #ll-member-wrapper {
     border-radius: 8px;
     border: 1px solid var(--Gray-Modern-200, #E3E8EF);
-    background: #FFF;
+    background: var(--ion-color-light);
     padding: 16px;
     position: relative;
 }
@@ -17,12 +17,12 @@ ion-label {
 #ll-memeber-pts{
     display: flex;
     align-items: center;
-    margin-block-end: 17px;
+    margin-block-end: 12px;
     justify-content: space-between;
 }
 ion-img {
     
-        width: 40px;
+        width: 35px;
     
 }
 ion-text {

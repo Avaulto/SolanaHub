@@ -43,8 +43,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
 
   public assetClassValue = computed(() => {
     const assets = this.assets();
-    console.log(assets);
-    
+
     if (!assets) return [];
 
     return assets

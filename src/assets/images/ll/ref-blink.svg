@@ -75,7 +75,7 @@
 </pattern>
 <radialGradient id="paint0_radial_2834_541" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(653.5) rotate(90) scale(1110 2216.59)">
 <stop stop-color="#B84794"/>
-<stop offset="1" stop-color="#FFF7FD"/>
+<stop offset="1" stop-color="var(--ion-color-light)7FD"/>
 </radialGradient>
 <linearGradient id="paint1_linear_2834_541" x1="138.14" y1="94.421" x2="138.14" y2="176.996" gradientUnits="userSpaceOnUse">
 <stop stop-color="white"/>

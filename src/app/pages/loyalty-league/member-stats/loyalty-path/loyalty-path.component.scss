@@ -129,8 +129,8 @@ ion-button {
     font-weight: 600;
     line-height: 18px;
     text-transform: capitalize;
-    --color: var(--component-colors-utility-gray-utility-gray-600, #364152);
-    --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, #FFF);
+    --color: var(--ion-color-dark);
+    --background: var(--ion-color-light);
     --background-hover: var(--ion-color-page-top);
     --padding-bottom: var(--spacing-lg, 12px);
     --padding-top: var(--spacing-lg, 12px);

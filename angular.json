@@ -37,7 +37,7 @@
                 "src/actions.json"
                
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss","node_modules/ngx-easy-table/style.css"],
+            "styles": [ "src/global.scss", "src/theme/variables.scss","node_modules/ngx-easy-table/style.css"],
             "scripts": [],
             "allowedCommonJsDependencies": ["@marinade.finance/marinade-ts-sdk", "camelcase", "js-sha3", "bs58", "@walletconnect/qrcode-modal", "@ledgerhq/devices/lib/hid-framing", "bn.js", "borsh", "rpc-websockets/dist/lib/client/websocket.browser", "@toruslabs/eccrypto", "eth-rpc-errors", "fast-deep-equal", "pump", "@walletconnect/window-getters", "@walletconnect/window-metadata", "@sonarwatch/portfolio-core", "@coral-xyz/anchor/dist/cjs/coder/borsh/accounts", "lottie-web", "@solana/buffer-layout", "bigint-buffer", "jayson/lib/client/browser", "rpc-websockets/dist/lib/client", "is-stream", "loglevel", "@walletconnect/environment", "buffer", "sdp", "rtcpeerconnection-shim", "@stablelib/ed25519", "@walletconnect/time", "@coral-xyz/borsh", "eventemitter3"]
           },
@@ -142,7 +142,7 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
+            "styles": [ "src/global.scss", "src/theme/variables.scss"],
             "scripts": []
           },
           "configurations": {
