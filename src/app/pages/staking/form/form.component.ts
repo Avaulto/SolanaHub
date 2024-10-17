@@ -145,7 +145,7 @@ export class FormComponent implements OnInit {
     let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
     const lamportsToDelegate = amount * LAMPORTS_PER_SOL
     const walletOwner = this._shs.getCurrentWallet().publicKey;
-    const stakeReferer = this._localStorage.getData('refWallet')
+    const stakeReferer = this._localStorage.getData('refCode')
 
     try {
       
