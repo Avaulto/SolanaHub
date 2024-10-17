@@ -1,6 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { IonButton, IonRippleEffect } from "@ionic/angular/standalone";
+import { IonButton, IonRippleEffect, IonText, IonLabel } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'portfolio-box',
@@ -8,6 +8,8 @@ import { IonButton, IonRippleEffect } from "@ionic/angular/standalone";
   styleUrls: ['./portfolio-box.component.scss'],
   standalone: true,
   imports: [
+    IonLabel, 
+    IonText, 
     IonRippleEffect, 
     IonButton,
     CurrencyPipe

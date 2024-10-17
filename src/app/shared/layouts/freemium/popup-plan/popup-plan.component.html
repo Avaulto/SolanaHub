@@ -3,15 +3,52 @@
     <div id="modal-intro">
         <div>
 
-
             <div class="icon-wrapper">
                 <ion-img src="assets/images/freemium-up-icon.svg" />
             </div>
-
             <div id="title">Unlock Premium Features</div>
-            <div id="desc">Upgrade to a premium account to access all features and enjoy a seamless experience.</div>
+            <div id="desc">Stake 100 SOL or more to unlock premium features.</div>
         </div>
 
         <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
     </div>
+    <div class="plans-wrapper">
+        <div id="services">
+            <div class="service-title">Services</div>
+            <div class="service-desc">Basic features</div>
+            <div class="service-desc">Multi Wallet Support</div>
+            <div class="service-desc">Liquid LST Actions</div>
+            <div class="service-desc">Stash Page</div>
+            <div class="service-desc">Stake Boost</div>
+        </div>
+        <div id="free-plan" class="plan-box">
+            <div class="service-title">Free</div>
+            <div class="service-desc"><ion-icon name="checkmark-outline"></ion-icon></div>
+            <div class="service-desc">0.01 SOL (up to 3 total wallets)</div>
+            <div class="service-desc">0.002 SOL per transaction</div>
+            <div class="service-desc">0.002 SOL per transaction</div>
+            <div class="service-desc"><ion-icon name="close-outline"></ion-icon></div>
+
+        </div>
+        <div id="divider"></div>
+        <div id="premium-plan" class="plan-box">
+            <div class="service-title">Premium</div>
+            <div class="service-desc"><ion-icon name="checkmark-outline"></ion-icon></div>
+            <div class="service-desc">FREE</div>
+            <div class="service-desc">Unlimited</div>
+            <div class="service-desc">Unlimited</div>
+            <div class="service-desc"><ion-icon name="checkmark-outline"></ion-icon></div>
+
+        </div>
+    </div>
+    <freemium-road/>
 </div>
+
+
+<!-- 
+ services:
+ - multi wallet support
+ - liquid LST actions
+ - Stash page
+ - Stake boost
+-->

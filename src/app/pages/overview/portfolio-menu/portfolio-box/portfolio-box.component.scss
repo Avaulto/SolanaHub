@@ -9,3 +9,13 @@
     position: relative;
     overflow: hidden;
   }
+.portfolio-box-header {
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin-block-end: 6px;
+}
+.portfolio-box-body {
+    display: flex;
+    justify-content: space-between;
+    text-transform: capitalize;
+}

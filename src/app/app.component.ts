@@ -143,10 +143,9 @@ export class AppComponent implements OnInit {
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
     this._activeRoute.queryParams
       .subscribe((params) => {
-        const refWallet = params['refWallet']
-        if (refWallet) {
-
-          this._localStorage.saveData('refWallet', refWallet)
+        const refCode = params['refCode']
+        if (refCode) {
+          this._localStorage.saveData('refCode', refCode)
         }
 
       }

@@ -145,7 +145,7 @@ export class FormComponent implements OnInit {
     let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
     const lamportsToDelegate = amount * LAMPORTS_PER_SOL
     const walletOwner = this._shs.getCurrentWallet().publicKey;
-    const stakeReferer = this._localStorage.getData('refWallet')
+    const stakeReferer = this._localStorage.getData('refCode')
 
     try {
       
@@ -155,10 +155,12 @@ export class FormComponent implements OnInit {
       // const stakeAccIns: Transaction = stakeIx.newStakeAccountIns;
       // await this._tis.sendTx([stakeAccIns], walletOwner, [stakeAcc])
       const stake = await this._nss.stake(lamportsToDelegate, walletOwner, validatorVoteIdentity, lockupDuration);
-
+      console.log('stake', stake)
       // add stakers to loyalty league referee program
       if (stake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
         const participantAddress = walletOwner.toBase58()
+        console.log('stakeReferer', stakeReferer)
+        console.log('participantAddress', participantAddress)
         this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
       }
     } else if (stakingPath === 'liquid') {

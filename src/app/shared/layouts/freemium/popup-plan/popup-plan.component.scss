@@ -41,3 +41,19 @@
       cursor: pointer;
     }
   }
+
+  .plans-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+  .service-title {
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin-block-end: 8px;
+}
+.service-desc {
+  margin-block-end: 16px;
+  color: var(--ion-color-dark);
+  border-bottom: 1px solid var(--ion-color-secondary);
+  padding-block-end: 4px;
+}

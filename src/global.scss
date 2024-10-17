@@ -205,7 +205,8 @@ ion-spinner {
     --max-height: 90%;
 }
 .freemium-popup{
-    --width: 480px;
+    --background: var(--ion-color-light);
+    --width: 600px;
     --border-radius: 12px;
     --max-width: 95%;
     --max-height: 90%;
