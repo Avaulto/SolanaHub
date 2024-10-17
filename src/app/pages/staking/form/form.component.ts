@@ -159,8 +159,6 @@ export class FormComponent implements OnInit {
       // add stakers to loyalty league referee program
       if (stake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
         const participantAddress = walletOwner.toBase58()
-        console.log('stakeReferer', stakeReferer)
-        console.log('participantAddress', participantAddress)
         this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
       }
     } else if (stakingPath === 'liquid') {
