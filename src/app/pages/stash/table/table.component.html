@@ -5,7 +5,7 @@
    <div class="">
       <div id="head-line">
         <ion-label>{{tableName}}</ion-label> 
-        <chip [name]="tableData().length + ' • ' + (10.1 | currency)"></chip>
+        <chip [name]="tableData().length + ' • ' + (stash.value| currency)"></chip>
 
       </div>
 
@@ -16,13 +16,17 @@
       
       <div class="ion-margin-button ion-hide-lg-down"></div>
     </div>
-    <!-- <ion-col  size="6" sizeLg="2">
-      <div id="toggle-swap">
-        <ion-toggle mode="md" /><span>Swap to hubSOL</span>
-      </div>
-    </ion-col> -->
-    
-      <ion-button id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{actionTitle}} | {{selectedData().length}}</ion-button>
+    <div style="display: flex; align-items: center; gap: 10px;">
+
+      @if(tableName === 'Dust value'){
+        <!-- <ion-col  size="3" sizeLg="2"> -->
+          <div id="toggle-swap">
+            <ion-toggle mode="md" /><span>Swap to hubSOL</span>
+          </div>
+        <!-- </ion-col> -->
+      }
+      <ion-button (click)="onAction.emit(selectedData())" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{actionTitle}} | {{selectedData().length}}</ion-button>
+    </div>
     
       <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow" name="arrow-up-outline"/></ion-button>
  

@@ -84,6 +84,7 @@ export class TxInterceptorService {
     public async sendMultipleTxn(transactions:Transaction[], extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
 
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+
       const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
       if (priorityFeeInst?.length > 0) transactions.map(t => t.add(...priorityFeeInst))
       let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];

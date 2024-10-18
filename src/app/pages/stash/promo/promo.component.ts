@@ -19,7 +19,7 @@ import {
           style({
               opacity: 1
           }),
-          animate("500ms ease-in-out", style({
+          animate("300ms ease-in-out", style({
               opacity: 0
           }))
       ])
@@ -37,17 +37,17 @@ import {
     trigger("fadeAnimation", [
       transition("false=>true", [
         style({ opacity: 0 }),
-        animate("500ms", style({ opacity: 1 }))
+        animate("300ms", style({ opacity: 1 }))
       ]),
       //when we write '500ms  100ms' means that the animation spend 500ms, and start afer 100ms
-      transition("true=>false", [animate("500ms 1000ms", style({ opacity: 0 }))])
+      transition("true=>false", [animate("300ms 600ms", style({ opacity: 0 }))])
     ]),
     
   ]
 })
 export class PromoComponent implements AfterViewInit {
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;
-  public wordCarousel = ["Low value assets", "Empty accounts", "Stake accounts", "DeFi positions"];
+  public wordCarousel = ["Dust value", "Stake accounts", "DeFi positions"];
   public wordCounter = -1;
   toggle: boolean = true;
   @Output() onStartAnalyze = new EventEmitter()
@@ -84,7 +84,7 @@ export class PromoComponent implements AfterViewInit {
       renderer: 'svg',
       loop: true,
       autoplay: true,
-      path: 'assets/images/placeholder-animation.json' // the path to the animation json
+      path: 'assets/stash-anim.json' // the path to the animation json
     });
   }
 }

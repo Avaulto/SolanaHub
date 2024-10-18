@@ -1,5 +1,5 @@
 import { CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
-import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, signal } from '@angular/core';
+import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, effect, signal } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
 import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
@@ -10,7 +10,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { PromoComponent } from './promo/promo.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-modal.component";
-import { StashService } from './stash.service';
+import { StashAsset, StashService } from './stash.service';
 import { TableComponent } from './table/table.component';
 import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
@@ -78,7 +78,8 @@ export class StashPage implements OnInit {
   @ViewChild('actionTpl', { static: true }) actionTpl: TemplateRef<any> | any;
   @ViewChild('sourceTpl', { static: true }) sourceTpl: TemplateRef<any> | any;
   @ViewChildren('checkAsset') checkNfts: QueryList<IonCheckbox>
-  public analyzeStage = signal(1);
+  public analyzeStage = signal(0);
+  public hideStash = signal(false)
   public selectedTab = signal('assets');
   public tableMenuOptions: string[] = ['Assets', 'Positions', 'Stake'];
   private _columnsOptions = null
@@ -90,9 +91,15 @@ export class StashPage implements OnInit {
     private _stashService: StashService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
-    private _jupService: JupStoreService
   ) { 
     addIcons({closeOutline})
+    effect(() => {
+      if(this.unstakedOverflow() && this.outOfRangeDeFiPositions() && this.nftZeroValue()) {
+        console.log(this.unstakedOverflow(), this.outOfRangeDeFiPositions(), this.nftZeroValue());
+        
+        this.hideStash.set(false)
+      }
+    })
   }
   // public dustBalanceAccounts = signal([])
   // // public emptyAccounts = signal([])
@@ -123,12 +130,14 @@ export class StashPage implements OnInit {
       "assets": []
     }
   }
-  public unstakedOverflow = null;
+  public unstakedOverflow = this._stashService.findStakeOverflow;
+  public outOfRangeDeFiPositions = this._stashService.findOutOfRangeDeFiPositions;
+  public nftZeroValue = this._stashService.findNftZeroValue;
   public emptyAccounts = {
     "networkId": "solana",
     "platformId": "wallet-tokens",
     "type": "multiple",
-    "label": "Empty accounts",
+    "label": "Dust value",
     "value": 173.00551050908487,
     "data": {
       "assets": [
@@ -190,12 +199,13 @@ export class StashPage implements OnInit {
       ]
     }
   }
-  public assets = signal([
+  public assets = signal(
+    [
     {
       "networkId": "solana",
       "platformId": "wallet-tokens",
       "type": "multiple",
-      "label": "Empty accounts",
+      "label": "Dust value",
       "value": 173.00551050908487,
       "data": {
         "assets": [
@@ -258,6 +268,30 @@ export class StashPage implements OnInit {
       "type": "multiple",
       "label": "Unstaked Overflow",
       "value": 27.59,
+      "data": {
+        "assets": [
+          {
+            "type": "token",
+            "networkId": "solana",
+            "value": 5.31576382446,
+            "attributes": {},
+            "name": "Solana",
+            "symbol": "SOL",
+            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/11111111111111111111111111111111.webp",
+            "decimals": 9,
+            "balance": 0.029177034,
+            "address": "So11111111111111111111111111111111111111112",
+            "price": 182.19
+          }
+        ]
+      }
+    },
+    {
+      "networkId": "solana",
+      "platformId": "marinade",
+      "type": "multiple",
+      "label": "Zero Value NFTs",
+      "value": 18,
       "data": {
         "assets": [
           {
@@ -347,7 +381,7 @@ export class StashPage implements OnInit {
   ])
 
    async ngOnInit() {
-    this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
+    // this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
     this.tableColumn = signal([
       // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
@@ -361,77 +395,23 @@ export class StashPage implements OnInit {
   
   }
   async getSavingData() {
-    const { publicKey } = this._shs.getCurrentWallet()
-    // get accounts data here
-
-
-
-    // const demiData = {
-    //   assets: [
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-
-    //   ],
-    //   positions: {}
-    // }
+    const minLoadingTime = 4000
 
     setTimeout(() => {
       this.analyzeStage.set(1)
-    }, 3000);
+    }, minLoadingTime);
 
+  }
+  triggerAction(event: StashAsset[]) {
+    console.log('event', event)
+    const type = event[0].type
+    switch (type) {
+      case 'stake-account':
+        this._stashService.withdrawStakeAccountExcessBalance(event)
+        break
+      // case 'withdraw':
+      //   this._stashService.withdraw(row.account)
+      //   break
+    }
   }
 }

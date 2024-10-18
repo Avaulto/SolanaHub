@@ -196,7 +196,7 @@ export class PortfolioService {
   private async _portfolioDeFi(editedDataExtended, tokensInfo) {
     // add more data for platforms
     const getPlatformsData = await this.getPlatformsData();
-
+    
     const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
     const defiHolding = await Promise.all(editedDataExtended
       .filter(g => !excludeList.includes(g.platformId))
@@ -221,7 +221,8 @@ export class PortfolioService {
                 poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
                 type: group.label,
                 link: group.website,
-                platform: group.platformId
+                platform: group.platformId,
+                tags: group.tags
               })
 
 
@@ -241,7 +242,8 @@ export class PortfolioService {
               poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
-              platform: group.platformId
+              platform: group.platformId,
+              tags: group.tags
             })
           })
           // assets = assets.flat()
@@ -258,7 +260,8 @@ export class PortfolioService {
               poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
-              platform: group.platformId
+              platform: group.platformId,
+              tags: group.tags
             })
           })
           group.data.borrowedAssets.map(async asset => {
@@ -271,7 +274,8 @@ export class PortfolioService {
               poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
-              platform: group.platformId
+              platform: group.platformId,
+              tags: group.tags
             })
           })
 

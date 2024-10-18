@@ -214,13 +214,14 @@ export interface TransactionHistory{
   }
   
   export interface defiHolding {
+    tags?: string[];
     poolTokens: PoolToken[];
     platform?:  string;
     imgURL:     string;
     type:       string;
     value:      number;
-    link:       string;
-    holdings: holding[]
+      link:       string;
+      holdings: holding[]
   }
   
   export interface PoolToken {
