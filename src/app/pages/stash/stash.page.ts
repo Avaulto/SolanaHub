@@ -409,6 +409,9 @@ export class StashPage implements OnInit {
       case 'stake-account':
         this._stashService.withdrawStakeAccountExcessBalance(event)
         break
+      case 'defi-position':
+        this._stashService.closeOutOfRangeDeFiPosition(event)
+        break
       // case 'withdraw':
       //   this._stashService.withdraw(row.account)
       //   break

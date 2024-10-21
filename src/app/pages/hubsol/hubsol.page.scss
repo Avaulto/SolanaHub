@@ -176,10 +176,27 @@
         }
     }
 }
-
+#hubSOL-chart{
+    background-color: #E6E7EB;
+    ion-text{
+        color: var(--colors-text-text-tertiary-600, #475467);
+    font-size: 20px;
+    line-height: 30px;
+    display: block;
+    margin-block-end: 20px;
+    }
+    #chart-title{    
+        color: var(--colors-text-text-primary-900, #101828);
+        font-size: 36px;
+        font-weight: 600;
+        line-height: 44px;
+        letter-spacing: -0.72px;
+        display: block;
+}
+}
 #hubSOL-trust {
     padding: 2.5vw;
-    background-color: #E6E7EB;
+
     background-image: url(/assets/images/bg-header-decorative.svg);
     div {
         font-weight: 500;
@@ -242,6 +259,7 @@
 
 
 #hubSOL-support {
+    background-color: #E6E7EB;
     padding: 54px 2.5vw;
 
     ion-label {

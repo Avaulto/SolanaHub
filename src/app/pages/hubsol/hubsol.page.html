@@ -82,7 +82,7 @@
 
       <div id="benefit-list">
         <div class="benefit">
-          <ion-img src="assets/images/check-heart.svg" /> <span>Weekly airdrops delivered directly to your wallet</span>
+          <ion-img src="assets/images/check-heart.svg" /> <span>Loyalty league airdrops delivered directly to your wallet</span>
         </div>
         <div class="benefit">
           <ion-img src="assets/images/check-heart.svg" /> <span>Enjoy premium features available only to holders</span>
@@ -97,7 +97,14 @@
       <div #animationEl></div>
     </ion-col>
   </ion-row>
+<ion-row id="hubSOL-chart"  class="ion-padding">
+  <div id="chart-title">LST APY performance</div>
+  <ion-text>The chart shows the 10 avg APY of leading liquid staking tokens</ion-text>
 
+  <div style="margin: 0 auto;width: 100%;height: 407px;">
+  <canvas  #chartEl></canvas>
+  </div>
+</ion-row>
   <div id="hubSOL-trust">
     <div>
       <div id="sanctum-power">Powered By <ion-img src="assets/images/sanctum-full-black.svg" /></div>

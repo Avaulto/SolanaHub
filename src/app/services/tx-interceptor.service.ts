@@ -35,6 +35,9 @@ export class TxInterceptorService {
 
   }
   public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
+    console.log(txParam);
+    try {
+      
 
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
     const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
@@ -80,13 +83,21 @@ export class TxInterceptorService {
 
     this._fetchPortfolioService.triggerFetch()
     return signature
+  } catch (error) {
+      console.warn(error);
+      return null
   }
-    public async sendMultipleTxn(transactions:Transaction[], extraSigners?: Keypair[] | Signer[], record?: { message: string, data?: {} }): Promise<string[]> {
+  }
+    public async sendMultipleTxn(
+      transactions:Transaction[], 
+      extraSigners?: Keypair[] | Signer[], 
+      record?: { message: string, data?: {} },
+    ): Promise<string[]> {
 
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
 
-      const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
-      if (priorityFeeInst?.length > 0) transactions.map(t => t.add(...priorityFeeInst))
+      // const priorityFeeInst = this._addPriorityFee(this._util.priorityFee)
+      // if (priorityFeeInst?.length > 0) transactions.map(t => t.add(...priorityFeeInst))
       let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
       if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
 

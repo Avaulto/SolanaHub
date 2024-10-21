@@ -64,8 +64,9 @@
         class="ion-margin-bottom" 
         [hasFees]="true" 
         tableName="zero yield zones" 
+        (onAction)="triggerAction($event)"
         tableDescription="This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal."
-        actionTitle="withdraw" 
+        actionTitle="close" 
         [columns]="tableColumn"
         [stash]="outOfRangeDeFiPositions()" />
       }
