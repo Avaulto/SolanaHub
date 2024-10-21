@@ -154,7 +154,7 @@ export class LiquidStakeService {
       stakeAccountPK
     );
     const record = {
-      message: 'liquid staking', data: { pool: 'hub' }
+      message: 'liquid staking', data: { pool: 'SolanaHub staked SOL' }
     }
     await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
@@ -162,7 +162,7 @@ export class LiquidStakeService {
 
     const record = {
       message: 'liquid staking', data: {
-        pool: 'hub',
+        pool: 'SolanaHub staked SOL',
         amount: lamports / LAMPORTS_PER_SOL
       }
     }
@@ -208,6 +208,8 @@ export class LiquidStakeService {
     return await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
   }
   async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
+    console.log(stakeAccount, pool);
+    
     const { publicKey } = this._shs.getCurrentWallet()
     // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
     const record = {
@@ -228,7 +230,9 @@ export class LiquidStakeService {
         const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
         const txIns: Transaction = depositAccount.transaction
         await this._txi.sendTx([txIns], publicKey, null, record);
-      } else if (pool.poolName.toLowerCase() == 'hub') {
+      } else if (pool.poolName.toLowerCase() == 'solanahub staked sol') {
+        console.log('depositStakeHubSolPool');
+        
         this.depositStakeHubSolPool(publicKey, stakeAccountPK)
       }
 

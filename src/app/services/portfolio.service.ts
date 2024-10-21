@@ -91,6 +91,8 @@ export class PortfolioService {
   private async fetchPortfolioData(walletAddress: string, turnStileToken: string) {
     const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`);
     const data = await response.json();
+    console.log(data);
+    
     this._utils.turnStileToken = null;
     data.elements = data.elements.filter(e => e?.platformId !== 'wallet-nfts');
     return data;
@@ -108,6 +110,8 @@ export class PortfolioService {
 
   private processPortfolioData(portfolioData: any, walletAddress: string) {
     const tempNft = portfolioData.elements.find(group => group.platformId === 'wallet-nfts-v2');
+    console.log(tempNft);
+    
     const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts-v2');
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
     
@@ -119,7 +123,10 @@ export class PortfolioService {
     this._portfolioDeFi(excludeNFTv2, tokenJupData);
 
     mergeDuplications.push(tempNft);
-    tempNft ? this.nfts.set(tempNft.data.assets) : this.nfts.set([])  ;
+    tempNft ? this.nfts.set(tempNft.data.assets) : this.nfts.set([]);
+
+    console.log(mergeDuplications, this.nfts());
+    
     this.walletAssets.set(mergeDuplications);
   }
 

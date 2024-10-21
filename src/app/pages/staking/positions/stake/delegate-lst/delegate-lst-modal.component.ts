@@ -39,9 +39,11 @@ constructor(private _lss: LiquidStakeService){
 
 }
   async ngOnInit() {
-    const _listedPools = ['solblaze','the vault']
-    if(this.stake.validator.vote_identity === '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh'){
-      _listedPools.unshift('hub')
+    console.log(this.stakePools);
+    
+    const _listedPools = ['solblaze','the vault', 'solanahub staked sol']
+    if(this.stake.validator.vote_identity === '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh' || this.stake.accountLamport < LAMPORTS_PER_SOL){
+      _listedPools.unshift('solanahub staked SOL')
     }
     if(this.stake.accountLamport > LAMPORTS_PER_SOL){
        _listedPools.push('marinade')

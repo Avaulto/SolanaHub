@@ -19,7 +19,10 @@ ion-label {
     height: 450px;
     width: 100%;
 }
-  
+div#pools-wrapper{
+  height: 270px;
+  overflow-y: auto;
+}
   .pool {
     display: flex;
     justify-content: space-between;
