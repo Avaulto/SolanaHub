@@ -35,7 +35,6 @@ export class TxInterceptorService {
 
   }
   public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
-    console.log(txParam);
     try {
       
 
@@ -71,6 +70,7 @@ export class TxInterceptorService {
       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
     }
     if (record) {
+      record.data.txId = signature
       va.track(record.message, record.data)
     }
     await this._shs.connection.confirmTransaction(config, 'processed')

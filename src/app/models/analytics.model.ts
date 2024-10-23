@@ -1,4 +1,6 @@
 export interface Record {
     message: string,
-    data?: {}
+    data?: {
+        txId?: string
+    }
 }
