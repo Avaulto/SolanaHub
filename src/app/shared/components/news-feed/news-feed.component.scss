@@ -1,0 +1,67 @@
+#news-feed {
+    position: relative;
+}
+
+#main-feed {
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    ion-img {
+        min-height: 280px;
+    }
+    div {
+        position: absolute;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.8196078431);
+        width: 100%;
+        font-weight: bold;
+        padding: 10px 10px 14px 10px;
+        color: var(--ion-color-primary);
+        text-transform: capitalize;
+    }
+
+    #featured-chip {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+}
+
+#close-icon {
+    width: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+#news-feed-header {
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.feed-head {
+    gap: 6px;
+    display: flex;
+    margin-block-end: 4px;
+    color: var(--ion-color-dark);
+}
+
+.feed-title {
+    font-weight: 500;
+
+    span {
+        color: #CDD5DF;
+    }
+}
+
+.feed-item {
+    padding-block: 20px;
+    border-bottom: 1px solid #CDD5DF;
+
+    // hide border for last item
+    &:last-child {
+        border-bottom: none;
+    }
+}

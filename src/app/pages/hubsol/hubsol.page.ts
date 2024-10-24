@@ -151,8 +151,6 @@ export class HubsolPage implements OnInit, AfterViewInit {
   }
   async lstApyChart() {
     const lstApyHistory = await this._getLstApyHistory()
-    console.log(lstApyHistory);
-
     this.chartData ? this.chartData.destroy() : null
     const ctx = this.chartEl.nativeElement
 

@@ -1,5 +1,5 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
@@ -43,6 +43,7 @@ import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
+import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 
 
 @Component({
@@ -87,6 +88,7 @@ import { FloatJupComponent } from './shared/components/float-jup/float-jup.compo
   ],
 })
 export class AppComponent implements OnInit {
+
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
   // readonly isReady$ = this._walletStore.connected$.pipe
@@ -102,7 +104,9 @@ export class AppComponent implements OnInit {
       return wallet || watchMode;
     }))
 
-  public notifIndicator = this._notifService.notifIndicator
+  public notifIndicator = this._notifService.notifIndicator;
+
+
   constructor(
     public router: Router,
     private _notifService: NotificationsService,
@@ -116,9 +120,25 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     private _fetchPortfolioService: PortfolioFetchService
   ) {
-   
+    const showNewsFeed = JSON.parse(this._localStorage.getData('newsFeedClosed'))
+    // check if news feed was closed more than 30 days ago
+    if(!showNewsFeed || new Date(showNewsFeed.date).getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000){
+      this.openNewsFeedModal()
+    }
     
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
+  }
+
+  async openNewsFeedModal(){
+
+    const modal = await this._modalCtrl.create({
+      component: NewsFeedComponent,
+      cssClass: 'modal-style'
+    });
+    modal.present();
+    modal.onDidDismiss().then(() => {
+      this._localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
+    })
   }
   public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
     this._utilService.turnStileToken = null
