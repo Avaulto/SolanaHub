@@ -23,6 +23,7 @@ export class NewsFeedComponent implements OnInit {
   ngOnInit() {
     va.track('news feed', { event: 'open' })
    }
+   
   mainFeed = {
     title: "Solana Foundation Announces New Grant Program",
     type: "promotion",
