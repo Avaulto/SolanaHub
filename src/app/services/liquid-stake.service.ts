@@ -310,12 +310,9 @@ export class LiquidStakeService {
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey, null, record)
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
-      console.log(pool);
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
       const MultiValidatorsPool_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
       const STAKE_POOL_PROGRAM_ID = pool.type === 'SanctumSpl' ? singalValidatorsPool_PROGRAM_ID : MultiValidatorsPool_PROGRAM_ID
-      console.log(STAKE_POOL_PROGRAM_ID);
-
       let transaction = await withdrawStakeFromSanctum(
         STAKE_POOL_PROGRAM_ID,
         this._shs.connection,

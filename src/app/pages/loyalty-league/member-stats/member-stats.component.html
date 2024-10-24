@@ -16,8 +16,8 @@
         <div class="total-points">
           <div class="total-points__title-container">
             <ion-label class="total-points__title">
-              Your Total Points
-      
+              Your Total Points 
+              
             @if((member$ | async)?.ambassadorPts; as member){
             <ion-icon [tooltip]="toolTipTpl" name="disc-outline"></ion-icon>
             <ng-template #toolTipTpl>

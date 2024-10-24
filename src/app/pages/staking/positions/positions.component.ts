@@ -43,7 +43,6 @@ export class PositionsComponent implements OnInit, OnChanges {
         const stakePoolsSymbols = this.stakePools().map(p => p.tokenSymbol.toLowerCase())
         
         const LSTs = this._portfolio.tokens().filter(t => stakePoolsSymbols.includes(t.symbol.toLowerCase())).filter(t => t.price > 1)
-        console.log(stakePoolsSymbols, LSTs);
         return this._structLiquidPos(LSTs)
       }
   })

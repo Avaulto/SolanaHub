@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Observable, shareReplay, Subject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class PortfolioFetchService {
   }
 
   refetchPortfolio(): Observable<boolean> {
-    return this._fetchPortfolio.asObservable();
+    return this._fetchPortfolio.asObservable().pipe(shareReplay(1));
   }
  
 

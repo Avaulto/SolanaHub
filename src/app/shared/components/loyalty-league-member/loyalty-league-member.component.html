@@ -5,8 +5,12 @@
 <div id="ll-member-wrapper">
   <div class="badge"> Season 1</div>
   <ion-label>
-    Your total points
+    Your total points <ion-icon [tooltip]="toolTipTpl2" name="information-circle-outline"></ion-icon>
   </ion-label>
+  <ng-template #toolTipTpl2>
+    it takes up to 24 hours to update your points
+  </ng-template>
+
   <div id="ll-memeber-pts">
 
     <ion-text>
