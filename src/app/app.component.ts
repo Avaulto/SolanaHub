@@ -45,7 +45,7 @@ import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
 import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 
-
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -136,8 +136,11 @@ export class AppComponent implements OnInit {
       cssClass: 'modal-style'
     });
     modal.present();
+    va.track('news feed', { event: 'open' })
+
     modal.onDidDismiss().then(() => {
       this._localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
+      va.track('news feed', { event: 'close' })
     })
   }
   public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
