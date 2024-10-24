@@ -165,8 +165,7 @@ export class FloatJupComponent implements OnInit, OnChanges {
       feeAccounts.push(feeAccount);
     }
   
-    console.log(feeAccounts);
-    
+
     const platformFeeAndAccounts = {
       feeBps: 100,
       referralAccount: referralAccountPubkey,
