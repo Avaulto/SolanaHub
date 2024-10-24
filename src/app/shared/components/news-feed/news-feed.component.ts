@@ -3,6 +3,7 @@ import { IonTitle, IonImg } from "@ionic/angular/standalone";
 import { ChipComponent } from '../chip/chip.component';
 import { ModalController } from '@ionic/angular';
 import { LocalStorageService } from 'src/app/services';
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'news-feed',
   templateUrl: './news-feed.component.html',
@@ -17,8 +18,11 @@ export class NewsFeedComponent implements OnInit {
   dismissModal(){
     this._modalCtrl.dismiss()
     this._localStorageService.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
+    va.track('news feed', { event: 'close' })
   }
-  ngOnInit() { }
+  ngOnInit() {
+    va.track('news feed', { event: 'open' })
+   }
   mainFeed = {
     title: "Solana Foundation Announces New Grant Program",
     type: "promotion",
