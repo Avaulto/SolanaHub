@@ -176,16 +176,19 @@
         }
     }
 }
-#hubSOL-chart{
+
+#hubSOL-chart {
     background-color: #E6E7EB;
-    ion-text{
+
+    ion-text {
         color: var(--colors-text-text-tertiary-600, #475467);
-    font-size: 20px;
-    line-height: 30px;
-    display: block;
-    margin-block-end: 20px;
+        font-size: 20px;
+        line-height: 30px;
+        display: block;
+        margin-block-end: 20px;
     }
-    #chart-title{    
+
+    #chart-title {
         width: 100%;
 
         color: var(--colors-text-text-primary-900, #101828);
@@ -194,17 +197,66 @@
         line-height: 44px;
         letter-spacing: -0.72px;
         display: block;
+    }
 }
+
+#hubSOL-adoption {
+    ion-text {
+        color: var(--colors-text-text-tertiary-600, #475467);
+        font-size: 20px;
+        line-height: 30px;
+        display: block;
+        margin-block-end: 20px;
+    }
+
+    ion-label {
+        width: 100%;
+
+        color: var(--colors-text-text-primary-900, #101828);
+        font-size: 36px;
+        font-weight: 600;
+        line-height: 44px;
+        letter-spacing: -0.72px;
+        display: block;
+    }
+
+    padding: 2.5vw;
+    background-color: #E6E7EB;
 }
+
+.adoption-item {
+    border-radius: 4px;
+    border: 1px solid var(--ion-color-secondary);
+    padding: 20px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    height: 150px;
+    justify-content: center;
+    div {
+        font-size: 14px;
+        color: var(--ion-color-dark);
+        padding-top: 8px;
+    }
+
+    ion-img {
+        width: 50px;
+    }
+}
+
 #hubSOL-trust {
     padding: 2.5vw;
 
     background-image: url(/assets/images/bg-header-decorative.svg);
+
     div {
         font-weight: 500;
         display: flex;
         justify-content: center;
     }
+
     p {
         color: #121926;
         text-align: center;
@@ -261,7 +313,6 @@
 
 
 #hubSOL-support {
-    background-color: #E6E7EB;
     padding: 54px 2.5vw;
 
     ion-label {
@@ -294,12 +345,14 @@
         padding-left: 25px;
         border-left: 1px solid #CDD5DF;
         margin-block-end: 5vh;
-        .wrapper{
+
+        .wrapper {
             height: 100%;
             display: flex;
             justify-content: space-between;
             flex-direction: column;
         }
+
         ion-img {
             width: 140px;
             filter: grayscale(100%);
@@ -319,9 +372,10 @@
         }
 
         &:hover {
-            .chip{
+            .chip {
                 color: white;
             }
+
             .wallet {
                 background: #F9F5FF;
                 color: #6941C6;
@@ -341,6 +395,7 @@
                 background: var(--ion-color-light)1F3;
                 color: #C01048;
             }
+
             .other {
                 background: #79554826;
                 color: #795548;
@@ -348,27 +403,34 @@
         }
     }
 }
+
 ion-skeleton-text {
     width: 50%;
     height: 25px;
     border-radius: 4px;
 }
+
 @media only screen and (max-width: 992px) {
-    .metrics{
+    .metrics {
         width: 100% !important;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
     }
+
     #hubSOL-trust {
-        div,p {
+
+        div,
+        p {
             display: flex;
             text-align: left;
             justify-content: left;
         }
-        ion-col{
-        margin-block-end: 40px;
-        align-items: baseline;
-        text-align: left;
-    }}
+
+        ion-col {
+            margin-block-end: 40px;
+            align-items: baseline;
+            text-align: left;
+        }
+    }
 }
