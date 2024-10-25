@@ -95,7 +95,7 @@ export class StashPage implements OnInit {
     addIcons({closeOutline})
     effect(() => {
       if(this.unstakedOverflow() && this.outOfRangeDeFiPositions() && this.nftZeroValue()) {
-        console.log(this.unstakedOverflow(), this.outOfRangeDeFiPositions(), this.nftZeroValue());
+        // console.log(this.unstakedOverflow(), this.outOfRangeDeFiPositions(), this.nftZeroValue());
         
         this.hideStash.set(false)
       }
@@ -391,7 +391,7 @@ export class StashPage implements OnInit {
       { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
-
+    this._stashService.getOutOfRangeRaydium()
   
   }
   async getSavingData() {

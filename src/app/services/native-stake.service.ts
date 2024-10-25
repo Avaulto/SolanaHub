@@ -176,7 +176,6 @@ export class NativeStakeService {
   }
 
   public async splitStakeAccounts(walletOwnerPk: PublicKey, targetStakePubKey: PublicKey, keypair: Keypair, lamports: number) {
-    console.log(walletOwnerPk, targetStakePubKey, keypair, lamports / LAMPORTS_PER_SOL);
     const minimumAmount = await this._shs.connection.getMinimumBalanceForRentExemption(
       StakeProgram.space,
     );
@@ -226,6 +225,8 @@ export class NativeStakeService {
       toPubkey: walletOwnerPK,
       lamports, // Withdraw the full balance at the time of the transaction
     }));
+    console.log(withdrawTx);
+    
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
       return await this._txi.sendTx([...withdrawTx], walletOwnerPK, null, record)

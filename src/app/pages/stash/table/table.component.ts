@@ -45,7 +45,7 @@ export class TableComponent  implements OnInit {
   constructor() { 
     addIcons({arrowUpOutline});
     effect(()=>{
-      console.log(this.selectedData());
+      // console.log(this.selectedData());
       
     })
   }

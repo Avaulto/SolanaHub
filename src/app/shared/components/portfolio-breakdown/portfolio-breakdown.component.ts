@@ -45,8 +45,6 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     const assets = this.assets();
 
     if (!assets) return [];
-    console.log(assets);
-    
     return assets
       .map(assetClass => ({
         group: assetClass.label ? (assetClass.label === 'NFTs' ? 'NFTs' : assetClass.label.replace(/([A-Z])/g, ' $1').trim()) : assetClass.label,

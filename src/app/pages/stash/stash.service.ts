@@ -3,6 +3,7 @@ import { BN } from '@marinade.finance/marinade-ts-sdk';
 import DLMM from '@meteora-ag/dlmm';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
 import { JupStoreService, NativeStakeService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
+import { closePosition, harvestRewards, closePosition2, decreaseLiquidity, getOutOfRangeRaydium, getOutOfRangeMetora } from './stash.helpers';
 export interface StashGroup {
   // networkId: string
   // platformId: string
@@ -44,7 +45,7 @@ export class StashService {
 
     })
   }
-  findNftZeroValue = computed(() => {
+  public findNftZeroValue = computed(() => {
     const NFTs = this._portfolioService.nfts()
     if (!NFTs) return null
     const filterNftZeroValue = NFTs.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice == 0)
@@ -65,7 +66,7 @@ export class StashService {
       }
     }
     nftZeroValueGroup.value = nftZeroValueGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.USD, 0)
-    console.log(nftZeroValueGroup);
+    // console.log(nftZeroValueGroup);
 
     return nftZeroValueGroup
 
@@ -130,11 +131,44 @@ export class StashService {
       lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
     }));
     console.log(withdrawTx);
-    
+
     await this._txi.sendTx(withdrawTx, publicKey)
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
   }
+  async getOutOfRangeRaydium() {
+    const { publicKey } = this._shs.getCurrentWallet()
+    const positions = await getOutOfRangeMetora(publicKey, this._shs.connection)
+    // const positions = await getOutOfRangeRaydium(publicKey, this._shs.connection)
+    // console.log(positions);
+    // const position = positions.find(p => p.nftmint =="DUTQRX5rAQbDtN11qUo2sC7PtkscChSm5VddcxiFKJXa")
 
+    // // map all positions to closePosition with promise.all
+    // // const harvestRewardsTx = await harvestRewards(publicKey, this._shs.connection, poolInfo, positionsInfo)
+    // console.log( position);
+    
+    // const closePositionTx = await decreaseLiquidity(publicKey, this._shs.connection, position)
+
+    // // Create array of transactions from each item in the closePositionTx array and include harvestRewardsTx
+    // const transactions = [
+    //   // ...(harvestRewardsTx.transactions.map(t => t.instructions) || []),
+    //   closePositionTx
+    //   // ...closePositionTx.flatMap(result => {
+    //   //   if (result && result.transaction) {
+    //   //     return [result.transaction]
+    //   //   }
+    //   //   return []
+    //   // })
+    // ].flat()
+
+    // console.log( transactions, closePositionTx);
+
+    // // Now you can use the transactions array
+    // await this._txi.sendTx([closePositionTx], publicKey)
+
+
+
+
+  }
   async closeOutOfRangeDeFiPosition(positions?: StashAsset[]) {
     try {
       const myWallet = this._shs.getCurrentWallet().publicKey
@@ -178,27 +212,27 @@ export class StashService {
           -657,
           -656,
           -655
-      ]
+        ]
       }
       // const dlmmPool = await DLMM.create(new Connection(this._utils.RPC), new PublicKey(data.poolAddress));
       // console.log(this._utils.RPC);
-      
-      // // Remove Liquidity
+
+      // Remove Liquidity
       // let userPositions = []
       //   // Get position state
       //   const positionsState = await dlmmPool.getPositionsByUserAndLbPair(
       //     myWallet
       //   );
-      
+
       //   userPositions = positionsState.userPositions;
       // console.log("🚀 ~ userPositions:", userPositions);
-      
+
 
       // const removeLiquidityTxs = (
       //   await Promise.all(
       //     userPositions.map(({ publicKey, positionData }) => {
       //       console.log(publicKey, positionData);
-            
+
       //       const binIdsToRemove = positionData.positionBinData.map(
       //         (bin) => bin.binId
       //       );
@@ -213,7 +247,7 @@ export class StashService {
       //   )
       // ).flat();
 
-      
+
       const closePositionTx = await fetch(`${this._utils.serverlessAPI}/api/stash/close-position`, {
         method: 'POST',
         body: JSON.stringify(data)
@@ -232,7 +266,7 @@ export class StashService {
       await this._txi.sendMultipleTxn(tx)
     } catch (error) {
       console.log(error);
-      
+
     }
   }
 }
