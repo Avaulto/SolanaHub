@@ -11,7 +11,13 @@
 
       <div class="hubSOL-metrics ion-hide-lg-down">
         <div class="metrics ">
-          <ion-label>APY</ion-label>
+          <ion-label>APY <ion-img [tooltip]="toolTipTpl" src="assets/images/info-icon.svg"/>
+  
+          <ng-template #toolTipTpl>
+            APY is based on 5 epochs average
+          </ng-template> 
+        
+        </ion-label>
           @if (metrics() === null) {
           <ion-skeleton-text [animated]="true" />
           }@else {

@@ -1,12 +1,13 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe, NgClass, PercentPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText } from "@ionic/angular/standalone";
+import { IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText, IonIcon } from "@ionic/angular/standalone";
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
 import Lottie from 'lottie-web';
 import { map, Observable, switchMap } from 'rxjs';
 
 import { ApiService, JupStoreService, UtilService } from 'src/app/services';
+import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 interface LST_APY_HISTORY {
   epochAvg: number
   jupSOL: number
@@ -27,7 +28,7 @@ interface HubSOLAdoption {
   templateUrl: './hubsol.page.html',
   styleUrls: ['./hubsol.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon, 
     RouterLink,
     IonSkeletonText,
     DecimalPipe,
@@ -42,7 +43,8 @@ interface HubSOLAdoption {
     IonLabel,
     IonButton,
     AsyncPipe,
-    CurrencyPipe
+    CurrencyPipe,
+    TooltipModule
   ]
 })
 export class HubsolPage implements OnInit, AfterViewInit {

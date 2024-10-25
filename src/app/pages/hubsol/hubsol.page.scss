@@ -15,8 +15,13 @@
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
   }
-
+  ion-img{
+    width: 14px;
+  }
   ion-text {
     color: var(--colors-text-text-primary-900, #121926);
     font-size: 24px;

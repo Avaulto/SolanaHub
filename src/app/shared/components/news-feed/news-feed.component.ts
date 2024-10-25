@@ -33,6 +33,13 @@ export class NewsFeedComponent implements OnInit {
   }
   feed = [
     {
+      title: "Automatic priority fees",
+      description: "Priority fees are now automatically adjusted to your transactions base on network congestion",
+      type: "feature",
+      color: "secondary",
+      image: "assets/images/news-feed/news-1.png"
+    },
+    {
       title: "hubSOL page revamp",
       description: "You can now view hubSOL APY over multiple epochs and hot DeFi TVL on the hubSOL page",
       type: "informative",
@@ -53,12 +60,6 @@ export class NewsFeedComponent implements OnInit {
       color: "primary",
       image: "assets/images/news-feed/news-1.png"
     },
-    {
-      title: "NFT floor price",
-      description: "NFT floor price is now available on overview page and included in your portfolio total value",
-      type: "feature",
-      color: "secondary",
-      image: "assets/images/news-feed/news-1.png"
-    }
+    
   ]
 }
