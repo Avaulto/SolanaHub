@@ -25,6 +25,16 @@ export class JupStoreService {
     }
     return data
   }
+  public async fetchPriceFeed2(mintAddress: string){
+    let data = null
+    try {
+      data = await fetch(`https://api.jup.ag/price/v2?ids=${mintAddress}`);
+      data = await data.json()
+    } catch (error) {
+      console.warn(error)
+    }
+    return data
+  }
   public async computeBestRoute(inputAmount: number, inputToken: JupToken, outputToken: JupToken, slippage: number): Promise<JupRoute> {
     let bestRoute: JupRoute = null;
     const inputAmountInSmallestUnits = inputToken

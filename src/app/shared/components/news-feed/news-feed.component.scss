@@ -12,8 +12,9 @@
     div {
         position: absolute;
         bottom: 0;
-        background: rgba(255, 255, 255, 0.8196078431);
+        background: white;
         width: 100%;
+        opacity: 0.9;
         font-weight: bold;
         padding: 10px 10px 14px 10px;
         color: var(--ion-color-primary);

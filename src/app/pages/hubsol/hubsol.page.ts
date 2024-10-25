@@ -372,7 +372,7 @@ export class HubsolPage implements OnInit, AfterViewInit {
         { protocol: 'solayer', img: 'assets/images/ll/solayer.svg' },
         { protocol: 'yield.fan', img: 'assets/images/ll/yieldfan.webp' }
       ]
-      const hubSOL_price = await this._jupService.fetchPriceFeed('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX')
+      const hubSOL_price = await this._jupService.fetchPriceFeed2('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX')
       const protocolsWithImg = res.map((item: HubSOLAdoption) => {
         item.protocol = item.protocol === 'meteora_dlmm' ? 'meteora' : item.protocol
         item.protocol = item.protocol === 'mango' ? 'yield.fan' : item.protocol
