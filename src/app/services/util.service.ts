@@ -70,7 +70,7 @@ export class UtilService {
   }
 
   public formatBigNumbers = (n: number) => {
-    if (n < 1e3) return n.toFixedNoRounding(4);
+    if (n < 1e3) return n.toFixedNoRounding(3);
     if (n >= 1e3 && n < 1e6) return Math.floor(n / 1e3 * 10) / 10 + "K";
     if (n >= 1e6 && n < 1e9) return Math.floor(n / 1e6 * 10) / 10 + "M";
     if (n >= 1e9 && n < 1e12) return Math.floor(n / 1e9 * 10) / 10 + "B";
