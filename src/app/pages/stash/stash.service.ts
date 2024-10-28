@@ -1,9 +1,32 @@
-import { Injectable, computed, effect } from '@angular/core';
+import { Injectable, Signal, computed, effect, signal } from '@angular/core';
 import { BN } from '@marinade.finance/marinade-ts-sdk';
-import DLMM from '@meteora-ag/dlmm';
 import { Connection, LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
-import { JupStoreService, NativeStakeService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
-import { closePosition, harvestRewards, closePosition2, decreaseLiquidity, getOutOfRangeRaydium, getOutOfRangeMetora } from './stash.helpers';
+import { ApiService, JupStoreService, NativeStakeService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
+
+
+export interface OutOfRange {
+  positionData: any
+  poolPair: string
+  poolTokenA: {
+    address: string,
+    decimals: number,
+    symbol: string,
+    logo: string,
+  },
+  poolTokenB: {
+    address: string,
+    decimals: number,
+    symbol: string,
+    logo: string,
+  },
+  isOutOfRange: boolean,
+  platform: string,
+  platformImgUrl: string,
+  pooledAmountAWithRewards: string,
+  pooledAmountBWithRewards: string,
+  pooledAmountAWithRewardsUSDValue: number,
+  pooledAmountBWithRewardsUSDValue: number
+}
 export interface StashGroup {
   // networkId: string
   // platformId: string
@@ -17,33 +40,38 @@ export interface StashGroup {
 export interface StashAsset {
   name: string,
   symbol: string,
-  imgUrl: string,
+  imgUrl: string | string[],
+  tokens?: { address: string, decimals: number, symbol: string, logo: string }[],
   balance?: number,
   account: { addr: string, addrShort: string },
+  platform?: string,
+  poolPair?: string,
   source: string,
-  extractedValue: {
-    SOL: number;
-    USD: number;
-  },
+  extractedValue: any// { [key: string]: number },
+  value?: number,
   action: string,
-  type: string
+  type: string,
+  positionData?: any
 }
 @Injectable({
   providedIn: 'root'
 })
 export class StashService {
+  private outOfRangeDeFiPositionsSignal = signal<StashGroup | null>(null);
 
   constructor(
     private _utils: UtilService,
     private _jupStoreService: JupStoreService,
     private _shs: SolanaHelpersService,
     // private _nss: NativeStakeService,
+    private _apiService: ApiService,
     private _txi: TxInterceptorService,
-    private _portfolioService: PortfolioService
+    private _portfolioService: PortfolioService,
+    private _toasterService: ToasterService
   ) {
-    effect(() => {
 
-    })
+    this.updateOutOfRangeDeFiPositions();
+
   }
   public findNftZeroValue = computed(() => {
     const NFTs = this._portfolioService.nfts()
@@ -59,13 +87,13 @@ export class StashService {
           imgUrl: acc.image_uri,
           account: this._utils.addrUtil(acc.mint),
           source: 'market value not found',
-          extractedValue: { SOL: acc.floorPrice || 0.02, USD: acc.floorPrice || 0.02 * this._jupStoreService.solPrice() },
+          extractedValue: { SOL: acc.floorPrice || 0.02 },
           action: 'burn',
           type: 'nft'
         }))
       }
     }
-    nftZeroValueGroup.value = nftZeroValueGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.USD, 0)
+    nftZeroValueGroup.value = nftZeroValueGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.SOL * this._jupStoreService.solPrice(), 0)
     // console.log(nftZeroValueGroup);
 
     return nftZeroValueGroup
@@ -86,42 +114,30 @@ export class StashService {
           imgUrl: acc.imgUrl,
           account: this._utils.addrUtil(acc.address),
           source: 'excess balance',
-          extractedValue: { SOL: acc.excessLamport / LAMPORTS_PER_SOL, USD: acc.excessLamport / LAMPORTS_PER_SOL * this._jupStoreService.solPrice() },
+          extractedValue: { SOL: acc.excessLamport / LAMPORTS_PER_SOL },
           action: 'withdraw',
-          type: 'stake-account'
+          type: 'stake-account',
         }))
       }
     }
-    unstakedGroup.value = unstakedGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.USD, 0)
+    unstakedGroup.value = unstakedGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.SOL * this._jupStoreService.solPrice(), 0)
 
     return unstakedGroup
   })
   public findOutOfRangeDeFiPositions = computed(() => {
-    const positions = this._portfolioService.defi()
-    if (!positions) return null
-    // include only positions with out-of-range tag
-    const filterOutOfRangePositions = positions.filter(position => position.tags?.includes('Out Of Range'))
-    const outOfRangeGroup = {
-      label: 'zero yield zones',
-      value: 0,
-      data: {
-        assets: filterOutOfRangePositions.map(acc => ({
-          // loop through poolTokens and get the token name and add dash in between
-          name: acc.poolTokens.map(token => token.symbol).join('-'),
-          symbol: acc.poolTokens.map(token => token.symbol).join('-'),
-          imgUrl: acc.poolTokens[0].imgURL,
-          account: this._utils.addrUtil('awdawaxaxjnawjan23424asndwadawd'),
-          source: 'out of range',
-          extractedValue: { SOL: acc.value / this._jupStoreService.solPrice(), USD: acc.value },
-          action: 'close',
-          type: 'defi-position'
-        }))
-      }
-    }
-    outOfRangeGroup.value = outOfRangeGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.USD, 0)
-    return outOfRangeGroup
-  })
+    return this.outOfRangeDeFiPositionsSignal();
+  });
+  public async getOutOfRangeDeFiPositions(): Promise<OutOfRange[]> {
+    const { publicKey } = this._shs.getCurrentWallet()
+    try {
+      const getOutOfRange: OutOfRange[] = await (await fetch(`${this._utils.serverlessAPI}/api/stash/out-of-range?address=${publicKey.toBase58()}`)).json()
+      console.log(getOutOfRange);
 
+      return getOutOfRange
+    } catch (error) {
+      return null
+    }
+  }
   async withdrawStakeAccountExcessBalance(accounts: StashAsset[]) {
     const { publicKey } = this._shs.getCurrentWallet()
     const withdrawTx = accounts.map(acc => StakeProgram.withdraw({
@@ -135,45 +151,12 @@ export class StashService {
     await this._txi.sendTx(withdrawTx, publicKey)
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
   }
-  async getOutOfRangeRaydium() {
-    const { publicKey } = this._shs.getCurrentWallet()
-    const positions = await getOutOfRangeMetora(publicKey, this._shs.connection)
-    // const positions = await getOutOfRangeRaydium(publicKey, this._shs.connection)
-    // console.log(positions);
-    // const position = positions.find(p => p.nftmint =="DUTQRX5rAQbDtN11qUo2sC7PtkscChSm5VddcxiFKJXa")
 
-    // // map all positions to closePosition with promise.all
-    // // const harvestRewardsTx = await harvestRewards(publicKey, this._shs.connection, poolInfo, positionsInfo)
-    // console.log( position);
-    
-    // const closePositionTx = await decreaseLiquidity(publicKey, this._shs.connection, position)
-
-    // // Create array of transactions from each item in the closePositionTx array and include harvestRewardsTx
-    // const transactions = [
-    //   // ...(harvestRewardsTx.transactions.map(t => t.instructions) || []),
-    //   closePositionTx
-    //   // ...closePositionTx.flatMap(result => {
-    //   //   if (result && result.transaction) {
-    //   //     return [result.transaction]
-    //   //   }
-    //   //   return []
-    //   // })
-    // ].flat()
-
-    // console.log( transactions, closePositionTx);
-
-    // // Now you can use the transactions array
-    // await this._txi.sendTx([closePositionTx], publicKey)
-
-
-
-
-  }
   async closeOutOfRangeDeFiPosition(positions?: StashAsset[]) {
     try {
-      const myWallet = this._shs.getCurrentWallet().publicKey
+      const walletOwner = this._shs.getCurrentWallet().publicKey
       const data = {
-        "wallet": myWallet.toBase58(),
+        "wallet": walletOwner.toBase58(),
         "poolAddress": "63qcW5SHA5syE6Pap2NeNMVARMXRA5nCdZFH3Q8cCsi8",
         "positionAddress": "9csMVrHY9j8mUdWBtdPyFfSo37Z6FUg7uuK2aGWVjXMj",
         "binIds": [
@@ -214,59 +197,59 @@ export class StashService {
           -655
         ]
       }
-      // const dlmmPool = await DLMM.create(new Connection(this._utils.RPC), new PublicKey(data.poolAddress));
-      // console.log(this._utils.RPC);
-
-      // Remove Liquidity
-      // let userPositions = []
-      //   // Get position state
-      //   const positionsState = await dlmmPool.getPositionsByUserAndLbPair(
-      //     myWallet
-      //   );
-
-      //   userPositions = positionsState.userPositions;
-      // console.log("🚀 ~ userPositions:", userPositions);
-
-
-      // const removeLiquidityTxs = (
-      //   await Promise.all(
-      //     userPositions.map(({ publicKey, positionData }) => {
-      //       console.log(publicKey, positionData);
-
-      //       const binIdsToRemove = positionData.positionBinData.map(
-      //         (bin) => bin.binId
-      //       );
-      //       return dlmmPool.removeLiquidity({
-      //         position: publicKey,
-      //         user: myWallet,
-      //         binIds: binIdsToRemove,
-      //         bps: new BN(100 * 100),
-      //         shouldClaimAndClose: true, // should claim swap fee and close position together
-      //       });
-      //     })
-      //   )
-      // ).flat();
-
-
-      const closePositionTx = await fetch(`${this._utils.serverlessAPI}/api/stash/close-position`, {
-        method: 'POST',
-        body: JSON.stringify(data)
+      const positionsToClose = positions.filter(p => p.type === 'defi-position')
+      const positionsData = positionsToClose.map(p => {
+        return {
+          ...p.positionData,
+          platform: p.platform
+        }
       })
-      const tx: Transaction[] = await closePositionTx.json()
-      console.log(tx);
-      // console.log(tx, publicKey);
-      // let txs: Transaction[] = []
-      // for (let tx of Array.isArray(removeLiquidityTxs)
-      //   ? removeLiquidityTxs
-      //   : [removeLiquidityTxs]) {
-      //     // Convert Transaction to VersionedTransaction
-      //     // const versionedTx = new VersionedTransaction(tx.compileMessage())
-      //     txs.push(tx)
-      // }
-      await this._txi.sendMultipleTxn(tx)
+      // get remove liquidity tx instructions
+      const encodedIx  = await (await fetch(`${this._utils.serverlessAPI}/api/stash/close-positions`, {
+        method: 'POST',
+        body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
+      })).json()
+      console.log(encodedIx);
+      const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
+      await this._txi.sendMultipleTxn([...txInsArray])
+      
     } catch (error) {
       console.log(error);
 
     }
+  }
+  private async updateOutOfRangeDeFiPositions() {
+    const positions = await this.getOutOfRangeDeFiPositions();
+    if (!positions) {
+      this.outOfRangeDeFiPositionsSignal.set(null);
+      return;
+    }
+
+    const stashGroup: StashGroup = {
+      label: 'zero yield zones',
+      value: 0,
+      data: {
+        assets: positions.map(p => ({
+          name: p.poolPair,
+          symbol: p.poolPair,
+          imgUrl: [p.poolTokenA.logo, p.poolTokenB.logo],
+          tokens: [p.poolTokenA, p.poolTokenB],
+          account: this._utils.addrUtil('awdawaxaxjnawjan23424asndwadawd'),
+          source: 'out of range',
+          platform: p.platform,
+          platformImgUrl: p.platformImgUrl,
+          extractedValue: {
+            [p.poolTokenA.symbol]: Number(p.pooledAmountAWithRewards),
+            [p.poolTokenB.symbol]: Number(p.pooledAmountBWithRewards)
+          },
+          action: 'close',
+          type: 'defi-position',
+          value: p.pooledAmountAWithRewardsUSDValue + p.pooledAmountBWithRewardsUSDValue,
+          positionData: p.positionData
+        }))
+      }
+    };
+    stashGroup.value = stashGroup.data.assets.reduce((acc, curr) => acc + (curr.value || 0), 0);
+    this.outOfRangeDeFiPositionsSignal.set(stashGroup);
   }
 }

@@ -87,7 +87,7 @@
     </ng-template>
     <ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
       <div class="platform-icon-wrapper ion-text-center">
-        <ion-img [tooltip]="platformToolTipTpl" [alt]="row.name" [src]="row.image || 'assets/images/unknown.svg'" alt="platform icon"></ion-img>
+        <ion-img [tooltip]="platformToolTipTpl" [alt]="row.name" [src]="row.image" #img (ionError)="img.src = 'assets/images/unknown.svg'" alt="platform icon"></ion-img>
         <ng-template #platformToolTipTpl>
           {{row.protocol}}
         </ng-template>

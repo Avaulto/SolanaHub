@@ -67,7 +67,7 @@
         (onAction)="triggerAction($event)"
         tableDescription="This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal."
         actionTitle="close" 
-        [columns]="tableColumn"
+        [columns]="tableColumnDeFiPositions"
         [stash]="outOfRangeDeFiPositions()" />
       }
       @if(nftZeroValue()){
@@ -88,11 +88,23 @@ here
   </ion-grid>
 
 </ion-content>
+<ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="platform-icon-wrapper ion-text-center">
+    <ion-img [src]="row.platformImgUrl" alt="platform icon"></ion-img>
+  </div>
+</ng-template>
 
 <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.imgUrl" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+      <!-- if imgURL is array then forLoop -->
+      @if(row.type === 'defi-position'){
+        @for(img of row.imgUrl; track img){
+          <ion-img [src]="img" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+        }
+      }@else{
+        <ion-img [src]="row.imgUrl" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+      }
     </div>
     <div class="item-info">
 
@@ -117,8 +129,11 @@ here
 
 <ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-left">
-    <div class="sol-value">{{row.extractedValue.SOL | number: '1.0-5'}} SOL</div>
-    <div class="usd-value">{{row.extractedValue.USD | currency}}</div>
+    @for(item of row.extractedValue | keyvalue; track item.key){
+      <div class="sol-value">
+        {{fixedNumber(item.value) }} {{item.key}}
+      </div>
+    }
   </div>
 </ng-template>
 <ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">

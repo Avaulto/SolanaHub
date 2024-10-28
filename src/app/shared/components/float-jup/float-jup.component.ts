@@ -131,17 +131,6 @@ export class FloatJupComponent implements OnInit, OnChanges {
   async initJupiter() {
     await this.importJupiterTerminal();
     const referralAccountPubkey = new PublicKey('68xFR3RfPvV4NpP1wd546j5vCWrFmVhw4PgmXZBcayP1');
-    // new Map([
-    //   [new PublicKey('So11111111111111111111111111111111111111112'), new PublicKey('HDZf2M4WSG7QjtGXYm1sB5ppdF75kxnBtPNcecDQzsWv')],
-    //   [new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), new PublicKey('133bwVgQTojGvM1ZV5Jv3roERdG1U2vnHgjDQv1Bsr7N')],
-    //   [new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'), new PublicKey('D9b86zb6sEy5di9Aihnid8bhfBSDVzUsxMpmfmrabnMi')],
-    //   [new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'), new PublicKey('5SUGzqWdr9mPxQa9FuNJAwdW1xq74mg1PYZKsFhW9QqL')],
-    //   [new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'), new PublicKey('7fPHGWSJk7UXyU8Xic9GS1ZKu7iCJ5CTNnZYWs4z71eo')],
-    //   [new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'), new PublicKey('96BHVJVpzU9XJ1FtAZxXVHvoTYp54x1pwFZwuDkXBzBz')],
-    //   [new PublicKey('vSoLxydx6akxyMD9XEcPvGYNGq6Nn66oqVb3UkGkei7'), new PublicKey('96BHVJVpzU9XJ1FtAZxXVHvoTYp54x1pwFZwuDkXBzBz')],
-    //   [new PublicKey('bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1'), new PublicKey('96BHVJVpzU9XJ1FtAZxXVHvoTYp54x1pwFZwuDkXBzBz')],
-
-    // ]),
     const mintAddress = [
       new PublicKey('So11111111111111111111111111111111111111112'),
       new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
@@ -167,7 +156,7 @@ export class FloatJupComponent implements OnInit, OnChanges {
   
 
     const platformFeeAndAccounts = {
-      feeBps: 100,
+      feeBps: 50,
       referralAccount: referralAccountPubkey,
       feeAccounts: new Map(mintAddress.map((mint, index) => [mint, feeAccounts[index]])),
     };
