@@ -162,13 +162,16 @@ export class FormComponent implements OnInit {
         this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
       }
     } else if (stakingPath === 'liquid') {
+      const participantAddress = walletOwner.toBase58()
       if(pool.poolName.toLowerCase() == 'solanahub staked sol'){
-        this._lss.depositSolHubSolPool(walletOwner,lamportsToDelegate)
+        const liquidStake = await this._lss.depositSolHubSolPool(walletOwner,lamportsToDelegate)
+        if(liquidStake){
+          this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
+        }
       }else{ 
         const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
         // add stakers to loyalty league referee program
         if (liquidStake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
-          const participantAddress = walletOwner.toBase58()
           this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)
         }
       }

@@ -175,7 +175,7 @@ export class LiquidStakeService {
       undefined,
       undefined
     );
-    await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
+    return await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
 
   public async getDirectStake(walletAddress): Promise<DirectStake> {

@@ -21,6 +21,22 @@ export class TxInterceptorService {
     private _util: UtilService,
     private _fetchPortfolioService: PortfolioFetchService,
   ) { }
+
+  private _memoIx(message: string = 'SolanaHub memo', publicKey: PublicKey) {
+    let memo = JSON.stringify({
+      value: message
+    });
+    let memoInstruction = new TransactionInstruction({
+      keys: [{
+        pubkey: publicKey,
+        isSigner: true,
+        isWritable: true
+      }],
+      programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
+      data: (new TextEncoder()).encode(memo) as Buffer
+    })
+    return memoInstruction
+  }
   private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
     const PRIORITY_RATE = priorityFee;
 
@@ -37,12 +53,16 @@ export class TxInterceptorService {
   public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
     try {
 
-      
+
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
       let transaction: Transaction = new Transaction(txArgs).add(...txParam);
-      const priorityFeeEst =  await this._getPriorityFeeEst(transaction)
+      const priorityFeeEst = await this._getPriorityFeeEst(transaction)
       if (priorityFeeEst) transaction.add(priorityFeeEst)
+
+      transaction.add(this._memoIx('SolanaHub memo', walletOwner))
+      console.log(transaction);
+      
       let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 
       if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
@@ -54,7 +74,7 @@ export class TxInterceptorService {
         }
       }
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
-      
+
 
       const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
       const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
@@ -159,7 +179,7 @@ export class TxInterceptorService {
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const priorityFeeEst = await this._getPriorityFeeEst(txParam)
       let signedTx = await this._shs.getCurrentWallet().signTransaction(txParam);
- 
+
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
       const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
       const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
@@ -197,53 +217,53 @@ export class TxInterceptorService {
 
   private async _getPriorityFeeEst(transaction: Transaction | VersionedTransaction) {
 
-      // if transaction is array then return array of 
-      // Extract all account keys from the transaction
-      const accountKeys = transaction instanceof Transaction ? transaction.compileMessage().accountKeys : transaction.message.staticAccountKeys;
+    // if transaction is array then return array of 
+    // Extract all account keys from the transaction
+    const accountKeys = transaction instanceof Transaction ? transaction.compileMessage().accountKeys : transaction.message.staticAccountKeys;
 
-      // Convert PublicKeys to base58 strings
-      const publicKeys = accountKeys.map(key => key.toBase58());
+    // Convert PublicKeys to base58 strings
+    const publicKeys = accountKeys.map(key => key.toBase58());
 
-      try {
-        const response = await fetch(this._shs.connection.rpcEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 'helius-example',
-            method: 'getPriorityFeeEstimate',
-            params: [
-              {
-                accountKeys: publicKeys,
-                options: {
-                  evaluateEmptySlotAsZero: true,
-                  recommended: true,
-                },
-              }
-            ],
-          }),
-        });
+    try {
+      const response = await fetch(this._shs.connection.rpcEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 'helius-example',
+          method: 'getPriorityFeeEstimate',
+          params: [
+            {
+              accountKeys: publicKeys,
+              options: {
+                evaluateEmptySlotAsZero: true,
+                recommended: true,
+              },
+            }
+          ],
+        }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        const priorityFeeEstimate = data.result?.priorityFeeEstimate;
-        console.log(data);
-        
-        // Add the priority fee to the transaction
-        console.log("Estimated priority fee:", priorityFeeEstimate);
-        
-        return ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: priorityFeeEstimate
-        })
-        
+      const priorityFeeEstimate = data.result?.priorityFeeEstimate;
+      console.log(data);
 
-     
-      } catch (err) {
-        console.error(`Error: ${err}`);
-        return ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: 10_000
-        })
-      }
-    
+      // Add the priority fee to the transaction
+      console.log("Estimated priority fee:", priorityFeeEstimate);
+
+      return ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: priorityFeeEstimate
+      })
+
+
+
+    } catch (err) {
+      console.error(`Error: ${err}`);
+      return ComputeBudgetProgram.setComputeUnitPrice({
+        microLamports: 10_000
+      })
+    }
+
   }
 }
