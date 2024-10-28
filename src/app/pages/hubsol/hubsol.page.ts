@@ -372,6 +372,7 @@ export class HubsolPage implements OnInit, AfterViewInit {
         { protocol: 'kamino', img: 'assets/images/ll/kamino.svg' },
         { protocol: 'meteora', img: 'assets/images/ll/meteora.svg' },
         { protocol: 'solayer', img: 'assets/images/ll/solayer.svg' },
+        { protocol: 'raydium', img: 'assets/images/ll/raydium.svg' },
         { protocol: 'yield.fan', img: 'assets/images/ll/yieldfan.webp' }
       ]
       const hubSOL_price = await this._jupService.fetchPriceFeed2('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX')
