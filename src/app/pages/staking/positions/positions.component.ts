@@ -51,7 +51,7 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   _structLiquidPos(stake){
     return stake.map(lst => {
-
+      console.log(lst);
       const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
   
       
@@ -65,7 +65,8 @@ export class PositionsComponent implements OnInit, OnChanges {
         imgUrl: pool?.tokenImageURL,
         // validatorName: lst[directStake[lst.symbol]] ? lst?.extraData?.validator?.name : null,
         pool: pool,
-        apy: pool?.apy * 100
+        apy: pool?.apy * 100,
+        token: lst
       }
 
       return stake

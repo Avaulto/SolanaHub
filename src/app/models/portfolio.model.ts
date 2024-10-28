@@ -152,6 +152,7 @@ export interface LendingOrBorrow{
 }
 
 export interface Stake {
+  token?: Token
   type: 'native' | 'liquid'
   price?: number
   lockedDue?: Date

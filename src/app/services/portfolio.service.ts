@@ -200,7 +200,6 @@ export class PortfolioService {
   private async _portfolioDeFi(editedDataExtended, tokensInfo) {
     // add more data for platforms
     const getPlatformsData = await this.getPlatformsData();
-    
     const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
     const defiHolding = await Promise.all(editedDataExtended
       .filter(g => !excludeList.includes(g.platformId))

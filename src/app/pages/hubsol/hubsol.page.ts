@@ -71,12 +71,12 @@ export class HubsolPage implements OnInit, AfterViewInit {
     {
       protocol: 'orca',
       img: 'assets/images/platforms/orca.svg',
-      type: 'DEX'
+      type: 'AMM'
     },
     {
       protocol: 'solayer',
       img: 'assets/images/platforms/solayer.svg',
-      type: 'other'
+      type: 'Restaking'
     },
     {
       protocol: 'solflare',
@@ -102,7 +102,7 @@ export class HubsolPage implements OnInit, AfterViewInit {
     {
       protocol: 'texture',
       img: 'assets/images/platforms/texture.svg',
-      type: 'AMM'
+      type: 'DEX'
     },
     // {
     //   img: 'assets/images/platforms/jup.svg',

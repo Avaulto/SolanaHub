@@ -5,11 +5,12 @@
     <div>
       <ion-label>Amount to unstake</ion-label>
       <div id="balance">
-        <span id="balance-label">Balance</span>
-        <span>{{stake.balance.toFixedNoRounding(3)}} {{stake.symbol}}</span>
+        <!-- <span id="balance-label">Balance</span> -->
+        <input-label [asset]="stake.token" (onSetSize)="setAmount($event)" />
+        <!-- <span>{{stake.balance.toFixedNoRounding(3)}} {{stake.symbol}}</span> -->
       </div>
     </div>
-    <ion-input (ionInput)="setAmount($event)" type="number" />
+    <amount-input [token]="stake.token" [value]="amount" (onValueChange)="setAmount($event)" />
   </div>
   <div id="splitting-summary">
     <ion-label>unstake summary</ion-label>
