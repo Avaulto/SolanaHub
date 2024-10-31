@@ -45,7 +45,8 @@
               @if(member.totalPts){
                 <!-- {{member.totalPts | number:'1.0-0'}} -->
               <number-counter 
-              [targetNumber]="member.totalPts"
+              [addOnNumber]="member.questsPts"
+              [targetNumber]="member.totalPts - member.questsPts"
                 [nextSnapshotTime]="member.nextUpdate" 
                 />
               }@else{
