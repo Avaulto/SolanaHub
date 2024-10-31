@@ -139,31 +139,12 @@
     </ion-row>
   </div>
   <div id="hubSOL-adoption">
-    <ion-col size="12" sizeLg="9">
+    <div>
       <ion-label>hubSOL adoption</ion-label>
-      <ion-text>view hubSOL onchain TVL across top protocols</ion-text>
-    </ion-col>
-    <ion-row style="gap: 5px;" class="ion-justify-content-center">
-      @if (hubSOLAdoption | async; as protocols) {
-      @for (protocol of protocols; track $index) {
-      <ion-col sizeLg="2.9" size="5.9">
-        <div class="adoption-item">
-          <ion-img [src]="protocol.img" />
-          <div>{{protocol.total | currency: 'USD'}}</div>
-        </div>
-      </ion-col>
-      }
-      }@else {
+      <ion-text>hubSOL onchain TVL across top protocols</ion-text>
+    </div>
+    <div id="adoption-TVL">{{(adoptionTVL | async)?.total | currency: 'USD':'symbol':'1.0-0'}}</div>
 
-      @for (protocol of [1,2,3,4]; track $index) {
-      <ion-col sizeLg="2.9" size="5.9">
-        <div class="adoption-item">
-          <ion-skeleton-text style="width: 100%;height: 80px;" [animated]="true" />
-        </div>
-      </ion-col>
-      }
-      }
-    </ion-row>
   </div>
   <div id="hubSOL-support">
     <ion-row class="ion-justify-content-between">

@@ -195,6 +195,13 @@
 }
 
 #hubSOL-adoption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  #adoption-TVL {
+    font-size: 30px;
+    font-weight: 100;
+  }
   ion-text {
     color: var(--colors-text-text-tertiary-600, #475467);
     font-size: 20px;
