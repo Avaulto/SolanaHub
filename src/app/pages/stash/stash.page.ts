@@ -95,29 +95,12 @@ export class StashPage implements OnInit {
     private _util: UtilService,
   ) { 
     addIcons({closeOutline})
-    effect(() => {
-      if(this.unstakedOverflow() && this.outOfRangeDeFiPositions() && this.nftZeroValue()) {
-        // console.log(this.unstakedOverflow(), this.outOfRangeDeFiPositions(), this.nftZeroValue());
-        console.log(this.outOfRangeDeFiPositions());
-        
-        this.hideStash.set(false)
-      }
-    })
+
   }
   public tableColumn = signal([])
 
   public stashTotalUsdValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
-  public dustBalanceAccounts = {
-    "networkId": "solana",
-    "platformId": "wallet-tokens",
-    "type": "multiple",
-    "label": "dust balance accounts",
-    "value": 173.00551050908487,
-    "data": {
-      "assets": []
-    }
-  }
-  
+
 
   public unstakedOverflow = this._stashService.findStakeOverflow;
   public outOfRangeDeFiPositions = this._stashService.findOutOfRangeDeFiPositions;
@@ -127,6 +110,8 @@ export class StashPage implements OnInit {
     "platformId": "wallet-tokens",
     "type": "multiple",
     "label": "Dust value",
+    "description": "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
+    "actionTitle": "Swap",
     "value": 173.00551050908487,
     "data": {
       "assets": [
@@ -189,42 +174,57 @@ export class StashPage implements OnInit {
     }
   }
   // append unstakedOverflow & zeroYieldZones & dustBalanceAccounts & outOfRangeDeFiPositions once they are computed
-  public assets = computed(() =>{
-    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.dustBalanceAccounts && !this.nftZeroValue()) return []
+  public assets = computed(() => {
+    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.emptyAccounts && !this.nftZeroValue()) return []
     const assets = []
-    if(this.unstakedOverflow()) assets.push(this.unstakedOverflow())
-    if(this.outOfRangeDeFiPositions()) assets.push(this.outOfRangeDeFiPositions())
-    if(this.dustBalanceAccounts) assets.push(this.dustBalanceAccounts)
-    if(this.nftZeroValue()) assets.push(this.nftZeroValue())
-    return assets
+    
+
+    if(this.unstakedOverflow()) {
+      assets.push(this.unstakedOverflow())
+    }
+    if(this.outOfRangeDeFiPositions()) {
+      assets.push(this.outOfRangeDeFiPositions())
+    }
+    if(this.emptyAccounts) {
+      assets.push(this.emptyAccounts)
+    }
+    if(this.nftZeroValue()) {
+      assets.push(this.nftZeroValue())
+    }
+
+    return assets.sort((a, b) => {
+      const valueA = a.value || 0;
+      const valueB = b.value || 0;
+      return valueB - valueA;
+    });
   })
   public tableColumnDeFiPositions = signal([])
    async ngOnInit() {
     // this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
     this.tableColumn = signal([
-      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
+      // { key: 'select', width: '8%',cellTemplate: this.checkboxTpl },
       { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
       { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '',width: '12%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
 
     this.tableColumnDeFiPositions = signal([
-      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
+      // { key: 'select', width: '8%',cellTemplate: this.checkboxTpl },
       { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'platform', title: 'Platform', width: '15%',cellTemplate: this.platformIconTpl, cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
       { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '',width: '12%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
     // this._stashService.getOutOfRangeRaydium()
   
   }
   async getSavingData() {
-    const minLoadingTime = 4000
+    const minLoadingTime = 1000
 
     setTimeout(() => {
       this.analyzeStage.set(1)

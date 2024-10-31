@@ -207,7 +207,11 @@ ion-spinner {
 // app-loyalty-league{
 //     filter: blur(7px);
 // }
-
+.quests-modal{
+    --width: 445px;
+    --max-width: 100%;
+    --background: white;
+}
 .nft-modal {
     --width: 884px;
     --border-radius: 12px;
@@ -225,6 +229,7 @@ ion-spinner {
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
+    --background: white;
 }
 .wallet-connect-dropdown {
     --width: 238px;

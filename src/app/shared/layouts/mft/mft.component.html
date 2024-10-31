@@ -32,27 +32,21 @@
   <ion-checkbox (ionChange)="changeEvent($event)" />
 
 </ng-template>
-
+<ng-template #checkboxTemplate let-row let-changeEvent="changeEvent">
+  <ion-checkbox (ionChange)="changeEvent($event)" [checked]="row.checked" />
+</ng-template>
 <div id="table-wrapper">
-  <ngx-table #table [id]="tableId" (event)="eventEmitted($event)" [configuration]="configuration" [data]="tableData()"
-    [columns]="tableColumns()" [loadingTemplate]="loadingTemplate" [detailsTemplate]="detailsTemplate">
+  <ngx-table #table 
+    [id]="tableId"
+    (event)="eventEmitted($event)" 
+    [configuration]="configuration" 
+    [data]="tableData()"
+    [columns]="tableColumns()"
+    [selectAllTemplate]="selectAllTemplate"
+    [loadingTemplate]="loadingTemplate" 
+    >
   </ngx-table>
-  <ng-template #detailsTemplate let-row>
-    @for(asset of [1,2,3]; track asset){
-    <div class="wallet-breakdown" style="padding-inline-end: 32px;display: flex;">
-      <div style="    flex: 4.15;">
-        wallet 1: awxa...456a
 
-      </div>
-      <div style="flex: 2;">
-        12,345.67
-      </div>
-      <div style="flex: 2.1;">
-        $100
-      </div>
-    </div>
-    }
-  </ng-template>
 
   @if (configuration.paginationEnabled && !configuration.isLoading) {
   <div id="table-controls">
@@ -79,3 +73,11 @@
     <ion-spinner color="primary" name="crescent"></ion-spinner>
   </div>
 </ng-template>
+
+<ng-template #noResultsTemplate>
+  <div>
+
+    <ion-img src="/assets/images/nothing-found.png" />
+    <p>Nothing found</p>
+  </div>
+  </ng-template>

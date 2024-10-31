@@ -6,7 +6,13 @@
 @if (openMenu) {
   <multipliers-menu id="multipliers-menu-wrapper" (click)="dismissModal($event)" (menuToggle)="openMenu = false"/>
 }
-<ion-content [class.hide-ll]="hideLLv2()" class="loyalty-league-content" [fullscreen]="true" >
+<ion-content  fixed-slot-placement="before" [class.hide-ll]="hideLLv2()" class="loyalty-league-content" [fullscreen]="true" >
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" style="transform: translateX(-10px);">
+    <ion-fab-button (click)="openQuests($event)" >
+      <ion-icon name="list-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
   
   <ion-row id="promo">
     <ion-col id="promo-text">
@@ -52,6 +58,8 @@
         </ion-col>
       </ion-row>
     </div> 
+
+
   </ion-grid>
   }
 </ion-content> 

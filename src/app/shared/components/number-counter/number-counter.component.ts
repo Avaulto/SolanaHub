@@ -86,7 +86,7 @@ export class NumberCounterComponent implements OnInit {
         startWith(this.startNumber)
       )
       .subscribe(value => {
-        this.currentNumber = value;
+        (this.currentNumber = value);
       });
   }
 }

@@ -32,6 +32,8 @@ export interface StashGroup {
   // platformId: string
   // type: string
   label: string
+  description: string
+  actionTitle: string
   value: number
   data: {
     assets: StashAsset[]
@@ -79,6 +81,8 @@ export class StashService {
     const filterNftZeroValue = NFTs.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice == 0)
     const nftZeroValueGroup = {
       label: 'NFT zero value',
+      description: "This dataset includes NFTs that are not used and sit idle ready to be withdrawal.",
+      actionTitle: "burn",
       value: 0,
       data: {
         assets: filterNftZeroValue.map(acc => ({
@@ -106,6 +110,8 @@ export class StashService {
     const filterExceedBalance = filterActiveAccounts.filter(acc => acc.excessLamport && !acc.locked)
     const unstakedGroup = {
       label: 'Unstaked overflow',
+      description: "This dataset includes stake accounts that are not fully optimize and have unused balance that you can withdraw.",
+      actionTitle: "withdraw",
       value: 0,
       data: {
         assets: filterExceedBalance.map(acc => ({
@@ -155,48 +161,6 @@ export class StashService {
   async closeOutOfRangeDeFiPosition(positions?: StashAsset[]) {
     try {
       const walletOwner = this._shs.getCurrentWallet().publicKey
-      const data = {
-        "wallet": walletOwner.toBase58(),
-        "poolAddress": "63qcW5SHA5syE6Pap2NeNMVARMXRA5nCdZFH3Q8cCsi8",
-        "positionAddress": "9csMVrHY9j8mUdWBtdPyFfSo37Z6FUg7uuK2aGWVjXMj",
-        "binIds": [
-          -689,
-          -688,
-          -687,
-          -686,
-          -685,
-          -684,
-          -683,
-          -682,
-          -681,
-          -680,
-          -679,
-          -678,
-          -677,
-          -676,
-          -675,
-          -674,
-          -673,
-          -672,
-          -671,
-          -670,
-          -669,
-          -668,
-          -667,
-          -666,
-          -665,
-          -664,
-          -663,
-          -662,
-          -661,
-          -660,
-          -659,
-          -658,
-          -657,
-          -656,
-          -655
-        ]
-      }
       const positionsToClose = positions.filter(p => p.type === 'defi-position')
       const positionsData = positionsToClose.map(p => {
         return {
@@ -211,7 +175,7 @@ export class StashService {
       })).json()
       console.log(encodedIx);
       const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
-      await this._txi.sendMultipleTxn([...txInsArray])
+      await this._txi.sendMultipleTxn(txInsArray)
       
     } catch (error) {
       console.log(error);
@@ -227,6 +191,8 @@ export class StashService {
 
     const stashGroup: StashGroup = {
       label: 'zero yield zones',
+      description: "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
+      actionTitle: "close",
       value: 0,
       data: {
         assets: positions.map(p => ({

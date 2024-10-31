@@ -30,56 +30,20 @@
 
     </ion-row>
     <div class="ion-hide-lg-down">
-    <!-- <stash-table class="ion-margin-bottom" 
-    [hasFees]="true"
-     tableName="low value assets" 
-     actionTitle="swap" 
 
-     [columns]="emptyAccountsColumn"
-      [stash]="emptyAccounts" /> -->
 
-      @if(unstakedOverflow()){
-      <stash-table 
-      class="ion-margin-bottom" 
-      [hasFees]="true" 
-      tableName="Unstaked overflow"
-      tableDescription="This dataset includes stake accounts that are not fully optimize and have unused balance that you can withdraw."
-      actionTitle="withdraw" 
-      (onAction)="triggerAction($event)"
-      [columns]="tableColumn"
-      [stash]="unstakedOverflow()" />
-      }
-      <!-- @if(dustValue()){  -->
-     <stash-table 
-      class="ion-margin-bottom" 
-      [hasFees]="true" 
-      tableName="Dust value" 
-      tableDescription="This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal."
-      actionTitle="Swap" 
-      [columns]="tableColumn"
-      [stash]="emptyAccounts" />
-      <!-- } -->
-      @if(outOfRangeDeFiPositions()){
+      @for(stashItem of assets(); track stashItem.label) {
         <stash-table 
         class="ion-margin-bottom" 
         [hasFees]="true" 
-        tableName="zero yield zones" 
         (onAction)="triggerAction($event)"
-        tableDescription="This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal."
-        actionTitle="close" 
-        [columns]="tableColumnDeFiPositions"
-        [stash]="outOfRangeDeFiPositions()" />
+        [tableName]="stashItem.label"
+        [tableDescription]="stashItem.description"
+        [actionTitle]="stashItem.actionTitle" 
+        [columns]="stashItem.label == 'zero yield zones' ? tableColumnDeFiPositions : tableColumn"
+        [stash]="stashItem" />
       }
-      @if(nftZeroValue()){
-          <stash-table 
-          class="ion-margin-bottom" 
-          [hasFees]="true" 
-          tableName="NFT zero value" 
-          tableDescription="This dataset includes NFTs that are not used and sit idle ready to be withdrawal."
-          actionTitle="burn" 
-          [columns]="tableColumn"
-          [stash]="nftZeroValue()" />
-      }
+    
     </div>
     <div class="ion-hide-lg-up">
 here
@@ -116,8 +80,8 @@ here
 </ng-template>
 
 <ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center">
-    <ion-checkbox />
+  <div class="ion-text-center" style="justify-content: center; display: flex;">
+    <ion-checkbox  />
   </div>
 </ng-template>
 

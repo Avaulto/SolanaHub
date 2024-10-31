@@ -14,10 +14,11 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
 import { PopoverController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components';
-import { flashOutline, flaskOutline } from 'ionicons/icons';
+import { flashOutline, flaskOutline, listOutline } from 'ionicons/icons';
 import { MultipliersMenuComponent, SeasonStatsComponent, TableComponent } from './';
 import { Tier } from 'src/app/models';
 import { V2LoaderComponent } from './v2-loader/v2-loader.component';
+import { QuestsComponent } from './quests/quests.component';
 
 
 @Component({
@@ -58,15 +59,12 @@ export class LoyaltyLeaguePage implements OnInit {
   public openMenu = false
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   constructor(
-    public popoverController: PopoverController,
+    public _popoverController: PopoverController,
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     public _utilService: UtilService,
   ) {
-    addIcons({
-      flashOutline,
-      flaskOutline
-    });
+    addIcons({listOutline,flashOutline,flaskOutline});
 
     // effect(() => console.log(this.loyalMember()))
   }
@@ -98,5 +96,16 @@ export class LoyaltyLeaguePage implements OnInit {
     if (event.target.id === 'multipliers-menu-wrapper') {
       this.openMenu = false
     }
+  }
+
+  public async openQuests(event: any) {
+    const modal = await this._popoverController.create({
+      component: QuestsComponent,
+      cssClass: 'quests-modal',
+      mode: 'ios',
+      event: event,
+      // side: 'left'
+    })
+    modal.present();
   }
 }

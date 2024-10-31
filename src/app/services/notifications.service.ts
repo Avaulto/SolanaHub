@@ -12,6 +12,7 @@ import { DappMessageExtended } from '../models';
 import { LocalStorageService } from './local-storage.service';
 import {  Router } from '@angular/router';
 import { ToasterService } from './toaster.service';
+import { LoyaltyLeagueService } from './loyalty-league.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +23,8 @@ export class NotificationsService {
     private _toasterService: ToasterService,
     private _localStorageService: LocalStorageService,
     private _shs: SolanaHelpersService,
-    private _router: Router
+    private _router: Router,
+    private _loyaltyLeagueService: LoyaltyLeagueService
   ) {
 
     this.createSdk()
@@ -195,6 +197,7 @@ export class NotificationsService {
     // Lastly, we create the notifications thread, which is just a one-way
     // messaging thread between the dapp and the subscribing user.
     this.getSubscribedDapps()
+    this._loyaltyLeagueService.completeQuest(this._shs.getCurrentWallet().publicKey.toBase58(), 'notificationRegister')
     this._toasterService.msg.next({ message: 'subscription preference updated', segmentClass: "toastInfo" })
     if(flag){
 

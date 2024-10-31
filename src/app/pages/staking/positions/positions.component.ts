@@ -51,7 +51,6 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   _structLiquidPos(stake){
     return stake.map(lst => {
-      console.log(lst);
       const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
   
       
