@@ -15,7 +15,9 @@ import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { CodesComponent } from './codes/codes.component';
+import { QuestsComponent } from '../quests/quests.component';
 // import { LoyaltyBadgeComponent } from './loyalty-badge/loyalty-badge.component';
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-member-stats',
@@ -64,6 +66,7 @@ export class MemberStatsComponent implements OnChanges {
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _utilsService: UtilService,
     private _shs: SolanaHelpersService,
+    public _popoverController: PopoverController,
   ) {
 
     addIcons({discOutline,informationCircleOutline,copyOutline});
@@ -120,5 +123,14 @@ export class MemberStatsComponent implements OnChanges {
     { title: 'Quests', key: 'questsPts', tooltip: 'Quests are special activities that earn you points. Check the quests section for more details.'  }
   ];
   //'Bonus points earned from loyalty tier boost and quests.'
-
+  public async openQuests(event: any) {
+    const modal = await this._popoverController.create({
+      component: QuestsComponent,
+      cssClass: 'quests-modal',
+      mode: 'ios',
+      event: event,
+      // side: 'left'
+    })
+    modal.present();
+  }
 }

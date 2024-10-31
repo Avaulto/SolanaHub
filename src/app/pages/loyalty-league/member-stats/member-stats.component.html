@@ -44,8 +44,10 @@
               @if(member$ | async; as member){
               @if(member.totalPts){
                 <!-- {{member.totalPts | number:'1.0-0'}} -->
-              <number-counter [targetNumber]="member.totalPts"
-                [nextSnapshotTime]="member.nextUpdate" />
+              <number-counter 
+              [targetNumber]="member.totalPts"
+                [nextSnapshotTime]="member.nextUpdate" 
+                />
               }@else{
               0
               }
@@ -63,7 +65,13 @@
             @for (category of pointCategories; track category.title) {
               <ion-col size="4">
                 <div class="points-category">
-                  <div class="points-category__title">{{ category.title }} <ion-icon [tooltip]="toolTipTpl" name="information-circle-outline"></ion-icon></div>
+                  <div class="points-category__title">
+                   @if(category.title === 'Quests'){
+                    <span class="quest-title" (click)="openQuests($event)">Quests</span>
+                   }@else{
+                    {{ category.title }} 
+                   }
+                    <ion-icon [tooltip]="toolTipTpl" name="information-circle-outline"></ion-icon></div>
                   <ng-template #toolTipTpl>
 
                     <div class="tool-tip">
@@ -79,8 +87,14 @@
                   <div class="points-category__value">
                     @if (member$ | async; as member) {
                       @if (member[category.key]) {
-                        <number-counter [targetNumber]="member[category.key]"
-                [nextSnapshotTime]="member.nextUpdate" />  
+                        @if(category.key !== 'questsPts'){
+                        <number-counter 
+                        [targetNumber]="member[category.key]"
+                        [nextSnapshotTime]="member.nextUpdate" 
+                        />  
+                        }@else{
+                       {{ member[category.key] | number:'1.0-0'}}
+                        }
                       } @else {
                         0
                       }

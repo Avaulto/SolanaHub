@@ -59,7 +59,7 @@ export class LoyaltyLeaguePage implements OnInit {
   public openMenu = false
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   constructor(
-    public _popoverController: PopoverController,
+
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     public _utilService: UtilService,
@@ -98,14 +98,4 @@ export class LoyaltyLeaguePage implements OnInit {
     }
   }
 
-  public async openQuests(event: any) {
-    const modal = await this._popoverController.create({
-      component: QuestsComponent,
-      cssClass: 'quests-modal',
-      mode: 'ios',
-      event: event,
-      // side: 'left'
-    })
-    modal.present();
-  }
 }

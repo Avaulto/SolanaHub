@@ -4,6 +4,7 @@ import { closeOutline, checkmarkOutline, arrowForwardOutline } from 'ionicons/ic
 import { IonImg, IonText, IonLabel, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { PopoverController } from '@ionic/angular';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-quests',
   templateUrl: './quests.component.html',
@@ -16,9 +17,9 @@ export class QuestsComponent implements OnInit {
   constructor(private _popoverCtrl: PopoverController, private _loyaltyLeagueService: LoyaltyLeagueService) {
     addIcons({ closeOutline, checkmarkOutline, arrowForwardOutline });
   }
-
+  observer: Subscription;
   ngOnInit() {
-     this._loyaltyLeagueService.member$.subscribe(member => {
+     this.observer = this._loyaltyLeagueService.member$.subscribe(member => {
       const quests = this.quests.map(quest => {
         quest.completed = member.quests[quest.task]
         return quest
@@ -76,5 +77,8 @@ export class QuestsComponent implements OnInit {
   }
   closeQuestsPopover() {
     this._popoverCtrl.dismiss();
+  }
+  ngOnDestroy() {
+    this.observer.unsubscribe();
   }
 }
