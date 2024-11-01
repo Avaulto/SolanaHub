@@ -48,6 +48,7 @@ export interface Season{
 
 
 export interface loyaltyLeagueMember {
+  error?: string,
   message?: string,
   communityCode?: string,
   nextUpdate?: Date,

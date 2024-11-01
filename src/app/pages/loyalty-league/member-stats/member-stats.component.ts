@@ -130,7 +130,6 @@ export class MemberStatsComponent implements OnChanges {
       cssClass: 'quests-modal',
       mode: 'ios',
       event: event,
-      // side: 'left'
     })
     modal.present();
   }

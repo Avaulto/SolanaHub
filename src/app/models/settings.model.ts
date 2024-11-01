@@ -27,7 +27,6 @@ export interface EnvironmentConfig {
   readonly solanaCluster: string;
   readonly apiUrl: string;
   readonly platformFeeCollector: string;
-  readonly platformATAbSOLFeeCollector: string;
   readonly rpcs: Config[];
   readonly explorers: Config[];
   readonly PriorityFee: Config[];

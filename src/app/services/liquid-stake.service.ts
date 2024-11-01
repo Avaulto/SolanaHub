@@ -70,7 +70,7 @@ export class LiquidStakeService {
 
   public async stake(pool: StakePool, lamports: number, walletOwnerPK: PublicKey, validatorVoteAccount?: string) {
 
-    const record = { message: 'LST stake', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
+    const record = { message: 'liquid stake', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
 
     const lamportsBN = new BN(lamports);
     const poolName = pool.poolName.toLowerCase()
@@ -301,7 +301,7 @@ export class LiquidStakeService {
 
     const { publicKey } = this._shs.getCurrentWallet()
     const lamportsBN = new BN(sol);
-    const record = { message: `LST unstake`, data: {pool: pool.poolName, amount: sol } };
+    const record = { message: `liquid unstake`, data: {pool: pool.poolName, amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(publicKey)

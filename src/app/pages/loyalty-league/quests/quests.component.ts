@@ -19,14 +19,24 @@ export class QuestsComponent implements OnInit {
   }
   observer: Subscription;
   ngOnInit() {
-     this.observer = this._loyaltyLeagueService.member$.subscribe(member => {
+    this.observer = this._loyaltyLeagueService.member$.subscribe(member => {
+
       const quests = this.quests.map(quest => {
         quest.completed = member.quests[quest.task]
+        if (quest.task === 'rankUp1' && member.daysLoyal >= 15) {
+          quest.completed = true
+        }
+        if (quest.task === 'rankUp2' && member.daysLoyal >= 30) {
+          quest.completed = true
+        }
+        if (quest.task === 'rankUp3' && member.daysLoyal >= 60) {
+          quest.completed = true
+        }
         return quest
       })
       this.quests = quests
     })
-   }
+  }
 
   quests = [
     {
@@ -37,6 +47,14 @@ export class QuestsComponent implements OnInit {
       pts: 3000,
       completed: false,
       task: 'hubDomain'
+    },
+    {
+      icon: 'assets/images/ll/referral-icon.svg',
+      title: 'Refer a friend',
+      description: 'Invite your friends to join the league using your referral code',
+      pts: 1000,
+      completed: false,
+      task: 'friendInvite'
     },
     {
       icon: 'assets/images/ll/swap-icon.svg',
@@ -57,18 +75,35 @@ export class QuestsComponent implements OnInit {
     {
       icon: 'assets/images/ll/stake-icon.svg',
       title: 'own hubSOL',
-      description: 'Own any amount of hubSOL',
+      description: 'Own more than 1 hubSOL',
       pts: 100,
       completed: false,
       task: 'ownhubSOL'
     },
+
     {
-      icon: 'assets/images/ll/referral-icon.svg',
-      title: 'Refer a friend',
-      description: 'Invite your friends to join the league using your referral code',
+      icon: 'assets/images/ll/rank-up-icon.svg',
+      title: 'Manlet Rank up',
+      description: 'Preserve your loyalty rank by accumulating points every day',
       pts: 1000,
       completed: false,
-      task: 'friendInvite'
+      task: 'rankUp1'
+    },
+    {
+      icon: 'assets/images/ll/rank-up-icon.svg',
+      title: 'Maxi Rank up',
+      description: 'Preserve your loyalty rank by accumulating points every day',
+      pts: 2500,
+      completed: false,
+      task: 'rankUp2'
+    },
+    {
+      icon: 'assets/images/ll/rank-up-icon.svg',
+      title: 'diamond-hands Rank up',
+      description: 'Preserve your loyalty rank by accumulating points every day',
+      pts: 10000,
+      completed: false,
+      task: 'rankUp3'
     }
   ]
 

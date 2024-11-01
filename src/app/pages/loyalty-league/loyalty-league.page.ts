@@ -18,8 +18,6 @@ import { flashOutline, flaskOutline, listOutline } from 'ionicons/icons';
 import { MultipliersMenuComponent, SeasonStatsComponent, TableComponent } from './';
 import { Tier } from 'src/app/models';
 import { V2LoaderComponent } from './v2-loader/v2-loader.component';
-import { QuestsComponent } from './quests/quests.component';
-
 
 @Component({
   selector: 'app-loyalty-league',
