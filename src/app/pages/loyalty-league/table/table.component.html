@@ -14,7 +14,7 @@
               
               </div>
               <span>
-                {{row.walletOwner}}
+                {{row.walletOwner.addrShort}}
               </span>
               <ion-icon style="cursor: pointer;" appCopyText [copyText]="row.walletOwner.addr" name="copy-outline"></ion-icon>
               <!-- @if(row.liquidStake.msol) -->
