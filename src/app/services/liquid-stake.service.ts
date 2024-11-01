@@ -154,14 +154,14 @@ export class LiquidStakeService {
       stakeAccountPK
     );
     const record = {
-      message: 'liquid staking', data: { pool: 'SolanaHub staked SOL' }
+      message: 'liquid stake', data: { pool: 'SolanaHub staked SOL' }
     }
     await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
   public async depositSolHubSolPool(walletOwnerPK: PublicKey, lamports: number) {
 
     const record = {
-      message: 'liquid staking', data: {
+      message: 'liquid stake', data: {
         pool: 'SolanaHub staked SOL',
         amount: lamports / LAMPORTS_PER_SOL
       }
@@ -213,7 +213,7 @@ export class LiquidStakeService {
     const { publicKey } = this._shs.getCurrentWallet()
     // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
     const record = {
-      message: 'liquid staking', data: {
+      message: 'liquid stake', data: {
         pool: pool.poolName,
         amount: stakeAccount.balance,
         validatorVoteAccount: stakeAccount.validator.vote_identity

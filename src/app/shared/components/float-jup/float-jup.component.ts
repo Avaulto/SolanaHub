@@ -136,38 +136,28 @@ export class FloatJupComponent implements OnInit {
   async initJupiter() {
     await this.importJupiterTerminal();
     const referralAccountPubkey = new PublicKey('68xFR3RfPvV4NpP1wd546j5vCWrFmVhw4PgmXZBcayP1');
-   const feeAccounts =   new Map([
-      [new PublicKey('So11111111111111111111111111111111111111112'), new PublicKey('HDZf2M4WSG7QjtGXYm1sB5ppdF75kxnBtPNcecDQzsWv')],
-      [new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), new PublicKey('EdxKJxGrSjKo1oqpnz3aKLtcAo6NRTU8FP2UMxYG4T7q')],
-      [new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'), new PublicKey('Bj1cuGGjRyqUFn3cXsweK4bm7ubRaYwbvnbjXqH7M6Rm')],
-      [new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'), new PublicKey('9YuPukisRrktn2wN2Nqd7zqaRWf2rBVAsN9S2vEqQPXX')],
-
-    ])
-    // const mintAddress = [
-    //   new PublicKey('So11111111111111111111111111111111111111112'),
-    //   new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
-    //   new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'),
-    //   new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'),
-    // ];
-    // const feeAccounts = [];
-    // const feeAccountMap = new Map<PublicKey, PublicKey>();
-    
-    // for (const mint of mintAddress) {
-    //   const [feeAccount] = PublicKey.findProgramAddressSync(
-    //     [
-    //       Buffer.from("referral_ata"),
-    //       referralAccountPubkey.toBuffer(),
-    //       mint.toBuffer(),
-    //     ],
-    //     new PublicKey("REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3")
-    //   );
-    //   // feeAccounts.push(feeAccount);
-    //   feeAccountMap.set(mint, feeAccount);
-
-    //   console.log(feeAccount.toBase58(), mint.toBase58());
-    // }
+    const mintAddress = [
+      new PublicKey('So11111111111111111111111111111111111111112'),
+      new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+      new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'),
+      new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'),
+      new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'),
+    ];
+    const feeAccounts = [];
+    for (const mint of mintAddress) {
+      const [feeAccount] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("referral_ata"),
+          referralAccountPubkey.toBuffer(),
+          mint.toBuffer(),
+        ],
+        new PublicKey("REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3")
+      );
+      feeAccounts.push(new Map([[mint, feeAccount]]));
+      console.log(feeAccount,mint.toBase58(), feeAccounts);
+    }
   
-   
+
     const platformFeeAndAccounts = {
       feeBps: 50,
       referralAccount: referralAccountPubkey,
