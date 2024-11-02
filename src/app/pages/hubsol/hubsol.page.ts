@@ -136,8 +136,6 @@ export class HubsolPage implements OnInit, AfterViewInit {
   public metrics = signal(null)
   public async getMetrics() {
     const metrics = await (await fetch(`${this.api}/hubSOL/get-metrics`)).json()
-    console.log(metrics);
-
     this.metrics.set(metrics)
 
   }
