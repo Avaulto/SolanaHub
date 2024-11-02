@@ -17,11 +17,11 @@
       @if(member$ | async; as member){
         @if(member.totalPts){
           <!-- {{totalPts}} -->
-        <number-counter 
-          [nextSnapshotTime]="member.nextUpdate "
-         [targetNumber]="member.totalPts" 
-        [showFormatNumber]="true"
-         />
+          <number-counter 
+          [addOnNumber]="member.questsPts"
+          [targetNumber]="member.totalPts - member.questsPts"
+            [nextSnapshotTime]="member.nextUpdate" 
+            />
         }@else{
         0
         }
