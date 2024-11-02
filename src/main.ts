@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
@@ -15,6 +15,7 @@ import {
   provideAnimations,
 } from '@angular/platform-browser/animations';
 import { inject } from '@vercel/analytics';
+import { provideServiceWorker } from '@angular/service-worker';
 inject({mode: "production"});
 
 if (environment.production) {
@@ -30,9 +31,12 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideRouter(routes),
     provideWalletAdapter({
-      autoConnect: true,
-      adapters: [new UnsafeBurnerWalletAdapter()],
-    }
-    ),
-  ],
+        autoConnect: true,
+        adapters: [new UnsafeBurnerWalletAdapter()],
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+        enabled: !isDevMode(),
+        registrationStrategy: 'registerWhenStable:30000'
+    })
+],
 });
