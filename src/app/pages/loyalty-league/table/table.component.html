@@ -23,9 +23,17 @@
           </ng-template>
   
           <ng-template #animatedNumberTpl  let-row let-rowIndex="rowIndex" let-column="column">
+           @if(column.key === 'totalPts') {
             <number-counter 
             [addOnNumber]="row.questsPts"
             [targetNumber]="row.totalPts - row.questsPts"
             [nextSnapshotTime]="row.nextUpdate"
            />
+           }@else {
+            <number-counter 
+
+            [targetNumber]="row[column.key]"
+            [nextSnapshotTime]="row.nextUpdate"
+           />
+           }
           </ng-template>

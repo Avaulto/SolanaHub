@@ -58,10 +58,10 @@ export class TableComponent implements OnInit, AfterViewInit {
           walletOwner: this._utilService.addrUtil(member.walletOwner),
         } as any
       }).sort((a, b) => {
-        if (a.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
+        if (a.walletOwner.addr === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addr) {
           return -1;
         }
-        if (b.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
+        if (b.walletOwner.addr === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addr) {
           return 1;
         }
         return 0;
