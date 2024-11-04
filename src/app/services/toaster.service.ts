@@ -24,7 +24,7 @@ async presentToastWithOptions(message: string,btnText: string, segmentClass: str
     cssClass: `toastStyle ${segmentClass}`,
     color:'primary',
     icon: 'information-circle-outline',
-    duration: duration | 300000,
+    duration: duration | 3000,
     animated: true,
     message,
     layout: 'baseline',
