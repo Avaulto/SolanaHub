@@ -28,7 +28,7 @@ import { NgxTurnstileModule } from 'ngx-turnstile';
 export class OverviewPage implements OnInit {
   private _jupStore = inject(JupStoreService)
   public walletAssets = inject(PortfolioService).walletAssets
-  public portfolioTotalUsdValue = computed(() => this.walletAssets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
+  public portfolioTotalUsdValue = computed(() => this.walletAssets()?.filter(data => data?.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
   public portfolioValueInSOL = computed(() => this.portfolioTotalUsdValue() / this._jupStore.solPrice())
 
 

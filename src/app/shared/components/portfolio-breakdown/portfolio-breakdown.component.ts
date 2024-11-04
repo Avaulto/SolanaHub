@@ -32,7 +32,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     if (!assets) return 0;
     
     const totalAssets = assets
-      .filter(data => data.value && !this.excludedAssets().has(data.label))
+      .filter(data => data?.value && !this.excludedAssets().has(data?.label))
       .reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
     
     // Move this outside of the computed signal
@@ -47,10 +47,10 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     if (!assets) return [];
     return assets
       .map(assetClass => ({
-        group: assetClass.label ? (assetClass.label === 'NFTs' ? 'NFTs' : assetClass.label.replace(/([A-Z])/g, ' $1').trim()) : assetClass.label,
-        value: assetClass.value,
-        color: this.colorPicker(assetClass.label),
-        excluded: this.excludedAssets().has(assetClass.label)
+        group: assetClass?.label ? (assetClass?.label === 'NFTs' ? 'NFTs' : assetClass?.label.replace(/([A-Z])/g, ' $1').trim()) : assetClass?.label,
+        value: assetClass?.value,
+        color: this.colorPicker(assetClass?.label),
+        excluded: this.excludedAssets().has(assetClass?.label)
       }))
       .reduce((a, c) => {
         const obj = a.find((obj) => obj.group === c.group);

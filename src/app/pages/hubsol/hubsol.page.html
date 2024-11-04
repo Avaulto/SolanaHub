@@ -143,7 +143,13 @@
       <ion-label>hubSOL adoption</ion-label>
       <ion-text>hubSOL onchain TVL across top protocols</ion-text>
     </div>
-    <div id="adoption-TVL">{{(adoptionTVL | async)?.total | currency: 'USD':'symbol':'1.0-0'}}</div>
+    <div id="adoption-TVL">
+      @if (adoptionTVL | async) {
+        {{(adoptionTVL | async)?.total | currency: 'USD':'symbol':'1.0-0'}}
+      }@else {
+        <ion-skeleton-text [animated]="true" />
+      }
+    </div>
 
   </div>
   <div id="hubSOL-support">

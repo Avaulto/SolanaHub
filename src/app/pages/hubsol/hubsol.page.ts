@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText, IonIcon } from "@ionic/angular/standalone";
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
 import Lottie from 'lottie-web';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, Observable, shareReplay, switchMap } from 'rxjs';
 
 import { ApiService, JupStoreService, UtilService } from 'src/app/services';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
@@ -298,6 +298,6 @@ export class HubsolPage implements OnInit, AfterViewInit {
     this.chartData = new Chart(ctx, config2)
 
   }
-  public adoptionTVL = this._apiService.get(this.api + '/hubSOL/get-onchain-tvl')
+  public adoptionTVL = this._apiService.get(this.api + '/hubSOL/get-onchain-tvl').pipe(shareReplay())
 
 }
