@@ -120,9 +120,9 @@ export class PortfolioService {
     this._portfolioStaking(walletAddress);
     this._portfolioTokens(extendTokenData as any, tokenJupData as any);
     this._portfolioDeFi(excludeNFTv2, tokenJupData);
-
+    this._portfolioNFT(tempNft?.data.assets);
     mergeDuplications.push(tempNft);
-    tempNft ? this.nfts.set(tempNft.data.assets) : this.nfts.set([]);
+    
 
     this.walletAssets.set(mergeDuplications);
   }
@@ -164,20 +164,17 @@ export class PortfolioService {
     }
   }
 
-  public async getNFTdata() {
+  public async _portfolioNFT(nfts: NFT[]) {
     try {
-      const {publicKey} = this._shs.getCurrentWallet();
-      const nftData = await (await fetch(`${this.restAPI}/api/portfolio/nft?address=${publicKey.toBase58()}`)).json()
-      this.nfts.set(nftData.data.assets)
-      // console.log(nfts);
-      // const magicEdenNft = await (await fetch(`${this.restAPI}/api/ME-proxy?env=mainnet&endpoint=wallets/CdoFMmSgkhKGKwunc7TusgsMZjxML6kpsvEmqpVYPjyP/tokens`)).json()
-      // console.log(magicEdenNft);
-
-      // // const nftExtended = await (await fetch(`https://api.blockchainapi.com/v1/solana/nft/solana/GqUDRFJ8wb38fx3o7tzefZY483pZgjDVKxkdgsDNhBiG/owner_advanced`)).json()
-
-      // const nftExtended = await (await fetch(`http://localhost:3000/api/nft-floor-price`, { method: 'POST', body: JSON.stringify({ nfts: magicEdenNft }) })).json()
-      // console.log(nftExtended);
-
+      // loop through nfts and add imgUrl from image_uri
+      const nftExtended = nfts.map(nft => {
+        return {
+          ...nft,
+          imgUrl: nft.image_uri,
+          address: nft.mint
+        }
+      })
+      this.nfts.set(nftExtended);
     } catch (error) {
       console.error(error);
 

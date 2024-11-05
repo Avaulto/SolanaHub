@@ -88,7 +88,10 @@
       @if ((isReady$ | async ) || (path | async) === '/hubSOL') {
       <ion-router-outlet></ion-router-outlet>
       }@else {
-      <not-connected />
+        <ion-content>
+
+          <not-connected />
+        </ion-content>
       }
       <!-- <donate/> -->
     </ion-content>

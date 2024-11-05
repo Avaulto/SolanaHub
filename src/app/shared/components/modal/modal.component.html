@@ -1,4 +1,4 @@
-<div style="position: relative;" class="ion-padding">
+<div class="ion-padding">
   <div id="modal-intro">
     <div>
 
@@ -14,6 +14,9 @@
     <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
   </div>
   @switch (componentName) {
+    @case ("stash-modal") {
+      <stash-modal [stashAssets]="data.stashAssets" />
+      }
   @case ("validators-modal") {
   <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
   }

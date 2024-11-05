@@ -61,8 +61,7 @@ export class TxInterceptorService {
       if (priorityFeeEst) transaction.add(priorityFeeEst)
 
       transaction.add(this._memoIx('SolanaHub memo', walletOwner))
-      console.log(transaction);
-      
+
       let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 
       if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)

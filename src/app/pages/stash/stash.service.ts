@@ -1,60 +1,12 @@
 import { Injectable, Signal, computed, effect, signal } from '@angular/core';
 import { BN } from '@marinade.finance/marinade-ts-sdk';
-import { Connection, LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
-import { ApiService, JupStoreService, NativeStakeService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
+import {  LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
+import { ApiService, JupStoreService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
+import { OutOfRange, StashAsset, StashGroup } from './stash.model';
 
 
-export interface OutOfRange {
-  positionData: any
-  poolPair: string
-  poolTokenA: {
-    address: string,
-    decimals: number,
-    symbol: string,
-    logo: string,
-  },
-  poolTokenB: {
-    address: string,
-    decimals: number,
-    symbol: string,
-    logo: string,
-  },
-  isOutOfRange: boolean,
-  platform: string,
-  platformImgUrl: string,
-  pooledAmountAWithRewards: string,
-  pooledAmountBWithRewards: string,
-  pooledAmountAWithRewardsUSDValue: number,
-  pooledAmountBWithRewardsUSDValue: number
-}
-export interface StashGroup {
-  // networkId: string
-  // platformId: string
-  // type: string
-  label: string
-  description: string
-  actionTitle: string
-  value: number
-  data: {
-    assets: StashAsset[]
-  }
-}
-export interface StashAsset {
-  name: string,
-  symbol: string,
-  imgUrl: string | string[],
-  tokens?: { address: string, decimals: number, symbol: string, logo: string }[],
-  balance?: number,
-  account: { addr: string, addrShort: string },
-  platform?: string,
-  poolPair?: string,
-  source: string,
-  extractedValue: any// { [key: string]: number },
-  value?: number,
-  action: string,
-  type: string,
-  positionData?: any
-}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -75,23 +27,30 @@ export class StashService {
     this.updateOutOfRangeDeFiPositions();
 
   }
-  public findNftZeroValue = computed(() => {
+  public findZeroValueAssets = computed(() => {
     const NFTs = this._portfolioService.nfts()
-    if (!NFTs) return null
+    const tokens = this._portfolioService.tokens()
+    if (!NFTs && !tokens) return null
+    // filter nft zero value and orca & raydium position(clmm & amm & whirlpool)
     const filterNftZeroValue = NFTs.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice == 0)
+                                .filter((token: any) => !token.name.includes('Orca Whirlpool Position') && !token.name.includes('Raydium Concentrated Liquidity'))
+
+    const filterTokenZeroValue = tokens.filter(acc => Number(acc.value) < 0.01 && Number(acc.value) == 0)
+    console.log(filterNftZeroValue);
+    
     const nftZeroValueGroup = {
-      label: 'NFT zero value',
-      description: "This dataset includes NFTs that are not used and sit idle ready to be withdrawal.",
+      label: 'zero value assets',
+      description: "This dataset includes NFTs and tokens that are not used and sit idle ready to be withdrawal.",
       actionTitle: "burn",
       value: 0,
       data: {
-        assets: filterNftZeroValue.map(acc => ({
+        assets: [...filterNftZeroValue, ...filterTokenZeroValue].map(acc => ({
           name: acc.name,
           symbol: acc.symbol,
-          imgUrl: acc.image_uri,
-          account: this._utils.addrUtil(acc.mint),
-          source: 'market value not found',
-          extractedValue: { SOL: acc.floorPrice || 0.02 },
+          imgUrl: acc.imgUrl,
+          account: this._utils.addrUtil(acc.address),
+          source: 'no market value',
+          extractedValue: { SOL: 0.02 },
           action: 'burn',
           type: 'nft'
         }))
@@ -110,8 +69,8 @@ export class StashService {
     const filterExceedBalance = filterActiveAccounts.filter(acc => acc.excessLamport && !acc.locked)
     const unstakedGroup = {
       label: 'Unstaked overflow',
-      description: "This dataset includes stake accounts that are not fully optimize and have unused balance that you can withdraw.",
-      actionTitle: "withdraw",
+      description: "Excess balance from your stake account mostly driven by MEV rewards that are not compounded.",
+      actionTitle: "harvest",
       value: 0,
       data: {
         assets: filterExceedBalance.map(acc => ({
@@ -121,7 +80,7 @@ export class StashService {
           account: this._utils.addrUtil(acc.address),
           source: 'excess balance',
           extractedValue: { SOL: acc.excessLamport / LAMPORTS_PER_SOL },
-          action: 'withdraw',
+          action: 'harvest',
           type: 'stake-account',
         }))
       }

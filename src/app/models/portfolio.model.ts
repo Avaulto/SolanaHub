@@ -27,12 +27,14 @@ export interface NFT{
   symbol: string
   royalty: number
   image_uri: string
+  imgUrl: string
   cached_image_uri: string
   animation_url: string
   cached_animation_url: string
   metadata_uri: string
   description: string
   mint: string
+  address: string
   owner: string
   update_authority: string
   creators: Array<{

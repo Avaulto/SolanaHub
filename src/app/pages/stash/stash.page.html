@@ -36,7 +36,7 @@
         <stash-table 
         class="ion-margin-bottom" 
         [hasFees]="true" 
-        (onAction)="triggerAction($event)"
+        (onAction)="openStashPopup($event)"
         [tableName]="stashItem.label"
         [tableDescription]="stashItem.description"
         [actionTitle]="stashItem.actionTitle" 
@@ -81,7 +81,7 @@ here
 
 <ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-center" style="justify-content: center; display: flex;">
-    <ion-checkbox  />
+    <ion-checkbox mode="md" />
   </div>
 </ng-template>
 
@@ -107,7 +107,7 @@ here
   </div>
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="triggerAction(row)">
+  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="openStashPopup(row)">
      {{row.action}}
   </ion-button>
 </ng-template>

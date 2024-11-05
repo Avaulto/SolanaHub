@@ -19,6 +19,8 @@ import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal
 import { NftsService } from 'src/app/services/nfts.service';
 import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/unstake-lst-modal/unstake-lst-modal.component';
 import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-modal.component';
+import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal.component';
+
 
 @Component({
   selector: 'app-modal',
@@ -28,6 +30,7 @@ import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-mo
   imports: [
     IonButton,
     IonImg,
+    StashModalComponent,
     ValidatorsModalComponent,
     DelegateLSTModalComponent,
     InstantUnstakeModalComponent,
@@ -52,7 +55,7 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'll-faq-modal' | 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
+  @Input() componentName: 'stash-modal' | 'll-faq-modal' | 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,
@@ -71,6 +74,7 @@ export class ModalComponent implements AfterViewInit {
 
     const wallet = this._shs.getCurrentWallet()
     switch (this.componentName) {
+      
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
         console.log(pool);

@@ -2,7 +2,7 @@ import { CurrencyPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/comm
 import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, effect, signal } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
 import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
-import { PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
+import { ModalComponent, PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { TableHeadComponent } from 'src/app/shared/layouts/mft/table-head/table-head.component';
 import { TableMenuComponent } from 'src/app/shared/layouts/mft/table-menu/table-menu.component';
@@ -10,13 +10,15 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { PromoComponent } from './promo/promo.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-modal.component";
-import { StashAsset, StashService } from './stash.service';
+import {  StashService } from './stash.service';
 import { TableComponent } from './table/table.component';
 import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { StashAsset } from './stash.model';
+import { ModalController } from '@ionic/angular';
+import { StashModalComponent } from './stash-modal/stash-modal.component';
 
 
 @Component({
@@ -93,6 +95,7 @@ export class StashPage implements OnInit {
     private _stashService: StashService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
+    private _modalCtrl: ModalController
   ) { 
     addIcons({closeOutline})
 
@@ -104,7 +107,7 @@ export class StashPage implements OnInit {
 
   public unstakedOverflow = this._stashService.findStakeOverflow;
   public outOfRangeDeFiPositions = this._stashService.findOutOfRangeDeFiPositions;
-  public nftZeroValue = this._stashService.findNftZeroValue;
+  public zeroValueAssets = this._stashService.findZeroValueAssets;
   public emptyAccounts = {
     "networkId": "solana",
     "platformId": "wallet-tokens",
@@ -175,7 +178,7 @@ export class StashPage implements OnInit {
   }
   // append unstakedOverflow & zeroYieldZones & dustBalanceAccounts & outOfRangeDeFiPositions once they are computed
   public assets = computed(() => {
-    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.emptyAccounts && !this.nftZeroValue()) return []
+    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.emptyAccounts && !this.zeroValueAssets()) return []
     const assets = []
     
 
@@ -188,8 +191,8 @@ export class StashPage implements OnInit {
     if(this.emptyAccounts) {
       assets.push(this.emptyAccounts)
     }
-    if(this.nftZeroValue()) {
-      assets.push(this.nftZeroValue())
+    if(this.zeroValueAssets()) {
+      assets.push(this.zeroValueAssets())
     }
 
     return assets.sort((a, b) => {
@@ -231,21 +234,19 @@ export class StashPage implements OnInit {
     }, minLoadingTime);
 
   }
-  triggerAction(event: StashAsset[]) {
-    console.log('event', event)
-    const type = event[0].type
-    switch (type) {
-      case 'stake-account':
-        this._stashService.withdrawStakeAccountExcessBalance(event)
-        break
-      case 'defi-position':
-        this._stashService.closeOutOfRangeDeFiPosition(event)
-        break
-      // case 'withdraw':
-      //   this._stashService.withdraw(row.account)
-      //   break
-    }
+   async openStashPopup(event: StashAsset[]) {
+    const modal = await this._modalCtrl.create({
+      component: StashModalComponent,
+      componentProps: {
+        stashAssets: event,
+        actionTitle: event[0].action
+      },
+      cssClass: 'modal-style'
+    });
+    modal.present();
+    // this.onActionSelected.emit(true)
   }
+
   public fixedNumber(value: any): string {
     // Convert the input to a number
     const num = Number(value);

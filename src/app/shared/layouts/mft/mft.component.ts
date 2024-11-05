@@ -77,8 +77,7 @@ export class MftComponent implements OnInit {
     }
 
     if (this.checkBox) {
-      console.log(this.table);
-      
+
       // Modify the first column to use custom template if it's a checkbox column
       // const checkboxRow  = {
       //   key: 'select',

@@ -5,7 +5,7 @@ import { addIcons } from 'ionicons';
 import { arrowUpOutline } from 'ionicons/icons';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { StashGroup } from '../stash.service';
+import { StashGroup } from '../stash.model';
 
 @Component({
   selector: 'stash-table',

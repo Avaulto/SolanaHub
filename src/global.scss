@@ -187,15 +187,15 @@ ion-spinner {
 .modal-style {
     --width: 540px;
     --border-radius: 12px;
-    --height: auto;
+    --height: fit-content;
     --max-width: 95%;
-    --max-height: 90%;
-    --overflow: auto;
+    // --max-height: 90%;
+    // --overflow: auto;
     --background: white;
-    >.ion-page {
-        position: static;
-        contain: initial;
-    }
+    // >.ion-page {
+    //     position: static;
+    //     contain: initial;
+    // }
 }
 
 // .ll-loader{
