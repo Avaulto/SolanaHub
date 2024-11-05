@@ -431,6 +431,7 @@ export class PortfolioService {
 
     // clean session storage
     this._sessionStorageService.clearData()
+  
 
     this.walletAssets.set(null)
     this.tokens.set(null)
