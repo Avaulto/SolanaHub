@@ -1,3 +1,25 @@
+// Common variables for repeated values
+:root {
+  --text-primary: var(--colors-text-text-primary-900, #101828);
+  --text-tertiary: var(--colors-text-text-tertiary-600, #475467);
+}
+
+// Common mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin title-text {
+  color: var(--text-primary);
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 44px;
+  letter-spacing: -0.72px;
+}
+
+// Base shared styles
 .shared-metrics {
   min-height: 92.2px;
   width: 247px;
@@ -11,7 +33,7 @@
   gap: var(--spacing-2xl, 20px);
 
   ion-label {
-    color: var(--colors-text-text-tertiary-600, #4B5565);
+    color: var(--text-tertiary);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -19,25 +41,29 @@
     align-items: center;
     gap: 3px;
   }
-  ion-img{
-    width: 14px;
-  }
+  
+  ion-img { width: 14px; }
+  
   ion-text {
-    color: var(--colors-text-text-primary-900, #121926);
+    color: var(--text-primary);
     font-size: 24px;
     font-weight: 600;
     line-height: 32px;
   }
 }
 
-.shared-title {
-  color: var(--colors-text-text-primary-900, #101828);
-  font-size: 36px;
-  font-weight: 600;
-  line-height: 44px;
-  letter-spacing: -0.72px;
+// Combine similar text styles
+%base-text {
   display: block;
   margin-block-end: 20px;
+}
+
+// Combine similar button styles
+%button-base {
+  text-transform: capitalize;
+  width: 150px;
+  height: 44px;
+  font-size: 16px;
 }
 
 #promo {
@@ -93,12 +119,7 @@
   }
 
   ion-button {
-    text-transform: capitalize;
-    --padding-bottom: 16px;
-    --padding-top: 16px;
-    width: 150px;
-    font-size: 16px;
-    height: 44px;
+    @extend %button-base;
   }
 }
 
@@ -129,15 +150,14 @@
   }
 
   #benefits-title {
-    @extend .shared-title;
+    @extend %shared-title;
   }
 
   ion-text {
-    display: block;
+    @extend %base-text;
     color: var(--ion-color-dark);
     font-size: 16px;
     line-height: 24px;
-    margin-block-end: 14px;
   }
 
   #benefit-list {
@@ -175,22 +195,17 @@
   background-color: #E6E7EB;
 
   ion-text {
+    @extend %base-text;
     color: var(--colors-text-text-tertiary-600, #475467);
     font-size: 20px;
     line-height: 30px;
     display: block;
-    margin-block-end: 20px;
   }
 
   #chart-title {
     width: 100%;
 
-    color: var(--colors-text-text-primary-900, #101828);
-    font-size: 36px;
-    font-weight: 600;
-    line-height: 44px;
-    letter-spacing: -0.72px;
-    display: block;
+    @extend %shared-title;
   }
 }
 
@@ -206,20 +221,17 @@
     justify-content: flex-end;
   }
   ion-text {
+    @extend %base-text;
     color: var(--colors-text-text-tertiary-600, #475467);
     font-size: 20px;
     line-height: 30px;
     display: block;
-    margin-block-end: 20px;
   }
 
   ion-label {
     width: 100%;
 
-    color: var(--colors-text-text-primary-900, #101828);
-    font-size: 36px;
-    font-weight: 600;
-    line-height: 44px;
+    @extend %shared-title;
     letter-spacing: -0.72px;
     display: block;
   }
@@ -262,6 +274,7 @@
   }
 
   p {
+    @extend %base-text;
     color: #121926;
     text-align: center;
     font-size: 36px;
@@ -299,6 +312,7 @@
 
 
   ion-label {
+    @extend %base-text;
     margin-block-end: 4px;
     color: #121926;
     font-size: 16px;
@@ -308,6 +322,7 @@
   }
 
   ion-text {
+    @extend %base-text;
     color: #121926;
     font-size: 13px;
     line-height: 18px;
@@ -320,7 +335,7 @@
   padding: 54px 2.5vw;
 
   ion-label {
-    color: var(--colors-text-text-primary-900, #101828);
+    @extend %shared-title;
     margin-block-end: 12px;
     font-size: 34px;
     font-weight: 600;
@@ -330,6 +345,7 @@
   }
 
   ion-text {
+    @extend %base-text;
     color: var(--colors-text-text-tertiary-600, #475467);
     font-size: 20px;
     line-height: 30px;
@@ -338,10 +354,7 @@
   }
 
   ion-button {
-    text-transform: capitalize;
-    width: 150px;
-    height: 44px;
-    font-size: 16px;
+    @extend %button-base;
   }
 
   .platform {
@@ -423,9 +436,7 @@ ion-skeleton-text {
   }
 
   #hubSOL-trust {
-
-    div,
-    p {
+    div, p {
       display: flex;
       text-align: left;
       justify-content: left;
@@ -437,4 +448,13 @@ ion-skeleton-text {
       text-align: left;
     }
   }
+}
+
+// Add the missing shared title class
+%shared-title {
+  color: var(--text-primary);
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 44px;
+  letter-spacing: -0.72px;
 }

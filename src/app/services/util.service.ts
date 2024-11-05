@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
 import { JupStoreService } from "./jup-store.service";
 import { SessionStorageService } from "./session-storage.service";
-import { Config, PriorityFee } from "../models/settings.model";
+import { Config } from "../models/settings.model";
 import { environment } from 'src/environments/environment';
 
 declare global {
@@ -57,12 +57,6 @@ export class UtilService {
     return config ;
   }
   
-  public get priorityFee()  {
-    const baseFee = PriorityFee.Fast
-    const config = Number(JSON.parse(this._localStorage.getData('priority-fee'))?.value) || baseFee
-
-    return config;
-  }
   public get theme()  {
     const config = JSON.parse(this._localStorage.getData('theme'))?.value || 'light'
 

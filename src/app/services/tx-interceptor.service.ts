@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 
 import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
-import { PriorityFee, Record, toastData } from '../models';
+import { Record, toastData } from '../models';
 import va from '@vercel/analytics';
 import { environment } from 'src/environments/environment';
 import { SolanaHelpersService } from './solana-helpers.service';
@@ -37,19 +37,7 @@ export class TxInterceptorService {
     })
     return memoInstruction
   }
-  private _addPriorityFee(priorityFee: PriorityFee): TransactionInstruction[] | null {
-    const PRIORITY_RATE = priorityFee;
 
-    const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-      units: PRIORITY_RATE
-    });
-
-    const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
-      microLamports: PRIORITY_RATE * 5
-    });
-    return [addPriorityFee, modifyComputeUnits]
-
-  }
   public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record): Promise<string> {
     try {
 
