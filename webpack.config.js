@@ -1,3 +1,6 @@
+const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
+
 module.exports = (config) => {
 	config.resolve.fallback = {
 		path: false,
@@ -14,6 +17,27 @@ module.exports = (config) => {
 		http:false,
 		https:false
 	};
+
+	if (config.mode === 'production') {
+		config.plugins = [
+			...config.plugins,
+			new webpack.DefinePlugin({
+				ngDevMode: false
+			})
+		];
+
+		config.optimization = {
+			...config.optimization,
+			minimizer: [
+				new TerserPlugin({
+					terserOptions: {
+						keep_classnames: /.*Wallet.*|.*Adapter.*/,
+						keep_fnames: /.*Wallet.*|.*Adapter.*/,
+					},
+				}),
+			],
+		};
+	}
 
 	return config;
 };
