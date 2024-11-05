@@ -1,7 +1,7 @@
-import { Injectable, Signal, WritableSignal, signal } from '@angular/core';
+import { Injectable, Signal, WritableSignal, inject, signal } from '@angular/core';
 import { UtilService } from './util.service';
-import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, LendingOrBorrow, LiquidityProviding, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
+import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
+import { Token, NFT,  Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
 import va from '@vercel/analytics';
@@ -14,9 +14,7 @@ import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject, Subject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
-import { PublicKey } from '@solana/web3.js';
 import { RoutingPath } from '../shared/constants';
-
 
 @Injectable({
   providedIn: 'root'
@@ -93,8 +91,8 @@ export class PortfolioService {
   private async fetchPortfolioData(walletAddress: string, turnStileToken: string) {
     const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`);
     const data = await response.json();
-  
-    
+
+
     this._utils.turnStileToken = null;
     data.elements = data.elements.filter(e => e?.platformId !== 'wallet-nfts');
     return data;
@@ -115,7 +113,7 @@ export class PortfolioService {
 
     const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts-v2');
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
-    
+
     const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
 
@@ -124,7 +122,7 @@ export class PortfolioService {
     this._portfolioDeFi(excludeNFTv2, tokenJupData);
     this._portfolioNFT(tempNft?.data.assets);
     mergeDuplications.push(tempNft);
-    
+
 
     this.walletAssets.set(mergeDuplications);
   }
@@ -252,7 +250,7 @@ export class PortfolioService {
         }
 
         if (group.type === "borrowlend") {
-          
+
           group.data.suppliedAssets.map(async asset => {
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
             records.push({
@@ -424,14 +422,15 @@ export class PortfolioService {
     return filterResults
   }
 
-  public clearWallet() {
+  public async clearWallet() {
 
     // clear state of wallet connect
     this._watchModeService.watchedWallet$.next(null)
 
     // clean session storage
     this._sessionStorageService.clearData()
-  
+
+
 
     this.walletAssets.set(null)
     this.tokens.set(null)
