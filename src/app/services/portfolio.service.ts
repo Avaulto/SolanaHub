@@ -7,7 +7,7 @@ import { JupToken } from '../models/jup-token.model'
 import va from '@vercel/analytics';
 
 import { NativeStakeService, SolanaHelpersService } from './';
-
+import { NavController } from '@ionic/angular';
 import { SessionStorageService } from './session-storage.service';
 import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
@@ -15,6 +15,7 @@ import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject, Subject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
 import { PublicKey } from '@solana/web3.js';
+import { RoutingPath } from '../shared/constants';
 
 
 @Injectable({
@@ -31,6 +32,7 @@ export class PortfolioService {
   public privateMode: BehaviorSubject<boolean> = new BehaviorSubject(false)
   readonly restAPI = this._utils.serverlessAPI
   constructor(
+    private _navCtrl: NavController,
     private _utils: UtilService,
     private _nss: NativeStakeService,
     private _shs: SolanaHelpersService,
@@ -438,5 +440,6 @@ export class PortfolioService {
     this.walletHistory.set(null)
 
     this._fetchPortfolioService.triggerFetch()
+    this._navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
   }
 }

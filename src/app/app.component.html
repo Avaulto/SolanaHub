@@ -85,15 +85,9 @@
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content">
-      @if ((isReady$ | async ) || (path | async) === '/hubSOL') {
-      <ion-router-outlet></ion-router-outlet>
-      }@else {
-        <ion-content>
 
-          <not-connected />
-        </ion-content>
-      }
-      <!-- <donate/> -->
+      <ion-router-outlet></ion-router-outlet>
+
     </ion-content>
 
   </ion-split-pane>

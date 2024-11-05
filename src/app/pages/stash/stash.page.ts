@@ -194,7 +194,9 @@ export class StashPage implements OnInit {
     if(this.zeroValueAssets()) {
       assets.push(this.zeroValueAssets())
     }
-
+    console.log(assets);
+    
+    // this.analyzeStage.set(1)
     return assets.sort((a, b) => {
       const valueA = a.value || 0;
       const valueB = b.value || 0;
@@ -227,11 +229,11 @@ export class StashPage implements OnInit {
   
   }
   async getSavingData() {
-    const minLoadingTime = 1000
+    // const minLoadingTime = 3000
 
-    setTimeout(() => {
-      this.analyzeStage.set(1)
-    }, minLoadingTime);
+    // setTimeout(() => {
+    //   this.analyzeStage.set(1)
+    // }, minLoadingTime);
 
   }
    async openStashPopup(event: StashAsset[]) {

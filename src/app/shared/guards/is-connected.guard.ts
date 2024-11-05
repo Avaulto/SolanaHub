@@ -1,37 +1,30 @@
-import { AsyncPipe } from '@angular/common';
-import {  Injectable, inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Resolve, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
-import { catchError, delay, map, Observable, of } from 'rxjs';
-
-@Injectable({
-  providedIn: 'root'
-})
-
-export class IsConnectedGuard implements Resolve<any>{
-  readonly isReady$ =  inject(WalletStore).connected$
-  private _router = inject(Router)
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<any>|Promise<any>|any {
-    return this.isReady$.pipe(
-      delay(1500),
-      map(e => {
-        console.log(e);
-        
-        if (e) {
-          return true;
-        } else {
-          return false
-        }
-      }),
-      catchError((err) => {
-        console.log('catch');
-        this._router.navigate(['']);
-        return of(false);
-      })
-    );
-  }
-  
-}
+import { map, tap, take, filter, catchError, of, timeout } from 'rxjs';
+import { RoutingPath } from '../constants';
+import { NavController } from '@ionic/angular';
+export const isConnectedGuard = () => {
+  const walletStore = inject(WalletStore);
+ // Store the attempted URL
+ const attemptedUrl = inject(Router).getCurrentNavigation()?.finalUrl?.toString();
+ if (attemptedUrl) {
+   sessionStorage.setItem('attemptedUrl', attemptedUrl);
+ }
+  const navCtrl = inject(NavController);
+  return walletStore.connected$.pipe(
+    take(2),
+    filter(connected => connected),
+    timeout(300),
+    tap(connected => {
+      if (!connected) {
+        navCtrl.navigateForward([RoutingPath.NOT_CONNECTED]);
+      }
+    }),
+    map(() => true),
+    catchError(() => {
+      navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
+      return of(false);
+    })
+  );
+};

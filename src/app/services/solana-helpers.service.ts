@@ -32,6 +32,7 @@ export class SolanaHelpersService {
   // add balance utility
   public walletExtended$ = this._walletExtended$.asObservable().pipe(
     switchMap(async (wallet: any) => {
+
       if (wallet) {
         wallet.signMessage = async (message) => await firstValueFrom(this._walletStore.signMessage(message))
         wallet.balance = (await this.connection.getBalance(wallet.publicKey)) / LAMPORTS_PER_SOL
@@ -94,7 +95,7 @@ export class SolanaHelpersService {
         console.error(error);
       }
 
-      this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
+      // this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
       this._validatorsList = validatorsList;
       return validatorsList
     }

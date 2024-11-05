@@ -42,7 +42,7 @@ export class QuestsComponent implements OnInit {
     {
       icon: 'assets/images/ll/hub-icon.svg',
       title: 'own .hub domain',
-      description: 'own a .hub domain via AllDomains',
+      description: 'own a .hub domain via <a target="_blank" href="https://alldomains.id/domains/hub?ref=YOarLb">AllDomains</a>',
       link: 'https://all.domains',
       pts: 3000,
       completed: false,

@@ -15,7 +15,7 @@
         </div>
         <div class="quest-item-content">
           <ion-label>{{quest.title}}</ion-label>
-          <ion-text>{{quest.description}}</ion-text>
+          <ion-text [innerHTML]="quest.description"></ion-text>
         </div>
         <div class="quest-pts" [class.completed]="quest.completed">+{{quest.pts}} pts</div>
         <div class="quest-action">

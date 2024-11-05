@@ -39,7 +39,7 @@ import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilServ
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
-import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
+import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
@@ -96,6 +96,8 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
+      console.log('wallet',wallet);
+      
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
@@ -127,6 +129,8 @@ export class AppComponent implements OnInit {
     }
     
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
+
+
   }
 
   async openNewsFeedModal(){
@@ -148,9 +152,8 @@ export class AppComponent implements OnInit {
     this.turnStile.reset()
 
   })
-  log(e){
-    console.log(e);
-    
+  log(...args: any[]){
+    console.log(...args);
   }
   sendCaptchaResponse(token) {
     this._utilService.turnStileToken = token
@@ -163,17 +166,22 @@ export class AppComponent implements OnInit {
       .subscribe((params) => {
         const refCode = params['refCode']
         if (refCode) {
-
           this._localStorage.saveData('refCode', refCode)
         }
+      });
 
-      }
-      );
-
-      this.path = this.router.events.pipe(
-        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-        map((event) => event.url)
-      )
+    // Add wallet connection handler
+    this._walletStore.connected$.pipe(
+      filter(connected => connected),
+      take(1),
+      tap(() => {
+        const attemptedUrl = sessionStorage.getItem('attemptedUrl');
+        if (attemptedUrl) {
+          sessionStorage.removeItem('attemptedUrl');
+          this.router.navigateByUrl(attemptedUrl);
+        }
+      })
+    ).subscribe();
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';

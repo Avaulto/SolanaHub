@@ -19,6 +19,7 @@ import { ModalController } from '@ionic/angular';
 })
 export class StashModalComponent  implements OnInit {
   @Input() stashAssets: StashAsset[] = [];
+  @Input() actionTitle: string = ''
   private _stashService = inject(StashService)
   private modalCtrl = inject(ModalController)
   public summary: {[key: string]: number} = {};

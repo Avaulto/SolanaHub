@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PageHeaderComponent } from '../../components/page-header/page-header.component';
-import { IonImg, IonRow, IonCol, IonLabel, IonText, IonGrid } from '@ionic/angular/standalone';
+import { IonImg, IonRow, IonCol, IonLabel, IonText, IonGrid, IonContent } from '@ionic/angular/standalone';
 import { WalletModule } from '../wallet/wallet.module';
 import { WatchModeComponent } from '../../components/watch-button/watch-mode.component';
 
@@ -18,7 +18,8 @@ import { WatchModeComponent } from '../../components/watch-button/watch-mode.com
     IonRow,
     IonCol,
     PageHeaderComponent,
-    WatchModeComponent
+    WatchModeComponent,
+    IonContent
   ]
 })
 export class NotConnectedComponent implements OnInit {
