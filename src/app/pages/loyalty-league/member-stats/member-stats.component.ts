@@ -113,7 +113,7 @@ export class MemberStatsComponent implements OnChanges {
       },
       cssClass: 'refer-a-friend-modal'
     });
-    modal.present();
+    await modal.present();
   }
 
   pointCategories = [

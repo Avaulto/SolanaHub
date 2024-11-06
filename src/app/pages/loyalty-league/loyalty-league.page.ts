@@ -85,7 +85,7 @@ export class LoyaltyLeaguePage implements OnInit {
       mode: 'ios',
       cssClass: 'faq-modal',
     });
-    modal.present();
+    await modal.present();
   }
   dismissModal(event: any) {
     // close model only if click is outside the menu
