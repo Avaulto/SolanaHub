@@ -94,6 +94,11 @@ export class HubsolPage implements OnInit, AfterViewInit {
       type: 'AMM'
     },
     {
+      protocol: 'loopscale',
+      img: 'assets/images/platforms/loopscale.svg',
+      type: 'AMM'
+    },
+    {
       protocol: 'mango',
       img: 'assets/images/platforms/mango.svg',
       type: 'DEX'
