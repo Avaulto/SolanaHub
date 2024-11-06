@@ -45,7 +45,9 @@ import va from '@vercel/analytics';
     IonIcon,
     CopyTextDirective, 
     NumberCounterComponent,
-    CodesComponent],
+    CodesComponent,
+    
+  ],
   animations: [
     trigger('slideInOut', [
       state('void', style({
@@ -106,11 +108,12 @@ export class MemberStatsComponent implements OnChanges {
     const refCode = this._loyaltyLeagueService._member.referralCode
     console.log(refCode);
     
-    const modal = await this._modalCtrl.create({
+    const modal = await this.popoverController.create({
       component: ReferAFriendModalComponent,
       componentProps: {
         refCode ,
       },
+      mode: 'ios',
       cssClass: 'refer-a-friend-modal'
     });
     await modal.present();

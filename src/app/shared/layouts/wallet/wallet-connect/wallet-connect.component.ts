@@ -92,6 +92,8 @@ export class WalletConnectComponent implements OnInit, OnDestroy {
     await popover.present();
   }
   public async showConnectWalletActions(e: Event) {
+    console.log('showWalletAdapters');
+    
     const walletAddress = this._shs?.getCurrentWallet()?.publicKey.toBase58() || this._watchModeService.watchedWallet$.value
     const popover = await this.popoverController.create({
       component: WalletConnectedDropdownComponent,
