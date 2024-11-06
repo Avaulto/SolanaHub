@@ -106,8 +106,6 @@ export class MemberStatsComponent implements OnChanges {
 
   public async openReferAFriendModal() {
     const refCode = this._loyaltyLeagueService._member.referralCode
-    console.log(refCode);
-    
     const modal = await this.popoverController.create({
       component: ReferAFriendModalComponent,
       componentProps: {
