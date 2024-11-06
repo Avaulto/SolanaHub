@@ -31,8 +31,8 @@ module.exports = (config) => {
 			minimizer: [
 				new TerserPlugin({
 					terserOptions: {
-						keep_classnames: /.*Wallet.*|.*Adapter.*|.*Modal.*/,
-						keep_fnames: /.*Wallet.*|.*Adapter.*|.*Modal.*/,
+						keep_classnames: /.*Wallet.*|.*Adapter.*|.*ModalController.*/,
+						keep_fnames: /.*Wallet.*|.*Adapter.*|.*ModalController.*/,
 					},
 				}),
 			],
