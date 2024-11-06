@@ -196,7 +196,7 @@ export class StashPage implements OnInit {
     }
     console.log(assets);
     
-    // this.analyzeStage.set(1)
+
     return assets.sort((a, b) => {
       const valueA = a.value || 0;
       const valueB = b.value || 0;
@@ -212,8 +212,8 @@ export class StashPage implements OnInit {
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
       { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '',width: '12%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
 
     this.tableColumnDeFiPositions = signal([
@@ -222,18 +222,25 @@ export class StashPage implements OnInit {
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'platform', title: 'Platform', width: '15%',cellTemplate: this.platformIconTpl, cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
       { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '',width: '12%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
     // this._stashService.getOutOfRangeRaydium()
   
   }
   async getSavingData() {
-    // const minLoadingTime = 3000
+    const minLoadingTime = 3000
 
-    // setTimeout(() => {
-    //   this.analyzeStage.set(1)
-    // }, minLoadingTime);
+
+
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        if(this.assets().length >3) {
+          this.analyzeStage.set(1)
+          clearInterval(interval)
+        }
+      }, 500);
+    }, minLoadingTime);
 
   }
    async openStashPopup(event: StashAsset[]) {

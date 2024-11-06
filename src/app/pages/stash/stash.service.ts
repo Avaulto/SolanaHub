@@ -1,7 +1,7 @@
 import { Injectable, Signal, computed, effect, signal } from '@angular/core';
 import { BN } from '@marinade.finance/marinade-ts-sdk';
 import {  LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
-import { ApiService, JupStoreService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
+import { ApiService, JupStoreService, PortfolioFetchService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
 import { OutOfRange, StashAsset, StashGroup } from './stash.model';
 
 
@@ -21,6 +21,7 @@ export class StashService {
     private _apiService: ApiService,
     private _txi: TxInterceptorService,
     private _portfolioService: PortfolioService,
+    private _portfolioFetchService: PortfolioFetchService, 
     private _toasterService: ToasterService
   ) {
 
@@ -111,9 +112,14 @@ export class StashService {
       toPubkey: publicKey,
       lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
     }));
-    console.log(withdrawTx);
-
-    await this._txi.sendTx(withdrawTx, publicKey)
+    this
+    this._txi.sendTx(withdrawTx, publicKey).then(res => {
+    if(res) {
+      this._portfolioFetchService.refetchPortfolio()
+    }
+  })
+  
+    
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
   }
 
@@ -134,11 +140,15 @@ export class StashService {
       })).json()
       console.log(encodedIx);
       const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
-      await this._txi.sendMultipleTxn(txInsArray)
+       this._txi.sendMultipleTxn(txInsArray).then(res => {
+        if(res) {
+          this.updateOutOfRangeDeFiPositions()
+        }
+      })
       
     } catch (error) {
       console.log(error);
-
+      return null
     }
   }
   private async updateOutOfRangeDeFiPositions() {
@@ -147,17 +157,17 @@ export class StashService {
       this.outOfRangeDeFiPositionsSignal.set(null);
       return;
     }
-
+    
     const stashGroup: StashGroup = {
       label: 'zero yield zones',
       description: "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
-      actionTitle: "close",
+      actionTitle: "Withdraw & Close",
       value: 0,
       data: {
         assets: positions.map(p => ({
           name: p.poolPair,
           symbol: p.poolPair,
-          imgUrl: [p.poolTokenA.logo, p.poolTokenB.logo],
+          imgUrl: [p.poolTokenA.imgUrl, p.poolTokenB.imgUrl],
           tokens: [p.poolTokenA, p.poolTokenB],
           account: this._utils.addrUtil('awdawaxaxjnawjan23424asndwadawd'),
           source: 'out of range',
@@ -167,7 +177,7 @@ export class StashService {
             [p.poolTokenA.symbol]: Number(p.pooledAmountAWithRewards),
             [p.poolTokenB.symbol]: Number(p.pooledAmountBWithRewards)
           },
-          action: 'close',
+          action: 'Withdraw & Close',
           type: 'defi-position',
           value: p.pooledAmountAWithRewardsUSDValue + p.pooledAmountBWithRewardsUSDValue,
           positionData: p.positionData

@@ -25,7 +25,7 @@
           </div>
         <!-- </ion-col> -->
       }
-      <ion-button (click)="onAction.emit(selectedData())" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{actionTitle}} | {{selectedData().length}}</ion-button>
+      <ion-button (click)="emitData()" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{stash.actionTitle}} | {{selectedData().length}}</ion-button>
     </div>
     
       <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow" name="arrow-up-outline"/></ion-button>

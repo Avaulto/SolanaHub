@@ -107,7 +107,7 @@ here
   </div>
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="openStashPopup(row)">
+  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="openStashPopup([row])">
      {{row.action}}
   </ion-button>
 </ng-template>

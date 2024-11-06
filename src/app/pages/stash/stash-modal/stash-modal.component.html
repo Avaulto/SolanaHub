@@ -22,7 +22,7 @@
       <!-- <stash-modal-item [stash]="stash"/> -->
       <div class="stash-item">
         <div class="stash-profile">
-          <ion-img [src]="item.imgUrl" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
+          <ion-img [src]="item.platformImgUrl || item.imgUrl" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
           <div>
             <ion-label>{{item.name}}</ion-label>
             <ion-text>{{item.symbol}}</ion-text>
@@ -45,14 +45,12 @@
         </div>
         <div class="item">
           <div class="item-id">get from cleaning up</div>
+          <div class="items-wrapper">
           @for (item of summary | keyvalue; track $index) {
 
           <div class="item-value">{{item.value}} {{item.key}}</div>
-            <!-- add declimation mark between each itration, if not last -->
-            @if ($index < (summary | keyvalue).length - 1) {
-              <div class="item-value">, </div>
-            }
           }
+          </div>
         </div>
         <div class="item">
           <div class="item-id">platform fee</div>
@@ -63,7 +61,7 @@
 
     <div id="modal-controls">
       <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
-      <ion-button (click)="submit(stashAssets)">{{actionTitle}}</ion-button>
+      <ion-button [disabled]="stashState() !== actionTitle" (click)="submit(stashAssets)">{{stashState()}}</ion-button>
     </div>
   </div>
 </div>

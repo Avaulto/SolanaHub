@@ -1,5 +1,3 @@
-
-
 #modal-intro {
     display: flex;
     justify-content: space-between;
@@ -44,6 +42,7 @@
     }
 
 }
+
 #stashs-list {
     height: 200px;
     overflow: auto;
@@ -92,6 +91,9 @@
 
     .item-value {
         color: #475467;
+        justify-content: flex-end;
+        display: flex;
+        text-transform: none;
     }
 }
 
@@ -121,14 +123,16 @@
     cursor: pointer;
 
 
-ion-img {
-    border-radius: 4px;
-    overflow: hidden;
-    width: 40px;
-    height: 40px;
-    margin-inline-end: 12px;
+    ion-img {
+        border-radius: 4px;
+        overflow: hidden;
+        width: 32px;
+        height: 32px;
+        margin-inline-end: 12px;
+        border-radius: 50%;
+    }
 }
-}
+
 ion-label {
     color: var(--ion-color-text-2);
     font-size: 13px;
@@ -164,26 +168,28 @@ ion-text {
     line-height: 14px;
 }
 
-  
+
 #modal-controls {
     margin-top: 10px;
     padding: 24px 0;
     border-top: 1px solid #E3E8EF;
-  
+
     ion-button {
-      width: 100%;
-      font-size: 16px;
-      font-weight: 600;
-      height: 44px;
-      
-      text-transform: capitalize;
-      &.button-clear{
-        color: var(--ion-color-dark);
-        border: 1px solid #CDD5DF;
-      }
-      &.ion-color-primary {
-        border: 1px solid var(--ion-color-primary);
-      }
+        width: 100%;
+        font-size: 16px;
+        font-weight: 600;
+        height: 44px;
+
+        text-transform: capitalize;
+
+        &.button-clear {
+            color: var(--ion-color-dark);
+            border: 1px solid #CDD5DF;
+        }
+
+        &.ion-color-primary {
+            border: 1px solid var(--ion-color-primary);
+        }
     }
-  
-  }
+
+}

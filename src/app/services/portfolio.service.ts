@@ -1,6 +1,6 @@
 import { Injectable, Signal, WritableSignal, inject, signal } from '@angular/core';
 import { UtilService } from './util.service';
-import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
+import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
 import { Token, NFT,  Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
@@ -14,8 +14,10 @@ import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject, Subject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
+import { PublicKey } from '@solana/web3.js';
 import { RoutingPath } from '../shared/constants';
 
+import { MenuController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })

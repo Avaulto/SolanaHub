@@ -51,6 +51,8 @@ export class TableComponent  implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.stash);
+    
     this.tableData.set(this.stash.data.assets)
 
   }
@@ -74,5 +76,9 @@ export class TableComponent  implements OnInit {
     }
   };
   public selectedData = signal([])
-
+  emitData(){
+    console.log(this.selectedData());
+    
+    this.onAction.emit(this.selectedData())
+  }
 }

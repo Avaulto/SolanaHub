@@ -104,7 +104,7 @@ export class TxInterceptorService {
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
 
 
-    // Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
+    Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
     let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
     if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
 
@@ -122,22 +122,21 @@ export class TxInterceptorService {
       message: `Transaction Submitted`,
       btnText: `view on explorer`,
       segmentClass: "toastInfo",
-      duration: 5000,
+      duration: 50000,
       cb: () => window.open(url)
     }
     this._toasterService.msg.next(txSend)
     const config: BlockheightBasedTransactionConfirmationStrategy = {
       signature: signatures[0], blockhash, lastValidBlockHeight
     }
-    console.log(url);
-
+   
     await this._shs.connection.confirmTransaction(config, 'processed')
     const txCompleted: toastData = {
       message: 'Transaction Completed',
       segmentClass: "toastInfo"
     }
     if (record) {
-      console.log(record);
+
 
       va.track(record.message, record.data)
     }
