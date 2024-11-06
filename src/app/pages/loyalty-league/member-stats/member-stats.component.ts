@@ -9,7 +9,7 @@ import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
 import { loyaltyLeagueMember, Tier } from 'src/app/models';
-import {  LoyaltyPathComponent, LoyaltyBadgeComponent } from '../';
+import { ReferAFriendModalComponent, LoyaltyPathComponent, LoyaltyBadgeComponent } from '../';
 import { NumberCounterComponent } from "../../../shared/components/number-counter/number-counter.component";
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
@@ -66,7 +66,7 @@ export class MemberStatsComponent implements OnChanges {
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
-    public _popoverController: PopoverController,
+    public popoverController: PopoverController,
   ) {
 
     addIcons({discOutline,informationCircleOutline,copyOutline});
@@ -105,7 +105,7 @@ export class MemberStatsComponent implements OnChanges {
   public async openReferAFriendModal() {
     const refCode = this._loyaltyLeagueService._member.referralCode
     console.log(refCode);
-    const { ReferAFriendModalComponent } = await import('./refer-a-friend-modal/refer-a-friend-modal.component');
+    
     const modal = await this._modalCtrl.create({
       component: ReferAFriendModalComponent,
       componentProps: {
@@ -125,12 +125,12 @@ export class MemberStatsComponent implements OnChanges {
   //'Bonus points earned from loyalty tier boost and quests.'
   public async openQuests(event: any) {
     va.track('loyalty league', { event: 'quests open' })
-    const modal = await this._popoverController.create({
+    const modal = await this.popoverController.create({
       component: QuestsComponent,
       cssClass: 'quests-modal',
       mode: 'ios',
       event: event,
     })
-    modal.present();
+    await modal.present();
   }
 }
