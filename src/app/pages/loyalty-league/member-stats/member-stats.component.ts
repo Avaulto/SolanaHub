@@ -45,9 +45,7 @@ import va from '@vercel/analytics';
     IonIcon,
     CopyTextDirective, 
     NumberCounterComponent,
-    CodesComponent,
-    
-  ],
+    CodesComponent],
   animations: [
     trigger('slideInOut', [
       state('void', style({
@@ -68,7 +66,7 @@ export class MemberStatsComponent implements OnChanges {
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
-    public popoverController: PopoverController,
+    public _popoverController: PopoverController,
   ) {
 
     addIcons({discOutline,informationCircleOutline,copyOutline});
@@ -106,15 +104,16 @@ export class MemberStatsComponent implements OnChanges {
 
   public async openReferAFriendModal() {
     const refCode = this._loyaltyLeagueService._member.referralCode
-    const modal = await this.popoverController.create({
+    console.log(refCode);
+    
+    const modal = await this._modalCtrl.create({
       component: ReferAFriendModalComponent,
       componentProps: {
         refCode ,
       },
-      mode: 'ios',
       cssClass: 'refer-a-friend-modal'
     });
-    await modal.present();
+    modal.present();
   }
 
   pointCategories = [
@@ -126,12 +125,12 @@ export class MemberStatsComponent implements OnChanges {
   //'Bonus points earned from loyalty tier boost and quests.'
   public async openQuests(event: any) {
     va.track('loyalty league', { event: 'quests open' })
-    const modal = await this.popoverController.create({
+    const modal = await this._popoverController.create({
       component: QuestsComponent,
       cssClass: 'quests-modal',
       mode: 'ios',
       event: event,
     })
-    await modal.present();
+    modal.present();
   }
 }

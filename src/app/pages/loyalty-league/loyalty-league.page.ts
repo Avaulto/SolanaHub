@@ -56,7 +56,7 @@ export class LoyaltyLeaguePage implements OnInit {
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   constructor(
 
-    private _popoverController: PopoverController,
+    private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     public _utilService: UtilService,
   ) {
@@ -76,14 +76,14 @@ export class LoyaltyLeaguePage implements OnInit {
       title: 'Loyalty League FAQ',
       desc: 'This is a quick overview of the Loyalty Program, for detailed information visit the docs in the end'
     }
-    const modal = await this._popoverController.create({
+    const modal = await this._modalCtrl.create({
       component: ModalComponent,
       componentProps: {
         componentName: 'll-faq-modal',
         config
       },
       mode: 'ios',
-      cssClass: 'modal-style',
+      cssClass: 'faq-modal',
     });
     await modal.present();
   }
