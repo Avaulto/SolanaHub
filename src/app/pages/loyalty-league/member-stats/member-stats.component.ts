@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText, IonInput } from '@ionic/angular/standalone';
@@ -63,6 +63,7 @@ import va from '@vercel/analytics';
 export class MemberStatsComponent implements OnChanges {
   public communityBanner = signal('')
   constructor(
+    private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
     public _popoverController: PopoverController,
@@ -101,7 +102,6 @@ export class MemberStatsComponent implements OnChanges {
     return numStr;
   }
 
-  private _modalCtrl = inject(ModalController)
   public async openReferAFriendModal() {
     const refCode = this._loyaltyLeagueService._member.referralCode
     console.log(refCode);
