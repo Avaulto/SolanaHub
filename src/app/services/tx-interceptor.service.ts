@@ -88,7 +88,9 @@ export class TxInterceptorService {
 
       this._toasterService.msg.next(txCompleted)
 
-      this._fetchPortfolioService.triggerFetch()
+      setTimeout(() => {
+        this._fetchPortfolioService.triggerFetch()
+      }, 500);
       return signature
     } catch (error) {
       console.warn(error);
@@ -142,7 +144,9 @@ export class TxInterceptorService {
     }
     this._toasterService.msg.next(txCompleted)
 
-    this._fetchPortfolioService.triggerFetch()
+    setTimeout(() => {
+      this._fetchPortfolioService.triggerFetch()
+    }, 500);
     return signatures
 
 
@@ -191,7 +195,9 @@ export class TxInterceptorService {
       // }
       this._toasterService.msg.next(txCompleted)
 
-      this._fetchPortfolioService.triggerFetch()
+      setTimeout(() => {
+        this._fetchPortfolioService.triggerFetch()
+      }, 500);
       return signature
 
     } catch (error) {

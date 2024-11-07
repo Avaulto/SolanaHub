@@ -123,6 +123,7 @@ export class PortfolioService {
     const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
 
     if (fetchType === 'partial') {
+      this._portfolioStaking(walletAddress);
       this._portfolioTokens(extendTokenData as any, tokenJupData as any);
       this._portfolioNFT(tempNft?.data.assets);
     } else {

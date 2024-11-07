@@ -293,20 +293,23 @@ export class LiquidStakeService {
   }
 
   public async unstake(pool: StakePool, sol: number) {
+ 
     // single validator pools
     // const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
     // // Multi validator sanctum pools
     // const MVP = ['jupSOL']
-
-
+    // sol = sol)
+    console.log(sol);
+    
     const { publicKey } = this._shs.getCurrentWallet()
-    const lamportsBN = new BN(sol);
+    const lamports = (sol * LAMPORTS_PER_SOL).toString().split(".")[0]
+
     const record = { message: `liquid unstake`, data: {pool: pool.poolName, amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(publicKey)
       }
-      const { transaction } = await this.marinadeSDK.liquidUnstake(lamportsBN)
+      const { transaction } = await this.marinadeSDK.liquidUnstake(new BN(lamports))
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey, null, record)
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
@@ -337,4 +340,12 @@ export class LiquidStakeService {
 
     }
   }
+  private _floorLastDecimal(num) {
+    const decimalPlaces = num.toString().split('.')[1]?.length || 0;
+    if (decimalPlaces > 3) {
+      return Math.floor(num * 10000) / 10000;
+  }
+  
+  return num;
+}
 }
