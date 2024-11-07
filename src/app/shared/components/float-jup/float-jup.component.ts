@@ -189,7 +189,7 @@ export class FloatJupComponent implements OnInit {
         this._loyaltyLeagueService.completeQuest(this._shs.getCurrentWallet().publicKey.toBase58(), 'swapOnSolanaHub')
 
         setTimeout(() => {
-          this._portfolioFetchService.triggerFetch();
+          this._portfolioFetchService.triggerFetch('partial');
         }, 2000);
         console.log({ txid, swapResult });
       },

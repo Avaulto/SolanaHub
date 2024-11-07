@@ -65,8 +65,6 @@ export class WalletConnectComponent implements OnInit, OnDestroy {
     distinctUntilChanged(),
     shareReplay(),
     map(([wallet, watchModeWallet]: any) => {
-      // this._portfolioFetchService.triggerFetch()
-
       return wallet || watchModeWallet
     }),
     shareReplay()

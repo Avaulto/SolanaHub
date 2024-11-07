@@ -6,15 +6,15 @@ import { Observable, shareReplay, Subject } from "rxjs";
 })
 export class PortfolioFetchService {
 
-  private readonly _fetchPortfolio: Subject<boolean> = new Subject()
-  triggerFetch(): void {
-    this._fetchPortfolio.next(true);
+  private refetchSubject = new Subject<{shouldRefresh: boolean, fetchType: 'full' | 'partial'}>();
+
+  refetchPortfolio() {
+    return this.refetchSubject.asObservable();
   }
 
-  refetchPortfolio(): Observable<boolean> {
-    return this._fetchPortfolio.asObservable().pipe(shareReplay(1));
+  triggerFetch(fetchType: 'full' | 'partial' = 'partial') {
+    this.refetchSubject.next({shouldRefresh: true, fetchType});
   }
- 
 
 
 }

@@ -1,7 +1,7 @@
 import { Injectable, Signal, WritableSignal, inject, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT,  Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
+import { Token, NFT, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange } from '../models/portfolio.model';
 import { JupToken } from '../models/jup-token.model'
 
 import va from '@vercel/analytics';
@@ -18,6 +18,10 @@ import { PublicKey } from '@solana/web3.js';
 import { RoutingPath } from '../shared/constants';
 
 import { MenuController } from '@ionic/angular';
+
+// Add new type definition
+type FetchType = 'full' | 'partial';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -49,11 +53,11 @@ export class PortfolioService {
       await this.waitForTurnStileToken();
       this.getPortfolioAssets(wallet.publicKey.toBase58(), this._utils.turnStileToken);
 
-      this._fetchPortfolioService.refetchPortfolio().subscribe(async (shouldRefresh) => {
+      this._fetchPortfolioService.refetchPortfolio().subscribe(async ({ shouldRefresh, fetchType }) => {
         if (shouldRefresh) {
           const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
           await this.waitForTurnStileToken();
-          this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true);
+          this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
         }
       });
     }
@@ -65,33 +69,34 @@ export class PortfolioService {
     }
   }
 
-  private _portfolioData(): any {
-    const portfolioLocalRecord = this._sessionStorageService.getData('portfolioData');
-    if (!portfolioLocalRecord) return null;
 
-    const { portfolioData, lastSave } = JSON.parse(portfolioLocalRecord);
-    const currentTime = Math.floor(Date.now() / 1000);
-    return currentTime < lastSave + 600 ? portfolioData : null;
-  }
 
-  public async getPortfolioAssets(walletAddress: string, turnStileToken: string, forceFetch = false, watchMode: boolean = false) {
-    let portfolioData = !forceFetch && this._portfolioData()?.owner === walletAddress ? this._portfolioData() : null;
+  public async getPortfolioAssets(
+    walletAddress: string,
+    turnStileToken: string,
+    forceFetch = false,
+    watchMode: boolean = false,
+    fetchType: FetchType = 'full'
+  ) {
+    let portfolioData = await this.fetchPortfolioData(walletAddress, turnStileToken, fetchType);
 
     try {
-      if (!portfolioData) {
-        portfolioData = await this.fetchPortfolioData(walletAddress, turnStileToken);
-        this.savePortfolioData(portfolioData);
-      }
 
-      this.processPortfolioData(portfolioData, walletAddress);
-      va.track('fetch portfolio', { status: 'success', wallet: walletAddress, watchMode });
+      this.processPortfolioData(portfolioData, walletAddress, fetchType);
+
+      va.track('fetch portfolio', {
+        status: 'success',
+        wallet: walletAddress,
+        watchMode,
+        fetchType
+      });
     } catch (error) {
       this.handlePortfolioError(error, walletAddress);
     }
   }
 
-  private async fetchPortfolioData(walletAddress: string, turnStileToken: string) {
-    const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}`);
+  private async fetchPortfolioData(walletAddress: string, turnStileToken: string, fetchType: FetchType = 'full') {
+    const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}&fetchType=${fetchType}`);
     const data = await response.json();
 
 
@@ -110,23 +115,24 @@ export class PortfolioService {
     }
   }
 
-  private processPortfolioData(portfolioData: any, walletAddress: string) {
+  private processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full') {
     const tempNft = portfolioData.elements.find(group => group.platformId === 'wallet-nfts-v2');
-
     const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts-v2');
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
-
-    const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
+    const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
 
-    this._portfolioStaking(walletAddress);
-    this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-    this._portfolioDeFi(excludeNFTv2, tokenJupData);
-    this._portfolioNFT(tempNft?.data.assets);
-    mergeDuplications.push(tempNft);
-
-
-    this.walletAssets.set(mergeDuplications);
+    if (fetchType === 'partial') {
+      this._portfolioTokens(extendTokenData as any, tokenJupData as any);
+      this._portfolioNFT(tempNft?.data.assets);
+    } else {
+      this._portfolioStaking(walletAddress);
+      this._portfolioTokens(extendTokenData as any, tokenJupData as any);
+      this._portfolioDeFi(excludeNFTv2, tokenJupData);
+      this._portfolioNFT(tempNft?.data.assets);
+      mergeDuplications.push(tempNft);
+      this.walletAssets.set(mergeDuplications);
+    }
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {

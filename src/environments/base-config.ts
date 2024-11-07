@@ -17,7 +17,7 @@ export const getBaseConfig = (): BaseConfig => {
       {
         name: 'Triton',
         imageURL: '../assets/images/triton-icon.svg',
-        value: 'https://mb-avaulto-cc28.mainnet.rpcpool.com/190dce2e-b99d-475e-8e0f-3207a5c97e8b'
+        value: 'https://mb-avaulto-cc28.mainnet.rpcpool.com'
       },
       {
         name: 'Custom RPC',
