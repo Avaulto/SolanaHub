@@ -3,7 +3,7 @@
   <ion-input 
   (ionInput)="valueChange($event)"
   inputmode="decimal" 
-  [value]="visibleValue() | number: '1.0-7'"
+  [value]="visibleValue()"
   
   class="currency-amount" />
   @if(visibleValue()){

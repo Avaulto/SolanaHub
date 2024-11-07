@@ -1,8 +1,8 @@
-import { CurrencyPipe, DecimalPipe, JsonPipe } from '@angular/common';
-import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, signal } from '@angular/core';
+import { CurrencyPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
+import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, effect, signal } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
 import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
-import { PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
+import { ModalComponent, PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { TableHeadComponent } from 'src/app/shared/layouts/mft/table-head/table-head.component';
 import { TableMenuComponent } from 'src/app/shared/layouts/mft/table-menu/table-menu.component';
@@ -10,13 +10,15 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { PromoComponent } from './promo/promo.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-modal.component";
-import { StashService } from './stash.service';
+import {  StashService } from './stash.service';
 import { TableComponent } from './table/table.component';
 import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { StashAsset } from './stash.model';
+import { ModalController } from '@ionic/angular';
+import { StashModalComponent } from './stash-modal/stash-modal.component';
 
 
 @Component({
@@ -66,7 +68,8 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
     MftModule,
     TooltipModule,
     BurnNftModalComponent,
-    AnimatedIconComponent
+    AnimatedIconComponent,
+    KeyValuePipe
 ]
 })
 export class StashPage implements OnInit {
@@ -77,8 +80,10 @@ export class StashPage implements OnInit {
   @ViewChild('valueTpl', { static: true }) valueTpl: TemplateRef<any> | any;
   @ViewChild('actionTpl', { static: true }) actionTpl: TemplateRef<any> | any;
   @ViewChild('sourceTpl', { static: true }) sourceTpl: TemplateRef<any> | any;
+  @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
   @ViewChildren('checkAsset') checkNfts: QueryList<IonCheckbox>
-  public analyzeStage = signal(1);
+  public analyzeStage = signal(0);
+  public hideStash = signal(false)
   public selectedTab = signal('assets');
   public tableMenuOptions: string[] = ['Assets', 'Positions', 'Stake'];
   private _columnsOptions = null
@@ -90,45 +95,26 @@ export class StashPage implements OnInit {
     private _stashService: StashService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
-    private _jupService: JupStoreService
+    private _modalCtrl: ModalController
   ) { 
     addIcons({closeOutline})
-  }
-  // public dustBalanceAccounts = signal([])
-  // // public emptyAccounts = signal([])
-  // public zeroYieldZones = signal([])
-  // public unstakedOverflow= signal([])
 
+  }
   public tableColumn = signal([])
 
   public stashTotalUsdValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
-  public dustBalanceAccounts = {
-    "networkId": "solana",
-    "platformId": "wallet-tokens",
-    "type": "multiple",
-    "label": "dust balance accounts",
-    "value": 173.00551050908487,
-    "data": {
-      "assets": []
-    }
-  }
-  
-  public zeroYieldZones = {
-    "networkId": "solana",
-    "platformId": "wallet-tokens",
-    "type": "multiple",
-    "label": "zero yield zones",
-    "value": 173.00551050908487,
-    "data": {
-      "assets": []
-    }
-  }
-  public unstakedOverflow = null;
+
+
+  public unstakedOverflow = this._stashService.findStakeOverflow;
+  public outOfRangeDeFiPositions = this._stashService.findOutOfRangeDeFiPositions;
+  public zeroValueAssets = this._stashService.findZeroValueAssets;
   public emptyAccounts = {
     "networkId": "solana",
     "platformId": "wallet-tokens",
     "type": "multiple",
-    "label": "Empty accounts",
+    "label": "Dust value",
+    "description": "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
+    "actionTitle": "Swap",
     "value": 173.00551050908487,
     "data": {
       "assets": [
@@ -190,248 +176,119 @@ export class StashPage implements OnInit {
       ]
     }
   }
-  public assets = signal([
-    {
-      "networkId": "solana",
-      "platformId": "wallet-tokens",
-      "type": "multiple",
-      "label": "Empty accounts",
-      "value": 173.00551050908487,
-      "data": {
-        "assets": [
-          {
-            "type": "token",
-            "networkId": "solana",
-            "value": {
-              "sol": 96.0869375886,
-              "usd": 173.00551050908487
-            },
-            "attributes": {},
-            "name": "SolanaHub staked SOL",
-            "symbol": "hubSOL",
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX.webp",
-            "decimals": 9,
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "balance": 0.512956105,
-            "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
-            "price": 187.32
-          },
-          {
-            "type": "token",
-            "networkId": "solana",
-            "value": {
-              "sol": 0.025552454802054175,
-              "usd": 0.025552454802054175
-            },
-            "attributes": {},
-            "name": "Bee Wif Hat",
-            "symbol": "Bee",
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-            "decimals": 9,
-            "balance": 10000,
-            "address": "Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2",
-            "price": 0.0000025552454802054177
-          }, {
-            "type": "token",
-            "networkId": "solana",
-            "value": {
-              "sol": 0.025552454802054175,
-              "usd": 0.025552454802054175
-            },
-            "attributes": {},
-            "name": "Bee Wif Hat",
-            "symbol": "Bee",
-            "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-            "decimals": 9,
-            "balance": 10000,
-            "address": "Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2",
-            "price": 0.0000025552454802054177
-          }
-        ]
-      }
-    },
-    {
-      "networkId": "solana",
-      "platformId": "marinade",
-      "type": "multiple",
-      "label": "Unstaked Overflow",
-      "value": 27.59,
-      "data": {
-        "assets": [
-          {
-            "type": "token",
-            "networkId": "solana",
-            "value": 5.31576382446,
-            "attributes": {},
-            "name": "Solana",
-            "symbol": "SOL",
-            "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/11111111111111111111111111111111.webp",
-            "decimals": 9,
-            "balance": 0.029177034,
-            "address": "So11111111111111111111111111111111111111112",
-            "price": 182.19
-          }
-        ]
-      }
-    },
-    // {
-    //     "networkId": "solana",
-    //     "platformId": "solend",
-    //     "type": "multiple",
-    //     "label": "NFTs",
-    //     "value": 0.00026879558032035395,
-    //     "data": {
-    //         "assets": [
-    //             {
-    //                 "type": "token",
-    //                 "networkId": "solana",
-    //                 "value": 0.00026879558032035395,
-    //                 "data": {
-    //                     "address": "MNDEFzGvMt87ueuHvVU9VcTqsAP5b3fTGPsHuuPA5ey",
-    //                     "amount": 0.002178705240329032,
-    //                     "price": 0.123374
-    //                 },
-    //                 "attributes": {
-    //                     "isClaimable": true
-    //                 }
-    //             }
-    //         ]
-    //     }
-    // },
-    {
-      "networkId": "solana",
-      "platformId": "meteora",
-      "type": "liquidity",
-      "label": "Zero Yield Zones",
-      "value": 1.8467960965557,
-      "data": {
-        "assets": [
-          {
-            "value": 6468.181835777565,
-            "imgURL": "https://sonar.watch/img/platforms/raydium.webp",
-            "holdings": [
-              {
-                "balance": 28.085577208,
-                "symbol": "wSOL",
-                "decimals": 9
-              },
-              {
-                "balance": 16.060126993,
-                "symbol": "hubSOL",
-                "decimals": 9
-              }
-            ],
-            "poolTokens": [
-              {
-                "address": "So11111111111111111111111111111111111111112",
-                "imgURL": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/So11111111111111111111111111111111111111112.webp",
-                "symbol": "wSOL",
-                "decimals": 9
-              },
-              {
-                "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
-                "imgURL": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX.webp",
-                "symbol": "hubSOL",
-                "decimals": 9
-              }
-            ],
-            "type": "LiquidityPool",
-            "link": "https://raydium.io/",
-            "platform": "raydium"
-          }
-        ]
-      }
-    }
-  ])
+  // append unstakedOverflow & zeroYieldZones & dustBalanceAccounts & outOfRangeDeFiPositions once they are computed
+  public assets = computed(() => {
+    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.emptyAccounts && !this.zeroValueAssets()) return []
+    const assets = []
+    
 
+    if(this.unstakedOverflow()) {
+      assets.push(this.unstakedOverflow())
+    }
+    if(this.outOfRangeDeFiPositions()) {
+      assets.push(this.outOfRangeDeFiPositions())
+    }
+    if(this.emptyAccounts) {
+      assets.push(this.emptyAccounts)
+    }
+    if(this.zeroValueAssets()) {
+      assets.push(this.zeroValueAssets())
+    }
+    console.log(assets);
+    
+
+    return assets.sort((a, b) => {
+      const valueA = a.value || 0;
+      const valueB = b.value || 0;
+      return valueB - valueA;
+    });
+  })
+  public tableColumnDeFiPositions = signal([])
    async ngOnInit() {
-    this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
+    // this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
     this.tableColumn = signal([
-      // { key: 'select', width: '0%',cellTemplate: this.checkboxTpl,cssClass: { name: 'ion-text-left', includeHeader: true } },
+      // { key: 'select', width: '8%',cellTemplate: this.checkboxTpl },
       { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
-      { key: 'value', title: 'Extracted Value',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', width: '15%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
 
+    this.tableColumnDeFiPositions = signal([
+      // { key: 'select', width: '8%',cellTemplate: this.checkboxTpl },
+      { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'platform', title: 'Platform', width: '15%',cellTemplate: this.platformIconTpl, cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
+      { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+    ])
+    // this._stashService.getOutOfRangeRaydium()
   
   }
   async getSavingData() {
-    const { publicKey } = this._shs.getCurrentWallet()
-    // get accounts data here
+    const minLoadingTime = 3000
 
 
-
-    // const demiData = {
-    //   assets: [
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-    //     {
-    //       "name": "Jito Staked SOL",
-    //       "symbol": "JitoSOL",
-    //       "imgUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-    //       "decimals": 9,
-    //       "balance": 0,
-    //       "value": "0.2",
-    //       "extract-asset": "SOL",
-
-    //       "tokenAccount": { short: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, long: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-    //       "address": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-    //       "url": this._util.explorer + '/account/' + "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6",
-    //       "source": 'empty account'
-    //     },
-
-    //   ],
-    //   positions: {}
-    // }
 
     setTimeout(() => {
-      this.analyzeStage.set(1)
-    }, 3000);
+      const interval = setInterval(() => {
+        if(this.assets().length >3) {
+          this.analyzeStage.set(1)
+          clearInterval(interval)
+        }
+      }, 500);
+    }, minLoadingTime);
 
+  }
+   async openStashPopup(event: StashAsset[]) {
+    const modal = await this._modalCtrl.create({
+      component: StashModalComponent,
+      componentProps: {
+        stashAssets: event,
+        actionTitle: event[0].action
+      },
+      cssClass: 'modal-style'
+    });
+    modal.present();
+    // this.onActionSelected.emit(true)
+  }
+
+  public fixedNumber(value: any): string {
+    // Convert the input to a number
+    const num = Number(value);
+
+    // If the number is not valid, return '0.00'
+    if (isNaN(num) || !isFinite(num)) {
+      return '0.00';
+    }
+
+    // Find the closest positive number
+    const absNum = Math.abs(num);
+
+    // Find the minimum number of decimal places needed
+    let decimalPlaces = 2; // Start with minimum 2 decimal places
+    let tempNum = absNum;
+    while (tempNum < 0.01 && tempNum > 0) {
+      tempNum *= 10;
+      decimalPlaces++;
+    }
+
+    // Cap the decimal places at 8 to avoid excessive precision
+    decimalPlaces = Math.min(decimalPlaces, 8);
+
+    // Format the number with the calculated decimal places
+    const formattedNum = absNum.toFixedNoRounding(decimalPlaces);
+
+    // Remove trailing zeros after the decimal point, but keep at least 2 decimal places
+    const trimmedNum = parseFloat(formattedNum).toFixedNoRounding(Math.max(2, (formattedNum.split('.')[1] || '').replace(/0+$/, '').length));
+
+    // Localize the number
+    return Number(trimmedNum).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 8
+    });
   }
 }

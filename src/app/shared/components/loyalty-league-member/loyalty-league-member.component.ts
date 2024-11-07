@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { TooltipModule } from '../../layouts/tooltip/tooltip.module';
 import { addIcons } from 'ionicons';
-import { chevronForwardOutline } from 'ionicons/icons';
+import { chevronForwardOutline, informationCircleOutline } from 'ionicons/icons';
 import { LoyaltyBadgeComponent } from 'src/app/pages/loyalty-league/member-stats/loyalty-badge/loyalty-badge.component';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { NumberCounterComponent } from '../number-counter/number-counter.component';
@@ -45,7 +45,7 @@ export class LoyaltyLeagueMemberComponent {
     private _shs: SolanaHelpersService,
     private navCtrl: NavController
   ) {
-    addIcons({ chevronForwardOutline });
+    addIcons({informationCircleOutline,chevronForwardOutline});
   }
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   public wallet$ =this._shs.walletExtended$

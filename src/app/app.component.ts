@@ -1,5 +1,5 @@
 import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
@@ -39,14 +39,15 @@ import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilServ
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
-import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
+import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
+import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
 import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
-
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -90,6 +91,7 @@ import { FreemiumService } from './shared/layouts/freemium/freemium.service';
   ],
 })
 export class AppComponent implements OnInit {
+
   public adShouldShow = this._freemiumService.adShouldShow;
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
@@ -98,6 +100,8 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
+      console.log('wallet',wallet);
+      
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
@@ -106,7 +110,9 @@ export class AppComponent implements OnInit {
       return wallet || watchMode;
     }))
 
-  public notifIndicator = this._notifService.notifIndicator
+  public notifIndicator = this._notifService.notifIndicator;
+
+
   constructor(
     private _freemiumService: FreemiumService,
     public router: Router,
@@ -121,18 +127,38 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     private _fetchPortfolioService: PortfolioFetchService
   ) {
-   
+    const showNewsFeed = JSON.parse(this._localStorage.getData('newsFeedClosed'))
+    // check if news feed was closed more than 30 days ago
+    if(!showNewsFeed || new Date(showNewsFeed.date).getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000){
+      this.openNewsFeedModal()
+    }
     
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
+
+
+  }
+
+  async openNewsFeedModal(){
+
+    const modal = await this._modalCtrl.create({
+      component: NewsFeedComponent,
+      cssClass: 'modal-style'
+    });
+    modal.present();
+    va.track('news feed', { event: 'open' })
+
+    modal.onDidDismiss().then(() => {
+      this._localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
+      va.track('news feed', { event: 'close' })
+    })
   }
   public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
     this._utilService.turnStileToken = null
     this.turnStile.reset()
 
   })
-  log(e){
-    console.log(e);
-    
+  log(...args: any[]){
+    console.log(...args);
   }
   sendCaptchaResponse(token) {
     this._utilService.turnStileToken = token
@@ -147,14 +173,20 @@ export class AppComponent implements OnInit {
         if (refCode) {
           this._localStorage.saveData('refCode', refCode)
         }
+      });
 
-      }
-      );
-
-      this.path = this.router.events.pipe(
-        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-        map((event) => event.url)
-      )
+    // Add wallet connection handler
+    this._walletStore.connected$.pipe(
+      filter(connected => connected),
+      take(1),
+      tap(() => {
+        const attemptedUrl = sessionStorage.getItem('attemptedUrl');
+        if (attemptedUrl) {
+          sessionStorage.removeItem('attemptedUrl');
+          this.router.navigateByUrl(attemptedUrl);
+        }
+      })
+    ).subscribe();
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';

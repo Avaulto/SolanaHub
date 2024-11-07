@@ -5,9 +5,11 @@
   <ion-grid>
     @if(analyzeStage() === 0){
     <promo  (onStartAnalyze)="getSavingData()" />
-    }@else{
+    }
+    
    
-
+   
+    <div id="stash-wrapper" [hidden]="!hideStash() && analyzeStage() === 0">
 
     <ion-row id="stat-wrapper" class="ion-justify-content-between">
       <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
@@ -28,54 +30,45 @@
 
     </ion-row>
     <div class="ion-hide-lg-down">
-    <!-- <stash-table class="ion-margin-bottom" 
-    [hasFees]="true"
-     tableName="low value assets" 
-     actionTitle="swap" 
 
-     [columns]="emptyAccountsColumn"
-      [stash]="emptyAccounts" /> -->
 
-      @if(unstakedOverflow){
-      <stash-table 
-      class="ion-margin-bottom" 
-      [hasFees]="true" 
-      tableName="Unstaked overflow"
-      tableDescription="This dataset includes stake accounts that are not fully optimize and have unused balance that you can withdraw."
-      actionTitle="withdraw" 
-      [columns]="tableColumn"
-      [stash]="unstakedOverflow" />
+      @for(stashItem of assets(); track stashItem.label) {
+        <stash-table 
+        class="ion-margin-bottom" 
+        [hasFees]="true" 
+        (onAction)="openStashPopup($event)"
+        [tableName]="stashItem.label"
+        [tableDescription]="stashItem.description"
+        [actionTitle]="stashItem.actionTitle" 
+        [columns]="stashItem.label == 'zero yield zones' ? tableColumnDeFiPositions : tableColumn"
+        [stash]="stashItem" />
       }
-
-     <stash-table 
-      class="ion-margin-bottom" 
-      [hasFees]="true" 
-      tableName="zero yield zones" 
-      tableDescription="This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal."
-      actionTitle="withdraw" 
-      [columns]="tableColumn"
-      [stash]="emptyAccounts" />
- <!-- 
-      <stash-table 
-      class="ion-margin-bottom" 
-      tableName="empty accounts" 
-      tableDescription="This dataset includes empty accounts with no valuable balance, by burn them you can reclaim the SOL rent fees used to open them."
-      actionTitle="close" 
-      [columns]="emptyAccountsColumn"
-      [stash]="emptyAccounts" /> -->
+    
     </div>
     <div class="ion-hide-lg-up">
 here
     </div>
-    }
+    </div>
   </ion-grid>
 
 </ion-content>
+<ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="platform-icon-wrapper ion-text-center">
+    <ion-img [src]="row.platformImgUrl" alt="platform icon"></ion-img>
+  </div>
+</ng-template>
 
 <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.imgUrl || 'assets/images/unknown.svg'" alt="image" />
+      <!-- if imgURL is array then forLoop -->
+      @if(row.type === 'defi-position'){
+        @for(img of row.imgUrl; track img){
+          <ion-img [src]="img" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+        }
+      }@else{
+        <ion-img [src]="row.imgUrl" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+      }
     </div>
     <div class="item-info">
 
@@ -87,21 +80,24 @@ here
 </ng-template>
 
 <ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center">
-    <ion-checkbox />
+  <div class="ion-text-center" style="justify-content: center; display: flex;">
+    <ion-checkbox mode="md" />
   </div>
 </ng-template>
 
 <ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-left">
-    {{row.balance | number: '1.0'}} {{row.symbol}}
+    {{row.balance | number: '1.0-5'}} {{row.symbol}}
   </div>
 </ng-template>
 
 <ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-left">
-    <div class="sol-value">{{row.extractedValue.SOL | number: '1.0'}} SOL</div>
-    <div class="usd-value">{{row.extractedValue.USD | currency}}</div>
+    @for(item of row.extractedValue | keyvalue; track item.key){
+      <div class="sol-value">
+        {{fixedNumber(item.value) }} {{item.key}}
+      </div>
+    }
   </div>
 </ng-template>
 <ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
@@ -111,7 +107,7 @@ here
   </div>
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-button fill="clear" class="ion-text-capitalize close-single">
+  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="openStashPopup([row])">
      {{row.action}}
   </ion-button>
 </ng-template>
@@ -120,6 +116,6 @@ here
   <div class="source-type ion-text-left ion-text-capitalize">
     <chip 
      [name]="row.source" 
-     [color]="row.source === 'empty account' ? 'focus'  : row.source === 'zero yield zone' ? 'secondary' : row.source == 'excess balance' ? 'active' : ''" />
+     [color]="row.source === 'empty account' ? 'focus'  : row.source === 'out of range' ? 'danger' : row.source == 'excess balance' ? 'active' : ''" />
   </div>
 </ng-template>

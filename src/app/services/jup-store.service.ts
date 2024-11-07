@@ -18,10 +18,20 @@ export class JupStoreService {
   public async fetchPriceFeed(mintAddress: string, vsAmount: number = 1): Promise<JupiterPriceFeed> {
     let data: JupiterPriceFeed = null
     try {
-      const res = await fetch(`https://quote-api.jup.ag/v4/price?ids=${mintAddress}&vsAmount=${vsAmount}`);
+      const res = await fetch(`https://api.jup.ag/price/v2?ids=${mintAddress}&vsAmount=${vsAmount}`);
       data = await res.json();
     } catch (error) {
       console.warn(error);
+    }
+    return data
+  }
+  public async fetchPriceFeed2(mintAddress: string){
+    let data = null
+    try {
+      data = await fetch(`https://api.jup.ag/price/v2?ids=${mintAddress}`);
+      data = await data.json()
+    } catch (error) {
+      console.warn(error)
     }
     return data
   }

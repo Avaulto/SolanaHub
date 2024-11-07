@@ -6,17 +6,12 @@ export interface Config {
   value: string | number,
 }
 
-export enum PriorityFee {
-  None = 70000,
-  Fast = 300000,
-  Supercharger = 700000,
-}
+
 
 export interface BaseConfig {
   platformFeeCollector: string;
   rpcs: Config[],
   explorers: Config[],
-  PriorityFee: Config[],
   Theme: Config[],
 }
 
@@ -28,9 +23,7 @@ export interface EnvironmentConfig {
   readonly solanaCluster: string;
   readonly apiUrl: string;
   readonly platformFeeCollector: string;
-  readonly platformATAbSOLFeeCollector: string;
   readonly rpcs: Config[];
   readonly explorers: Config[];
-  readonly PriorityFee: Config[];
   readonly Theme: Config[];
 }

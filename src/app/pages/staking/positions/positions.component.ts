@@ -40,10 +40,9 @@ export class PositionsComponent implements OnInit, OnChanges {
       if(this.positionGroup() === 'native'){
         return this.nativeStake()
       }else{
-        const stakePoolsSymbols = this.stakePools().map(p => p.tokenSymbol.toLowerCase());
-
-
-        const LSTs = this._portfolio.tokens().filter(t => stakePoolsSymbols.includes(t.symbol.toLowerCase()))
+        const stakePoolsSymbols = this.stakePools().map(p => p.tokenSymbol.toLowerCase())
+        
+        const LSTs = this._portfolio.tokens().filter(t => stakePoolsSymbols.includes(t.symbol.toLowerCase())).filter(t => t.price > 1)
         return this._structLiquidPos(LSTs)
       }
   })
@@ -52,7 +51,6 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   _structLiquidPos(stake){
     return stake.map(lst => {
-
       const pool: StakePool = this.stakePools().find(p => p.tokenMint === lst.address)
   
       
@@ -61,12 +59,13 @@ export class PositionsComponent implements OnInit, OnChanges {
         address: lst.address,
         balance: Number(lst.balance),
         value: Number(lst.value),
-        state: pool.poolName === "jito" || pool.poolName === "solblaze" || pool.poolName === 'marinade' ? 'delegationStrategyPool' : 'directStake',
-        symbol: lst.symbol,
-        imgUrl: pool.tokenImageURL,
+        state: pool?.poolName === "jito" || pool?.poolName === "solblaze" || pool?.poolName === 'marinade' ? 'delegationStrategyPool' : 'directStake',
+        symbol: lst?.symbol,
+        imgUrl: pool?.tokenImageURL,
         // validatorName: lst[directStake[lst.symbol]] ? lst?.extraData?.validator?.name : null,
         pool: pool,
-        apy: pool.apy * 100
+        apy: pool?.apy * 100,
+        token: lst
       }
 
       return stake

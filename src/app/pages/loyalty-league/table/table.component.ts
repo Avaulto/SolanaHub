@@ -7,7 +7,7 @@ import { DecimalPipe, JsonPipe } from '@angular/common';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { combineLatestWith, map } from 'rxjs';
 import { NumberCounterComponent } from 'src/app/shared/components/number-counter/number-counter.component';
 @Component({
   selector: 'll-table',
@@ -37,26 +37,37 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   public leaderBoard = toSignal<loyaltyLeagueMember[]>(this._loyaltyLeagueService.getLeaderBoard().pipe(      
-    map((loyaltyLeaderBoard: loyaltyLeagueMember[]) => {
+    combineLatestWith(this._loyaltyLeagueService.member$),
+    map(([loyaltyLeaderBoard, llMember]) => {
+      // replace llMember with the current user's member if it exists
+      if (!llMember?.error) {
+        const memberIndex = loyaltyLeaderBoard.findIndex(member => 
+          member.walletOwner === llMember.walletOwner);
+          
+        if (memberIndex !== -1) {
+          loyaltyLeaderBoard[memberIndex] = llMember;
+        } else {
+          loyaltyLeaderBoard.push(llMember);
+        }
+      }
 
-    const llEdited = loyaltyLeaderBoard.map((member: loyaltyLeagueMember, i: number) => {
-      return {  
-        ...member,
-        rank: i + 1,
-        walletOwner: this._utilService.addrUtil(member.walletOwner).addrShort,
-    
-      } as any
-    }).sort((a, b) => {
-      if (a.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
-        return -1;
-      }
-      if (b.walletOwner === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addrShort) {
-        return 1;
-      }
-      return 0;
-    })
-    return llEdited
-  }),
+      const llEdited = loyaltyLeaderBoard.map((member: loyaltyLeagueMember, i: number) => {
+        return {  
+          ...member,
+          rank: i + 1,
+          walletOwner: this._utilService.addrUtil(member.walletOwner),
+        } as any
+      }).sort((a, b) => {
+        if (a.walletOwner.addr === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addr) {
+          return -1;
+        }
+        if (b.walletOwner.addr === this._utilService.addrUtil(this._shs.getCurrentWallet().publicKey.toBase58()).addr) {
+          return 1;
+        }
+        return 0;
+      })
+      return llEdited
+    }),
 ));
 
 

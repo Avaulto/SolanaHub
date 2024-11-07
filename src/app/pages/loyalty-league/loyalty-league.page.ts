@@ -14,11 +14,9 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { ModalController } from '@ionic/angular';
 import { PopoverController } from '@ionic/angular';
 import { ModalComponent } from 'src/app/shared/components';
-import { flashOutline, flaskOutline } from 'ionicons/icons';
+import { flashOutline, flaskOutline, listOutline } from 'ionicons/icons';
 import { MultipliersMenuComponent, SeasonStatsComponent, TableComponent } from './';
 import { Tier } from 'src/app/models';
-import { V2LoaderComponent } from './v2-loader/v2-loader.component';
-
 
 @Component({
   selector: 'app-loyalty-league',
@@ -47,7 +45,6 @@ import { V2LoaderComponent } from './v2-loader/v2-loader.component';
     AsyncPipe,
     TableComponent,
     DecimalPipe,
-    V2LoaderComponent,
     NgStyle
   ]
 })
@@ -58,15 +55,12 @@ export class LoyaltyLeaguePage implements OnInit {
   public openMenu = false
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   constructor(
-    public popoverController: PopoverController,
+
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
     public _utilService: UtilService,
   ) {
-    addIcons({
-      flashOutline,
-      flaskOutline
-    });
+    addIcons({listOutline,flashOutline,flaskOutline});
 
     // effect(() => console.log(this.loyalMember()))
   }
@@ -91,7 +85,7 @@ export class LoyaltyLeaguePage implements OnInit {
       mode: 'ios',
       cssClass: 'faq-modal',
     });
-    modal.present();
+    await modal.present();
   }
   dismissModal(event: any) {
     // close model only if click is outside the menu
@@ -99,4 +93,5 @@ export class LoyaltyLeaguePage implements OnInit {
       this.openMenu = false
     }
   }
+
 }

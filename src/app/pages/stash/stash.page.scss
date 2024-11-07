@@ -74,10 +74,11 @@ ion-grid {
 
 .item-img-wrapper {
     margin-inline-end: 12px;
-
+    display: flex;
     ion-img {
-        width: 40px;
-        height: 40px;
+        margin-inline-end: 4px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         overflow: hidden;
     }

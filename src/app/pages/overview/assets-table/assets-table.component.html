@@ -106,11 +106,15 @@
   </div>
 </ng-template>
 <ng-template #statusTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <chip [name]="row.state" class="ion-text-capitalize" [ngClass]="{
-    'green': row.state.toLowerCase() === 'active',
-    'primary': row.state.toLowerCase() === 'deactive',
-    'blue': row.state.toLowerCase() === 'activated',
-}"/>
+  <div style="    display: flex;
+    justify-content: center;">
+
+  <chip [name]="row.state" class="ion-text-capitalize" [color]="
+    row.state.toLowerCase() === 'active' ? 'focus' :
+    row.state.toLowerCase() === 'deactivating' ? 'warning' :
+    row.state.toLowerCase() === 'activating' ? 'active' : 'default'
+  "/>
+</div>
 </ng-template>
 
 

@@ -70,7 +70,7 @@ export class LiquidStakeService {
 
   public async stake(pool: StakePool, lamports: number, walletOwnerPK: PublicKey, validatorVoteAccount?: string) {
 
-    const record = { message: 'liquid staking', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
+    const record = { message: 'liquid stake', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
 
     const lamportsBN = new BN(lamports);
     const poolName = pool.poolName.toLowerCase()
@@ -154,15 +154,15 @@ export class LiquidStakeService {
       stakeAccountPK
     );
     const record = {
-      message: 'liquid staking', data: { pool: 'hub' }
+      message: 'liquid stake', data: { pool: 'SolanaHub staked SOL' }
     }
     await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
   public async depositSolHubSolPool(walletOwnerPK: PublicKey, lamports: number) {
 
     const record = {
-      message: 'liquid staking', data: {
-        pool: 'hub',
+      message: 'liquid stake', data: {
+        pool: 'SolanaHub staked SOL',
         amount: lamports / LAMPORTS_PER_SOL
       }
     }
@@ -175,7 +175,7 @@ export class LiquidStakeService {
       undefined,
       undefined
     );
-    await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
+    return await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
   }
 
   public async getDirectStake(walletAddress): Promise<DirectStake> {
@@ -208,10 +208,12 @@ export class LiquidStakeService {
     return await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
   }
   async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
+    console.log(stakeAccount, pool);
+    
     const { publicKey } = this._shs.getCurrentWallet()
     // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
     const record = {
-      message: 'liquid staking', data: {
+      message: 'liquid stake', data: {
         pool: pool.poolName,
         amount: stakeAccount.balance,
         validatorVoteAccount: stakeAccount.validator.vote_identity
@@ -228,7 +230,9 @@ export class LiquidStakeService {
         const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
         const txIns: Transaction = depositAccount.transaction
         await this._txi.sendTx([txIns], publicKey, null, record);
-      } else if (pool.poolName.toLowerCase() == 'hub') {
+      } else if (pool.poolName.toLowerCase() == 'solanahub staked sol') {
+        console.log('depositStakeHubSolPool');
+        
         this.depositStakeHubSolPool(publicKey, stakeAccountPK)
       }
 
@@ -289,29 +293,29 @@ export class LiquidStakeService {
   }
 
   public async unstake(pool: StakePool, sol: number) {
+ 
     // single validator pools
     // const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
     // // Multi validator sanctum pools
     // const MVP = ['jupSOL']
-
-
+    // sol = sol)
+    console.log(sol);
+    
     const { publicKey } = this._shs.getCurrentWallet()
-    const lamportsBN = new BN(sol);
-    const record = { message: `${pool.poolName} unstake`, data: { amount: sol } };
+    const lamports = (sol * LAMPORTS_PER_SOL).toString().split(".")[0]
+
+    const record = { message: `liquid unstake`, data: {pool: pool.poolName, amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(publicKey)
       }
-      const { transaction } = await this.marinadeSDK.liquidUnstake(lamportsBN)
+      const { transaction } = await this.marinadeSDK.liquidUnstake(new BN(lamports))
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey, null, record, 'unstake-lst')
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
-      console.log(pool);
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
       const MultiValidatorsPool_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
       const STAKE_POOL_PROGRAM_ID = pool.type === 'SanctumSpl' ? singalValidatorsPool_PROGRAM_ID : MultiValidatorsPool_PROGRAM_ID
-      console.log(STAKE_POOL_PROGRAM_ID);
-
       let transaction = await withdrawStakeFromSanctum(
         STAKE_POOL_PROGRAM_ID,
         this._shs.connection,
@@ -336,4 +340,12 @@ export class LiquidStakeService {
 
     }
   }
+  private _floorLastDecimal(num) {
+    const decimalPlaces = num.toString().split('.')[1]?.length || 0;
+    if (decimalPlaces > 3) {
+      return Math.floor(num * 10000) / 10000;
+  }
+  
+  return num;
+}
 }

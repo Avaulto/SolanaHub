@@ -46,6 +46,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 ion-grid {
     padding-block-start: 20px;
+    padding-block-end: 100px;
     // padding-block-end:66px ;
     padding-inline: 3vw;
     margin: 0;
@@ -186,18 +187,31 @@ ion-spinner {
 .modal-style {
     --width: 540px;
     --border-radius: 12px;
-    --height: auto;
-    overflow-y: auto;
+    --height: fit-content;
+    --max-width: 95%;
+    // --max-height: 90%;
     // --overflow: auto;
-
+    --background: white;
     // >.ion-page {
     //     position: static;
     //     contain: initial;
     // }
 }
 
-
-
+// .ll-loader{
+//     --width: 450px;
+//     --border-radius: 12px;
+//     --max-width: 95%;
+//     --max-height: 90%;
+// }
+// app-loyalty-league{
+//     filter: blur(7px);
+// }
+.quests-modal{
+    --width: 445px;
+    --max-width: 97%;
+    --background: white;
+}
 .nft-modal {
     --width: 884px;
     --border-radius: 12px;
@@ -221,6 +235,7 @@ ion-spinner {
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
+    --background: white;
 }
 .wallet-connect-dropdown {
     --width: 238px;

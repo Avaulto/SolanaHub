@@ -1,10 +1,11 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowUpOutline } from 'ionicons/icons';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
+import { StashGroup } from '../stash.model';
 
 @Component({
   selector: 'stash-table',
@@ -33,9 +34,10 @@ import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 })
 export class TableComponent  implements OnInit {
 
+  @Output() onAction = new EventEmitter()
   @Input() hasFees: boolean = false;
   @Input() columns;
-  @Input() stash;
+  @Input() stash: StashGroup;
   @Input() tableName: string;
   @Input() tableDescription: string;
   @Input() actionTitle: string;
@@ -43,12 +45,14 @@ export class TableComponent  implements OnInit {
   constructor() { 
     addIcons({arrowUpOutline});
     effect(()=>{
-      console.log(this.selectedData());
+      // console.log(this.selectedData());
       
     })
   }
 
   ngOnInit() {
+    console.log(this.stash);
+    
     this.tableData.set(this.stash.data.assets)
 
   }
@@ -72,5 +76,9 @@ export class TableComponent  implements OnInit {
     }
   };
   public selectedData = signal([])
-
+  emitData(){
+    console.log(this.selectedData());
+    
+    this.onAction.emit(this.selectedData())
+  }
 }

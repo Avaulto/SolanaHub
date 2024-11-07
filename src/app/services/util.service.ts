@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
 import { JupStoreService } from "./jup-store.service";
 import { SessionStorageService } from "./session-storage.service";
-import { Config, PriorityFee } from "../models/settings.model";
+import { Config } from "../models/settings.model";
 import { environment } from 'src/environments/environment';
 
 declare global {
@@ -57,20 +57,14 @@ export class UtilService {
     return config ;
   }
   
-  public get priorityFee()  {
-    const baseFee = PriorityFee.Fast
-    const config = Number(JSON.parse(this._localStorage.getData('priority-fee'))?.value) || baseFee
-
-    return config;
-  }
   public get theme()  {
     const config = JSON.parse(this._localStorage.getData('theme'))?.value || 'light'
 
     return config;
   }
 
-  public formatBigNumbers = (n: number) => {
-    if (n < 1e3) return this.decimalPipe.transform(n, '1.2-2');
+  public formatBigNumbers = (n: number, decimals = 2) => {
+    if (n < 1e3) return n.toFixedNoRounding(decimals);
     if (n >= 1e3 && n < 1e6) return Math.floor(n / 1e3 * 10) / 10 + "K";
     if (n >= 1e6 && n < 1e9) return Math.floor(n / 1e6 * 10) / 10 + "M";
     if (n >= 1e9 && n < 1e12) return Math.floor(n / 1e9 * 10) / 10 + "B";

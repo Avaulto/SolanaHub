@@ -1,4 +1,4 @@
-import { BaseConfig, PriorityFee } from "../app/models";
+import { BaseConfig } from "../app/models";
 
 export const getBaseConfig = (): BaseConfig => {
   return {
@@ -43,23 +43,7 @@ export const getBaseConfig = (): BaseConfig => {
         value: 'https://explorer.solana.com'
       }
     ],
-    PriorityFee: [
-      {
-        name: 'none',
-        imageURL: '../assets/images/battery-1-icon.svg',
-        value: PriorityFee.None
-      },
-      {
-        name: 'fast',
-        imageURL: '../assets/images/battery-2-icon.svg',
-        value: PriorityFee.Fast
-      },
-      {
-        name: 'supercharger',
-        imageURL: '../assets/images/battery-3-icon.svg',
-        value: PriorityFee.Supercharger
-      }
-    ],
+
     Theme: [
       {
         name: 'Light',

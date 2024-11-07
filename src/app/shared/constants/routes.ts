@@ -15,4 +15,5 @@ export enum RoutingPath {
     NOTIFICATIONS = 'notifications',
     SETTINGS = 'settings',
     EVENTS = 'events',
+    NOT_CONNECTED = 'not-connected'
 }

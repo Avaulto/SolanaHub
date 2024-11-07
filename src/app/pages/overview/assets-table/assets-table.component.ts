@@ -10,7 +10,6 @@ import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { NFT, Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
-import { tokenDummyPlaceholder, nftDummyPlaceholder, defiDummyPlaceholder, stakingDummyPlaceholder } from './table-options-helper'
 import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';

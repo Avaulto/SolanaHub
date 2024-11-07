@@ -10,6 +10,7 @@ import { Config } from '../../../../models/settings.model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { SolanaHelpersService, ToasterService } from 'src/app/services';
 import { DOCUMENT } from '@angular/common';
+import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 @Component({
   selector: 'select-group-config',
   templateUrl: './select-group-config.component.html',
@@ -22,7 +23,8 @@ import { DOCUMENT } from '@angular/common';
     IonSegment,
      IonImg,
      IonText,
-     IonInput
+     IonInput,
+     ChipComponent
   ]
 })
 export class SelectGroupConfigComponent  implements AfterViewInit {

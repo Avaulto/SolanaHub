@@ -10,6 +10,12 @@
     background: var(--ion-color-light);
     padding: 32px;
   }
+  .quest-title {
+    text-decoration: underline;
+    cursor: pointer;
+    color: var(--ion-color-primary);
+}
+
 
   .member-stats {
     display: flex;

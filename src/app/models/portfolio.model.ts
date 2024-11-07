@@ -11,6 +11,18 @@ export interface WalletExtended {
   signTransaction: (transaction: Transaction | VersionedTransaction) => Promise<Transaction | VersionedTransaction>,
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
 }
+
+export interface WalletPortfolio {
+  walletAssets: any;
+  tokens: Token[];
+  nfts: NFT[];
+  staking: Stake[];
+  defi: defiHolding[];
+  walletHistory: TransactionHistory[];
+  netWorth: number;
+}
+
+
 export interface Token extends JupToken{
     type?: string,
     networkId?: string,
@@ -27,12 +39,14 @@ export interface NFT{
   symbol: string
   royalty: number
   image_uri: string
+  imgUrl: string
   cached_image_uri: string
   animation_url: string
   cached_animation_url: string
   metadata_uri: string
   description: string
   mint: string
+  address: string
   owner: string
   update_authority: string
   creators: Array<{
@@ -152,7 +166,9 @@ export interface LendingOrBorrow{
 }
 
 export interface Stake {
+  token?: Token
   type: 'native' | 'liquid'
+  price?: number
   lockedDue?: Date
   locked?: boolean
   excessLamport?: number
@@ -214,13 +230,14 @@ export interface TransactionHistory{
   }
   
   export interface defiHolding {
+    tags?: string[];
     poolTokens: PoolToken[];
     platform?:  string;
     imgURL:     string;
     type:       string;
     value:      number;
-    link:       string;
-    holdings: holding[]
+      link:       string;
+      holdings: holding[]
   }
   
   export interface PoolToken {

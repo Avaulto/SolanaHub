@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
   effect,
   signal
@@ -18,6 +19,9 @@ import { Platform } from '@ionic/angular';
 })
 // multi functional table
 export class MftComponent implements OnInit {
+
+  @ViewChild('checkboxTemplate', { static: true }) checkboxTemplate: TemplateRef<any>;
+
   @Input() label: string;
   @Input() desc: string;
   @Input() tableId: string;
@@ -71,6 +75,25 @@ export class MftComponent implements OnInit {
     if (this._platform.width() < 992) {
       this.configuration.horizontalScroll = true;
     }
+
+    if (this.checkBox) {
+
+      // Modify the first column to use custom template if it's a checkbox column
+      // const checkboxRow  = {
+      //   key: 'select',
+      //   title: '',
+      //   searchEnabled: false,
+      //   orderEnabled: false,
+      //   width: '30px',
+      //   custom: true,
+      //   customTemplate: this.checkboxTemplate
+      // };
+
+      // // Add checkbox column as the first column
+      // this.tableData.update(row => [checkboxRow, ...cols]);
+    }
+
+
   }
 
   previousPage() {

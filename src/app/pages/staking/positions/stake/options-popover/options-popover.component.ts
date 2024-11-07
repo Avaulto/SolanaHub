@@ -57,7 +57,7 @@ export class OptionsPopoverComponent implements OnInit {
     modal.present();
     const { data, role } = await modal.onWillDismiss();
     console.log(data, role);
-    if(role === 'backdrop' || role === undefined){
+    if(role === 'backdrop'){
       return null
     }
     let validator: Validator = data
@@ -81,6 +81,8 @@ export class OptionsPopoverComponent implements OnInit {
       validatorVoteIdentity = (await this.openValidatorModal('select validator & stake')).vote_identity;
 
     }
+    console.log(validatorVoteIdentity);
+    
     if(validatorVoteIdentity){
       await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)
     }

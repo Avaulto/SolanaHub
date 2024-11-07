@@ -31,7 +31,7 @@
           </div>
 
           <div class="exchange-rate">
-            {{pool?.exchangeRate | number:'1.0-2'}}
+            {{pool?.exchangeRate.toFixedNoRounding(3)}}
           </div>
         </div>
       </div>

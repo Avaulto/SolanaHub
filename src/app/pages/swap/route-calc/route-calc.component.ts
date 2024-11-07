@@ -16,7 +16,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 })
 export class RouteCalcComponent  implements OnInit {
   @Input() routeInfo: JupRoute
-  public fees = Number((this.utils.priorityFee / LAMPORTS_PER_SOL))
+  public fees = Number((70000 / LAMPORTS_PER_SOL))
   constructor(public utils:UtilService) { 
     addIcons({swapHorizontalOutline})
   }

@@ -1,13 +1,12 @@
 <div id="portfolio-menu">
+  @for (wallet of walletsPortfolio(); track $index) {
+    <portfolio-box [wallet]="wallet"/>
+  }
 
-  <portfolio-box/>
-  <portfolio-box/>
-  <portfolio-box/>
-
-  <div style="    display: flex;
+  <div (click)="openNewPortfolioSetup()" style="    display: flex;
   align-items: center;
   justify-content: center;" class="portfolio-box ion-activatable ripple-parent">
-    <div class="portfolio-box-body">
+    <div class="portfolio-box-body" >
       <ion-icon name="add-outline"></ion-icon>
       add new portfolio
     </div>

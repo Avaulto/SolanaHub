@@ -11,6 +11,7 @@ import {
   Lockup,
   ParsedAccountData,
   PublicKey,
+  RpcResponseAndContext,
   StakeActivationData,
   StakeProgram,
   Transaction,
@@ -49,9 +50,20 @@ export class NativeStakeService {
     const rentReserve = Number(account.meta.rentExemptReserve);
     const accountLamport = Number(account._lamports);
     const excessLamport = accountLamport - stake - rentReserve
-    
+    let state = "inactive";
     try {
-      var { active, state }: Partial<StakeActivationData> = await this._shs.connection?.getStakeActivation(pk) || { state: "inactive" };
+      const getCurrentEpoch = await this._shs.connection.getEpochInfo()
+      var data: RpcResponseAndContext<AccountInfo<Buffer | ParsedAccountData>> = await this._shs.connection?.getParsedAccountInfo(pk) 
+      // if deactivationEpoch > currentEpoch it's active
+      // if deactivationEpoch < currentEpoch it's inactive
+      // if activationEpoch == currentEpoch it's activating
+      // if deactivationEpoch == currentEpoch it's deactivating
+      // otherwise it's active
+      
+      const stakeState = data.value?.data['parsed']?.info?.stake.delegation
+      state = stakeState.deactivationEpoch > getCurrentEpoch.epoch ? "active" : stakeState.activationEpoch < getCurrentEpoch.epoch ? "inactive" : stakeState.activationEpoch == getCurrentEpoch.epoch ? "activating" : stakeState.deactivationEpoch === getCurrentEpoch.epoch ? "deactivating" : "active"
+
+  
 
     } catch (error) {
       state = "inactive";
@@ -176,7 +188,6 @@ export class NativeStakeService {
   }
 
   public async splitStakeAccounts(walletOwnerPk: PublicKey, targetStakePubKey: PublicKey, keypair: Keypair, lamports: number) {
-    console.log(walletOwnerPk, targetStakePubKey, keypair, lamports / LAMPORTS_PER_SOL);
     const minimumAmount = await this._shs.connection.getMinimumBalanceForRentExemption(
       StakeProgram.space,
     );
@@ -226,6 +237,8 @@ export class NativeStakeService {
       toPubkey: walletOwnerPK,
       lamports, // Withdraw the full balance at the time of the transaction
     }));
+    console.log(withdrawTx);
+    
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
       return await this._txi.sendTx([...withdrawTx], walletOwnerPK, null, record)

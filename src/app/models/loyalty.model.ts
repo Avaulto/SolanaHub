@@ -48,6 +48,7 @@ export interface Season{
 
 
 export interface loyaltyLeagueMember {
+  error?: string,
   message?: string,
   communityCode?: string,
   nextUpdate?: Date,
@@ -62,6 +63,7 @@ export interface loyaltyLeagueMember {
   questsPts: number,
   referralPts: number,
   daysLoyal: number,
+  quests: { [key: string]: boolean }
 }
 
 

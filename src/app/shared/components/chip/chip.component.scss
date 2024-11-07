@@ -5,18 +5,18 @@
 }
 .badge {
     cursor: pointer;
-    padding: 2px 8px 3px;
+    padding: 1px 8px 2px;
     border-radius: var(--radius-full, 9999px);
     border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
     background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: capitalize;
     font-weight: 500;
     width: fit-content;
     &.primary {
         border: 1px solid #FDD1EE;
-        background: var(--ion-color-light)3FB;
+        background: #FFF3FB;
         color: #763261;
     }
     &.secondary {

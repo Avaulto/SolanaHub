@@ -15,7 +15,10 @@ import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { CodesComponent } from './codes/codes.component';
+import { QuestsComponent } from '../quests/quests.component';
 // import { LoyaltyBadgeComponent } from './loyalty-badge/loyalty-badge.component';
+import { PopoverController } from '@ionic/angular';
+import va from '@vercel/analytics'; 
 
 @Component({
   selector: 'app-member-stats',
@@ -62,8 +65,8 @@ export class MemberStatsComponent implements OnChanges {
   constructor(
     private _modalCtrl: ModalController,
     private _loyaltyLeagueService: LoyaltyLeagueService,
-    private _utilsService: UtilService,
     private _shs: SolanaHelpersService,
+    public _popoverController: PopoverController,
   ) {
 
     addIcons({discOutline,informationCircleOutline,copyOutline});
@@ -117,8 +120,17 @@ export class MemberStatsComponent implements OnChanges {
     { title: 'Staking', key: 'stakingPts', tooltip: 'Staking points are earned by staking your SOL or LST with SolanaHub validator.' },
     { title: 'DAO', key: 'daoPts', tooltip: 'DAO points are earned by participating in marinade and solablaze DAO tokens voting stake allocation towards SolanaHub validator. (check SolanaHub docs for more details)' },
     { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referred friends who stake with SolanaHub validator.' },
-    { title: '? ? ? ?', key: 'questsPts', tooltip: 'its not a bug, were cooking something up!'  }
+    { title: 'Quests', key: 'questsPts', tooltip: 'Quests are special activities that earn you points. Check the quests section for more details.'  }
   ];
   //'Bonus points earned from loyalty tier boost and quests.'
-
+  public async openQuests(event: any) {
+    va.track('loyalty league', { event: 'quests open' })
+    const modal = await this._popoverController.create({
+      component: QuestsComponent,
+      cssClass: 'quests-modal',
+      mode: 'ios',
+      event: event,
+    })
+    modal.present();
+  }
 }

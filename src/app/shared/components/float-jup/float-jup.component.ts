@@ -1,9 +1,12 @@
 import { Component, inject, Input, OnChanges, OnInit, ViewEncapsulation } from '@angular/core';
-import { Connection, PublicKey } from '@solana/web3.js';
+import { BlockheightBasedTransactionConfirmationStrategy, Connection, PublicKey } from '@solana/web3.js';
 import { toastData } from 'src/app/models';
-import { PortfolioFetchService, ToasterService, UtilService } from 'src/app/services';
+import { PortfolioFetchService, SolanaHelpersService, ToasterService, UtilService } from 'src/app/services';
 import { environment } from 'src/environments/environment';
 import va from '@vercel/analytics';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+
+
 declare global {
   interface Window {
     Jupiter: JupiterTerminal;
@@ -17,7 +20,7 @@ interface IInit {
   connectionObj?: Connection;
 
   /** TODO: Update to use the new platform fee and accounts */
-  platformFeeAndAccounts?: any; // PlatformFeeAndAccounts;
+  platformFeeAndAccounts?: any //  PlatformFeeAndAccounts;
   /** Configure Terminal's behaviour and allowed actions for your user */
   formProps?: any;
   /** Only allow strict token by [Jupiter Token List API](https://station.jup.ag/docs/token-list/token-list-api) */
@@ -114,43 +117,63 @@ interface JupiterTerminal {
 @Component({
   selector: 'float-jup',
   template: '<div id="integrated-terminal"></div>',
-  styles: `#jupiter-terminal-instance  button{    background: var(--ion-color-secondary) !important;color:white !important;}`,
+  styles: `#integrated-terminal{overflow-y:auto !important;}; #jupiter-terminal-instance  button{    background: var(--ion-color-secondary) !important;color:white !important;}`,
   standalone: true,
   encapsulation: ViewEncapsulation.None
 })
-export class FloatJupComponent implements OnInit, OnChanges {
+export class FloatJupComponent implements OnInit {
   
-  @Input() path: string = '';
+
   private _utils = inject(UtilService);
   private _toast = inject(ToasterService);
   private _portfolioFetchService = inject(PortfolioFetchService);
+  private _loyaltyLeagueService = inject(LoyaltyLeagueService)  
+  private _shs = inject(SolanaHelpersService)
   async ngOnInit() {
 
+      if (!window.Jupiter) {
+        this.initJupiter()
+      }
 
   }
   async initJupiter() {
     await this.importJupiterTerminal();
+    const referralAccountPubkey = new PublicKey('68xFR3RfPvV4NpP1wd546j5vCWrFmVhw4PgmXZBcayP1'); 
+    const mintAddress = [
+      new PublicKey('So11111111111111111111111111111111111111112'),
+      new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'),
+      new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'),
+      new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'),
+      new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'),
+      new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'),
+    ];
+    const feeAccounts = new Map<string, PublicKey>();
+    for (const mint of mintAddress) {
+
+      const [feeAccount] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("referral_ata"),
+          referralAccountPubkey.toBuffer(),
+          mint.toBuffer(),
+        ],
+        new PublicKey("REFER4ZgmyYx9c6He5XfaTMiGfdLwRnkV4RPp9t9iF3")
+      );
+      feeAccounts.set(mint.toBase58(), feeAccount);      
+    }
 
     const platformFeeAndAccounts = {
       feeBps: 50,
-      referralAccount: new PublicKey('68xFR3RfPvV4NpP1wd546j5vCWrFmVhw4PgmXZBcayP1'),
-      feeAccounts: new Map([
-        [new PublicKey('So11111111111111111111111111111111111111112'), new PublicKey('HDZf2M4WSG7QjtGXYm1sB5ppdF75kxnBtPNcecDQzsWv')],
-        [new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), new PublicKey('133bwVgQTojGvM1ZV5Jv3roERdG1U2vnHgjDQv1Bsr7N')],
-        [new PublicKey('EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm'), new PublicKey('D9b86zb6sEy5di9Aihnid8bhfBSDVzUsxMpmfmrabnMi')],
-        [new PublicKey('JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN'), new PublicKey('5SUGzqWdr9mPxQa9FuNJAwdW1xq74mg1PYZKsFhW9QqL')],
-        [new PublicKey('DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263'), new PublicKey('7fPHGWSJk7UXyU8Xic9GS1ZKu7iCJ5CTNnZYWs4z71eo')],
-        [new PublicKey('HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'), new PublicKey('96BHVJVpzU9XJ1FtAZxXVHvoTYp54x1pwFZwuDkXBzBz')],
-      ]),
+      referralAccount: new PublicKey(environment.platformFeeCollector),
+      feeAccounts
     };
-
-
 
     window.Jupiter.init({
       displayMode: "widget",
       integratedTargetId: "integrated-terminal",
       endpoint: this._utils.RPC,
       platformFeeAndAccounts,
+      passthroughWalletContextState: this._shs.getCurrentWallet(),
+      autoConnect: true,
       onSuccess: ({ txid, swapResult }) => {
         va.track('swap', { txid });
         const url = `${this._utils.explorer}/tx/${txid}?cluster=${environment.solanaEnv}`
@@ -162,11 +185,12 @@ export class FloatJupComponent implements OnInit, OnChanges {
           duration: 3000,
           cb: () => window.open(url)
         }
-
         this._toast.msg.next(txSend);
+        this._loyaltyLeagueService.completeQuest(this._shs.getCurrentWallet().publicKey.toBase58(), 'swapOnSolanaHub')
+
         setTimeout(() => {
-          this._portfolioFetchService.triggerFetch();
-        }, 3000);
+          this._portfolioFetchService.triggerFetch('partial');
+        }, 2000);
         console.log({ txid, swapResult });
       },
       onSwapError: ({ error }) => {
@@ -184,26 +208,16 @@ export class FloatJupComponent implements OnInit, OnChanges {
       defaultExplorer: 'solscan',
       widgetStyle: {
         position: "bottom-right",
-        size: "sm"
+        size: 'default'
       }
     });
+
   }
-  ngOnChanges(): void {
-    if (this.path) {
-      if (this.path === '/loyalty-league') {
-        delete window.Jupiter;
-        document.getElementById('jupiter-terminal-instance')?.remove();
-      } else {
-        if (!window.Jupiter) {
-          this.initJupiter()
-        }
-      }
-    }
-  }
+
   async importJupiterTerminal() {
     // create a script element and turn it to promise
     const script = document.createElement('script');
-    script.src = 'https://terminal.jup.ag/main-v3.js';
+    script.src = 'https://terminal.jup.ag/main-v2.js';
     script.type = 'text/javascript';
     script.async = true;
     document.body.appendChild(script);

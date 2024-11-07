@@ -142,14 +142,15 @@ export class LoyaltyLeagueService {
     return data
   }
 
-  private _counterAnimation(startNumber: number, targetNumber: number, duration: number): Observable<number> {
-    const totalNumbers = targetNumber - startNumber;
-    const stepDuration = duration / totalNumbers;
-  
-    return interval(stepDuration).pipe(
-      take(totalNumbers + 1),
-      map(step => startNumber + step),
-      startWith(startNumber)
-    );
+  public async completeQuest(walletAddress: string, task: string) {
+    console.log('completeQuest', task)
+    try {
+      const res = await fetch(`${this.api}/quests?walletAddress=${walletAddress}&task=${task}`)
+      const data = await res.json()
+      return data
+    } catch (error) {
+      console.warn(error)
+      return null
+    }
   }
 }

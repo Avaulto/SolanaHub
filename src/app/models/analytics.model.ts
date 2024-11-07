@@ -1,4 +1,4 @@
 export interface Record {
     message: string,
-    data?: {}
+    data?: any
 }

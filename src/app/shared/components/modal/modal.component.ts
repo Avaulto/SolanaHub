@@ -54,7 +54,7 @@ export class ModalComponent implements AfterViewInit {
     btnText: null
   }
   @Input() data
-  @Input() componentName: 'll-faq-modal' | 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
+  @Input() componentName: 'stash-modal' | 'll-faq-modal' | 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
   constructor(
     private _modalCtrl: ModalController,
@@ -73,8 +73,10 @@ export class ModalComponent implements AfterViewInit {
 
     const wallet = this._shs.getCurrentWallet()
     switch (this.componentName) {
+      
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
+        console.log(pool);
         this._lss.stakePoolStakeAccount(this.data.stake, pool)
         break;
       case 'unstake-lst-modal':

@@ -77,7 +77,7 @@ showHubTip = false
 showTip(event, pool){
   console.log(event,pool);
   
-  if(pool.name =='hub'){
+  if(pool.name == 'SolanaHub staked SOL'){
     this.showHubTip = true
   }
 }

@@ -52,7 +52,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "2kb",
-                  "maximumError": "7kb"
+                  "maximumError": "10kb"
                 }
               ],
               "fileReplacements": [
@@ -77,7 +77,7 @@
                 }
               ],
               "buildOptimizer": true,
-              "optimization": false,
+              "optimization": true,
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,

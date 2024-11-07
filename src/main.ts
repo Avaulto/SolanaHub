@@ -8,7 +8,7 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideWalletAdapter } from '@heavy-duty/wallet-adapter';
-import { PhantomWalletAdapter, UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 import {
   BrowserAnimationsModule,
@@ -24,15 +24,14 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    provideWalletAdapter({
+      autoConnect: true,
+      adapters: [new UnsafeBurnerWalletAdapter()],
+    }),
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideAnimations(),
     provideIonicAngular(),
     provideHttpClient(),
     provideRouter(routes),
-    provideWalletAdapter({
-      autoConnect: true,
-      adapters: [new UnsafeBurnerWalletAdapter()],
-    }
-    ),
   ],
 });

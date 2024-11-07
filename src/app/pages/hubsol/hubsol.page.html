@@ -11,31 +11,37 @@
 
       <div class="hubSOL-metrics ion-hide-lg-down">
         <div class="metrics ">
-          <ion-label>APY</ion-label>
+          <ion-label>APY <ion-img [tooltip]="toolTipTpl" src="assets/images/info-icon.svg"/>
+  
+          <ng-template #toolTipTpl>
+            APY is based on 5 epochs average
+          </ng-template> 
+        
+        </ion-label>
           @if (metrics() === null) {
-            <ion-skeleton-text [animated]="true" />
-            }@else {
-              
-              <ion-text>{{metrics().apy | percent: "1.1-2"}}</ion-text>
-            }
+          <ion-skeleton-text [animated]="true" />
+          }@else {
+
+          <ion-text>{{metrics().apy | percent: "1.1-2"}}</ion-text>
+          }
         </div>
         <div class="metrics">
           <ion-label>TVL</ion-label>
           @if (metrics() === null) {
-            <ion-skeleton-text [animated]="true" />
-            }@else {
-              
-              <ion-text>{{metrics().tvl | number: '1.0-0'}} SOL</ion-text>
-            }
+          <ion-skeleton-text [animated]="true" />
+          }@else {
+
+          <ion-text>{{metrics().tvl | number: '1.0-0'}} SOL</ion-text>
+          }
         </div>
         <div class="metrics">
           <ion-label># Of Stakers</ion-label>
           @if (metrics() === null) {
-            <ion-skeleton-text [animated]="true" />
-            }@else {
-              
-              <ion-text>{{metrics().holders | number: "1.0"}}</ion-text>
-            }
+          <ion-skeleton-text [animated]="true" />
+          }@else {
+
+          <ion-text>{{metrics().holders | number: "1.0"}}</ion-text>
+          }
         </div>
       </div>
       <div class="hubSOL-metrics ion-hide-lg-up">
@@ -53,12 +59,9 @@
             <ion-text>10,000</ion-text>
           </div>
         </div>
-        </div>
+      </div>
       <div>
-        <ion-button 
-        routerDirection="root" 
-        routerLink="/staking"
-         >Stake Now</ion-button>
+        <ion-button routerDirection="root" routerLink="/staking">Stake Now</ion-button>
       </div>
     </ion-col>
 
@@ -82,14 +85,14 @@
 
       <div id="benefit-list">
         <div class="benefit">
-          <ion-img src="assets/images/check-heart.svg" /> <span>Weekly airdrops delivered directly to your wallet</span>
+          <ion-img src="assets/images/check-heart.svg" /> <span>Loyalty league airdrops delivered directly to your
+            wallet</span>
         </div>
         <div class="benefit">
-          <ion-img src="assets/images/check-heart.svg" /> <span>Enjoy premium features available only to holders</span>
+          <ion-img src="assets/images/check-heart.svg" /> <span>Waved platform fees to holders</span>
         </div>
         <div class="benefit">
-          <ion-img src="assets/images/check-heart.svg" /> <span>Join a rapidly adopted token with multiple protocol
-            integrations</span>
+          <ion-img src="assets/images/check-heart.svg" /> <span>Highly liquid token</span>
         </div>
       </div>
     </ion-col>
@@ -97,7 +100,14 @@
       <div #animationEl></div>
     </ion-col>
   </ion-row>
+  <ion-row id="hubSOL-chart" class="ion-padding">
+    <div id="chart-title">LST APY performance</div>
+    <ion-text>The chart shows the 10 avg APY of leading liquid staking tokens</ion-text>
 
+    <div style="margin: 0 auto;width: 100%;height: 407px;">
+      <canvas #chartEl></canvas>
+    </div>
+  </ion-row>
   <div id="hubSOL-trust">
     <div>
       <div id="sanctum-power">Powered By <ion-img src="assets/images/sanctum-full-black.svg" /></div>
@@ -108,13 +118,13 @@
         <ion-img src="assets/icon/f-icon-1.svg" />
         <ion-label>Secure</ion-label>
         <ion-text>Powered by a Solana Labs smart contract and rigorously audited over seven times for your peace of mind.
-          Rest assured, as validators, we never have access to your funds—now or in the future.
+          We are fully open sourced and never have access to your funds.
         </ion-text>
       </ion-col>
       <ion-col class="ion-margin-bottom" size="12" sizeLg="3">
         <ion-img src="assets/icon/f-icon-2.svg" />
         <ion-label>Liquid</ion-label>
-        <ion-text>Sanctum enables deep liquidity for anyone to sweep in and out of hubSOL, at anytime</ion-text>
+        <ion-text> Sanctum enables deep liquidity for anyone to swap in and out of hubSOL, at anytime.</ion-text>
       </ion-col>
       <ion-col size="12" sizeLg="3">
         <ion-img src="assets/icon/f-icon-3.svg" />
@@ -124,11 +134,24 @@
 
           Decentralization,
           Top-tier infrastructure for maximum uptime,
-          Ongoing transparency in our commission and commitments. </ion-text>
+          and transparency in our commission and commitments. </ion-text>
       </ion-col>
     </ion-row>
   </div>
+  <div id="hubSOL-adoption">
+    <div>
+      <ion-label>hubSOL adoption</ion-label>
+      <ion-text>hubSOL onchain TVL across top protocols</ion-text>
+    </div>
+    <div id="adoption-TVL">
+      @if (adoptionTVL | async) {
+        {{(adoptionTVL | async)?.total | currency: 'USD':'symbol':'1.0-0'}}
+      }@else {
+        <ion-skeleton-text [animated]="true" />
+      }
+    </div>
 
+  </div>
   <div id="hubSOL-support">
     <ion-row class="ion-justify-content-between">
       <ion-col size="12" sizeLg="9">
@@ -136,21 +159,18 @@
         <ion-text>hubSOL is widely supported across leading platforms in the Solana ecosystem.</ion-text>
       </ion-col>
       <ion-col class="ion-hide-lg-down" size="12" sizeLg="2">
-        <ion-button 
-        routerDirection="root" 
-        routerLink="/staking"
-         >Join up</ion-button>
+        <ion-button routerDirection="root" routerLink="/staking">Join up</ion-button>
       </ion-col>
     </ion-row>
     <ion-row class="ion-align-items-center">
       @for (item of supportedPlatforms; track $index) {
 
-        <ion-col class="platform" size="6" sizeLg="3">
-          <div class="wrapper" >
-            <div><span class="chip" [ngClass]="item.type">{{item.type}}</span></div>
-            <ion-img [src]="item.img"/>
-          </div>
-        </ion-col>
+      <ion-col class="platform" size="6" sizeLg="3">
+        <div class="wrapper">
+          <div><span class="chip" [ngClass]="item.type">{{item.type}}</span></div>
+          <ion-img [src]="item.img" />
+        </div>
+      </ion-col>
       }
     </ion-row>
   </div>

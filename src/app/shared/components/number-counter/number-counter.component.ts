@@ -25,6 +25,7 @@ import { UtilService } from 'src/app/services';
 export class NumberCounterComponent implements OnInit {
   @Input() showFormatNumber = false;
   @Input() targetNumber = 100;
+  @Input() addOnNumber = 0;
   @Input() set nextSnapshotTime(value: Date) {
     if (value) {
       this._nextSnapshotTime = new Date(value);
@@ -86,7 +87,7 @@ export class NumberCounterComponent implements OnInit {
         startWith(this.startNumber)
       )
       .subscribe(value => {
-        this.currentNumber = value;
+        (this.currentNumber = value + this.addOnNumber);
       });
   }
 }

@@ -25,7 +25,6 @@ ngOnInit(): void {
 ngOnChanges(changes: SimpleChanges): void {
   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
   //Add '${implements OnChanges}' to the class.
-  console.log(changes, this.token);
   this.visibleValue.set(this.value);
   if(!this.token.price && changes['token'].currentValue != changes['token'].currentValue){
     this.getTokenPrice();
@@ -33,9 +32,9 @@ ngOnChanges(changes: SimpleChanges): void {
 }
   valueChange(ev) {
     let value = ev.detail !== undefined ? ev.detail.value : ev
-    const definitelyValidValue = value.toString().indexOf(',') > 0 ? value.replaceAll(",", "") : value
-    this.onValueChange.emit(definitelyValidValue)
-    this.visibleValue.set(definitelyValidValue)
+    // const definitelyValidValue = value.toString().indexOf(',') > 0 ? value.replaceAll(",", "") : value
+    this.onValueChange.emit(value)
+    // this.visibleValue.set(definitelyValidValue)
     // this.getTokenPrice();
 
   }

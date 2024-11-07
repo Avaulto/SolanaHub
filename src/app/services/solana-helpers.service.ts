@@ -95,7 +95,7 @@ export class SolanaHelpersService {
         console.error(error);
       }
 
-      this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
+      // this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
       this._validatorsList = validatorsList;
       return validatorsList
     }
