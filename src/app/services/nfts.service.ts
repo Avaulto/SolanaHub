@@ -16,9 +16,9 @@ interface BurnIns{
 export class NftsService {
 
   constructor(private _utils: UtilService) { }
-  async burnNft(nfts: NFT[], walletOwner: string): Promise<Transaction[]> {
+  async burnNft(nftsAddress: string[], walletOwner: string): Promise<Transaction[]> {
     try {
-      const aggregateNFTs =  nfts.map(nft => { return {address: nft.mint}})
+      const aggregateNFTs = nftsAddress.map(nftAddress => { return {address: nftAddress}})
       const getBurnIns = await fetch(this._utils.serverlessAPI + '/api/nft/burn',{
         method:'POST',
         body: JSON.stringify({nftAddresses: aggregateNFTs, walletOwner})

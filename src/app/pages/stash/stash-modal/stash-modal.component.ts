@@ -62,11 +62,11 @@ export class StashModalComponent implements OnInit {
         break
       case 'defi-position':
          await this._stashService.closeOutOfRangeDeFiPosition(event)
-
         break
-      // case 'withdraw':
-      //   this._stashService.withdraw(row.account)
-      //   break
+      case 'empty-account':
+      case 'nft':
+        await this._stashService.burnAccounts(event)
+        break
     }
 
 

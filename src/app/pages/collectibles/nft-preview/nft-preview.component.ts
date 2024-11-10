@@ -49,12 +49,12 @@ export class NftPreviewComponent  implements OnInit {
         config.desc = `Send your NFT to a different wallet`
         config.btnText = `Send`
         break;
-      case 'burn-nft-modal':
-        config.imgUrl = 'assets/images/trash-icon.svg'
-        config.title = 'Burn'
-        config.desc = `Burn your NFT forever`
-        config.btnText = `Burn`
-        break;
+      // case 'burn-nft-modal':
+      //   config.imgUrl = 'assets/images/trash-icon.svg'
+      //   config.title = 'Burn'
+      //   config.desc = `Burn your NFT forever`
+      //   config.btnText = `Burn`
+      //   break;
     }
     
     const modal = await this._modalCtrl.create({

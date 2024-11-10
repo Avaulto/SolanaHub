@@ -3,6 +3,7 @@ import { BN } from '@marinade.finance/marinade-ts-sdk';
 import {  LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
 import { ApiService, JupStoreService, PortfolioFetchService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
 import { OutOfRange, StashAsset, StashGroup } from './stash.model';
+import { NftsService } from 'src/app/services/nfts.service';
 
 
 
@@ -14,6 +15,7 @@ export class StashService {
   private outOfRangeDeFiPositionsSignal = signal<StashGroup | null>(null);
 
   constructor(
+    private _nftService: NftsService,
     private _utils: UtilService,
     private _jupStoreService: JupStoreService,
     private _shs: SolanaHelpersService,
@@ -33,10 +35,14 @@ export class StashService {
     const tokens = this._portfolioService.tokens()
     if (!NFTs && !tokens) return null
     // filter nft zero value and orca & raydium position(clmm & amm & whirlpool)
-    const filterNftZeroValue = NFTs.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice == 0)
-                                .filter((token: any) => !token.name.includes('Orca Whirlpool Position') && !token.name.includes('Raydium Concentrated Liquidity'))
 
-    const filterTokenZeroValue = tokens.filter(acc => Number(acc.value) < 0.01 && Number(acc.value) == 0)
+    // add new property to nft items called category and set it to 'nft'
+    const nftItems = NFTs?.map(acc => ({...acc, category: 'nft'}))
+    const filterNftZeroValue = nftItems?.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice == 0)
+                                .filter((token: any) => !token.name.includes('Orca Whirlpool Position') && !token.name.includes('Raydium Concentrated Liquidity'))
+    // add new property to tokens items called category and set it to 'token'
+    const tokenItems = tokens.map(acc => ({...acc, category: 'token'}))
+    const filterTokenZeroValue = tokenItems.filter(acc => Number(acc.value) < 0.01 && Number(acc.value) == 0)
     console.log(filterNftZeroValue);
     
     const nftZeroValueGroup = {
@@ -53,7 +59,7 @@ export class StashService {
           source: 'no market value',
           extractedValue: { SOL: 0.02 },
           action: 'burn',
-          type: 'nft'
+          type: acc.category === 'nft' ? 'nft' : 'empty-account'
         }))
       }
     }
@@ -90,6 +96,49 @@ export class StashService {
 
     return unstakedGroup
   })
+  // public findOutOfRangeDeFiPositions = computed(() => {
+  //   const positions = this._portfolioService.defi()
+  //   if (!positions) return null
+  //   const filterOutOfRange = positions.filter(p => p.tags?.includes('Out Of Range'))
+  //   console.log('defi positions', filterOutOfRange);
+    
+  //   const stashGroup: StashGroup = {
+  //     label: 'zero yield zones',
+  //     description: "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
+  //     actionTitle: "Withdraw & Close",
+  //     value: 0,
+  //     data: {
+        
+  //       assets: filterOutOfRange.map(p => ({
+  //         // if symbol is wSOL, then replace it to SOL
+  //         name: p.poolTokens[0].symbol + '-' + p.poolTokens[1].symbol,
+  //         symbol: p.poolTokens[0].symbol + '-' + p.poolTokens[1].symbol,
+  //         imgUrl: [p.poolTokens[0].imgURL, p.poolTokens[1].imgURL],
+  //         tokens: [p.poolTokens[0], p.poolTokens[1]].map(token => ({
+  //           address: token.address,
+  //           decimals: token.decimals,
+  //           symbol: token.symbol,
+  //           imgUrl: token.imgURL
+  //         })),
+  //         platform: p.platform,
+  //         platformImgUrl: p.imgURL,
+  //         account: this._utils.addrUtil('awdawaxaxjnawjan23424asndwadawd'),
+  //         source: 'out of range',
+  //         action: 'Withdraw & Close',
+  //         type: 'defi-position',
+  //         value: p.value,
+  //         extractedValue: {
+  //           [p.poolTokens[0].symbol == 'wSOL' ? 'SOL' : p.poolTokens[0].symbol]: Number(p.holdings[0].balance),
+  //           [p.poolTokens[1].symbol == 'wSOL' ? 'SOL' : p.poolTokens[1].symbol]: Number(p.holdings[1].balance)
+  //         },
+  //       }))
+  //     }
+  //   }
+  //   stashGroup.value = stashGroup.data.assets.reduce((acc, curr) => acc + curr.value, 0)
+  //   console.log(stashGroup);
+  //   return stashGroup
+  // })
+
   public findOutOfRangeDeFiPositions = computed(() => {
     return this.outOfRangeDeFiPositionsSignal();
   });
@@ -97,7 +146,7 @@ export class StashService {
     const { publicKey } = this._shs.getCurrentWallet()
     try {
       const getOutOfRange: OutOfRange[] = await (await fetch(`${this._utils.serverlessAPI}/api/stash/out-of-range?address=${publicKey.toBase58()}`)).json()
-      console.log(getOutOfRange);
+      // console.log(getOutOfRange);
 
       return getOutOfRange
     } catch (error) {
@@ -168,7 +217,12 @@ export class StashService {
           name: p.poolPair,
           symbol: p.poolPair,
           imgUrl: [p.poolTokenA.imgUrl, p.poolTokenB.imgUrl],
-          tokens: [p.poolTokenA, p.poolTokenB],
+          tokens: [p.poolTokenA, p.poolTokenB].map(token => ({
+            address: token.address,
+            decimals: token.decimals,
+            symbol: token.symbol,
+            imgUrl: token.imgUrl
+          })),
           account: this._utils.addrUtil('awdawaxaxjnawjan23424asndwadawd'),
           source: 'out of range',
           platform: p.platform,
@@ -186,5 +240,14 @@ export class StashService {
     };
     stashGroup.value = stashGroup.data.assets.reduce((acc, curr) => acc + (curr.value || 0), 0);
     this.outOfRangeDeFiPositionsSignal.set(stashGroup);
+  }
+
+  public async burnAccounts(accounts: StashAsset[]) {
+    const { publicKey } = this._shs.getCurrentWallet()
+    const nftsAddress = accounts.filter(acc => acc.type === 'nft').map(acc => (acc).account.addr)
+    console.log(nftsAddress,accounts);
+    
+    const burnNftTx = await this._nftService.burnNft(nftsAddress, publicKey.toBase58())
+    await this._txi.sendMultipleTxn(burnNftTx)
   }
 }

@@ -253,7 +253,7 @@ export class TxInterceptorService {
     } catch (err) {
       console.error(`Error: ${err}`);
       return ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 10_000
+        microLamports: 20_000
       })
     }
 
