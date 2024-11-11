@@ -114,7 +114,6 @@ export class AppComponent implements OnInit {
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,
-    private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
     private _utilService: UtilService,
@@ -160,15 +159,9 @@ export class AppComponent implements OnInit {
   }
   path;;
   async ngOnInit() {
+
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
-    this._activeRoute.queryParams
-      .subscribe((params) => {
-        const refCode = params['refCode']
-        if (refCode) {
-          this._localStorage.saveData('refCode', refCode)
-        }
-      });
 
     // Add wallet connection handler
     this._walletStore.connected$.pipe(

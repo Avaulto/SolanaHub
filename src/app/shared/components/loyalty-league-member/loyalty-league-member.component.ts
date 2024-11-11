@@ -52,6 +52,7 @@ export class LoyaltyLeagueMemberComponent {
   public wallet$ =this._shs.walletExtended$
   public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$.pipe(
     map(member => {
+      console.log(member)
       return {
         ...member,
         totalPts: this.utils.formatBigNumbers(member.totalPts)

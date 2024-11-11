@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { map, tap, take, filter, catchError, of, timeout, combineLatestWith, distinctUntilChanged } from 'rxjs';
 import { RoutingPath } from '../constants';
@@ -7,10 +7,24 @@ import { NavController } from '@ionic/angular';
 import { WatchModeService } from 'src/app/services/watch-mode.service';
 export const isConnectedGuard = () => {
   const walletStore = inject(WalletStore);
- // Store the attempted URL
- const attemptedUrl = inject(Router).getCurrentNavigation()?.finalUrl?.toString();
- if (attemptedUrl) {
+  const activeRoute = inject(ActivatedRoute)
+  const router = inject(Router)
+  // Store the attempted URL with query params
+  const navigation = router.getCurrentNavigation();
+  // const attemptedUrl = navigation?.finalUrl?.toString();
+  
+  
+  
+  // Store the attempted URL
+  const attemptedUrl = router.getCurrentNavigation()?.finalUrl?.toString();
+  const currentQueryParams = navigation?.extractedUrl.queryParams || {};
+  console.log(attemptedUrl, currentQueryParams);
+  if (attemptedUrl) {
    sessionStorage.setItem('attemptedUrl', attemptedUrl);
+   // if refCode is present, store it
+   if (currentQueryParams['refCode']) {
+    localStorage.setItem('refCode', currentQueryParams['refCode']);
+   }
  }
   const navCtrl = inject(NavController);
   const watchModeWallet$ = inject(WatchModeService).watchedWallet$
@@ -21,12 +35,18 @@ export const isConnectedGuard = () => {
     timeout(300),
     tap(([connected, watchModeWallet]) => {
       if (!connected && !watchModeWallet) {
-        navCtrl.navigateForward([RoutingPath.NOT_CONNECTED]);
+        // preserve query params
+        const queryParams = activeRoute.snapshot.queryParams;
+        console.log(activeRoute, queryParams);
+        
+        navCtrl.navigateForward([RoutingPath.NOT_CONNECTED], { queryParams });
       }
     }),
     map(() => true),
     catchError(() => {
-      navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
+      // preserve query params
+      const queryParams = activeRoute.snapshot.queryParams;
+      navCtrl.navigateBack([RoutingPath.NOT_CONNECTED], { queryParams });
       return of(false);
     })
   );

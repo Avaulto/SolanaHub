@@ -33,6 +33,13 @@ export class NewsFeedComponent implements OnInit {
   }
   feed = [
     {
+      title: "Join Our Community",
+      description: "Become a member of our <a href='https://discord.gg/VauYjS7PMt' target='_blank'>Discord Community</a> to stay updated with the latest news and announcements and get custom role",
+      type: "informative",
+      color: "focus",
+      image: "assets/images/news-feed/news-1.png"
+    },
+    {
       title: "Automatic priority fees",
       description: "Priority fees are now automatically adjusted to your transactions base on network congestion",
       type: "feature",
@@ -46,14 +53,6 @@ export class NewsFeedComponent implements OnInit {
       color: "focus",
       image: "assets/images/news-feed/news-1.png"
     },
-    {
-      title: "hubSOL page revamp",
-      description: "You can now view hubSOL APY over multiple epochs and hot DeFi TVL on the hubSOL page",
-      type: "informative",
-      color: "focus",
-      image: "assets/images/news-feed/news-1.png"
-    },
-
     {
       title: "Full LST unstake support",
       description: "We added full LST unstake support for all LST tokens on staking page",
