@@ -1,9 +1,10 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
-import { map, tap, take, filter, catchError, of, timeout } from 'rxjs';
+import { map, tap, take, filter, catchError, of, timeout, combineLatestWith, distinctUntilChanged } from 'rxjs';
 import { RoutingPath } from '../constants';
 import { NavController } from '@ionic/angular';
+import { WatchModeService } from 'src/app/services/watch-mode.service';
 export const isConnectedGuard = () => {
   const walletStore = inject(WalletStore);
  // Store the attempted URL
@@ -12,12 +13,14 @@ export const isConnectedGuard = () => {
    sessionStorage.setItem('attemptedUrl', attemptedUrl);
  }
   const navCtrl = inject(NavController);
+  const watchModeWallet$ = inject(WatchModeService).watchedWallet$
   return walletStore.connected$.pipe(
+    combineLatestWith(watchModeWallet$),
+    distinctUntilChanged(),
     take(2),
-    filter(connected => connected),
     timeout(300),
-    tap(connected => {
-      if (!connected) {
+    tap(([connected, watchModeWallet]) => {
+      if (!connected && !watchModeWallet) {
         navCtrl.navigateForward([RoutingPath.NOT_CONNECTED]);
       }
     }),

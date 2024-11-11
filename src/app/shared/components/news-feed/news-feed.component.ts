@@ -40,19 +40,20 @@ export class NewsFeedComponent implements OnInit {
       image: "assets/images/news-feed/news-1.png"
     },
     {
+      title: "Loyalty league Points update",
+      description: "Our points system is now static and updated once per day",
+      type: "informative",
+      color: "focus",
+      image: "assets/images/news-feed/news-1.png"
+    },
+    {
       title: "hubSOL page revamp",
       description: "You can now view hubSOL APY over multiple epochs and hot DeFi TVL on the hubSOL page",
       type: "informative",
       color: "focus",
       image: "assets/images/news-feed/news-1.png"
     },
-    {
-      title: "Loyalty league v2 is LIVE",
-      description: "New points system, new look, new boosters, and new rewards model, new EVERYTHING 🚀 ",
-      type: "feature",
-      color: "secondary",
-      image: "assets/images/news-feed/news-1.png"
-    },
+
     {
       title: "Full LST unstake support",
       description: "We added full LST unstake support for all LST tokens on staking page",
