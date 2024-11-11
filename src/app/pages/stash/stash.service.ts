@@ -1,11 +1,18 @@
-import { Injectable, Signal, computed, effect, signal } from '@angular/core';
-import { BN } from '@marinade.finance/marinade-ts-sdk';
-import {  LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
-import { ApiService, JupStoreService, PortfolioFetchService, PortfolioService, SolanaHelpersService, ToasterService, TxInterceptorService, UtilService } from 'src/app/services';
-import { OutOfRange, StashAsset, StashGroup } from './stash.model';
+import { Injectable, Signal, computed, signal } from '@angular/core';
+import { LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
+import { 
+  ApiService, 
+  JupStoreService, 
+  PortfolioFetchService, 
+  PortfolioService, 
+  SolanaHelpersService, 
+  ToasterService, 
+  TxInterceptorService, 
+  UtilService 
+} from 'src/app/services';
+import { OutOfRange, StashAsset, StashGroup, TokenInfo } from './stash.model';
 import { NftsService } from 'src/app/services/nfts.service';
-
-
+import { burnChecked, createBurnCheckedInstruction } from "../../../../node_modules/@solana/spl-token";
 
 
 @Injectable({
@@ -13,135 +20,210 @@ import { NftsService } from 'src/app/services/nfts.service';
 })
 export class StashService {
   private outOfRangeDeFiPositionsSignal = signal<StashGroup | null>(null);
+  private zeroValueAssetsSignal = signal<any>(null);
 
   constructor(
     private _nftService: NftsService,
     private _utils: UtilService,
     private _jupStoreService: JupStoreService,
     private _shs: SolanaHelpersService,
-    // private _nss: NativeStakeService,
     private _apiService: ApiService,
     private _txi: TxInterceptorService,
     private _portfolioService: PortfolioService,
-    private _portfolioFetchService: PortfolioFetchService, 
+    private _portfolioFetchService: PortfolioFetchService,
     private _toasterService: ToasterService
   ) {
-
-    this.updateOutOfRangeDeFiPositions();
-
+    this.initializeService();
   }
+
+  private initializeService() {
+    this.updateOutOfRangeDeFiPositions();
+    this.updateZeroValueAssets();
+  }
+
+  private createStashGroup(
+    label: string, 
+    description: string, 
+    actionTitle: string, 
+    assets: StashAsset[]
+  ): StashGroup {
+    const group: StashGroup = {
+      label,
+      description,
+      actionTitle,
+      value: 0,
+      data: { assets }
+    };
+    
+    group.value = assets.reduce((acc, curr) => 
+      acc + (curr.value || curr.extractedValue?.SOL * this._jupStoreService.solPrice() || 0), 0);
+    return group;
+  }
+
+  private mapToStashAsset(
+    item: any, 
+    category: 'nft' | 'token' | 'stake' | 'defi',
+    extraData: Record<string, any> = {}
+  ): StashAsset {
+
+    const baseAsset = {
+      name: item.name,
+      symbol: item.symbol,
+      imgUrl: item.imgUrl,
+      mint: item.mint,
+      decimals: item?.decimals,
+      account: this._utils.addrUtil(item['address'] || 'default'),
+      action: this.getActionByCategory(category),
+      type: this.getTypeByCategory(category),
+      source: this.getSourceByCategory(category),
+      ...extraData
+    };
+
+    switch (category) {
+      case 'defi':
+        return {
+          ...baseAsset,
+          name: item.poolPair,
+          symbol: item.poolPair,
+          imgUrl: [item.poolTokenA.imgUrl, item.poolTokenB.imgUrl],
+          tokens: [item.poolTokenA, item.poolTokenB].map(this.mapToTokenInfo),
+          platform: item.platform,
+          platformImgUrl: item.platformImgUrl,
+          value: item.pooledAmountAWithRewardsUSDValue + item.pooledAmountBWithRewardsUSDValue,
+          extractedValue: {
+            [item.poolTokenA.symbol]: Number(item.pooledAmountAWithRewards),
+            [item.poolTokenB.symbol]: Number(item.pooledAmountBWithRewards)
+          },
+          positionData: item.positionData
+        };
+      case 'stake':
+        return {
+          ...baseAsset,
+          extractedValue: { SOL: item.excessLamport / LAMPORTS_PER_SOL }
+        };
+      default:
+        return {
+          ...baseAsset,
+          extractedValue: { SOL: 0.02 }
+        };
+    }
+  }
+
+  private mapToTokenInfo(token: any): TokenInfo {
+    return {
+      address: token.address,
+      decimals: token.decimals,
+      symbol: token.symbol,
+      imgUrl: token.imgUrl || token.imgURL
+    };
+  }
+
+  private getActionByCategory(category: string): string {
+    const actions = {
+      defi: 'Withdraw & Close',
+      stake: 'harvest',
+      default: 'burn'
+    };
+    return actions[category] || actions.default;
+  }
+
+  private getTypeByCategory(category: string): string {
+    const types = {
+      nft: 'nft',
+      defi: 'defi-position',
+      stake: 'stake-account',
+      default: 'empty-account'
+    };
+    return types[category] || types.default;
+  }
+
+  private getSourceByCategory(category: string): string {
+    const sources = {
+      defi: 'out of range',
+      stake: 'excess balance',
+      default: 'no market value'
+    };
+    return sources[category] || sources.default;
+  }
+
   public findZeroValueAssets = computed(() => {
-    const NFTs = this._portfolioService.nfts()
-    const tokens = this._portfolioService.tokens()
-    if (!NFTs && !tokens) return null
-    // filter nft zero value and orca & raydium position(clmm & amm & whirlpool)
-
-    // add new property to nft items called category and set it to 'nft'
-    const nftItems = NFTs?.map(acc => ({...acc, category: 'nft'}))
-    const filterNftZeroValue = nftItems?.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice == 0)
-                                .filter((token: any) => !token.name.includes('Orca Whirlpool Position') && !token.name.includes('Raydium Concentrated Liquidity'))
-    // add new property to tokens items called category and set it to 'token'
-    const tokenItems = tokens.map(acc => ({...acc, category: 'token'}))
-    const filterTokenZeroValue = tokenItems.filter(acc => Number(acc.value) < 0.01 && Number(acc.value) == 0)
-    console.log(filterNftZeroValue);
+    const NFTs = this._portfolioService.nfts();
+    const tokens = this._portfolioService.tokens();
+    const additionalAssets = this.zeroValueAssetsSignal();
     
-    const nftZeroValueGroup = {
-      label: 'zero value assets',
-      description: "This dataset includes NFTs and tokens that are not used and sit idle ready to be withdrawal.",
-      actionTitle: "burn",
-      value: 0,
-      data: {
-        assets: [...filterNftZeroValue, ...filterTokenZeroValue].map(acc => ({
-          name: acc.name,
-          symbol: acc.symbol,
-          imgUrl: acc.imgUrl,
-          account: this._utils.addrUtil(acc.address),
-          source: 'no market value',
-          extractedValue: { SOL: 0.02 },
-          action: 'burn',
-          type: acc.category === 'nft' ? 'nft' : 'empty-account'
-        }))
-      }
-    }
-    nftZeroValueGroup.value = nftZeroValueGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.SOL * this._jupStoreService.solPrice(), 0)
-    // console.log(nftZeroValueGroup);
+    if (!NFTs || !tokens || !additionalAssets) return null;
+    console.log(NFTs, tokens, additionalAssets);
+    const filterNftZeroValue = NFTs
+      ?.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice === 0)
+      .filter(token => !token.name.includes('Orca Whirlpool Position') 
+        && !token.name.includes('Raydium Concentrated Liquidity'))
+      .map(nft => this.mapToStashAsset(nft, 'nft'));
 
-    return nftZeroValueGroup
+    const filterTokenZeroValue = tokens
+      .filter(acc => Number(acc.value) < 1);
+    // add simiar filter to additionalAssets
+    // const additionalZeroValueTokens = additionalAssets
+    //   .filter(acc => Number(acc.value) < 1);
+    // Combine tokens and additional assets before mapping
+    const allTokens = [...filterTokenZeroValue, ...additionalAssets];
+    console.log('allTokens', allTokens);
+    // Create a Map to merge duplicates based on address
+    const mergedTokensMap = new Map();
+    allTokens.forEach(token => {
+      console.log(token);
+      
+      const address = token.address;
+      if (mergedTokensMap.has(address)) {
+        const existing = mergedTokensMap.get(address);
 
-  })
-  public findStakeOverflow = computed(() => {
-    const accounts = this._portfolioService.staking()
-    if (!accounts) return null
-    const filterActiveAccounts = accounts.filter(acc => acc.state === 'active')
-    const filterExceedBalance = filterActiveAccounts.filter(acc => acc.excessLamport && !acc.locked)
-    const unstakedGroup = {
-      label: 'Unstaked overflow',
-      description: "Excess balance from your stake account mostly driven by MEV rewards that are not compounded.",
-      actionTitle: "harvest",
-      value: 0,
-      data: {
-        assets: filterExceedBalance.map(acc => ({
-          name: acc.validatorName,
-          symbol: acc.symbol,
-          imgUrl: acc.imgUrl,
-          account: this._utils.addrUtil(acc.address),
-          source: 'excess balance',
-          extractedValue: { SOL: acc.excessLamport / LAMPORTS_PER_SOL },
-          action: 'harvest',
-          type: 'stake-account',
-        }))
-      }
-    }
-    unstakedGroup.value = unstakedGroup.data.assets.reduce((acc, curr) => acc + curr.extractedValue.SOL * this._jupStoreService.solPrice(), 0)
-
-    return unstakedGroup
-  })
-  // public findOutOfRangeDeFiPositions = computed(() => {
-  //   const positions = this._portfolioService.defi()
-  //   if (!positions) return null
-  //   const filterOutOfRange = positions.filter(p => p.tags?.includes('Out Of Range'))
-  //   console.log('defi positions', filterOutOfRange);
-    
-  //   const stashGroup: StashGroup = {
-  //     label: 'zero yield zones',
-  //     description: "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
-  //     actionTitle: "Withdraw & Close",
-  //     value: 0,
-  //     data: {
+        mergedTokensMap.set(address, {
+          ...existing,
+          mint: (!existing.mint && token.mint) ? token.mint : existing.mint,
+          name: (!existing.name && token.name) ? token.name : existing.name,
+          symbol: (!existing.symbol && token.symbol) ? token.symbol : existing.symbol,
+          imgUrl: (!existing.imgUrl && token.imgUrl) ? token.imgUrl : existing.imgUrl,
+          decimals: (!existing.decimals && token.decimals) ? token.decimals : existing.decimals,
+          balance: (!existing.balance && token.balance) ? token.balance : existing.balance,
+        });
+        console.log(mergedTokensMap.get(address));
         
-  //       assets: filterOutOfRange.map(p => ({
-  //         // if symbol is wSOL, then replace it to SOL
-  //         name: p.poolTokens[0].symbol + '-' + p.poolTokens[1].symbol,
-  //         symbol: p.poolTokens[0].symbol + '-' + p.poolTokens[1].symbol,
-  //         imgUrl: [p.poolTokens[0].imgURL, p.poolTokens[1].imgURL],
-  //         tokens: [p.poolTokens[0], p.poolTokens[1]].map(token => ({
-  //           address: token.address,
-  //           decimals: token.decimals,
-  //           symbol: token.symbol,
-  //           imgUrl: token.imgURL
-  //         })),
-  //         platform: p.platform,
-  //         platformImgUrl: p.imgURL,
-  //         account: this._utils.addrUtil('awdawaxaxjnawjan23424asndwadawd'),
-  //         source: 'out of range',
-  //         action: 'Withdraw & Close',
-  //         type: 'defi-position',
-  //         value: p.value,
-  //         extractedValue: {
-  //           [p.poolTokens[0].symbol == 'wSOL' ? 'SOL' : p.poolTokens[0].symbol]: Number(p.holdings[0].balance),
-  //           [p.poolTokens[1].symbol == 'wSOL' ? 'SOL' : p.poolTokens[1].symbol]: Number(p.holdings[1].balance)
-  //         },
-  //       }))
-  //     }
-  //   }
-  //   stashGroup.value = stashGroup.data.assets.reduce((acc, curr) => acc + curr.value, 0)
-  //   console.log(stashGroup);
-  //   return stashGroup
-  // })
+      } else {
+        mergedTokensMap.set(address, token);
+      }
+    });
+
+    // Combine unique tokens with NFTs
+    const allAssets = [...filterNftZeroValue, ...Array.from(mergedTokensMap.values())];
+    console.log(allAssets);
+    
+    return this.createStashGroup(
+      'zero value assets',
+      "This dataset includes NFTs and tokens that are not used and sit idle ready to be withdrawal.",
+      "burn",
+      allAssets
+    );
+  });
+
+  public findStakeOverflow = computed(() => {
+    const accounts = this._portfolioService.staking();
+    if (!accounts) return null;
+
+    const filterExceedBalance = accounts
+      .filter(acc => acc.state === 'active' && acc.excessLamport && !acc.locked)
+      .map(acc => this.mapToStashAsset(acc, 'stake'));
+
+    return this.createStashGroup(
+      'Unstaked overflow',
+      "Excess balance from your stake account mostly driven by MEV rewards that are not compounded.",
+      "harvest",
+      filterExceedBalance
+    );
+  });
 
   public findOutOfRangeDeFiPositions = computed(() => {
     return this.outOfRangeDeFiPositionsSignal();
   });
+
   public async getOutOfRangeDeFiPositions(): Promise<OutOfRange[]> {
     const { publicKey } = this._shs.getCurrentWallet()
     try {
@@ -153,6 +235,17 @@ export class StashService {
       return null
     }
   }
+
+  public async getZeroValueAssets() {
+    const { publicKey } = this._shs.getCurrentWallet()
+    try {
+      const unknownAssets = await this._shs.getTokenAccountsBalance(publicKey.toBase58(), true, false, 'token')
+      return unknownAssets
+    } catch (error) {
+      return null
+    }
+  }
+
   async withdrawStakeAccountExcessBalance(accounts: StashAsset[]) {
     const { publicKey } = this._shs.getCurrentWallet()
     const withdrawTx = accounts.map(acc => StakeProgram.withdraw({
@@ -187,7 +280,6 @@ export class StashService {
         method: 'POST',
         body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
       })).json()
-      console.log(encodedIx);
       const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
        this._txi.sendMultipleTxn(txInsArray).then(res => {
         if(res) {
@@ -200,6 +292,7 @@ export class StashService {
       return null
     }
   }
+
   private async updateOutOfRangeDeFiPositions() {
     const positions = await this.getOutOfRangeDeFiPositions();
     if (!positions) {
@@ -242,12 +335,33 @@ export class StashService {
     this.outOfRangeDeFiPositionsSignal.set(stashGroup);
   }
 
+  async updateZeroValueAssets() {
+    const zeroValueAssets = await this.getZeroValueAssets();
+    if (zeroValueAssets) {
+      this.zeroValueAssetsSignal.set(zeroValueAssets);
+    }
+  }
+
   public async burnAccounts(accounts: StashAsset[]) {
     const { publicKey } = this._shs.getCurrentWallet()
+
     const nftsAddress = accounts.filter(acc => acc.type === 'nft').map(acc => (acc).account.addr)
     console.log(nftsAddress,accounts);
     
-    const burnNftTx = await this._nftService.burnNft(nftsAddress, publicKey.toBase58())
-    await this._txi.sendMultipleTxn(burnNftTx)
+    // const burnNftTx = await this._nftService.burnNft(nftsAddress, publicKey.toBase58())
+    const burnTokenTx = await Promise.all(accounts.filter(acc => acc.type === 'token').map(async acc => {
+      let tx = new Transaction().add(
+        createBurnCheckedInstruction(
+          new PublicKey(acc.account.addr), // token account
+          new PublicKey(acc.mint), // mint
+          publicKey, // owner of token account
+          acc.balance, // amount, if your deciamls is 8, 10^8 for 1 token
+          acc.decimals, // decimals
+        ),
+      );
+      return tx
+    }))
+    console.log(burnTokenTx);
+    await this._txi.sendMultipleTxn([...burnTokenTx])
   }
 }

@@ -204,10 +204,10 @@ export class SolanaHelpersService {
       let tokensBalance = accounts.map((account, i) => {
         //Parse the account data
         const parsedAccountInfo: any = account.account.data;
-        const address: string = parsedAccountInfo["parsed"]["info"]["mint"];
+        const mint: string = parsedAccountInfo["parsed"]["info"]["mint"];
         const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
         const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
-        return { data:{tokenAccount: account.pubkey.toString(), address, balance, decimals} }
+        return { data:{address: account.pubkey.toString(), mint, balance, decimals} }
       })
       if (getType) {
         if (getType == 'nft') {

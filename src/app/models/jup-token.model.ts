@@ -2,6 +2,7 @@
 export interface JupToken {
     chainId: number; // 101,
     address: string; // 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    mint?: string;
     symbol: string; // 'USDC',
     name: string; // 'Wrapped USDC',
     decimals: number; // 6,

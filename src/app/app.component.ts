@@ -137,7 +137,7 @@ export class AppComponent implements OnInit {
 
     const modal = await this._modalCtrl.create({
       component: NewsFeedComponent,
-      cssClass: 'modal-style'
+      cssClass: 'news-feed-modal'
     });
     modal.present();
     va.track('news feed', { event: 'open' })

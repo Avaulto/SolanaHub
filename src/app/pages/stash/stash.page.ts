@@ -229,18 +229,18 @@ export class StashPage implements OnInit {
   
   }
   async getSavingData() {
-    const minLoadingTime = 3000
+    this.analyzeStage.set(1)
+    // const minLoadingTime = 3000
 
 
 
-    setTimeout(() => {
-      const interval = setInterval(() => {
-        if(this.assets().length >3) {
-          this.analyzeStage.set(1)
-          clearInterval(interval)
-        }
-      }, 500);
-    }, minLoadingTime);
+    // setTimeout(() => {
+    //   const interval = setInterval(() => {
+    //     if(this.assets().length >3) {
+    //       clearInterval(interval)
+    //     }
+    //   }, 500);
+    // }, minLoadingTime);
 
   }
    async openStashPopup(event: StashAsset[]) {
