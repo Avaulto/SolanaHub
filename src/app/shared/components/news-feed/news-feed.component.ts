@@ -34,7 +34,7 @@ export class NewsFeedComponent implements OnInit {
   feed = [
     {
       title: "Join Our Community",
-      description: "Become a member of our <a href='https://discord.gg/VauYjS7PMt' target='_blank'>Discord Community</a> to stay updated with the latest news and announcements and get custom role",
+      description: "Become a member of our <a href='https://discord.gg/bcVhnpww7N' target='_blank'>Discord Community</a> to stay updated with the latest news and announcements and get custom role",
       type: "informative",
       color: "focus",
       image: "assets/images/news-feed/news-1.png"
