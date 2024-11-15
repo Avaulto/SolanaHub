@@ -4,9 +4,9 @@ import { IonIcon, IonButton, IonRippleEffect } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
 import { PortfolioService, UtilService } from 'src/app/services';
-import { NewPortfolioSetupComponent } from './new-portfolio-setup/new-portfolio-setup.component';
 import { PopoverController } from '@ionic/angular';
 import { JsonPipe } from '@angular/common';
+import { AddPortfolioPopupComponent } from './add-portfolio-popup/add-portfolio-popup.component';
 
 @Component({
   selector: 'portfolio-menu',
@@ -42,14 +42,11 @@ export class PortfolioMenuComponent  implements OnInit {
     this._portfolioService.getPortfolioAssets(testAddress, 'TST');
   }
  async openNewPortfolioSetup() {
-  this.addNewPortfolio();
+    const modal =  await this._popoverController.create({
+      component: AddPortfolioPopupComponent,
+      mode: 'ios',
 
-
-    // const modal =  await this._popoverController.create({
-    //   component: NewPortfolioSetupComponent,
-    //   mode: 'ios',
-
-    // });
-    // await modal.present();
+    });
+    await modal.present();
   }
 }

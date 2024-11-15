@@ -26,7 +26,8 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   standalone: true,
-  imports: [IonContent, 
+  imports: [
+    IonContent, 
     FreemiumModule,
     IonButton,
     IonImg,
@@ -39,7 +40,7 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    BurnNftModalComponent,
+    // BurnNftModalComponent,
     UnstakeLstModalComponent,
     FaqModalComponent
   ]

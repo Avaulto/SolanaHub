@@ -1,7 +1,14 @@
-<div class="portfolio-box ion-activatable ripple-parent">
-  <div class="portfolio-box-header">{{wallet.walletAddress}}</div>
+<div class="portfolio-box">
+  <div class="portfolio-box-header">
+    <div class="portfolio-box-header-text">{{wallet.walletAddress}}</div>
+    <div class="portfolio-actions">
+      <ion-toggle color="primary" checked="true"></ion-toggle>
+      @if(!isPrimary) {
+        <ion-icon (click)="deleteWallet()" name="trash-outline"></ion-icon>
+      }
+    </div>
+  </div>
   <div class="portfolio-box-body">
-    <ion-label> net worth</ion-label>
     <ion-text>{{wallet.netWorth | currency:'USD'}}</ion-text>
   </div>
   <ion-ripple-effect/>

@@ -1,21 +1,35 @@
 .portfolio-box {
-    border-radius: 4px;
+    border-radius: 10px;
     padding: 12px;
     cursor: pointer;
     background-color: #fff;
-    border: 1px solid var(--ion-color-primary);
 }
-.ripple-parent {
-    position: relative;
-    overflow: hidden;
-  }
+.portfolio-actions {
+    display: flex;
+}
 .portfolio-box-header {
     font-weight: 600;
     color: var(--ion-color-dark);
     margin-block-end: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+.portfolio-box-header-text{
+    color: var(--ion-color-primary);
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 28px;
+    letter-spacing: 0.16px;
+}
+ion-toggle{
+    margin-inline-end: 6px;
 }
 .portfolio-box-body {
     display: flex;
     justify-content: space-between;
     text-transform: capitalize;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 28px;
+    letter-spacing: 0.16px;
 }

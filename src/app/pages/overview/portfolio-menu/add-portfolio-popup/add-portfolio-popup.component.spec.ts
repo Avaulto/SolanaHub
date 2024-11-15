@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { NewPortfolioSetupComponent } from './new-portfolio-setup.component';
+import { AddPortfolioPopupComponent } from './add-portfolio-popup.component';
 
-describe('NewPortfolioSetupComponent', () => {
-  let component: NewPortfolioSetupComponent;
-  let fixture: ComponentFixture<NewPortfolioSetupComponent>;
+describe('AddPortfolioPopupComponent', () => {
+  let component: AddPortfolioPopupComponent;
+  let fixture: ComponentFixture<AddPortfolioPopupComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewPortfolioSetupComponent ],
+      declarations: [ AddPortfolioPopupComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(NewPortfolioSetupComponent);
+    fixture = TestBed.createComponent(AddPortfolioPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
