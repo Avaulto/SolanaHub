@@ -18,7 +18,6 @@ export const isConnectedGuard = () => {
   // Store the attempted URL
   const attemptedUrl = router.getCurrentNavigation()?.finalUrl?.toString();
   const currentQueryParams = navigation?.extractedUrl.queryParams || {};
-  console.log(attemptedUrl, currentQueryParams);
   if (attemptedUrl) {
    sessionStorage.setItem('attemptedUrl', attemptedUrl);
    // if refCode is present, store it

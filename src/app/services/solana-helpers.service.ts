@@ -204,13 +204,14 @@ export class SolanaHelpersService {
       let tokensBalance = accounts.map((account, i) => {
         //Parse the account data
         const parsedAccountInfo: any = account.account.data;
-        const mint: string = parsedAccountInfo["parsed"]["info"]["mint"];
+        const address: string = parsedAccountInfo["parsed"]["info"]["mint"];
         const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
         const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
-        return { data:{address: account.pubkey.toString(), mint, balance, decimals} }
+        return { data:{mint: account.pubkey.toString(), address, balance, decimals} }
       })
       if (getType) {
         if (getType == 'nft') {
+          console.log('nft:::::', tokensBalance);
           tokensBalance = tokensBalance.filter(token => token.data.decimals == 0)
         } else if (getType == 'token') {
           tokensBalance = tokensBalance.filter(token => token.data.decimals != 0)
@@ -218,13 +219,15 @@ export class SolanaHelpersService {
       }
       if(includeMeta){
         const jupTokens = await this._utils.getJupTokens()
+
         tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens)
       }
       if(emptyAccountOnly){
-        console.log(tokensBalance);
+        console.log('emptyAccountOnly:::::', tokensBalance);
         
         tokensBalance = tokensBalance.filter((acc: any) => acc.balance === 0)
       }
+      console.log('tokensBalance:::::', tokensBalance);
       return tokensBalance;
 
     }

@@ -1,18 +1,19 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
-import { 
-  ApiService, 
-  JupStoreService, 
-  PortfolioFetchService, 
-  PortfolioService, 
-  SolanaHelpersService, 
-  ToasterService, 
-  TxInterceptorService, 
-  UtilService 
+import {
+  ApiService,
+  JupStoreService,
+  PortfolioFetchService,
+  PortfolioService,
+  SolanaHelpersService,
+  ToasterService,
+  TxInterceptorService,
+  UtilService
 } from 'src/app/services';
 import { OutOfRange, StashAsset, StashGroup, TokenInfo } from './stash.model';
 import { NftsService } from 'src/app/services/nfts.service';
-import { burnChecked, createBurnCheckedInstruction } from "../../../../node_modules/@solana/spl-token";
+import { burnChecked, createBurnCheckedInstruction, createCloseAccountInstruction } from "../../../../node_modules/@solana/spl-token";
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 
 @Injectable({
@@ -42,9 +43,9 @@ export class StashService {
   }
 
   private createStashGroup(
-    label: string, 
-    description: string, 
-    actionTitle: string, 
+    label: string,
+    description: string,
+    actionTitle: string,
     assets: StashAsset[]
   ): StashGroup {
     const group: StashGroup = {
@@ -54,14 +55,14 @@ export class StashService {
       value: 0,
       data: { assets }
     };
-    
-    group.value = assets.reduce((acc, curr) => 
+
+    group.value = assets.reduce((acc, curr) =>
       acc + (curr.value || curr.extractedValue?.SOL * this._jupStoreService.solPrice() || 0), 0);
     return group;
   }
 
   private mapToStashAsset(
-    item: any, 
+    item: any,
     category: 'nft' | 'token' | 'stake' | 'defi',
     extraData: Record<string, any> = {}
   ): StashAsset {
@@ -73,6 +74,7 @@ export class StashService {
       mint: item.mint,
       decimals: item?.decimals,
       account: this._utils.addrUtil(item['address'] || 'default'),
+      balance: item.balance,
       action: this.getActionByCategory(category),
       type: this.getTypeByCategory(category),
       source: this.getSourceByCategory(category),
@@ -104,7 +106,7 @@ export class StashService {
       default:
         return {
           ...baseAsset,
-          extractedValue: { SOL: 0.02 }
+          extractedValue: { SOL: 0.002039 }
         };
     }
   }
@@ -150,12 +152,12 @@ export class StashService {
     const NFTs = this._portfolioService.nfts();
     const tokens = this._portfolioService.tokens();
     const additionalAssets = this.zeroValueAssetsSignal();
-    
+
     if (!NFTs || !tokens || !additionalAssets) return null;
     console.log(NFTs, tokens, additionalAssets);
     const filterNftZeroValue = NFTs
       ?.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice === 0)
-      .filter(token => !token.name.includes('Orca Whirlpool Position') 
+      .filter(token => !token.name.includes('Orca Whirlpool Position')
         && !token.name.includes('Raydium Concentrated Liquidity'))
       .map(nft => this.mapToStashAsset(nft, 'nft'));
 
@@ -165,40 +167,35 @@ export class StashService {
     // const additionalZeroValueTokens = additionalAssets
     //   .filter(acc => Number(acc.value) < 1);
     // Combine tokens and additional assets before mapping
-    const allTokens = [...filterTokenZeroValue, ...additionalAssets];
-    console.log('allTokens', allTokens);
-    // Create a Map to merge duplicates based on address
-    const mergedTokensMap = new Map();
-    allTokens.forEach(token => {
-      console.log(token);
+    // loop through additionalAssets and check if the token is already in the filterTokenZeroValue
+    // if it is, extend the existing token with the additional data
+    const additionalTokensExtended = additionalAssets.map((asset: any) => {
+      console.log(asset);
       
-      const address = token.address;
-      if (mergedTokensMap.has(address)) {
-        const existing = mergedTokensMap.get(address);
-
-        mergedTokensMap.set(address, {
-          ...existing,
-          mint: (!existing.mint && token.mint) ? token.mint : existing.mint,
-          name: (!existing.name && token.name) ? token.name : existing.name,
-          symbol: (!existing.symbol && token.symbol) ? token.symbol : existing.symbol,
-          imgUrl: (!existing.imgUrl && token.imgUrl) ? token.imgUrl : existing.imgUrl,
-          decimals: (!existing.decimals && token.decimals) ? token.decimals : existing.decimals,
-          balance: (!existing.balance && token.balance) ? token.balance : existing.balance,
-        });
-        console.log(mergedTokensMap.get(address));
+      const existingToken = filterTokenZeroValue.find(t => t.address === asset.address);
+      if (existingToken) {
+        console.log('existingToken:::::', existingToken);
         
-      } else {
-        mergedTokensMap.set(address, token);
+        return this.mapToStashAsset({
+          ...existingToken,
+          address: asset.mint,
+          value: Number(existingToken.value) + Number(asset.value) || 0,
+        }, asset.decimals == 1 ? 'nft' : 'token');
       }
+      return this.mapToStashAsset({
+        ...asset,
+        value: Number(asset.value) || 0,
+      }, asset.decimals == 1 ? 'nft' : 'token');
     });
 
+
     // Combine unique tokens with NFTs
-    const allAssets = [...filterNftZeroValue, ...Array.from(mergedTokensMap.values())];
-    console.log(allAssets);
-    
+    const allAssets = [...filterNftZeroValue, ...additionalTokensExtended];
+    console.log('allAssets:::::', allAssets);
+
     return this.createStashGroup(
       'zero value assets',
-      "This dataset includes NFTs and tokens that are not used and sit idle ready to be withdrawal.",
+      "This dataset includes NFTs and tokens with value less than solana account rent fee(0.002039 SOL)",
       "burn",
       allAssets
     );
@@ -239,7 +236,9 @@ export class StashService {
   public async getZeroValueAssets() {
     const { publicKey } = this._shs.getCurrentWallet()
     try {
-      const unknownAssets = await this._shs.getTokenAccountsBalance(publicKey.toBase58(), true, false, 'token')
+      const unknownAssets = await this._shs.getTokenAccountsBalance(publicKey.toBase58(), true, false)
+      // remove token with no symbol
+      const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
       return unknownAssets
     } catch (error) {
       return null
@@ -256,12 +255,12 @@ export class StashService {
     }));
     this
     this._txi.sendTx(withdrawTx, publicKey).then(res => {
-    if(res) {
-      this._portfolioFetchService.refetchPortfolio()
-    }
-  })
-  
-    
+      if (res) {
+        this._portfolioFetchService.refetchPortfolio()
+      }
+    })
+
+
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
   }
 
@@ -276,17 +275,17 @@ export class StashService {
         }
       })
       // get remove liquidity tx instructions
-      const encodedIx  = await (await fetch(`${this._utils.serverlessAPI}/api/stash/close-positions`, {
+      const encodedIx = await (await fetch(`${this._utils.serverlessAPI}/api/stash/close-positions`, {
         method: 'POST',
         body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
       })).json()
       const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
-       this._txi.sendMultipleTxn(txInsArray).then(res => {
-        if(res) {
+      this._txi.sendMultipleTxn(txInsArray).then(res => {
+        if (res) {
           this.updateOutOfRangeDeFiPositions()
         }
       })
-      
+
     } catch (error) {
       console.log(error);
       return null
@@ -299,7 +298,7 @@ export class StashService {
       this.outOfRangeDeFiPositionsSignal.set(null);
       return;
     }
-    
+
     const stashGroup: StashGroup = {
       label: 'zero yield zones',
       description: "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
@@ -346,22 +345,40 @@ export class StashService {
     const { publicKey } = this._shs.getCurrentWallet()
 
     const nftsAddress = accounts.filter(acc => acc.type === 'nft').map(acc => (acc).account.addr)
-    console.log(nftsAddress,accounts);
-    
+    const tokens = accounts.filter(acc => acc.type === 'empty-account').map(acc => acc)
+    console.log(nftsAddress, tokens);
+
     // const burnNftTx = await this._nftService.burnNft(nftsAddress, publicKey.toBase58())
-    const burnTokenTx = await Promise.all(accounts.filter(acc => acc.type === 'token').map(async acc => {
-      let tx = new Transaction().add(
-        createBurnCheckedInstruction(
-          new PublicKey(acc.account.addr), // token account
-          new PublicKey(acc.mint), // mint
-          publicKey, // owner of token account
-          acc.balance, // amount, if your deciamls is 8, 10^8 for 1 token
-          acc.decimals, // decimals
-        ),
-      );
-      return tx
+
+    // add recentBlockhash
+    // const recentBlockhash = await this._shs.getRecentBlockhash(publicKey.toBase58())
+    let tx = new Transaction();
+    await Promise.all(tokens.map(async acc => {
+      tx.add(createBurnCheckedInstruction(
+        new PublicKey(acc.account.addr),
+        new PublicKey(acc.mint),
+        publicKey,
+        BigInt(Math.floor(acc.balance * 10 ** acc.decimals)),
+        acc.decimals,
+      ))
     }))
-    console.log(burnTokenTx);
-    await this._txi.sendMultipleTxn([...burnTokenTx])
+    await Promise.all(tokens.map(async acc => {
+      tx.add(createCloseAccountInstruction(
+        new PublicKey(acc.account.addr), // token account
+        publicKey,
+        publicKey
+      ))
+
+    }))
+    console.log(tx);
+    const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+    // let tx = new Transaction().add( ...closeTokenTX)
+    tx.recentBlockhash = blockhash
+    tx.lastValidBlockHeight = lastValidBlockHeight
+    tx.feePayer = publicKey
+    console.log(tx);
+
+    await this._txi.sendMultipleTxn ([tx])
+
   }
 }
