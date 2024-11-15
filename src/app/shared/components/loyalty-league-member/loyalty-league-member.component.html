@@ -16,12 +16,7 @@
     <ion-text>
       @if(member$ | async; as member){
         @if(member.totalPts){
-          <!-- {{totalPts}} -->
-          <number-counter 
-          [addOnNumber]="member.questsPts"
-          [targetNumber]="member.totalPts - member.questsPts"
-            [nextSnapshotTime]="member.nextUpdate" 
-            />
+          {{member.totalPts}}
         }@else{
         0
         }

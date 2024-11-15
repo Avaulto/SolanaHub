@@ -51,7 +51,7 @@ export class TableComponent  implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.stash);
+    // console.log(this.stash);
     
     this.tableData.set(this.stash.data.assets)
 

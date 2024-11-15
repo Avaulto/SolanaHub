@@ -183,7 +183,15 @@ ion-spinner {
     --border-radius: 12px;
     --overflow: auto;
 }
-
+.news-feed-modal {
+    --width: 540px;
+    --border-radius: 12px;
+    --height: 800px;
+    --max-height: 90%;
+    --max-width: 95%;
+    --background: white;
+    overflow: auto;
+}
 .modal-style {
     --width: 540px;
     --border-radius: 12px;

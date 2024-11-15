@@ -70,11 +70,7 @@ export class MultipliersMenuComponent implements OnInit {
       }
     ],
     daoTokens: [
-      {
-        img: 'assets/images/MNDE.svg',
-        title: 'veMNDE',
-        pts: 0,
-      },
+   
       {
         img: 'assets/images/BLZE.svg',
         title: 'veBLZE',
@@ -193,11 +189,6 @@ export class MultipliersMenuComponent implements OnInit {
         }
       ],
       daoTokens: [
-        {
-          img: 'assets/images/MNDE.svg',
-          title: 'veMNDE',
-          pts: fetchedMultipliers.veMNDE,
-        },
         {
           img: 'assets/images/BLZE.svg',
           title: 'veBLZE',

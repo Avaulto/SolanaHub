@@ -1,3 +1,17 @@
+export interface AssetBase {
+  name: string;
+  symbol: string;
+  imgUrl: string | string[];
+  address: string;
+  value?: number;
+}
+
+export interface TokenInfo {
+  address: string;
+  decimals: number;
+  symbol: string;
+  imgUrl: string;
+}
 export interface StashGroup {
     // networkId: string
     // platformId: string
@@ -14,9 +28,11 @@ export interface StashGroup {
     name: string,
     symbol: string,
     imgUrl: string | string[],
-    platformImgUrl: string,
+    platformImgUrl?: string,
     tokens?: { address: string, decimals: number, symbol: string, imgUrl: string }[],
     balance?: number,
+    mint?: string,
+    decimals?: number,
     account: { addr: string, addrShort: string },
     platform?: string,
     poolPair?: string,

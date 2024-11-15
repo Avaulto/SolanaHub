@@ -43,13 +43,22 @@ export class LoyaltyLeagueMemberComponent {
   constructor(
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private utils: UtilService
   ) {
     addIcons({informationCircleOutline,chevronForwardOutline});
   }
   public hideLLv2 = this._loyaltyLeagueService.hideLLv2
   public wallet$ =this._shs.walletExtended$
-  public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$
+  public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$.pipe(
+    map(member => {
+      console.log(member)
+      return {
+        ...member,
+        totalPts: this.utils.formatBigNumbers(member.totalPts)
+      }
+    })
+  ) 
 
   public tiers = this._loyaltyLeagueService.tiers;
 

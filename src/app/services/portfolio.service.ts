@@ -255,6 +255,8 @@ export class PortfolioService {
       .filter(g => !excludeList.includes(g.platformId))
       .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
       .map(async group => {
+
+
         let records: defiHolding[] = [];
         // add if id =juptier jupiter-governance 
         group.platformId = group.platformId === 'jupiter-governance' ? 'jupiter-exchange' : group.platformId
@@ -266,6 +268,12 @@ export class PortfolioService {
             group.data.liquidities.map(async position => {
 
               const extendTokenData = this._utils.addTokenData(position.assets, tokensInfo)
+
+                      // if symbol is wSOL, then replace it to SOL
+              extendTokenData.map(asset => {
+                asset.symbol = asset.symbol === 'wSOL' ? 'SOL' : asset.symbol
+              })
+
 
               records.push({
                 value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
@@ -288,6 +296,12 @@ export class PortfolioService {
           group.data.assets.map(async asset => {
 
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
+
+            // if symbol is wSOL, then replace it to SOL
+            extendTokenData.map(asset => {
+              asset.symbol = asset.symbol === 'wSOL' ? 'SOL' : asset.symbol
+            })
+
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
@@ -306,6 +320,12 @@ export class PortfolioService {
 
           group.data.suppliedAssets.map(async asset => {
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
+
+            // if symbol is wSOL, then replace it to SOL
+            extendTokenData.map(asset => {
+              asset.symbol = asset.symbol === 'wSOL' ? 'SOL' : asset.symbol
+            })
+
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,
@@ -320,6 +340,12 @@ export class PortfolioService {
           group.data.borrowedAssets.map(async asset => {
 
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
+
+            // if symbol is wSOL, then replace it to SOL
+            extendTokenData.map(asset => {
+              asset.symbol = asset.symbol === 'wSOL' ? 'SOL' : asset.symbol
+            })
+
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
               imgURL: group.image,

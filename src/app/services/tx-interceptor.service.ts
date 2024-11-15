@@ -250,7 +250,7 @@ export class TxInterceptorService {
       console.log("Estimated priority fee:", priorityFeeEstimate);
 
       return ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: priorityFeeEstimate
+        microLamports: priorityFeeEstimate ? priorityFeeEstimate : 20_000
       })
 
 
@@ -258,7 +258,7 @@ export class TxInterceptorService {
     } catch (err) {
       console.error(`Error: ${err}`);
       return ComputeBudgetProgram.setComputeUnitPrice({
-        microLamports: 10_000
+        microLamports: 20_000
       })
     }
 

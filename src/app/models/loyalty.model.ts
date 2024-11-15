@@ -6,7 +6,6 @@ export interface Multipliers {
   hubSOL: number
   vSOL: number
   bSOL: number
-  veMNDE: number
   veBLZE: number
   referrals: number
   ambassador: number

@@ -43,12 +43,8 @@
             <span>
               @if(member$ | async; as member){
               @if(member.totalPts){
-                <!-- {{member.totalPts | number:'1.0-0'}} -->
-              <number-counter 
-              [addOnNumber]="member.questsPts"
-              [targetNumber]="member.totalPts - member.questsPts"
-                [nextSnapshotTime]="member.nextUpdate" 
-                />
+                {{member.totalPts | number:'1.0-0'}}
+             
               }@else{
               0
               }
@@ -88,14 +84,9 @@
                   <div class="points-category__value">
                     @if (member$ | async; as member) {
                       @if (member[category.key]) {
-                        @if(category.key !== 'questsPts'){
-                        <number-counter 
-                        [targetNumber]="member[category.key]"
-                        [nextSnapshotTime]="member.nextUpdate" 
-                        />  
-                        }@else{
+                     
                        {{ member[category.key] | number:'1.0-0'}}
-                        }
+                      
                       } @else {
                         0
                       }
