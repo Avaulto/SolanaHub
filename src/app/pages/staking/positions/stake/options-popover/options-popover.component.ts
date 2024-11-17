@@ -34,8 +34,7 @@ export class OptionsPopoverComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.stake);
-    
+
   }
   private  async openValidatorModal(btnText: string) {
     let config = {

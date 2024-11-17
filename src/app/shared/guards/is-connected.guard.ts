@@ -36,8 +36,6 @@ export const isConnectedGuard = () => {
       if (!connected && !watchModeWallet) {
         // preserve query params
         const queryParams = activeRoute.snapshot.queryParams;
-        console.log(activeRoute, queryParams);
-        
         navCtrl.navigateForward([RoutingPath.NOT_CONNECTED], { queryParams });
       }
     }),

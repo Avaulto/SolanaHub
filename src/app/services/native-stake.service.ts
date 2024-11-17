@@ -17,6 +17,7 @@ import {
   Transaction,
 
 } from '@solana/web3.js';
+const { struct, u32, u8 } = require('@solana/buffer-layout');
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 import { Stake, StakeAccountShyft, Validator, WalletExtended } from '../models';
@@ -34,6 +35,32 @@ export class NativeStakeService {
   ) { }
 
 
+  private async _getStakeAccountState(stakeAccountPubkey: PublicKey) {
+    // Fetch the account information
+    const accountInfo = await this._shs.connection.getAccountInfo(stakeAccountPubkey);
+    const StakeAccountLayout = struct([
+      u32('state'),
+      u8('rentExemptReserve'),
+      // Add other fields as necessary
+    ]);
+  
+    if (accountInfo === null) {
+      console.log('Stake account not found');
+      return;
+    }
+  
+    if (!accountInfo.owner.equals(StakeProgram.programId)) {
+      console.log('Not a stake account');
+      return;
+    }
+  
+    const data = Buffer.from(accountInfo.data);
+    const decodedData = StakeAccountLayout.decode(data);
+    //@ts-ignore
+    const state = decodedData.state;
+     //@ts-ignore
+    console.log('Stake account state:', state);
+  }
 
   private async _extendStakeAccount(
     account: StakeAccountShyft,
