@@ -10,7 +10,6 @@
 .portfolio-box-header {
     font-weight: 600;
     color: var(--ion-color-dark);
-    margin-block-end: 6px;
     display: flex;
     justify-content: space-between;
 }
@@ -21,9 +20,7 @@
     line-height: 28px;
     letter-spacing: 0.16px;
 }
-ion-toggle{
-    margin-inline-end: 6px;
-}
+
 .portfolio-box-body {
     display: flex;
     justify-content: space-between;
