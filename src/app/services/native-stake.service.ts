@@ -89,9 +89,9 @@ export class NativeStakeService {
       
       const stakeState = data.value?.data['parsed']?.info?.stake.delegation
       state = stakeState.activationEpoch == getCurrentEpoch.epoch ? "activating" 
+        : stakeState.deactivationEpoch === getCurrentEpoch.epoch ? "deactivating" 
         : stakeState.deactivationEpoch > getCurrentEpoch.epoch ? "active" 
         : stakeState.activationEpoch < getCurrentEpoch.epoch ? "inactive" 
-        : stakeState.deactivationEpoch === getCurrentEpoch.epoch ? "deactivating" 
         : "active"
 
   
