@@ -1,5 +1,5 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
 
@@ -26,6 +26,7 @@ import { CustomValidatorComponent } from './custom-validator/custom-validator.co
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'stake-form',
   templateUrl: './form.component.html',
@@ -45,7 +46,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
     InputLabelComponent
   ]
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, AfterViewInit {
   public solanaHubVoteKey = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public asset = {
     "address": "So11111111111111111111111111111111111111112",
@@ -73,7 +74,8 @@ export class FormComponent implements OnInit {
     private _nss: NativeStakeService,
     private _tis: TxInterceptorService,
     private _jupStore: JupStoreService,
-    private _localStorage: LocalStorageService
+    private _localStorage: LocalStorageService,
+    private _activatedRoute: ActivatedRoute
   ) {
 
   }
@@ -87,7 +89,7 @@ export class FormComponent implements OnInit {
     
   }
   ngOnInit() {
-
+    
     this.stakeForm = this._fb.group({
       amount: [null, [Validators.required]],
       validatorVoteIdentity: [null, [Validators.required]],
@@ -99,18 +101,22 @@ export class FormComponent implements OnInit {
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
   }
 
+  setStakePath = 'native'
+  ngAfterViewInit(): void {
+    const queryParams = this._activatedRoute.snapshot.queryParams;
+    if(queryParams['path'] === 'LST'){
+      this.setStakePath = 'liquid'
+
+    }
+  }
 
   setStakeSize(amount) {
-    // let {balance} = this._shs.getCurrentWallet()
-    // if(size === 'half'){
-    //   balance = balance / 2
-    // }
-    // amount = Number(this._util.decimalPipe.transform(amount, '1.4'))
     this.stakeForm.controls['amount'].setValue(amount)
   }
 
 
   selectStakePath(stakePath: 'native' | 'liquid') {
+    
     this.stakePath.set(stakePath)
     this.stakeForm.controls['validatorVoteIdentity'].reset()
     this.stakeForm.controls['stakingPath'].setValue(stakePath)

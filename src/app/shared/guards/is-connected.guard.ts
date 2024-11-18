@@ -31,7 +31,7 @@ export const isConnectedGuard = () => {
     combineLatestWith(watchModeWallet$),
     distinctUntilChanged(),
     take(2),
-    timeout(300),
+    timeout(100),
     tap(([connected, watchModeWallet]) => {
       if (!connected && !watchModeWallet) {
         // preserve query params

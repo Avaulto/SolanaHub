@@ -13,7 +13,7 @@
       <div>{{solPrice() * stakeForm.controls['amount'].value | currency}}</div>
     </div>
 
-    <stake-path style="display: block;" class="ion-margin-bottom" (onSelectPath)="selectStakePath($event)"/>
+    <stake-path style="display: block;" class="ion-margin-bottom" [stakePath]="setStakePath" (onSelectPath)="selectStakePath($event)"/>
     @if(stakePath() === 'native'){
       <select-validator [validatorsList]="validatorsList" (onSelectValidator)="setValidator($event)"/>
     }
