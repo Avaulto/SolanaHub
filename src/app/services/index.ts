@@ -12,3 +12,4 @@ export * from './dao.service'
 export * from './watch-mode.service'
 export * from './portfolio-refetch.service'
 export * from './local-storage.service'
+export * from "./address-validator.service"
