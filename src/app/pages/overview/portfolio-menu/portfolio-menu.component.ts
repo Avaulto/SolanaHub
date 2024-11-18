@@ -1,4 +1,4 @@
-import {Component, computed, effect, OnInit, ViewChild} from '@angular/core';
+import {Component, computed, effect} from '@angular/core';
 import {PortfolioBoxComponent} from './portfolio-box/portfolio-box.component';
 import {IonButton, IonIcon, IonImg, IonInput, IonLabel, IonRippleEffect, IonText} from "@ionic/angular/standalone";
 import {addIcons} from 'ionicons';
@@ -25,7 +25,7 @@ import {AddPortfolioPopupComponent} from "./add-portfolio-popup/add-portfolio-po
     IonText,
   ]
 })
-export class PortfolioMenuComponent implements OnInit {
+export class PortfolioMenuComponent {
 
   constructor(
     private _portfolioService: PortfolioService,
@@ -38,18 +38,13 @@ export class PortfolioMenuComponent implements OnInit {
     });
   }
 
+  public canAddWallet = computed(() => this.walletsPortfolio().length < 3);
+
   // turn the map into an array of objects with each object containing the key as wallet address and value as the wallet portfolio
   public walletsPortfolio = computed(() => Array.from(this._portfolioService.portfolioMap().entries()).map(([walletAddress, portfolio]) => ({
     walletAddress: this._utils.addrUtil(walletAddress).addrShort,
     netWorth: portfolio.netWorth
   })));
-
-  ngOnInit() {}
-
-  addNewPortfolio() {
-    const testAddress = 'HUB3kyuE5kLojcsJn4csoN5Gd27mJpERzTqVuoUTTmUV';
-    this._portfolioService.getPortfolioAssets(testAddress, 'TST');
-  }
 
   async openNewPortfolioSetup() {
     const modal = await this._popover.create({
@@ -59,5 +54,9 @@ export class PortfolioMenuComponent implements OnInit {
       cssClass: 'multi-wallet-modal'
     });
     await modal.present();
+    const { data} = await modal.onDidDismiss()
+    if (data) {
+      this._portfolioService.syncPortfolios(data);
+    }
   }
 }

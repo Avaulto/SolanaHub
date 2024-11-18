@@ -40,6 +40,7 @@ export class PortfolioService {
 
   public privateMode: BehaviorSubject<boolean> = new BehaviorSubject(false)
   readonly restAPI = this._utils.serverlessAPI
+
   constructor(
     private _navCtrl: NavController,
     private _utils: UtilService,
@@ -80,29 +81,60 @@ export class PortfolioService {
     this.portfolioMap.set(newMap);
   }
 
-  private async handleWalletChange(wallet: WalletExtended) {
-    if (wallet) {
-      const address = wallet.publicKey.toBase58();
-      this.currentWalletAddress = address;
-      
-      // Check if we already have data for this wallet
-      if (!this.portfolioMap().has(address)) {
-        await this.waitForTurnStileToken();
-        await this.getPortfolioAssets(address, this._utils.turnStileToken);
-      } else {
-        this.updateCurrentWalletSignals(address);
-      }
-
-      this._fetchPortfolioService.refetchPortfolio().subscribe(async ({ shouldRefresh, fetchType }) => {
-        if (shouldRefresh) {
-          const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
-          await this.waitForTurnStileToken();
-          this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
-        }
-      });
-    }
+  private handleWalletChange(wallet: WalletExtended) {
+    if (!wallet) return;
+    const address = this.extractAddressOnWalletChanges(wallet);
+    this.syncPortfolios(address)
   }
 
+  /**
+   * Extracts and returns the public key address from a WalletExtended object.
+   *
+   * @param {WalletExtended} wallet - The WalletExtended object containing the public key.
+   * @returns {string} The extracted public key address as a base58 string.
+   */
+  private extractAddressOnWalletChanges(wallet: WalletExtended): string {
+    const address = wallet.publicKey.toBase58();
+    this.currentWalletAddress = address;
+    return address;
+  }
+
+  /**
+   * Synchronizes portfolios for a given wallet address.
+   *
+   * This method checks if data already exists for the provided address,
+   * and either fetches new data or updates existing signals accordingly.
+   *
+   * @param {string} address - The wallet address to synchronize.
+   */
+  public async syncPortfolios(address: string) {
+    if (!this.containsWallet(address)) {
+      await this.waitForTurnStileToken();
+      await this.getPortfolioAssets(address, this._utils.turnStileToken);
+    } else {
+      this.updateCurrentWalletSignals(address);
+    }
+
+    this._fetchPortfolioService.refetchPortfolio().subscribe(async ({shouldRefresh, fetchType}) => {
+      if (shouldRefresh) {
+        const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
+        await this.waitForTurnStileToken();
+        this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
+      }
+    });
+  }
+
+  /**
+   * Checks if a wallet address exists in the portfolio map.
+   *
+   * @param {string} address - The wallet address to check.
+   * @returns {boolean} True if the address exists in the portfolio map, false otherwise.
+   */
+  public containsWallet(address: string): boolean {
+    return this.portfolioMap().has(address)
+  }
+
+  // TODO:
   private async waitForTurnStileToken() {
     while (!this._utils.turnStileToken) {
       await this._utils.sleep(500);

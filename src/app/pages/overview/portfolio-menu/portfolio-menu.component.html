@@ -3,11 +3,9 @@
     <portfolio-box [wallet]="wallet"/>
   }
 
-  <div class="portfolio-box" (click)="openNewPortfolioSetup()">
-    <div class="portfolio-box-body" >
-      <ion-icon name="add-outline"></ion-icon>
-      add new portfolio
+  @if(canAddWallet()) {
+    <div (click)="openNewPortfolioSetup()">
+      <portfolio-box />
     </div>
-    <ion-ripple-effect/>
-  </div>
+  }
 </div>

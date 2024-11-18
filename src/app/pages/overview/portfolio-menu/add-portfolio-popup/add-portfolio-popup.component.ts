@@ -3,8 +3,7 @@ import {PopoverController} from "@ionic/angular";
 import {IonButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonText} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {alertCircleOutline, closeOutline} from "ionicons/icons";
-import {PublicKey} from "@solana/web3.js";
-import {AddressValidatorService} from "../../../../services";
+import {AddressValidatorService, PortfolioService} from "../../../../services";
 
 @Component({
   selector: 'add-portfolio-popup',
@@ -22,9 +21,12 @@ import {AddressValidatorService} from "../../../../services";
     IonItem,
   ]
 })
-export class AddPortfolioPopupComponent implements OnInit {
+export class AddPortfolioPopupComponent {
   private _popover = inject(PopoverController)
   private _addressValidatorService = inject(AddressValidatorService)
+  private _portfolioService = inject(PortfolioService)
+  // const testAddress = 'HUB3kyuE5kLojcsJn4csoN5Gd27mJpERzTqVuoUTTmUV';
+
   public errorMessage = signal(null)
   public duplicatedWallet = "Oops! wallet already added."
   public invalidWallet = "Oops! invalid wallet"
@@ -33,29 +35,22 @@ export class AddPortfolioPopupComponent implements OnInit {
     addIcons({alertCircleOutline, closeOutline})
   }
 
-  ngOnInit() {
-  }
-
-  onSubmit(walletAddress) {
-    if (this._addressValidatorService.isValid(walletAddress)) {
-      console.log(walletAddress)
-      this.dismissModal();
-    } else {
+  addNewPortfolio(walletAddress) {
+    if (!this._addressValidatorService.isValid(walletAddress)) {
       this.errorMessage.set(this.invalidWallet);
-
+      return
     }
+
+    if(this._portfolioService.containsWallet(walletAddress)) {
+      this.errorMessage.set(this.duplicatedWallet);
+      return;
+    }
+
+    this.errorMessage.set(null);
+    this.dismissModal(walletAddress)
   }
 
-  async dismissModal() {
-    await this._popover.dismiss()
+  dismissModal(address?: string | null) {
+    this._popover.dismiss(address)
   }
-
-  isWalletAddressValid(walletAddress: string) {
-    try {
-      return !!new PublicKey(walletAddress) || PublicKey.isOnCurve(walletAddress);
-    } catch (err) {
-      this.errorMessage.set(this.invalidWallet);
-      return false;
-    }
-  };
 }
