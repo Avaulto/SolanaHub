@@ -49,6 +49,9 @@ export class SolanaHelpersService {
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
   ) {
+// prep setup
+this.getValidatorsList()
+
     const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)
     this._connectionStore.connection$.subscribe(conection => this.connection = conection);

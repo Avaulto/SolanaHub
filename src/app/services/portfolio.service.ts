@@ -45,6 +45,7 @@ export class PortfolioService {
     private _fetchPortfolioService: PortfolioFetchService,
     private _watchModeService: WatchModeService
   ) {
+    this.getPlatformsData()
     this._shs.walletExtended$.subscribe(this.handleWalletChange.bind(this));
   }
 
