@@ -214,7 +214,6 @@ this.getValidatorsList()
       })
       if (getType) {
         if (getType == 'nft') {
-          console.log('nft:::::', tokensBalance);
           tokensBalance = tokensBalance.filter(token => token.data.decimals == 0)
         } else if (getType == 'token') {
           tokensBalance = tokensBalance.filter(token => token.data.decimals != 0)
@@ -226,11 +225,11 @@ this.getValidatorsList()
         tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens)
       }
       if(emptyAccountOnly){
-        console.log('emptyAccountOnly:::::', tokensBalance);
+        // console.log('emptyAccountOnly:::::', tokensBalance);
         
         tokensBalance = tokensBalance.filter((acc: any) => acc.balance === 0)
       }
-      console.log('tokensBalance:::::', tokensBalance);
+      // console.log('tokensBalance:::::', tokensBalance);
       return tokensBalance;
 
     }

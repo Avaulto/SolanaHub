@@ -19,6 +19,7 @@ import { closeOutline } from 'ionicons/icons';
 import { StashAsset } from './stash.model';
 import { ModalController } from '@ionic/angular';
 import { StashModalComponent } from './stash-modal/stash-modal.component';
+import { FaqPopupComponent } from 'src/app/shared/components/faq-popup/faq-popup.component';
 
 
 @Component({
@@ -108,78 +109,81 @@ export class StashPage implements OnInit {
   public unstakedOverflow = this._stashService.findStakeOverflow;
   public outOfRangeDeFiPositions = this._stashService.findOutOfRangeDeFiPositions;
   public zeroValueAssets = this._stashService.findZeroValueAssets;
-  public emptyAccounts = {
-    "networkId": "solana",
-    "platformId": "wallet-tokens",
-    "type": "multiple",
-    "label": "Dust value",
-    "description": "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
-    "actionTitle": "Swap",
-    "value": 173.00551050908487,
-    "data": {
-      "assets": [
-        {
-          "type": "token",
-          "networkId": "solana",
-          "extractedValue": {
-            "SOL": 96.0869375886,
-            "USD": 173.00551050908487
-          },
-          "attributes": {},
-          "name": "SolanaHub staked SOL",
-          "symbol": "hubSOL",
-          "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX.webp",
-          "decimals": 9,
-          "balance": 0.512956105,
-          "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "price": 187.32,
-          "source": 'empty account',
-          "action": "close"
-        },
+  public dustValueTokens = this._stashService.findDustValueTokens;
+  
+  // {
+  //   "networkId": "solana",
+  //   "platformId": "wallet-tokens",
+  //   "type": "multiple",
+  //   "label": "Dust value",
+  //   "description": "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
+  //   "actionTitle": "Swap",
+  //   "value": 173.00551050908487,
+  //   "data": {
+  //     "assets": [
+  //       {
+  //         "type": "token",
+  //         "networkId": "solana",
+  //         "extractedValue": {
+  //           "SOL": 96.0869375886,
+  //           "USD": 173.00551050908487
+  //         },
+  //         "attributes": {},
+  //         "name": "SolanaHub staked SOL",
+  //         "symbol": "hubSOL",
+  //         "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX.webp",
+  //         "decimals": 9,
+  //         "balance": 0.512956105,
+  //         "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+  //         "price": 187.32,
+  //         "source": 'empty account',
+  //         "action": "close"
+  //       },
 
-        {
-          "type": "token",
-          "networkId": "solana",
-          "extractedValue": {
-            "SOL": 0.025552454802054175,
-            "USD": 0.025552454802054175
-          },
-          "attributes": {},
-          "name": "Bee Wif Hat",
-          "symbol": "Bee",
-          "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-          "decimals": 9,
-          "balance": 10000,
-          "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "price": 0.0000025552454802054177,
-          "source": 'empty account',
-          "action": "close"
-        },
-        {
-          "type": "token",
-          "networkId": "solana",
-          "extractedValue": {
-            "SOL": 4.44e-8,
-            "USD": 4.44e-8
-          },
-          "attributes": {},
-          "name": "catwifhat",
-          "symbol": "$CWIF",
-          "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1.webp",
-          "decimals": 2,
-          "balance": 0.04,
-          "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-          "price": 0.00000111,
-          "source": 'no liquidity',
-          "action": "close"
-        }
-      ]
-    }
-  }
+  //       {
+  //         "type": "token",
+  //         "networkId": "solana",
+  //         "extractedValue": {
+  //           "SOL": 0.025552454802054175,
+  //           "USD": 0.025552454802054175
+  //         },
+  //         "attributes": {},
+  //         "name": "Bee Wif Hat",
+  //         "symbol": "Bee",
+  //         "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
+  //         "decimals": 9,
+  //         "balance": 10000,
+  //         "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+  //         "price": 0.0000025552454802054177,
+  //         "source": 'empty account',
+  //         "action": "close"
+  //       },
+  //       {
+  //         "type": "token",
+  //         "networkId": "solana",
+  //         "extractedValue": {
+  //           "SOL": 4.44e-8,
+  //           "USD": 4.44e-8
+  //         },
+  //         "attributes": {},
+  //         "name": "catwifhat",
+  //         "symbol": "$CWIF",
+  //         "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1.webp",
+  //         "decimals": 2,
+  //         "balance": 0.04,
+  //         "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
+  //         "price": 0.00000111,
+  //         "source": 'no liquidity',
+  //         "action": "close"
+  //       }
+  //     ]
+  //   }
+  // }
   // append unstakedOverflow & zeroYieldZones & dustBalanceAccounts & outOfRangeDeFiPositions once they are computed
   public assets = computed(() => {
-    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.emptyAccounts && !this.zeroValueAssets()) return []
+    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.dustValueTokens() && !this.zeroValueAssets()) return []
     const assets = []
+    console.log(this.dustValueTokens());
     
 
     if(this.unstakedOverflow()) {
@@ -188,8 +192,8 @@ export class StashPage implements OnInit {
     if(this.outOfRangeDeFiPositions()) {
       assets.push(this.outOfRangeDeFiPositions())
     }
-    if(this.emptyAccounts) {
-      assets.push(this.emptyAccounts)
+    if(this.dustValueTokens()) {
+      assets.push(this.dustValueTokens())
     }
     if(this.zeroValueAssets()) {
       assets.push(this.zeroValueAssets())
@@ -229,15 +233,16 @@ export class StashPage implements OnInit {
   
   }
   async getSavingData() {
-    this.analyzeStage.set(1)
+
     // const minLoadingTime = 3000
 
 
-
+    this.analyzeStage.set(1)
     // setTimeout(() => {
     //   const interval = setInterval(() => {
     //     if(this.assets().length >3) {
     //       clearInterval(interval)
+    //       this.analyzeStage.set(1)
     //     }
     //   }, 500);
     // }, minLoadingTime);
@@ -290,5 +295,60 @@ export class StashPage implements OnInit {
       minimumFractionDigits: 2,
       maximumFractionDigits: 8
     });
+  }
+
+  public async openFaqPopOver() {
+    const modal = await this._modalCtrl.create({
+      component: FaqPopupComponent,
+      cssClass: 'faq-modal',
+      componentProps: {
+        title: 'How it works',
+        desc: `Stash page is created from the deep understanding of the Solana ecosystem. <br>
+        It is designed to find asset in different source, where every source has its own way to extract value.`,
+        faq: [
+          {
+            id: 1,
+            question: 'What is the purpose of the Stash page?',
+            answer: 'The purpose of the Stash page is to help you find and extract value from your idle assets on Solana.'
+          },
+          {
+            id: 2,
+            question: 'Where the extractable found?',
+            answer: 'Extractable is found in different source, where every source has its own way to deep dive inside the asset category and loop up for unused balanced assets.'
+          },
+          {
+            id: 3,
+            question: 'What Dust value means and how you handle it?',
+            answer: ``
+          },
+          {
+            id: 4,
+            question: 'What is excessive balance on stake account?',
+            answer: ``
+          },
+          {
+            id: 5,
+            question: 'What means out of range DeFi positions?',
+            answer: ``
+          },
+          {
+            id: 6,
+            question: 'What means zero value asset?',
+            answer: `a group of NFTs & tokens with no market value &the only way to extract value from such account is by burn the asset and get rent fee back`
+          },
+          {
+            id: 7,
+            question: 'Stash is a smart contract?',
+            answer: `Stash is not smart contract, just a utlization of solana program and other protocols in order to find idle asset in `
+          },
+          {
+            id: 8,
+            question: 'What are the risks of using Stash?',
+            answer: `Some type of solana account contain offchain value, but not market value - the meaning of that can be compare to NFTs with no floor price(no sellers) so from stash perspective we might consider it as burnable asset, so make sure you understand the risk before you proceed with burning/swapping any asset`
+          }
+        ]
+      }
+    })
+    modal.present()
   }
 }

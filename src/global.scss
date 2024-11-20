@@ -192,6 +192,14 @@ ion-spinner {
     --background: white;
     overflow: auto;
 }
+.faq-modal {
+
+    --height: fit-content;
+    overflow: auto;
+}
+.range-popover{
+    --width: 260px;
+}
 .modal-style {
     --width: 540px;
     --border-radius: 12px;

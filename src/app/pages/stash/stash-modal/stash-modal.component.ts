@@ -67,6 +67,9 @@ export class StashModalComponent implements OnInit {
       case 'nft':
         await this._stashService.burnAccounts(event)
         break
+      case 'dust-value':
+        await this._stashService.bulkSwapDustValueTokens(event)
+        break
     }
 
 

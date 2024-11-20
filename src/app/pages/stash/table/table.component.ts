@@ -1,18 +1,21 @@
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
+import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { IonRow, IonCol,  IonButton, IonImg, IonIcon, IonToggle, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowUpOutline } from 'ionicons/icons';
+import { arrowUpOutline, funnelOutline } from 'ionicons/icons';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { StashGroup } from '../stash.model';
-
+import { PopoverController } from '@ionic/angular';
+import { RangeBoxComponent } from './range-box/range-box.component';
+import { StashService } from '../stash.service';
 @Component({
   selector: 'stash-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
   imports:[
+    IonIcon,
     ChipComponent,
     IonRow,
     IonIcon,
@@ -32,7 +35,7 @@ import { StashGroup } from '../stash.model';
      CurrencyPipe,
   ]
 })
-export class TableComponent  implements OnInit {
+export class TableComponent  implements OnChanges {
 
   @Output() onAction = new EventEmitter()
   @Input() hasFees: boolean = false;
@@ -42,23 +45,43 @@ export class TableComponent  implements OnInit {
   @Input() tableDescription: string;
   @Input() actionTitle: string;
   public tableData = signal([])
-  constructor() { 
-    addIcons({arrowUpOutline});
+  // 1% of portfolio tokens value
+  public portfolioShare = 3
+  constructor(private _stashService: StashService,public _popoverController: PopoverController) { 
+    addIcons({funnelOutline,arrowUpOutline});
     effect(()=>{
       // console.log(this.selectedData());
       
     })
   }
-
-  ngOnInit() {
-    // console.log(this.stash);
-    
+  public tempTableData = []
+  ngOnChanges(changes: SimpleChanges): void {
     this.tableData.set(this.stash.data.assets)
-
   }
 
 
   @ViewChild('accordionGroup', { static: true }) accordionGroup: IonAccordionGroup;
+
+  public async openRangeBox(event: any) {
+    const modal = await this._popoverController.create({
+      component: RangeBoxComponent,
+      cssClass: 'range-popover',
+      mode: 'ios',
+      event: event,
+      side:'top',
+      showBackdrop: false,
+      componentProps: {
+        portfolioShare: this.portfolioShare
+      }
+    })
+    modal.present();
+    const { data, role } = await modal.onWillDismiss();
+    if(data){
+      this.portfolioShare = data
+
+      this._stashService.findDustValueTokensWithCustomShare(this.portfolioShare )
+    }
+  }
 
   alternateClick(ev){
     if(ev.target.id !== 'toggle-btn'){
@@ -81,4 +104,6 @@ export class TableComponent  implements OnInit {
     
     this.onAction.emit(this.selectedData())
   }
+
+
 }

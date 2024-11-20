@@ -1,7 +1,14 @@
 ion-grid {
     transform: translateY(-70px);
 }
-
+#faq-btn{
+    font-size: 13px;
+    --background: white;
+    --background-hover: transparent;
+    --box-shadow: none;
+    color: var(--ion-color-dark);
+    margin-top: 10px;
+}
 #stat-wrapper {
     // transform: translateY(-100px);
     // height: 204px;

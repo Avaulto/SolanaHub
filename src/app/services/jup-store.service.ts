@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { JupRoute, JupToken, JupiterPriceFeed } from '../models/jup-token.model';
-import { VersionedTransaction } from '@solana/web3.js';
+import { Transaction, VersionedTransaction } from '@solana/web3.js';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 
@@ -53,7 +53,7 @@ export class JupStoreService {
     //return best route
     return bestRoute
   }
-  public async swapTx(routeInfo: JupRoute): Promise<void> {
+  public async swapTx(routeInfo: JupRoute): Promise<VersionedTransaction> {
     // const arrayOfTx: Transaction[] = []
     try {
       const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
@@ -72,6 +72,7 @@ export class JupStoreService {
             userPublicKey: walletOwner,
             // auto wrap and unwrap SOL. default is true
             wrapUnwrapSOL: true,
+            // asLegacyTransaction: true,
             // feeAccount is optional. Use if you want to charge a fee.  feeBps must have been passed in /quote API.
             // feeAccount: "fee_account_public_key"
           })
@@ -80,11 +81,12 @@ export class JupStoreService {
       const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
       var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
       
-      const record = { message: 'swap', data: { symbol:routeInfo.inputMint, amount: routeInfo.inAmount  } }
-      await this._txIntercept.sendTxV2(transaction, record);
+      // const record = { message: 'swap', data: { symbol:routeInfo.inputMint, amount: routeInfo.inAmount  } }
+      return  transaction 
 
     } catch (error) {
       console.warn(error)
+      return null
     }
 
 

@@ -1,7 +1,20 @@
-:host{
+:host {
     overflow: hidden;
     border-radius: 8px;
 }
+
+#range-btn {
+    border: 1px solid lightgray;
+    color: var(--ion-color-dark);
+    text-transform: capitalize;
+    font-size: 13px;
+    font-weight: 600;
+    span {
+        margin-inline-end: 4px;
+        margin-inline-start: 6px;
+    }
+}
+
 .table-head {
     width: 100%;
 
@@ -45,19 +58,22 @@
         line-height: 100%;
         /* 13px */
     }
+
     ion-toggle {
         margin-inline-end: 8px;
 
     }
-    
+
     #toggle-swap {
         display: flex;
+
         span {
             color: var(--ion-light-gray);
             font-size: 12px;
         }
     }
 }
+
 #toggle-btn {
     --box-shadow: 0;
     --color: #9AA4B2;
@@ -66,16 +82,18 @@
     top: 0;
     --background-focused: transparent;
     --background-hover: transparent;
-    ion-icon{
+
+    ion-icon {
         transition: 0.3s ease;
     }
-    .flipArrow{
+
+    .flipArrow {
         transform: rotate(180deg);
-        
+
     }
 }
 
-#action-btn{
+#action-btn {
     margin-right: 26px;
 }
 

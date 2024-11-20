@@ -16,9 +16,9 @@
       
       <div class="ion-margin-button ion-hide-lg-down"></div>
     </div>
-    <div style="display: flex; align-items: center; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px;    margin-inline-end: 15px;">
 
-      @if(tableName === 'Dust value'){
+      @if(tableName === 'dust value'){
         <!-- <ion-col  size="3" sizeLg="2"> -->
           <div id="toggle-swap">
             <ion-toggle mode="md" /><span>Swap to hubSOL</span>
@@ -26,6 +26,10 @@
         <!-- </ion-col> -->
       }
       <ion-button (click)="emitData()" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{stash.actionTitle}} | {{selectedData().length}}</ion-button>
+      @if(tableName === 'dust value'){
+        <ion-button (click)="openRangeBox($event)" id="range-btn" fill="clear" ><ion-icon name="funnel-outline"/> <span>min. value</span> <chip [name]="portfolioShare + '%'"></chip></ion-button>
+      }
+   
     </div>
     
       <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow" name="arrow-up-outline"/></ion-button>

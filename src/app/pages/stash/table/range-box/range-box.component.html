@@ -1,0 +1,13 @@
+<div id="range-box">
+  <ion-label>Dust value</ion-label>
+  <ion-text>Select your Dust value share from portfolio total value</ion-text>
+  <div >
+    <ion-segment mode="ios" [value]="portfolioShare" (ionChange)="onChangePortfolioPercentage($event)">
+      <ion-segment-button value="1" >1%</ion-segment-button>
+      <ion-segment-button value="2" >2%</ion-segment-button>
+      <ion-segment-button value="3" >3%</ion-segment-button>
+      <ion-segment-button value="4" >4%</ion-segment-button>
+      <ion-segment-button value="5" >5%</ion-segment-button>
+    </ion-segment>
+  </div>
+</div>

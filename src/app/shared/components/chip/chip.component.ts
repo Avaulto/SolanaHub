@@ -9,7 +9,7 @@ import {  IonRippleEffect } from '@ionic/angular/standalone';
   imports: [IonRippleEffect],
 })
 export class ChipComponent  implements OnInit {
-  @Input() name = '';
+  @Input() name: string | number;
   @Input() color = '';
   constructor() { }
 

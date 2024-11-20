@@ -1,7 +1,13 @@
 <ion-content [fullscreen]="true">
   <page-header title="Stash" description="
   Discover innovative ways to maximize the potential of your idle assets on Solana.
-    "></page-header>
+    ">
+    <div style="width: 100%;">
+      @if(analyzeStage() === 1){
+      <ion-button  id="faq-btn" (click)="openFaqPopOver()">How it works</ion-button>
+      }
+    </div>
+  </page-header>
   <ion-grid>
     @if(analyzeStage() === 0){
     <promo  (onStartAnalyze)="getSavingData()" />
@@ -25,7 +31,9 @@
         </div>
       </ion-col>
       <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
-        <portfolio-breakdown [assets]="assets" />
+        @if(assets()){
+          <portfolio-breakdown [assets]="assets" />
+        }
       </ion-col>
 
     </ion-row>

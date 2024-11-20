@@ -79,6 +79,13 @@ export class MultipliersMenuComponent implements OnInit {
     ],
     hubSOLBoosters: [
       {
+        img: 'assets/images/ll/nx-finance.svg',
+        title: 'nx-finance',
+        pts: 0,
+        link: 'https://nxfinance.io/leverage/v2/hubSOL',
+        badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: false }]
+      },
+      {
         img: 'assets/images/ll/loopscale.png',
         title: 'loopscale',
         pts: 0,
@@ -198,40 +205,44 @@ export class MultipliersMenuComponent implements OnInit {
       hubSOLBoosters: [
         {
           ...this.defaultMultipliers.hubSOLBoosters[0],
-          pts: "up to 4x" as any,
+          pts: "up to 10x" as any,
         },
         {
           ...this.defaultMultipliers.hubSOLBoosters[1],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.orca / fetchedMultipliers.hubSOL,
+          pts: "up to 4x" as any,
         },
         {
           ...this.defaultMultipliers.hubSOLBoosters[2],
+          pts: fetchedMultipliers.hubSOLDeFiBoost.orca / fetchedMultipliers.hubSOL,
+        },
+        {
+          ...this.defaultMultipliers.hubSOLBoosters[3],
           pts: fetchedMultipliers.hubSOLDeFiBoost.kamino / fetchedMultipliers.hubSOL,
         },
  
         {
-          ...this.defaultMultipliers.hubSOLBoosters[3],
+          ...this.defaultMultipliers.hubSOLBoosters[4],
           pts: fetchedMultipliers.hubSOLDeFiBoost.meteora / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[4],
+          ...this.defaultMultipliers.hubSOLBoosters[5],
           pts: "up to 3x" as any,
         },
 
         {
-          ...this.defaultMultipliers.hubSOLBoosters[5],
+          ...this.defaultMultipliers.hubSOLBoosters[6],
           pts: fetchedMultipliers.hubSOLDeFiBoost.raydium / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[6],
+          ...this.defaultMultipliers.hubSOLBoosters[7],
           pts: fetchedMultipliers.hubSOLDeFiBoost.solayer / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[7],
+          ...this.defaultMultipliers.hubSOLBoosters[8],
           pts: fetchedMultipliers.hubSOLDeFiBoost.texture / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[8],
+          ...this.defaultMultipliers.hubSOLBoosters[9],
           pts: fetchedMultipliers.hubSOLDeFiBoost.rainfi / fetchedMultipliers.hubSOL,
         },
       ] // .sort((a: any, b: any) => b.pts - a.pts)
