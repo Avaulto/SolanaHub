@@ -80,7 +80,7 @@ export class MultipliersMenuComponent implements OnInit {
     hubSOLBoosters: [
       {
         img: 'assets/images/ll/nx-finance.svg',
-        title: 'nx-finance',
+        title: 'NX finance',
         pts: 0,
         link: 'https://nxfinance.io/leverage/v2/hubSOL',
         badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: false }]
