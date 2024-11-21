@@ -1,6 +1,6 @@
 <div id="portfolio-menu">
-  @for (wallet of walletsPortfolio(); track $index) {
-    <portfolio-box [wallet]="wallet"/>
+  @for (wallet of walletsPortfolio(); let i = $index; track i) {
+    <portfolio-box [isPrimary]="i === 0" [wallet]="wallet" (delete)="delete($event)" (toggle)="toggle($event)"/>
   }
 
   @if(canAddWallet()) {

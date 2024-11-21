@@ -20,6 +20,7 @@ export interface WalletPortfolio {
   defi: defiHolding[];
   walletHistory: TransactionHistory[];
   netWorth: number;
+  enabled: boolean,
 }
 
 

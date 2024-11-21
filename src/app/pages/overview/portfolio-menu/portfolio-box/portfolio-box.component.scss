@@ -7,7 +7,8 @@
 }
 
 .portfolio-actions {
-  display: flex;
+  display: inline-flex;
+  gap: .5rem;
 }
 
 .portfolio-box-header {
@@ -15,6 +16,7 @@
   color: var(--ion-color-dark);
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .portfolio-box-header-text {

@@ -23,6 +23,7 @@ import {AddPortfolioPopupComponent} from "./add-portfolio-popup/add-portfolio-po
     IonInput,
     IonLabel,
     IonText,
+    PortfolioBoxComponent,
   ]
 })
 export class PortfolioMenuComponent {
@@ -34,17 +35,20 @@ export class PortfolioMenuComponent {
   ) {
     addIcons({addOutline});
     effect(() => {
-      console.log(this._portfolioService.portfolioMap());
+      console.log(this._portfolioService.portfolio());
     });
   }
 
   public canAddWallet = computed(() => this.walletsPortfolio().length < 3);
 
-  // turn the map into an array of objects with each object containing the key as wallet address and value as the wallet portfolio
-  public walletsPortfolio = computed(() => Array.from(this._portfolioService.portfolioMap().entries()).map(([walletAddress, portfolio]) => ({
-    walletAddress: this._utils.addrUtil(walletAddress).addrShort,
-    netWorth: portfolio.netWorth
-  })));
+  public walletsPortfolio = computed(() =>
+    this._portfolioService.portfolio().map(
+      ({ walletAddress, portfolio }) => ({
+      walletAddress,
+        walletAddressShort: this._utils.addrUtil(walletAddress).addrShort,
+      value: portfolio.netWorth,
+      enabled: portfolio.enabled
+  })))
 
   async openNewPortfolioSetup() {
     const modal = await this._popover.create({
@@ -55,8 +59,16 @@ export class PortfolioMenuComponent {
     });
     await modal.present();
     const { data} = await modal.onDidDismiss()
-    if (data) {
+    if (data ) {
       this._portfolioService.syncPortfolios(data);
     }
+  }
+
+  delete(walletAddress: string) {
+    this._portfolioService.removeFromPortfolioMap(walletAddress)
+  }
+
+  toggle(walletAddress: string) {
+    this._portfolioService.toggleWallet(walletAddress)
   }
 }

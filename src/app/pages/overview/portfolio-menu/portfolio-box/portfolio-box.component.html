@@ -1,16 +1,16 @@
 <div class="portfolio-box">
   @if (wallet?.walletAddress) {
     <div class="portfolio-box-header">
-      <div class="portfolio-box-header-text">{{wallet.walletAddress}}</div>
+      <div class="portfolio-box-header-text">{{wallet.walletAddressShort}}</div>
       <div class="portfolio-actions">
-        <ion-toggle color="primary" checked="true"></ion-toggle>
+        <ion-toggle color="primary" [checked]="wallet.enabled" (ionChange)="toggleWallet(wallet.walletAddress)"></ion-toggle>
         @if(!isPrimary) {
-          <ion-icon style="cursor: pointer; margin-inline-start: 6px;" (click)="deleteWallet()" name="trash-outline"></ion-icon>
+          <ion-icon style="cursor: pointer; margin-inline-start: 6px;" (click)="deleteWallet(wallet.walletAddress)" name="trash-outline"></ion-icon>
         }
       </div>
     </div>
     <div class="portfolio-box-body">
-      <ion-text>{{wallet.netWorth | currency:'USD'}}</ion-text>
+      <ion-text>{{wallet.value | currency:'USD'}}</ion-text>
     </div>
   } @else {
   <div class="portfolio-box-empty">

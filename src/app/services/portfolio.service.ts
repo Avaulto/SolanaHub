@@ -1,34 +1,75 @@
-import { Injectable, Signal, WritableSignal, inject, signal } from '@angular/core';
+import { computed, Injectable, signal, WritableSignal } from '@angular/core';
 import { UtilService } from './util.service';
-import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange, WalletPortfolio } from '../models/portfolio.model';
-import { JupToken } from '../models/jup-token.model'
+import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
+import {
+  BalanceChange,
+  defiHolding,
+  NFT,
+  Platform,
+  Stake,
+  Token,
+  JupToken,
+  TransactionHistory,
+  WalletExtended,
+  WalletPortfolio
+} from '../models';
 
 import va from '@vercel/analytics';
 
 import { NativeStakeService, SolanaHelpersService } from './';
 import { NavController } from '@ionic/angular';
 import { SessionStorageService } from './session-storage.service';
-import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
+import { historyResultShyft, TransactionHistoryShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
-import { PublicKey } from '@solana/web3.js';
 import { RoutingPath } from '../shared/constants';
-
-import { MenuController } from '@ionic/angular';
 
 // Add new type definition
 type FetchType = 'full' | 'partial';
+
+enum PortfolioDataKeys {
+  WALLET_ASSETS = "walletAssets",
+  TOKENS = "tokens",
+  NFTS = "nfts",
+  STAKING = "staking",
+  DEFI = "defi",
+  WALLET_HISTORY = "walletHistory",
+  NETWORTH = "netWorth",
+  ENABLED = "enabled"
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
 
-  public portfolioMap: WritableSignal<Map<string, WalletPortfolio>> = signal(new Map());
-  public currentWalletAddress: string = null;
+  /**
+   * A writable signal representing the portfolio map.
+   * Contains a Map<string, WalletPortfolio> where keys are wallet addresses and values are WalletPortfolio objects.
+   *
+   * @type {WritableSignal<Map<string, WalletPortfolio>>}
+   */
+  private portfolioMap: WritableSignal<Map<string, WalletPortfolio>> = signal(new Map());
+
+  /**
+   * A computed property that returns an array of wallet objects from the portfolio map.
+   * Each wallet object contains the wallet address and portfolio data.
+   *
+   * @remarks
+   * This computed property will automatically rerender whenever the underlying `portfolioMap` signal changes.
+   *
+   * @returns {Array<{walletAddress: string, portfolio: WalletPortfolio}>}
+   */
+  public portfolio = computed(() =>
+    Array.from(this.portfolioMap().entries())
+    .map(([walletAddress, portfolio]) => ({
+    walletAddress,
+    portfolio
+  })));
+
+  public currentWalletAddress = signal<string>(null);
 
   public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
@@ -67,7 +108,22 @@ export class PortfolioService {
     }
   }
 
-  private saveToPortfolioMap(address: string) {
+  /**
+   * Saves current wallet data to the portfolio map.
+   *
+   * @param {string} address - The solana address of the wallet.
+   * @returns {void}
+   *
+   * @description
+   * This method updates the portfolio map with the latest wallet data for a given address.
+   * It creates a new Map based on the current portfolio map, sets the wallet data as a new entry,
+   * and updates the portfolio map with this new entry.
+   *
+   * @example
+   * // Example usage:
+   * wallet.saveToPortfolioMap("0x1234567890123456789012345678901234567890", false);
+   */
+  private saveToPortfolioMap(address: string): void {
     const newMap = new Map(this.portfolioMap());
     newMap.set(address, {
       walletAssets: this.walletAssets(),
@@ -76,9 +132,56 @@ export class PortfolioService {
       staking: this.staking(),
       defi: this.defi(),
       walletHistory: this.walletHistory(),
-      netWorth: this.netWorth()
+      netWorth: this.netWorth(),
+      enabled: true
     });
     this.portfolioMap.set(newMap);
+  }
+
+  /**
+   * Removes the specified address from the portfolio map.
+   *
+   * @remarks
+   * The portfolio signal will get re-rendered after this operation.
+   *
+   * @param {string} address - The address of the wallet to remove from the portfolio.
+   * @returns {void}
+   */
+  public removeFromPortfolioMap(address: string): void {
+    const newMap = new Map(this.portfolioMap());
+    newMap.delete(address)
+    this.portfolioMap.set(newMap)
+  }
+
+  /**
+   * Updates portfolio data for the specified address by key-value pair.
+   *
+   * @remarks
+   * The portfolio signal will get re-rendered after this operation.
+   *
+   * @param {string} walletAddress - The address of the wallet to update.
+   * @param {string} key - The key of the data to update.
+   * @param {any} value - The new value for the specified key.
+   * @returns {void}
+   */
+  private updateWalletDataByKey(walletAddress: string, key: string, value: any): void {
+    const walletPortfolio = this.portfolioMap().get(walletAddress)!;
+    const newMap = new Map(this.portfolioMap());
+    this.portfolioMap.set(newMap.set(walletAddress, {
+      ...walletPortfolio,
+      [key]: value
+    }));
+  }
+
+  /**
+   * Toggles the wallet status for the specified address.
+   *
+   * @param {string} walletAddress - The address of the wallet to toggle.
+   * @returns {void}
+   */
+  public toggleWallet(walletAddress: string): void {
+    const walletPortfolio = this.portfolioMap().get(walletAddress)!;
+    this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.ENABLED, !walletPortfolio.enabled);
   }
 
   private handleWalletChange(wallet: WalletExtended) {
@@ -95,7 +198,7 @@ export class PortfolioService {
    */
   private extractAddressOnWalletChanges(wallet: WalletExtended): string {
     const address = wallet.publicKey.toBase58();
-    this.currentWalletAddress = address;
+    this.currentWalletAddress.set(address);
     return address;
   }
 
@@ -266,7 +369,9 @@ export class PortfolioService {
     }
 
   }
+
   private _platforms = []
+
   public async getPlatformsData(): Promise<Platform[]> {
     if (this._platforms.length) {
       return this._platforms
@@ -279,6 +384,7 @@ export class PortfolioService {
     }
     return this._platforms
   }
+
   private async _portfolioDeFi(editedDataExtended, tokensInfo) {
     // add more data for platforms
     const getPlatformsData = await this.getPlatformsData();
@@ -290,7 +396,7 @@ export class PortfolioService {
 
 
         let records: defiHolding[] = [];
-        // add if id =juptier jupiter-governance 
+        // add if id =juptier jupiter-governance
         group.platformId = group.platformId === 'jupiter-governance' ? 'jupiter-exchange' : group.platformId
         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
         Object.assign(group, platformData);
@@ -301,7 +407,7 @@ export class PortfolioService {
 
               const extendTokenData = this._utils.addTokenData(position.assets, tokensInfo)
 
-                      // if symbol is wSOL, then replace it to SOL
+              // if symbol is wSOL, then replace it to SOL
               extendTokenData.map(asset => {
                 asset.symbol = asset.symbol === 'wSOL' ? 'SOL' : asset.symbol
               })
@@ -400,6 +506,7 @@ export class PortfolioService {
     this.defi.set(defiHolding.flat())
 
   }
+
   public async getWalletHistory(walletAddress: string): Promise<WritableSignal<TransactionHistory[]>> {
 
     try {
@@ -534,28 +641,30 @@ export class PortfolioService {
   }
 
   public async clearWallet() {
-    if (this.currentWalletAddress) {
+    if (this.currentWalletAddress()) {
       const newMap = new Map(this.portfolioMap());
-      newMap.delete(this.currentWalletAddress);
+      newMap.delete(this.currentWalletAddress());
       this.portfolioMap.set(newMap);
     }
-    
+
     // clear state of wallet connect
     this._watchModeService.watchedWallet$.next(null)
 
     // clean session storage
     this._sessionStorageService.clearData()
 
+    this.clearCurrentPortfolioData();
+    this._fetchPortfolioService.triggerFetch()
+    this._navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
+  }
 
-
+  private clearCurrentPortfolioData() {
     this.walletAssets.set(null)
     this.tokens.set(null)
     this.nfts.set(null)
     this.defi.set(null)
     this.staking.set(null)
     this.walletHistory.set(null)
-
-    this._fetchPortfolioService.triggerFetch()
-    this._navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
+    this.netWorth.set(null)
   }
 }

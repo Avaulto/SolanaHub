@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import { IonButton, IonRippleEffect, IonText, IonLabel, IonIcon ,IonToggle} from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
@@ -17,21 +17,25 @@ import { trashOutline } from 'ionicons/icons';
     IonRippleEffect,
     IonButton,
     CurrencyPipe
-  ]
+  ],
+   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PortfolioBoxComponent  implements OnInit {
+export class PortfolioBoxComponent {
   @Input() isPrimary = false;
-  @Input() wallet: {walletAddress: string, netWorth: number};
+  @Input() wallet: { walletAddressShort: string, walletAddress: string, value: number, enabled: boolean };
+
+  @Output() delete = new EventEmitter<string>()
+  @Output() toggle = new EventEmitter<string>()
 
   constructor() {
     addIcons({trashOutline});
   }
 
-  ngOnInit() {
-    console.log(this.wallet);
+  deleteWallet(walletAddress: string) {
+    this.delete.emit(walletAddress)
   }
 
-  deleteWallet() {
-    console.log('delete wallet');
+  toggleWallet(walletAddress: string) {
+    this.toggle.emit(walletAddress)
   }
 }
