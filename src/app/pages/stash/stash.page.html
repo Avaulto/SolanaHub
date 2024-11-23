@@ -42,6 +42,7 @@
 
       @for(stashItem of assets(); track stashItem.label) {
         <stash-table 
+        (swapTohubSOLChange)="swapTohubSOL = $event"
         class="ion-margin-bottom" 
         [hasFees]="true" 
         (onAction)="openStashPopup($event)"

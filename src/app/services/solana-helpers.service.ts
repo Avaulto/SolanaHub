@@ -28,7 +28,7 @@ export class SolanaHelpersService {
   readonly SolanaHubVoteKey: string = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
   public connection: Connection;
   // create a single source of trute for wallet adapter
-  private _walletExtended$: BehaviorSubject<Partial<WalletExtended> | WalletExtended > = new BehaviorSubject(null);
+  private _walletExtended$: BehaviorSubject<Partial<WalletExtended> | WalletExtended> = new BehaviorSubject(null);
   // add balance utility
   public walletExtended$ = this._walletExtended$.asObservable().pipe(
     switchMap(async (wallet: any) => {
@@ -49,8 +49,8 @@ export class SolanaHelpersService {
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
   ) {
-// prep setup
-this.getValidatorsList()
+    // prep setup
+    this.getValidatorsList()
 
     const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)
@@ -58,18 +58,18 @@ this.getValidatorsList()
     this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
     this._watchModeService.watchedWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
   }
-  public updateRPC(rpcURL){
+  public updateRPC(rpcURL) {
     this._connectionStore.setEndpoint(rpcURL)
   }
   public getCurrentWallet(): WalletExtended | Partial<WalletExtended> {
     return this._walletExtended$.value
   }
 
-  private featureValidator(validators:Validator[], vote_identity: string, position?: number){
+  private featureValidator(validators: Validator[], vote_identity: string, position?: number) {
     let index = validators.findIndex(obj => obj.vote_identity === vote_identity);
     if (index !== -1) {
-        let removedObject = validators.splice(index, 1)[0];
-        validators.splice(1, 0, removedObject);
+      let removedObject = validators.splice(index, 1)[0];
+      validators.splice(1, 0, removedObject);
     }
     return validators
   }
@@ -89,9 +89,9 @@ this.getValidatorsList()
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
-        
-        validatorsList[0].total_apy = (validatorsList[0].total_apy * (1 )).toFixedNoRounding(2)
-        
+
+        validatorsList[0].total_apy = (validatorsList[0].total_apy * (1)).toFixedNoRounding(2)
+
 
       } catch (error) {
         console.error(error);
@@ -120,7 +120,7 @@ this.getValidatorsList()
       return await (await fetch(`${this.restAPI}/api/portfolio/nativeStakeAccounts?address=${walletAddress}`)).json()
     } catch (error) {
       console.error(error);
-      
+
       return []
     }
   }
@@ -152,7 +152,7 @@ this.getValidatorsList()
   //     })
 
   //     console.log(stakeAccounts);
-      
+
   //     return stakeAccounts;
   //   } catch (error) {
   //     new Error(error)
@@ -188,75 +188,77 @@ this.getValidatorsList()
     );
   }
 
-    public async getTokenAccountsBalance(wallet: string,includeMeta: boolean,emptyAccountOnly: boolean,  getType?: 'token' | 'nft'): Promise<any[]> {
-      const filters: GetProgramAccountsFilter[] = [
-        {
-          dataSize: 165,    //size of account (bytes)
-        },
-        {
-          memcmp: {
-            offset: 32,     //location of our query in the account (bytes)
-            bytes: wallet,  //our search criteria, a base58 encoded string
-          }
-        }
-      ];
-      const accounts = await this.connection.getParsedProgramAccounts(
-        TOKEN_PROGRAM_ID,   //SPL Token Program, new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
-        { filters }
-      );
-      let tokensBalance = accounts.map((account, i) => {
-        //Parse the account data
-        const parsedAccountInfo: any = account.account.data;
-        const address: string = parsedAccountInfo["parsed"]["info"]["mint"];
-        const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
-        const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
-        return { data:{mint: account.pubkey.toString(), address, balance, decimals} }
-      })
-      if (getType) {
-        if (getType == 'nft') {
-          tokensBalance = tokensBalance.filter(token => token.data.decimals == 0)
-        } else if (getType == 'token') {
-          tokensBalance = tokensBalance.filter(token => token.data.decimals != 0)
+  public async getTokenAccountsBalance(wallet: string, includeMeta: boolean, emptyAccountOnly: boolean, getType?: 'token' | 'nft'): Promise<any[]> {
+    const filters: GetProgramAccountsFilter[] = [
+      {
+        dataSize: 165,    //size of account (bytes)
+      },
+      {
+        memcmp: {
+          offset: 32,     //location of our query in the account (bytes)
+          bytes: wallet,  //our search criteria, a base58 encoded string
         }
       }
-      if(includeMeta){
-        const jupTokens = await this._utils.getJupTokens()
+    ];
+    const accounts = await this.connection.getParsedProgramAccounts(
+      TOKEN_PROGRAM_ID,   //SPL Token Program, new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
+      { filters }
+    );
+    let tokensBalance = accounts.map((account, i) => {
+      //Parse the account data
+      const parsedAccountInfo: any = account.account.data;
+      const mint: string = parsedAccountInfo["parsed"]["info"]["mint"];
+      const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
+      const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
+      return { data: { address: account.pubkey.toString(), mint, balance, decimals } }
+    })
+    if (getType) {
+      if (getType == 'nft') {
+        tokensBalance = tokensBalance.filter(token => token.data.decimals == 0)
+      } else if (getType == 'token') {
+        tokensBalance = tokensBalance.filter(token => token.data.decimals != 0)
+      }
+    }
+    if (includeMeta) {
+      const jupTokens = await this._utils.getJupTokens()
+      const mapBy = 'mint';
 
-        tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens)
-      }
-      if(emptyAccountOnly){
-        // console.log('emptyAccountOnly:::::', tokensBalance);
-        
-        tokensBalance = tokensBalance.filter((acc: any) => acc.balance === 0)
-      }
-      // console.log('tokensBalance:::::', tokensBalance);
-      return tokensBalance;
+      tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens, mapBy)
 
     }
+    if (emptyAccountOnly) {
+      // console.log('emptyAccountOnly:::::', tokensBalance);
 
-    // try {
-    //   const mintPubkey = new PublicKey(mintAddressPK);
-    //   // const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
-    //   const account = await getAssociatedTokenAddress(mintPubkey, walletOwner);
-    //   const decimals = await this.connection.getParsedAccountInfo(mintPubkey);
+      tokensBalance = tokensBalance.filter((acc: any) => acc.balance === 0)
+    }
 
-    //   console.log(account, decimals);
-      
-    //   let txIns: TransactionInstruction = createBurnCheckedInstruction(
-    //     account, // PublicKey of Owner's Associated Token Account
-    //     mintPubkey, // Public Key of the Token Mint Address
-    //     walletOwner, // Public Key of Owner's Wallet
-    //     1, // amount, if your decimals is 8, 10^8 for 1 token
-    //     1
-    //   );
-    //   console.log(txIns,account);
-      
-    //   return txIns;
-    // } catch (error) {
-    //   console.error(error);
-    //   return null
-    // }
-  
+    return tokensBalance;
+
+  }
+
+  // try {
+  //   const mintPubkey = new PublicKey(mintAddressPK);
+  //   // const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
+  //   const account = await getAssociatedTokenAddress(mintPubkey, walletOwner);
+  //   const decimals = await this.connection.getParsedAccountInfo(mintPubkey);
+
+  //   console.log(account, decimals);
+
+  //   let txIns: TransactionInstruction = createBurnCheckedInstruction(
+  //     account, // PublicKey of Owner's Associated Token Account
+  //     mintPubkey, // Public Key of the Token Mint Address
+  //     walletOwner, // Public Key of Owner's Wallet
+  //     1, // amount, if your decimals is 8, 10^8 for 1 token
+  //     1
+  //   );
+  //   console.log(txIns,account);
+
+  //   return txIns;
+  // } catch (error) {
+  //   console.error(error);
+  //   return null
+  // }
+
   async getOrCreateTokenAccountInstruction(mint: PublicKey, user: PublicKey, payer: PublicKey | null = null): Promise<TransactionInstruction | null> {
     try {
       const userTokenAccountAddress = await getAssociatedTokenAddress(mint, user, false);
@@ -282,7 +284,7 @@ this.getValidatorsList()
 
       const decimals = await (await this.connection.getParsedAccountInfo(mintAddressPK))?.value?.data['parsed']?.info?.decimals || 0;
       console.log(decimals);
-      
+
       const transferSplOrNft = createTransferCheckedInstruction(
         tokenAccountSourcePubkey,
         mintAddressPK,

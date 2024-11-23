@@ -18,15 +18,20 @@
     </div>
     <div style="display: flex; align-items: center; gap: 10px;    margin-inline-end: 15px;">
 
-      @if(tableName === 'dust value'){
+      @if(tableName.toLowerCase() === 'dust value'){
         <!-- <ion-col  size="3" sizeLg="2"> -->
           <div id="toggle-swap">
-            <ion-toggle mode="md" /><span>Swap to hubSOL</span>
+            <ion-toggle mode="md" [value]="swapTohubSOL" (ionChange)="onSwapTohubSOLChange($event.detail.value)" /><span>Swap to hubSOL</span>
           </div>
         <!-- </ion-col> -->
       }
+      @if(tableName.toLowerCase() === 'zero value assets'){
+        <div id="toggle-swap">
+          <ion-toggle color="danger" mode="md" [value]="swapTohubSOL" (ionChange)="showUnknownSource($event)" /><span>Unknown source</span>
+        </div>
+      }
       <ion-button (click)="emitData()" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{stash.actionTitle}} | {{selectedData().length}}</ion-button>
-      @if(tableName === 'dust value'){
+      @if(tableName.toLowerCase() === 'dust value'){
         <ion-button (click)="openRangeBox($event)" id="range-btn" fill="clear" ><ion-icon name="funnel-outline"/> <span>min. value</span> <chip [name]="portfolioShare + '%'"></chip></ion-button>
       }
    
@@ -39,7 +44,7 @@
     [checkBox]="true"
     slot="content"
     (onData)="selectedData.set($event)"
-    [tableRows]="100"
+    [tableRows]="1000"
     [tableId]="'savings-table'+ tableName" 
     [tableColumns]="columns" 
     [tableData]="tableData"

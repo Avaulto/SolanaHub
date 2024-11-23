@@ -9,7 +9,7 @@ export interface WalletExtended {
   publicKey: PublicKey,
   signMessage(message: Uint8Array): Observable<Uint8Array> | undefined;
   signTransaction: (transaction: Transaction | VersionedTransaction) => Promise<Transaction | VersionedTransaction>,
-  signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
+  signAllTransactions: (transactions: Transaction[] | VersionedTransaction[]) => Promise<Transaction[] | VersionedTransaction[]>
 }
 export interface Token extends JupToken{
     type?: string,

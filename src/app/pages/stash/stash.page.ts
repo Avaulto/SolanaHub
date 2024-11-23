@@ -88,6 +88,7 @@ export class StashPage implements OnInit {
   public selectedTab = signal('assets');
   public tableMenuOptions: string[] = ['Assets', 'Positions', 'Stake'];
   private _columnsOptions = null
+  public swapTohubSOL = false;
   public columns = computed(() => {
     //@ts-ignore
     return this._columnsOptions[this.selectedTab().toLowerCase()]
@@ -111,74 +112,7 @@ export class StashPage implements OnInit {
   public zeroValueAssets = this._stashService.findZeroValueAssets;
   public dustValueTokens = this._stashService.findDustValueTokens;
   
-  // {
-  //   "networkId": "solana",
-  //   "platformId": "wallet-tokens",
-  //   "type": "multiple",
-  //   "label": "Dust value",
-  //   "description": "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
-  //   "actionTitle": "Swap",
-  //   "value": 173.00551050908487,
-  //   "data": {
-  //     "assets": [
-  //       {
-  //         "type": "token",
-  //         "networkId": "solana",
-  //         "extractedValue": {
-  //           "SOL": 96.0869375886,
-  //           "USD": 173.00551050908487
-  //         },
-  //         "attributes": {},
-  //         "name": "SolanaHub staked SOL",
-  //         "symbol": "hubSOL",
-  //         "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX.webp",
-  //         "decimals": 9,
-  //         "balance": 0.512956105,
-  //         "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-  //         "price": 187.32,
-  //         "source": 'empty account',
-  //         "action": "close"
-  //       },
 
-  //       {
-  //         "type": "token",
-  //         "networkId": "solana",
-  //         "extractedValue": {
-  //           "SOL": 0.025552454802054175,
-  //           "USD": 0.025552454802054175
-  //         },
-  //         "attributes": {},
-  //         "name": "Bee Wif Hat",
-  //         "symbol": "Bee",
-  //         "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/Eyi4ZC14YyADn3P9tQ7oT5cmq6DCxBTt9ZLszdfX3mh2.webp",
-  //         "decimals": 9,
-  //         "balance": 10000,
-  //         "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-  //         "price": 0.0000025552454802054177,
-  //         "source": 'empty account',
-  //         "action": "close"
-  //       },
-  //       {
-  //         "type": "token",
-  //         "networkId": "solana",
-  //         "extractedValue": {
-  //           "SOL": 4.44e-8,
-  //           "USD": 4.44e-8
-  //         },
-  //         "attributes": {},
-  //         "name": "catwifhat",
-  //         "symbol": "$CWIF",
-  //         "imgUrl": "https://raw.githubusercontent.com/sonarwatch/token-lists/main/images/solana/7atgF8KQo4wJrD5ATGX7t1V2zVvykPJbFfNeVf1icFv1.webp",
-  //         "decimals": 2,
-  //         "balance": 0.04,
-  //         "account": { addrShort: this._util.addrUtil("G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6").addrShort, addr: "G9iNShxGnmGmNScHpGHWjimEESknXv4CbzeD66ig1gQ6" },
-  //         "price": 0.00000111,
-  //         "source": 'no liquidity',
-  //         "action": "close"
-  //       }
-  //     ]
-  //   }
-  // }
   // append unstakedOverflow & zeroYieldZones & dustBalanceAccounts & outOfRangeDeFiPositions once they are computed
   public assets = computed(() => {
     if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.dustValueTokens() && !this.zeroValueAssets()) return []
@@ -229,23 +163,22 @@ export class StashPage implements OnInit {
       { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ])
-    // this._stashService.getOutOfRangeRaydium()
-  
+
   }
   async getSavingData() {
 
-    // const minLoadingTime = 3000
+    const minLoadingTime = 3000
 
 
-    this.analyzeStage.set(1)
-    // setTimeout(() => {
-    //   const interval = setInterval(() => {
-    //     if(this.assets().length >3) {
-    //       clearInterval(interval)
-    //       this.analyzeStage.set(1)
-    //     }
-    //   }, 500);
-    // }, minLoadingTime);
+    // this.analyzeStage.set(1)
+    setTimeout(() => {
+      const interval = setInterval(() => {
+        if(this.assets().length >3) {
+          clearInterval(interval)
+          this.analyzeStage.set(1)
+        }
+      }, 500);
+    }, minLoadingTime);
 
   }
    async openStashPopup(event: StashAsset[]) {
@@ -253,7 +186,8 @@ export class StashPage implements OnInit {
       component: StashModalComponent,
       componentProps: {
         stashAssets: event,
-        actionTitle: event[0].action
+        actionTitle: event[0].action,
+        swapTohubSOL: this.swapTohubSOL
       },
       cssClass: 'modal-style'
     });
@@ -262,39 +196,7 @@ export class StashPage implements OnInit {
   }
 
   public fixedNumber(value: any): string {
-    // Convert the input to a number
-    const num = Number(value);
-
-    // If the number is not valid, return '0.00'
-    if (isNaN(num) || !isFinite(num)) {
-      return '0.00';
-    }
-
-    // Find the closest positive number
-    const absNum = Math.abs(num);
-
-    // Find the minimum number of decimal places needed
-    let decimalPlaces = 2; // Start with minimum 2 decimal places
-    let tempNum = absNum;
-    while (tempNum < 0.01 && tempNum > 0) {
-      tempNum *= 10;
-      decimalPlaces++;
-    }
-
-    // Cap the decimal places at 8 to avoid excessive precision
-    decimalPlaces = Math.min(decimalPlaces, 8);
-
-    // Format the number with the calculated decimal places
-    const formattedNum = absNum.toFixedNoRounding(decimalPlaces);
-
-    // Remove trailing zeros after the decimal point, but keep at least 2 decimal places
-    const trimmedNum = parseFloat(formattedNum).toFixedNoRounding(Math.max(2, (formattedNum.split('.')[1] || '').replace(/0+$/, '').length));
-
-    // Localize the number
-    return Number(trimmedNum).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 8
-    });
+    return this._util.fixedNumber(value)
   }
 
   public async openFaqPopOver() {

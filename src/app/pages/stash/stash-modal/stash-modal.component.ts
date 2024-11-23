@@ -5,6 +5,7 @@ import { IonLabel, IonText, IonImg, IonButton } from '@ionic/angular/standalone'
 import { DecimalPipe, KeyValuePipe } from '@angular/common';
 import { StashService } from '../stash.service';
 import { ModalController } from '@ionic/angular';
+import { UtilService } from 'src/app/services/util.service';
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -20,10 +21,12 @@ import { ModalController } from '@ionic/angular';
 export class StashModalComponent implements OnInit {
   @Input() stashAssets: StashAsset[] = [];
   @Input() actionTitle: string = ''
+  @Input() swapTohubSOL: boolean = false;
   private _stashService = inject(StashService)
   private modalCtrl = inject(ModalController)
+  public utils = inject(UtilService)
   public summary: { [key: string]: number } = {};
-  public platformFee: number = 0
+  public platformFeeInSol: number = 0
   public stashState = signal('')
   ngOnInit() {
     this.stashState.set(this.actionTitle)
@@ -43,38 +46,56 @@ export class StashModalComponent implements OnInit {
     }, {})
     // loop through summary and add toFixedNoRounding 2 
     Object.keys(this.summary).forEach(key => {
-      this.summary[key] = Number(this.summary[key]).toFixedNoRounding(3)
+      this.summary[key] = Number(this.summary[key]).toFixedNoRounding(5)
     })
     // filter zero values
     this.summary = Object.fromEntries(Object.entries(this.summary).filter(([key, value]) => value > 0))
-    this.platformFee = 0.002
+   
+    this._calculatePlatformFee()
   }
+  private _calculatePlatformFee() {
+    const type = this.stashAssets[0].type
+    switch (type) {
+      case 'stake-account':
+      case 'value-deficient':
+      case 'dust-value':
+        this.platformFeeInSol = this.summary['SOL'] * this._stashService.platformFeeBPS
+      break
+      case 'defi-position':
+        let costPerPosition = 0.01
+        this.platformFeeInSol = this.stashAssets.length * costPerPosition
+        break
 
+      
+    }
+  }
   async submit(event: StashAsset[]) {
     console.log('event', event)
     const type = event[0].type
     this.stashState.set('preparing transactions')
-
+    let response = null
     switch (type) {
       case 'stake-account':
-         await this._stashService.withdrawStakeAccountExcessBalance(event)
+         response = await this._stashService.withdrawStakeAccountExcessBalance(event)
 
         break
       case 'defi-position':
-         await this._stashService.closeOutOfRangeDeFiPosition(event)
+         response = await this._stashService.closeOutOfRangeDeFiPosition(event)
         break
-      case 'empty-account':
+      case 'value-deficient':
       case 'nft':
-        await this._stashService.burnAccounts(event)
+        response = await this._stashService.burnAccounts(event)
         break
       case 'dust-value':
-        await this._stashService.bulkSwapDustValueTokens(event)
+        response = await this._stashService.bulkSwapDustValueTokens(event, this.swapTohubSOL)
         break
     }
 
-
-
-    this.closeModal()
+    if(response){
+      this.closeModal()
+    } 
+    this.stashState.set(this.actionTitle)
+    
   }
   closeModal() {
     this.modalCtrl.dismiss()

@@ -28,10 +28,10 @@
             <ion-text>{{item.symbol}}</ion-text>
           </div>
         </div>
-        @if (item.balance > 0) {
+        
         <div class="floor-price">
-          {{item.balance | number:'1.2-2'}} {{item.symbol}}</div>
-        }
+          {{utils.fixedNumber(item?.balance || 0)}} {{item.symbol}}</div>
+        
       </div>
       }
     </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="item">
           <div class="item-id">platform fee</div>
-          <div class="item-value">{{platformFee}} SOL</div>
+          <div class="item-value">{{platformFeeInSol}} SOL (0.3%)</div>
         </div>
       </div>
     </div>

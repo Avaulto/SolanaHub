@@ -171,8 +171,6 @@ export class MftComponent implements OnInit {
         }
         break;
       case 'onClick':
-        console.log($event);
-        
         this.table.apiEvent({
           type: API.toggleRowIndex,
           value: $event.value.rowId,

@@ -11,43 +11,51 @@ import {
   UtilService
 } from 'src/app/services';
 import { OutOfRange, StashAsset, StashGroup, TokenInfo } from './stash.model';
-import { NftsService } from 'src/app/services/nfts.service';
-import { burnChecked, createBurnCheckedInstruction, createCloseAccountInstruction } from "../../../../node_modules/@solana/spl-token";
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { createBurnCheckedInstruction, createCloseAccountInstruction } from "../../../../node_modules/@solana/spl-token";
 import { JupToken } from 'src/app/models/jup-token.model';
+import { NftsService } from 'src/app/services/nfts.service';
+
+interface BulkSwap {
+  mint: string;
+  inputAmount: string;
+  decimals: number;
+  slippage: string;
+  asLegacyTransaction: boolean;
+  onlyDirectRoutes: boolean;
+}
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class StashService {
+  public platformFeeBPS = 0.03
   private _rentFee = 0.002039
   private outOfRangeDeFiPositionsSignal = signal<StashGroup | null>(null);
   private zeroValueAssetsSignal = signal<any>(null);
 
   constructor(
-    private _nftService: NftsService,
     private _utils: UtilService,
     private _jupStoreService: JupStoreService,
     private _shs: SolanaHelpersService,
-    private _apiService: ApiService,
     private _txi: TxInterceptorService,
     private _portfolioService: PortfolioService,
     private _portfolioFetchService: PortfolioFetchService,
+    private _nftService: NftsService,
     private _toasterService: ToasterService
   ) {
     this.initializeService();
     effect(() => {
-      if(this._portfolioService.tokens()){
+      if (this._portfolioService.tokens()) {
         this.createAndUpdateDustValueTokens()
       }
-    }, {allowSignalWrites: true})
+    }, { allowSignalWrites: true })
   }
 
   private initializeService() {
     this.updateOutOfRangeDeFiPositions();
     this.updateZeroValueAssets();
-    
+
   }
 
   private createStashGroup(
@@ -71,18 +79,19 @@ export class StashService {
 
   private mapToStashAsset(
     item: any,
-    category: 'nft' | 'token' | 'stake' | 'defi' | 'dust',
+    category: 'value-deficient' | 'stake' | 'defi' | 'dust',
     extraData: Record<string, any> = {}
   ): StashAsset {
 
     const baseAsset = {
-      name: item.name,
+      name: category === 'stake' ? item.validatorName : item.name,
       symbol: item.symbol,
       imgUrl: item.imgUrl,
+      url: this._utils.explorer + '/account/' + item['address'],
       mint: item.mint,
       decimals: item?.decimals,
       account: this._utils.addrUtil(item['address'] || 'default'),
-      balance: item.balance,
+      balance:  item.balance,
       action: this.getActionByCategory(category),
       type: this.getTypeByCategory(category),
       source: this.getSourceByCategory(category),
@@ -115,6 +124,7 @@ export class StashService {
       case 'stake':
         return {
           ...baseAsset,
+          balance: item.excessLamport  / LAMPORTS_PER_SOL,
           extractedValue: { SOL: item.excessLamport / LAMPORTS_PER_SOL }
         };
       default:
@@ -146,11 +156,10 @@ export class StashService {
 
   private getTypeByCategory(category: string): string {
     const types = {
-      nft: 'nft',
       defi: 'defi-position',
       stake: 'stake-account',
       dust: 'dust-value',
-      default: 'empty-account'
+      default: 'value-deficient'
     };
     return types[category] || types.default;
   }
@@ -167,11 +176,11 @@ export class StashService {
   private dustValueStashGroupSignal = signal(null)
   private createAndUpdateDustValueTokens(portfolioShare: number = 3) {
     console.log('portfolioShare', portfolioShare);
-    
+
     const tokens = this._portfolioService.tokens();
     if (!tokens) return null;
 
-    
+
     // get all tokens total value combined.
     // filter all tokens that equal more than x of the total value
     const totalTokensValue = tokens?.reduce((acc, curr) => acc + Number(curr.value), 0)
@@ -184,14 +193,14 @@ export class StashService {
       .filter(token => token.symbol !== 'SOL')
       .map(token => this.mapToStashAsset(token, 'dust'))
 
-   
+
     const dustTokens = this.createStashGroup(
       'dust value',
       "This dataset includes tokens with value less than 5% of the total value of your portfolio",
       "swap",
       filterDustValueTokens
     )
-    
+
     this.dustValueStashGroupSignal.set(dustTokens)
     return dustTokens
 
@@ -214,50 +223,43 @@ export class StashService {
     const additionalAssets = this.zeroValueAssetsSignal();
 
     if (!NFTs || !tokens || !additionalAssets) return null;
-    // console.log(NFTs, tokens, additionalAssets);
+    // console.log( tokens, additionalAssets);
     const filterNftZeroValue = NFTs
       ?.filter(acc => acc.floorPrice < 0.01 && acc.floorPrice === 0)
       .filter(token => !token.name.includes('Orca Whirlpool Position')
-        && !token.name.includes('Raydium Concentrated Liquidity'))
-      .map(nft => this.mapToStashAsset(nft, 'nft'));
+        && !token.name.includes('Raydium Concentrated Liquidity'));
 
-    const filterTokenZeroValue = tokens
-      .filter(acc => Number(acc.value) < 1);
-    // add simiar filter to additionalAssets
-    // const additionalZeroValueTokens = additionalAssets
-    //   .filter(acc => Number(acc.value) < 1);
-    // Combine tokens and additional assets before mapping
-    // loop through additionalAssets and check if the token is already in the filterTokenZeroValue
-    // if it is, extend the existing token with the additional data
-    const additionalTokensExtended = additionalAssets.map((asset: any) => {
-
-
-      const existingToken = filterTokenZeroValue.find(t => t.address === asset.address);
+    // filter token with value less than rent fee cost in USD
+    const excludeToken = tokens
+      .filter(acc => Number(acc.value) > this._rentFee * this._jupStoreService.solPrice());
+    // exclude tokens and nfts from additionalAssets by address
+    const additionalZeroValueTokensFinalized = additionalAssets
+      .filter(acc => !excludeToken.some(t => t.address === acc.mint));
+    // map through additionalZeroValueTokensFinalized find duplicate in filterNftZeroValue and extend the existing 
+    // token with the additional data and if there overlapping props,
+    // make sure to keep the additional data from additionalZeroValueTokensFinalized
+    const additionalZeroValueTokensExtended = additionalZeroValueTokensFinalized.map(acc => {
+      const existingToken = filterNftZeroValue.find(t => t.mint === acc.mint);
+      acc.type = 'value-deficient'
       if (existingToken) {
-        // console.log('existingToken:::::', existingToken);
-
-        return this.mapToStashAsset({
-          ...existingToken,
-          address: asset.mint,
-          value: Number(existingToken.value) + Number(asset.value) || 0,
-        }, asset.decimals == 1 ? 'nft' : 'token');
+        return {
+          ...acc,
+          imgUrl: existingToken.imgUrl,
+          name: existingToken.name,
+          symbol: existingToken.symbol,
+        };
       }
-      return this.mapToStashAsset({
-        ...asset,
-        value: Number(asset.value) || 0,
-      }, asset.decimals == 1 ? 'nft' : 'token');
-    });
+      return acc;
+    }).map(acc => this.mapToStashAsset(acc, acc.type));;
 
 
-    // Combine unique tokens with NFTs
-    const allAssets = [...filterNftZeroValue, ...additionalTokensExtended];
-    // console.log('allAssets:::::', allAssets);
+
 
     return this.createStashGroup(
       'zero value assets',
       "This dataset includes NFTs and tokens with value less than solana account rent fee(0.002039 SOL)",
       "burn",
-      allAssets
+      additionalZeroValueTokensExtended
     );
   });
 
@@ -298,7 +300,7 @@ export class StashService {
     try {
       const unknownAssets = await this._shs.getTokenAccountsBalance(publicKey.toBase58(), true, false)
       // remove token with no symbol
-      const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
+      // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
       return unknownAssets
     } catch (error) {
       return null
@@ -313,12 +315,7 @@ export class StashService {
       toPubkey: publicKey,
       lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
     }));
-    this
-    this._txi.sendTx(withdrawTx, publicKey).then(res => {
-      if (res) {
-        this._portfolioFetchService.refetchPortfolio()
-      }
-    })
+    return await this._txi.sendTx(withdrawTx, publicKey)
 
 
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
@@ -340,7 +337,7 @@ export class StashService {
         body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
       })).json()
       const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
-      this._txi.sendMultipleTxn(txInsArray).then(res => {
+      return await this._txi.sendMultipleTxn(txInsArray).then(res => {
         if (res) {
           this.updateOutOfRangeDeFiPositions()
         }
@@ -404,130 +401,139 @@ export class StashService {
   public async burnAccounts(accounts: StashAsset[]) {
     const { publicKey } = this._shs.getCurrentWallet()
 
-    const nftsAddress = accounts.filter(acc => acc.type === 'nft').map(acc => (acc).account.addr)
-    const tokens = accounts.filter(acc => acc.type === 'empty-account').map(acc => acc)
-    console.log(nftsAddress, tokens);
+    // const nftsAddress = accounts.filter(acc => acc.type === 'nft').map(acc => (acc).account.addr)
+    // const tokens = accounts.filter(acc => acc.type === 'value-deficient').map(acc => acc)
+    // console.log(nftsAddress, tokens);
 
     // const burnNftTx = await this._nftService.burnNft(nftsAddress, publicKey.toBase58())
 
     // add recentBlockhash
     // const recentBlockhash = await this._shs.getRecentBlockhash(publicKey.toBase58())
-    let tx = new Transaction();
-    await Promise.all(tokens.map(async acc => {
-      tx.add(createBurnCheckedInstruction(
-        new PublicKey(acc.account.addr),
-        new PublicKey(acc.mint),
-        publicKey,
-        BigInt(Math.floor(acc.balance * 10 ** acc.decimals)),
-        acc.decimals,
-      ))
-    }))
-    await Promise.all(tokens.map(async acc => {
-      tx.add(createCloseAccountInstruction(
-        new PublicKey(acc.account.addr), // token account
-        publicKey,
-        publicKey
-      ))
+    try {
 
-    }))
-    console.log(tx);
-    const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-    // let tx = new Transaction().add( ...closeTokenTX)
-    tx.recentBlockhash = blockhash
-    tx.lastValidBlockHeight = lastValidBlockHeight
-    tx.feePayer = publicKey
-    console.log(tx);
 
-    await this._txi.sendMultipleTxn([tx])
+      let tx = new Transaction();
+      await Promise.all(accounts.map(async acc => {
+        tx.add(createBurnCheckedInstruction(
+          new PublicKey(acc.account.addr),
+          new PublicKey(acc.mint),
+          publicKey,
+          BigInt(Math.floor(acc.balance * 10 ** acc.decimals)),
+          acc.decimals,
+        ))
+      }))
+      await Promise.all(accounts.map(async acc => {
+        tx.add(createCloseAccountInstruction(
+          new PublicKey(acc.account.addr), // token account
+          publicKey,
+          publicKey
+        ))
 
+      }))
+      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+      // let tx = new Transaction().add( ...closeTokenTX)
+      tx.recentBlockhash = blockhash
+      tx.lastValidBlockHeight = lastValidBlockHeight
+      tx.feePayer = publicKey
+
+      return await this._txi.sendMultipleTxn([tx])
+    } catch (error) {
+      console.log(error);
+      return null
+    }
   }
+
 
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
     console.log('tokens', tokens);
     const { publicKey } = this._shs.getCurrentWallet()
-    const swapencodedIx = await Promise.all(tokens.map(async token => {
-      const jupToken = {
-        chainId: 101,
-        address: token.account.addr,
-        logoURI: Array.isArray(token.imgUrl) ? token.imgUrl[0] : token.imgUrl,
-        decimals: token.decimals,
-        symbol: token.symbol,
-        name: token.name,
-      };
+    try {
 
-      let outputToken: JupToken = {
-        chainId: 101,
-        address: 'So11111111111111111111111111111111111111112',
-        logoURI: Array.isArray(token.imgUrl) ? token.imgUrl[0] : token.imgUrl,
-        decimals: token.decimals,
-        symbol: 'SOL',
-        name: 'Solana',
-      }
-      if (swapToHubsol) {
-        outputToken = {
-          ...outputToken,
-          address: 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-          name: 'SolanaHub Staked SOL',
-          symbol: 'hubSOL'
+      const swapencodedIx = await Promise.all(tokens.map(async token => {
+        const jupToken = {
+          chainId: 101,
+          address: token.account.addr,
+          logoURI: Array.isArray(token.imgUrl) ? token.imgUrl[0] : token.imgUrl,
+          decimals: token.decimals,
+          symbol: token.symbol,
+          name: token.name,
+        };
+
+        let outputToken: JupToken = {
+          chainId: 101,
+          address: 'So11111111111111111111111111111111111111112',
+          logoURI: Array.isArray(token.imgUrl) ? token.imgUrl[0] : token.imgUrl,
+          decimals: token.decimals,
+          symbol: 'SOL',
+          name: 'Solana',
         }
-      }
-      const bestRoute = await this._jupStoreService.computeBestRoute(
-        token.balance,
-        jupToken,
-        outputToken,
-        50
-      );
-      console.log('bestRoute', bestRoute);
-      
-      const swapIx = await this._jupStoreService.swapTx(bestRoute)
-      return swapIx
-    }));
+        if (swapToHubsol) {
+          outputToken = {
+            ...outputToken,
+            address: 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
+            name: 'SolanaHub Staked SOL',
+            symbol: 'hubSOL'
+          }
+        }
+        const bestRoute = await this._jupStoreService.computeBestRoute(
+          token.balance,
+          jupToken,
+          outputToken,
+          50
+        );
+        const swapIx = await this._jupStoreService.swapTx(bestRoute)
+        return swapIx
+      }));
 
-    // const txInsArray: Transaction[] = swapencodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
+      return await this._txi.sendMultipleTxn(swapencodedIx)
 
-    // const splitTx = this.splitTransactions(swapencodedIx)
-    // add recentBlockhash
-    // const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-    // splitTx.forEach(tx => {
-    //   tx.recentBlockhash = blockhash
-    //   tx.lastValidBlockHeight = lastValidBlockHeight
-    //   tx.feePayer = publicKey
-    // })
-    // console.log('swapTx', splitTx);
-    swapencodedIx.forEach(async ix => {
-      await this._txi.sendTxV2(ix)
-    })
+    } catch (error) {
+      console.log(error);
+      return null
+    }
   }
-
+  private bulkSwapSynthesis(bulkSwapTokens: BulkSwap[], swapTohubSOL: boolean = false) {
+    const { publicKey } = this._shs.getCurrentWallet()
+    const getSwapIx = fetch(`https://synthesis-api-rho.vercel.app/v1/swap/create`, {
+      method: 'POST',
+      body: JSON.stringify({
+        "owner": publicKey.toBase58(),
+        "priorityFee": "fast", // ["fast", "turbo", "ultra"] specify one of these
+        bulkSwapTokens
+      })
+    })
+    return getSwapIx
+  }
   private splitTransactions(encodedInstructions: string[]): Transaction[] {
     const transactions: Transaction[] = [];
     let currentTransaction = new Transaction();
     let currentSize = 0;
     let maxSize = 1200 //bytes
-  
+
     encodedInstructions.forEach(ix => {
       const transaction = Transaction.from(Buffer.from(ix, 'base64'));
       const transactionSize = transaction.serializeMessage().length;
       console.log('transactionSize', transactionSize);
-      
+
       if (currentSize + transactionSize > maxSize) {
         // Push the current transaction to the list and start a new one
         transactions.push(currentTransaction);
         currentTransaction = new Transaction();
         currentSize = 0;
       }
-  
+
       currentTransaction.add(transaction);
       currentSize += transactionSize;
     });
-  
+
     // Add the last transaction if it has any instructions
     if (currentTransaction.instructions.length > 0) {
       transactions.push(currentTransaction);
     }
-  
+
     return transactions;
   }
-  
+
+
 }

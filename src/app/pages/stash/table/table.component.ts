@@ -45,6 +45,8 @@ export class TableComponent  implements OnChanges {
   @Input() tableDescription: string;
   @Input() actionTitle: string;
   public tableData = signal([])
+  public swapTohubSOL = false;
+  @Output() swapTohubSOLChange = new EventEmitter<boolean>();
   // 1% of portfolio tokens value
   public portfolioShare = 3
   constructor(private _stashService: StashService,public _popoverController: PopoverController) { 
@@ -59,7 +61,9 @@ export class TableComponent  implements OnChanges {
     this.tableData.set(this.stash.data.assets)
   }
 
-
+  onSwapTohubSOLChange(ev){
+    this.swapTohubSOLChange.emit(ev)
+  }
   @ViewChild('accordionGroup', { static: true }) accordionGroup: IonAccordionGroup;
 
   public async openRangeBox(event: any) {
@@ -100,10 +104,14 @@ export class TableComponent  implements OnChanges {
   };
   public selectedData = signal([])
   emitData(){
-    console.log(this.selectedData());
+    console.log(this.selectedData(), this.swapTohubSOL);
     
     this.onAction.emit(this.selectedData())
   }
 
 
+  showUnknownSource(ev){
+    console.log(ev);
+    
+  }
 }

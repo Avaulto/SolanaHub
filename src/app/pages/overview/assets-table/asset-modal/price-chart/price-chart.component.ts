@@ -40,7 +40,7 @@ export class PriceChartComponent implements OnInit, AfterViewInit {
     private createGroupCategory(priceDataHistory) {
 
         this.chartData ? this.chartData.destroy() : null
-        const ctx = this.breakdownChart.nativeElement
+        const ctx = this.breakdownChart?.nativeElement
 
 
         var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
