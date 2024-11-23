@@ -25,8 +25,9 @@ import { PortfolioBreakdownService } from "../../services";
   ]
 })
 export class OverviewPage implements OnInit {
-  private _portfolioBreakDownService = inject(PortfolioBreakdownService)
-  private _portfolioService = inject(PortfolioService)
+  private readonly _portfolioBreakDownService = inject(PortfolioBreakdownService)
+  private readonly _portfolioService = inject(PortfolioService)
+  public readonly allWalletsAssets = this._portfolioBreakDownService.getEnabledWalletsAssets;
 
   /**
    * Computed property that returns a Map of total USD values for all wallets.
@@ -61,5 +62,4 @@ export class OverviewPage implements OnInit {
 
   }
   // public walletHistory: WritableSignal<TransactionHistory[]> = this._portfolioService.walletHistory
-  allWalletsAssets = this._portfolioBreakDownService.getAllWalletsAssets;
 }

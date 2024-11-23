@@ -12,6 +12,11 @@ export interface WalletExtended {
   signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
 }
 
+export interface WalletEntry {
+  walletAddress: string;
+  portfolio: WalletPortfolio
+}
+
 export interface WalletPortfolio {
   walletAssets: any;
   tokens: Token[];
@@ -28,7 +33,7 @@ export interface Token extends JupToken{
     type?: string,
     networkId?: string,
     imgUrl?: string,
-    value?: string,
+    value?: number,
     price?: number
     amount?: string
     extraData?: any
@@ -206,8 +211,8 @@ export interface TransactionHistory{
     contractLabel?: ContractLabel;
     case: string;
   }
-  
-  export interface BalanceChange {
+
+export interface BalanceChange {
     type: 'in' | 'out',
     amount: number
     symbol?: string
@@ -219,18 +224,18 @@ export interface TransactionHistory{
     owner?: string
     programId?: string
   }
-  
-  export interface ContractLabel {
+
+export interface ContractLabel {
     address: string
     name: string
     metadata: Metadata
   }
-  
-  export interface Metadata {
+
+export interface Metadata {
     icon: string
   }
-  
-  export interface defiHolding {
+
+export interface defiHolding {
     tags?: string[];
     poolTokens: PoolToken[];
     platform?:  string;
@@ -240,8 +245,8 @@ export interface TransactionHistory{
       link:       string;
       holdings: holding[]
   }
-  
-  export interface PoolToken {
+
+export interface PoolToken {
     imgURL: string;
     symbol: string;
     decimals?: number;

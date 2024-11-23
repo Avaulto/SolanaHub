@@ -17,7 +17,6 @@ import {AddPortfolioPopupComponent} from "./add-portfolio-popup/add-portfolio-po
     IonRippleEffect,
     IonButton,
     IonIcon,
-    PortfolioBoxComponent,
     JsonPipe,
     IonImg,
     IonInput,

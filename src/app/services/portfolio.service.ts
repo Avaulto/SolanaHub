@@ -1,4 +1,4 @@
-import { computed, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { UtilService } from './util.service';
 import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
 import {
@@ -11,7 +11,8 @@ import {
   JupToken,
   TransactionHistory,
   WalletExtended,
-  WalletPortfolio
+  WalletPortfolio,
+  WalletEntry
 } from '../models';
 
 import va from '@vercel/analytics';
@@ -25,20 +26,10 @@ import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
 import { RoutingPath } from '../shared/constants';
+import { PortfolioDataKeys } from "../enums";
 
 // Add new type definition
 type FetchType = 'full' | 'partial';
-
-enum PortfolioDataKeys {
-  WALLET_ASSETS = "walletAssets",
-  TOKENS = "tokens",
-  NFTS = "nfts",
-  STAKING = "staking",
-  DEFI = "defi",
-  WALLET_HISTORY = "walletHistory",
-  NETWORTH = "netWorth",
-  ENABLED = "enabled"
-}
 
 @Injectable({
   providedIn: 'root'
@@ -60,9 +51,9 @@ export class PortfolioService {
    * @remarks
    * This computed property will automatically rerender whenever the underlying `portfolioMap` signal changes.
    *
-   * @returns {Array<{walletAddress: string, portfolio: WalletPortfolio}>}
+   * @returns {Array<WalletEntry>}
    */
-  public portfolio = computed(() =>
+  public portfolio: Signal<WalletEntry[]> = computed(() =>
     Array.from(this.portfolioMap().entries())
     .map(([walletAddress, portfolio]) => ({
     walletAddress,
@@ -297,15 +288,12 @@ export class PortfolioService {
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
 
-    if (fetchType === 'partial') {
-      await this._portfolioStaking(walletAddress);
-      await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-      await this._portfolioNFT(tempNft?.data.assets);
-    } else {
-      await this._portfolioStaking(walletAddress);
-      await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
+    await this._portfolioStaking(walletAddress);
+    await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
+    await this._portfolioNFT(tempNft?.data.assets);
+
+    if (fetchType !== 'partial') {
       await this._portfolioDeFi(excludeNFTv2, tokenJupData);
-      await this._portfolioNFT(tempNft?.data.assets);
       mergeDuplications.push(tempNft);
       this.walletAssets.set(mergeDuplications);
       this.netWorth.set(portfolioData.value);

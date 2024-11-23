@@ -10,9 +10,10 @@ import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { NFT, Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
-import { JupStoreService, PriceHistoryService, UtilService } from 'src/app/services';
+import { JupStoreService, PortfolioBreakdownService, PriceHistoryService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+import {PortfolioDataKeys} from "../../../enums";
 
 interface nftTable {
   collectionName: string
@@ -50,7 +51,7 @@ interface nftTable {
   ]
 })
 export class AssetsTableComponent implements OnInit {
-  // token & validator tpl 
+  // token & validator tpl
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   @ViewChild('validatorProfileTpl', { static: true }) validatorProfileTpl: TemplateRef<any> | any;
@@ -76,7 +77,7 @@ export class AssetsTableComponent implements OnInit {
   public solPrice = this._jupStore.solPrice;
   tableMenuOptions: string[] = [
     'Tokens',
-     'NFTs', 
+     'NFTs',
     'Staking',
     'DeFi'
   ];
@@ -85,29 +86,30 @@ export class AssetsTableComponent implements OnInit {
   constructor(
     private _jupStore: JupStoreService,
     private _portfolioService: PortfolioService,
+    private _portfolioBreakdownService: PortfolioBreakdownService,
     private _modalCtrl: ModalController,
     public utils:UtilService
   ) {
     addIcons({ arrowBack, arrowForward });
   }
   public showBalance = this._portfolioService.privateMode
-  selectedTab = signal('tokens');
-  columns = computed(() => {
-    //@ts-ignore
-    return this._columnsOptions[this.selectedTab().toLowerCase()]
-  })
+  selectedTab = signal(PortfolioDataKeys.TOKENS);
+  columns = computed(() => this._columnsOptions[this.selectedTab().toLowerCase()])
   tableData = computed(() => {
     let tableType: string = this.selectedTab().toLowerCase();
 
     // if(tableType === 'tokens'){
     //   return tokenDummyPlaceholder
     // }
-    if (tableType === 'nfts') {
-      return this.nftDataAggregator(this._portfolioService[tableType]())
 
+    switch (tableType) {
+      case PortfolioDataKeys.NFTS:
+        return this.nftDataAggregator(this._portfolioService[tableType]())
+      case PortfolioDataKeys.TOKENS:
+        return this._portfolioBreakdownService.getTokensBreakdown()
+      default:
+        return this._portfolioService[tableType]()
     }
-
-    return this._portfolioService[tableType]()
   })
 
   private _columnsOptions = {}
@@ -123,7 +125,7 @@ export class AssetsTableComponent implements OnInit {
       const collectionSymbol = nft.collection.symbol || nft.collectionMagicEdenStatSymbol || '';
       // const collectionKey = collectionName.toLowerCase().slice(0, 5);
 
-      const existingCollection = acc.find(c => 
+      const existingCollection = acc.find(c =>
         c.collectionName.toLowerCase() === collectionName.toLowerCase() ||
         c.collectionSymbol.toLowerCase() === collectionSymbol.toLowerCase()
         // c.collectionKey === collectionKey
@@ -193,7 +195,7 @@ export class AssetsTableComponent implements OnInit {
 
   eventEmitted($event): void {
     const token: Token = $event[0]
-    if (this.selectedTab().toLowerCase() === 'tokens') {
+    if (this.selectedTab().toLowerCase() === PortfolioDataKeys.TOKENS) {
         this.openModal(token)
     }
   }
