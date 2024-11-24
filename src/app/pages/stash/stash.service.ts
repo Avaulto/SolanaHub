@@ -1,5 +1,5 @@
 import { Injectable, Signal, computed, effect, signal } from '@angular/core';
-import { LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey, StakeProgram, Transaction, TransactionInstruction } from '@solana/web3.js';
 import {
   ApiService,
   JupStoreService,
@@ -33,6 +33,7 @@ export class StashService {
   private _rentFee = 0.002039
   private outOfRangeDeFiPositionsSignal = signal<StashGroup | null>(null);
   private zeroValueAssetsSignal = signal<any>(null);
+  private allZeroValueAssets: any[] = [];
 
   constructor(
     private _utils: UtilService,
@@ -91,10 +92,10 @@ export class StashService {
       mint: item.mint,
       decimals: item?.decimals,
       account: this._utils.addrUtil(item['address'] || 'default'),
-      balance:  item.balance,
+      balance: item.balance,
       action: this.getActionByCategory(category),
       type: this.getTypeByCategory(category),
-      source: this.getSourceByCategory(category),
+      source: this.getSourceByCategory(category, item.balance),
       ...extraData
     };
 
@@ -124,7 +125,7 @@ export class StashService {
       case 'stake':
         return {
           ...baseAsset,
-          balance: item.excessLamport  / LAMPORTS_PER_SOL,
+          balance: item.excessLamport / LAMPORTS_PER_SOL,
           extractedValue: { SOL: item.excessLamport / LAMPORTS_PER_SOL }
         };
       default:
@@ -164,12 +165,12 @@ export class StashService {
     return types[category] || types.default;
   }
 
-  private getSourceByCategory(category: string): string {
+  private getSourceByCategory(category: string, balance: number): string {
     const sources = {
       defi: 'out of range',
       stake: 'excess balance',
       dust: 'dust value',
-      default: 'no market value'
+      default: balance === 0 ? 'empty account' : 'no market value'
     };
     return sources[category] || sources.default;
   }
@@ -257,7 +258,7 @@ export class StashService {
 
     return this.createStashGroup(
       'zero value assets',
-      "This dataset includes NFTs and tokens with value less than solana account rent fee(0.002039 SOL)",
+      "This dataset includes empty NFTs and token accounts or with balance but no market value found.",
       "burn",
       additionalZeroValueTokensExtended
     );
@@ -307,47 +308,6 @@ export class StashService {
     }
   }
 
-  async withdrawStakeAccountExcessBalance(accounts: StashAsset[]) {
-    const { publicKey } = this._shs.getCurrentWallet()
-    const withdrawTx = accounts.map(acc => StakeProgram.withdraw({
-      stakePubkey: new PublicKey(acc.account.addr),
-      authorizedPubkey: publicKey,
-      toPubkey: publicKey,
-      lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
-    }));
-    return await this._txi.sendTx(withdrawTx, publicKey)
-
-
-    // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
-  }
-
-  async closeOutOfRangeDeFiPosition(positions?: StashAsset[]) {
-    try {
-      const walletOwner = this._shs.getCurrentWallet().publicKey
-      const positionsToClose = positions.filter(p => p.type === 'defi-position')
-      const positionsData = positionsToClose.map(p => {
-        return {
-          ...p.positionData,
-          platform: p.platform
-        }
-      })
-      // get remove liquidity tx instructions
-      const encodedIx = await (await fetch(`${this._utils.serverlessAPI}/api/stash/close-positions`, {
-        method: 'POST',
-        body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
-      })).json()
-      const txInsArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
-      return await this._txi.sendMultipleTxn(txInsArray).then(res => {
-        if (res) {
-          this.updateOutOfRangeDeFiPositions()
-        }
-      })
-
-    } catch (error) {
-      console.log(error);
-      return null
-    }
-  }
 
   private async updateOutOfRangeDeFiPositions() {
     const positions = await this.getOutOfRangeDeFiPositions();
@@ -394,56 +354,122 @@ export class StashService {
   async updateZeroValueAssets() {
     const zeroValueAssets = await this.getZeroValueAssets();
     if (zeroValueAssets) {
-      this.zeroValueAssetsSignal.set(zeroValueAssets);
+      this.allZeroValueAssets = zeroValueAssets;
+      const filteredZeroValueAssets = zeroValueAssets.filter(acc => acc.balance === 0);
+      this.zeroValueAssetsSignal.set(filteredZeroValueAssets);
     }
   }
 
+  async updateZeroValueAssetsByBalance(showAssetWithBalance: boolean = false) {
+    const zeroValueAssets = !showAssetWithBalance
+      ? this.allZeroValueAssets.filter(acc => acc.balance === 0)
+      : this.allZeroValueAssets;
+    this.zeroValueAssetsSignal.set(zeroValueAssets);
+  }
+
+  private async splitIntoSubTransactions(instructions: TransactionInstruction[], maxSize: number = 1200): Promise<Transaction[]> {
+    const { publicKey } = this._shs.getCurrentWallet();
+    const transactions: Transaction[] = [];
+    let currentTransaction = new Transaction();
+    let currentSize = 0;
+    const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+
+
+
+    instructions.forEach(instruction => {
+      const tempTransaction = new Transaction().add(instruction);
+      tempTransaction.recentBlockhash = blockhash;
+      tempTransaction.lastValidBlockHeight = lastValidBlockHeight;
+      tempTransaction.feePayer = publicKey;
+      const instructionSize = tempTransaction.serializeMessage().length;
+
+      if (currentSize + instructionSize > maxSize) {
+        transactions.push(currentTransaction);
+        currentTransaction = new Transaction();
+        currentSize = 0;
+      }
+
+      currentTransaction.add(instruction);
+      currentSize += instructionSize;
+    });
+
+    if (currentTransaction.instructions.length > 0) {
+      transactions.push(currentTransaction);
+    }
+
+    return transactions;
+  }
+
+
   public async burnAccounts(accounts: StashAsset[]) {
+    const { publicKey } = this._shs.getCurrentWallet();
+    const instructions: TransactionInstruction[] = [];
+
+    await Promise.all(accounts.filter(acc => acc.balance !== 0).map(async acc => {
+      instructions.push(createBurnCheckedInstruction(
+        new PublicKey(acc.account.addr),
+        new PublicKey(acc.mint),
+        publicKey,
+        BigInt(Math.floor(acc.balance * 10 ** acc.decimals)),
+        acc.decimals,
+      ));
+    }));
+
+    await Promise.all(accounts.map(async acc => {
+      instructions.push(createCloseAccountInstruction(
+        new PublicKey(acc.account.addr),
+        publicKey,
+        publicKey
+      ));
+    }));
+
+    return await this._wrapBulkSendTx(instructions)
+  }
+
+
+
+  async withdrawStakeAccountExcessBalance(accounts: StashAsset[]) {
     const { publicKey } = this._shs.getCurrentWallet()
+    const withdrawTx = accounts.map(acc => StakeProgram.withdraw({
+      stakePubkey: new PublicKey(acc.account.addr),
+      authorizedPubkey: publicKey,
+      toPubkey: publicKey,
+      lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
+    }));
+    const instructions = withdrawTx.map(ix => ix.instructions)
+    return await this._wrapBulkSendTx(instructions.flat())
 
-    // const nftsAddress = accounts.filter(acc => acc.type === 'nft').map(acc => (acc).account.addr)
-    // const tokens = accounts.filter(acc => acc.type === 'value-deficient').map(acc => acc)
-    // console.log(nftsAddress, tokens);
 
-    // const burnNftTx = await this._nftService.burnNft(nftsAddress, publicKey.toBase58())
+    // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
+  }
 
-    // add recentBlockhash
-    // const recentBlockhash = await this._shs.getRecentBlockhash(publicKey.toBase58())
+  async closeOutOfRangeDeFiPosition(positions?: StashAsset[]) {
     try {
+      const walletOwner = this._shs.getCurrentWallet().publicKey
+      const positionsToClose = positions.filter(p => p.type === 'defi-position')
+      const positionsData = positionsToClose.map(p => {
+        return {
+          ...p.positionData,
+          platform: p.platform
+        }
+      })
+      // get remove liquidity tx instructions
+      const encodedIx = await (await fetch(`${this._utils.serverlessAPI}/api/stash/close-positions`, {
+        method: 'POST',
+        body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
+      })).json()
+      return await this._wrapBulkSendTx(encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')).instructions))
+      .then(res => {
+        if (res) {
+          this.updateOutOfRangeDeFiPositions()
+        }
+      })
 
-
-      let tx = new Transaction();
-      await Promise.all(accounts.map(async acc => {
-        tx.add(createBurnCheckedInstruction(
-          new PublicKey(acc.account.addr),
-          new PublicKey(acc.mint),
-          publicKey,
-          BigInt(Math.floor(acc.balance * 10 ** acc.decimals)),
-          acc.decimals,
-        ))
-      }))
-      await Promise.all(accounts.map(async acc => {
-        tx.add(createCloseAccountInstruction(
-          new PublicKey(acc.account.addr), // token account
-          publicKey,
-          publicKey
-        ))
-
-      }))
-      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-      // let tx = new Transaction().add( ...closeTokenTX)
-      tx.recentBlockhash = blockhash
-      tx.lastValidBlockHeight = lastValidBlockHeight
-      tx.feePayer = publicKey
-
-      return await this._txi.sendMultipleTxn([tx])
     } catch (error) {
       console.log(error);
       return null
     }
   }
-
-
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
     console.log('tokens', tokens);
@@ -493,47 +519,30 @@ export class StashService {
       return null
     }
   }
-  private bulkSwapSynthesis(bulkSwapTokens: BulkSwap[], swapTohubSOL: boolean = false) {
-    const { publicKey } = this._shs.getCurrentWallet()
-    const getSwapIx = fetch(`https://synthesis-api-rho.vercel.app/v1/swap/create`, {
-      method: 'POST',
-      body: JSON.stringify({
-        "owner": publicKey.toBase58(),
-        "priorityFee": "fast", // ["fast", "turbo", "ultra"] specify one of these
-        bulkSwapTokens
-      })
-    })
-    return getSwapIx
-  }
-  private splitTransactions(encodedInstructions: string[]): Transaction[] {
-    const transactions: Transaction[] = [];
-    let currentTransaction = new Transaction();
-    let currentSize = 0;
-    let maxSize = 1200 //bytes
 
-    encodedInstructions.forEach(ix => {
-      const transaction = Transaction.from(Buffer.from(ix, 'base64'));
-      const transactionSize = transaction.serializeMessage().length;
-      console.log('transactionSize', transactionSize);
+  numberOfTransactions: number = 1;
+  numberOfTransactionsCompleted: number = 0;
+  private async _wrapBulkSendTx(instructions: TransactionInstruction[]): Promise<boolean> {
+    const { publicKey } = this._shs.getCurrentWallet();
+    const transactions = await this.splitIntoSubTransactions(instructions);
+    console.log('transactions', transactions, transactions.length);
+    this.numberOfTransactions = transactions.length;
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        for (const tx of transactions) {
+          const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+          tx.recentBlockhash = blockhash;
+          tx.lastValidBlockHeight = lastValidBlockHeight;
+          tx.feePayer = publicKey;
 
-      if (currentSize + transactionSize > maxSize) {
-        // Push the current transaction to the list and start a new one
-        transactions.push(currentTransaction);
-        currentTransaction = new Transaction();
-        currentSize = 0;
+          await this._txi.sendMultipleTxn([tx]);
+          this.numberOfTransactionsCompleted++;
+        }
+        resolve(true); // Indicate success
+      } catch (error) {
+        console.error(error);
+        resolve(false); // Indicate failure
       }
-
-      currentTransaction.add(transaction);
-      currentSize += transactionSize;
     });
-
-    // Add the last transaction if it has any instructions
-    if (currentTransaction.instructions.length > 0) {
-      transactions.push(currentTransaction);
-    }
-
-    return transactions;
   }
-
-
 }

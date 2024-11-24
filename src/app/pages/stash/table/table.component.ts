@@ -104,14 +104,13 @@ export class TableComponent  implements OnChanges {
   };
   public selectedData = signal([])
   emitData(){
-    console.log(this.selectedData(), this.swapTohubSOL);
     
     this.onAction.emit(this.selectedData())
   }
 
 
   showUnknownSource(ev){
-    console.log(ev);
+    this._stashService.updateZeroValueAssetsByBalance(ev.detail.checked)
     
   }
 }

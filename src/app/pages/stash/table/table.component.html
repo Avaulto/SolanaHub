@@ -27,7 +27,7 @@
       }
       @if(tableName.toLowerCase() === 'zero value assets'){
         <div id="toggle-swap">
-          <ion-toggle color="danger" mode="md" [value]="swapTohubSOL" (ionChange)="showUnknownSource($event)" /><span>Unknown source</span>
+          <ion-toggle color="danger" mode="md" (ionChange)="showUnknownSource($event)" /><span>Unknown source</span>
         </div>
       }
       <ion-button (click)="emitData()" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{stash.actionTitle}} | {{selectedData().length}}</ion-button>

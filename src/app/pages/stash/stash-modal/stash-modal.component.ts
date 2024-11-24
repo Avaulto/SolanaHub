@@ -25,6 +25,8 @@ export class StashModalComponent implements OnInit {
   private _stashService = inject(StashService)
   private modalCtrl = inject(ModalController)
   public utils = inject(UtilService)
+  public numberOfTransactions: number = 0;
+  public numberOfTransactionsCompleted: number = 0;
   public summary: { [key: string]: number } = {};
   public platformFeeInSol: number = 0
   public stashState = signal('')
@@ -32,6 +34,8 @@ export class StashModalComponent implements OnInit {
     this.stashState.set(this.actionTitle)
     console.log('stashAssets', this.stashAssets);
 
+    this.numberOfTransactions = this._stashService.numberOfTransactions
+    this.numberOfTransactionsCompleted = this._stashService.numberOfTransactionsCompleted
     // add 1% platform fee from total summery value
     this.summary = this.stashAssets.map(item => item.extractedValue).reduce((acc, item) => {
       Object.keys(item).forEach(key => {
