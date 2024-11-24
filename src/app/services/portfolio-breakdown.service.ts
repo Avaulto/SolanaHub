@@ -1,7 +1,7 @@
-import {computed, effect, inject, Injectable, Signal, signal} from "@angular/core";
-import {JupStoreService} from "./jup-store.service";
-import {PortfolioService} from "./portfolio.service";
-import {WalletEntry} from "../models";
+import { computed, effect, inject, Injectable, Signal, signal } from "@angular/core";
+import { JupStoreService } from "./jup-store.service";
+import { PortfolioService } from "./portfolio.service";
+import { NFT, NftTable, WalletEntry } from "../models";
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,11 @@ export class PortfolioBreakdownService {
   public readonly _jupStore = inject(JupStoreService)
   public readonly _portfolioService = inject(PortfolioService)
   private readonly excludedAssets = signal<Set<string>>(new Set());
+  public readonly solPrice = this._jupStore.solPrice;
 
   constructor() {
     effect(() => {
-      console.log(this.getEnabledWalletsAssets())
+      console.log("Enabled Portfolio", this.getEnabledPortfolio())
     });
   }
 
@@ -80,6 +81,110 @@ export class PortfolioBreakdownService {
     return Array.from(tokenMap.values());
   })
 
+
+  /**
+   * Computed property that returns a breakdown of NFT collections across enabled portfolios.
+   *
+   * @returns {any[]} Array of NFT collections with their total value, count, and per-wallet value distribution.
+   *
+   * Each object in the returned array represents an NFT collection and has the following structure:
+   * @example
+   * [
+   *   {
+   *     collectionName: "Mad Labs",
+   *     count: 3,
+   *     value: 100.5,
+   *     nfts: [...],
+   *     breakdown: Map("wallet1" => 60.5, "wallet2" => 40.0)
+   *   }
+   * ]
+   */
+  public getNFTsBreakdown: Signal<any[]> = computed(() => {
+    const assets = this.getEnabledPortfolio();
+    if (!assets) return [];
+    const nftCollectionMap = new Map();
+
+    assets.forEach(wallet => {
+      const { walletAddress, portfolio } = wallet
+
+      const nftsData = this.nftDataAggregator(portfolio.nfts);
+
+      nftsData.forEach(data => {
+        const { collectionName, value } = data;
+        const { nfts, ...rest } = data;
+
+        if (!nftCollectionMap.has(collectionName)) {
+          nftCollectionMap.set(collectionName, {
+            ...rest,
+            count: 0,
+            value: 0,
+            breakdown: new Map<string, number>()
+          });
+        }
+
+        const existingToken = { ...nftCollectionMap.get(collectionName) };
+        const currentBreakdown = existingToken.breakdown;
+
+        nftCollectionMap.set(collectionName, {
+          ...existingToken,
+          nfts: [ ...(existingToken.nfts || []), ...nfts],
+          count: existingToken.count + 1,
+          value: existingToken.value + value,
+          breakdown: currentBreakdown.set(walletAddress,( currentBreakdown.get(walletAddress) || 0) + value)
+        })
+      });
+    });
+
+    return Array.from(nftCollectionMap.values())
+  })
+
+  /**
+   * Aggregates NFT data into collections based on their names.
+   *
+   * This method processes an array of NFT objects and groups them by collection name.
+   * It calculates aggregate values such as total value, count of listed tokens, and minimum floor price.
+   *
+   * @param {NFT[]} nfts - An array of NFT objects to process.
+   * @returns {NftTable[]} An array of aggregated collection data.
+   */
+  private nftDataAggregator(nfts: NFT[]): NftTable[] {
+    if (nfts == null)
+      return [];
+
+    const nftMap = new Map<string, any>()
+
+    const collections = nfts.reduce((acc, nft) => {
+      const collectionName = nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown';
+      const collectionSymbol = nft.collection.symbol || nft.collectionMagicEdenStatSymbol || '';
+      let existingCollection = nftMap.get(collectionName.toLowerCase());
+
+      if (existingCollection) {
+        existingCollection.nfts.push(nft);
+        existingCollection.value +=  (Number(nft.floorPrice) || 0) * this.solPrice();
+        existingCollection.listed += nft.listStatus === "listed" ? 1 : 0;
+        existingCollection.floorPrice = Math.min(existingCollection.floorPrice, Number(nft.floorPrice) || Infinity);
+      } else {
+        existingCollection = {
+          collectionName,
+          collectionSymbol,
+          // collectionKey,
+          nfts: [nft],
+          value: (Number(nft.floorPrice) || 0) * this.solPrice(),
+          imageUri: nft.collection.image_uri,
+          listed: nft.listStatus === "listed" ? 1 : 0,
+          floorPrice: Number(nft.floorPrice) || 0
+        }
+        acc.push(existingCollection);
+      }
+      nftMap.set(collectionName?.toLowerCase(), existingCollection);
+
+      return acc;
+    }, []);
+
+    const mergedCollections = collections.map(({collectionSymbol, collectionKey, ...rest}) => rest);
+    return mergedCollections.sort((a, b) => b.value - a.value);
+  }
+
   /**
    * Gets the total portfolio value in USD.
    *
@@ -136,7 +241,6 @@ export class PortfolioBreakdownService {
         } else {
           newSet.add(normalizedGroup);
         }
-        console.log(newSet)
         return newSet;
       });
     }

@@ -44,6 +44,10 @@ export class PortfolioService {
    */
   private portfolioMap: WritableSignal<Map<string, WalletPortfolio>> = signal(new Map());
 
+  public getPortfolioMapByAddress(walletAddress: string): WalletPortfolio {
+    return (this.portfolioMap().get(walletAddress) || {} as WalletPortfolio)
+  }
+
   /**
    * A computed property that returns an array of wallet objects from the portfolio map.
    * Each wallet object contains the wallet address and portfolio data.
@@ -282,11 +286,11 @@ export class PortfolioService {
   // }
 
   private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full') {
-    const tempNft = portfolioData.elements.find(group => group.platformId === 'wallet-nfts-v2');
-    const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts-v2');
+    const tempNft = portfolioData.elements.find(group => group.platformId === WalletDataKeys.NFT_V2);
+    const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== WalletDataKeys.NFT_V2);
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
-    const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
+    const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
     await this._portfolioStaking(walletAddress);
     await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
@@ -376,7 +380,7 @@ export class PortfolioService {
   private async _portfolioDeFi(editedDataExtended, tokensInfo) {
     // add more data for platforms
     const getPlatformsData = await this.getPlatformsData();
-    const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
+    const excludeList = [WalletDataKeys.TOKENS, WalletDataKeys.NFTs, WalletDataKeys.NATIVE_STAKE]
     const defiHolding = await Promise.all(editedDataExtended
       .filter(g => !excludeList.includes(g.platformId))
       .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
@@ -385,11 +389,11 @@ export class PortfolioService {
 
         let records: defiHolding[] = [];
         // add if id =juptier jupiter-governance
-        group.platformId = group.platformId === 'jupiter-governance' ? 'jupiter-exchange' : group.platformId
+        group.platformId = group.platformId === WalletDataKeys.JUPITER_GOVERNANCE ? WalletDataKeys.JUPITER_EXCHANGE : group.platformId
         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
         Object.assign(group, platformData);
 
-        if (group.type === "liquidity") {
+        if (group.type === WalletDataKeys.LIQUIDITY) {
           if (group.data.liquidities) {
             group.data.liquidities.map(async position => {
 
@@ -442,7 +446,7 @@ export class PortfolioService {
           // assets = assets.flat()
         }
 
-        if (group.type === "borrowlend") {
+        if (group.type === WalletDataKeys.BORROW_LEND) {
 
           group.data.suppliedAssets.map(async asset => {
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
@@ -489,7 +493,6 @@ export class PortfolioService {
 
         return records
       })
-
     )
     this.defi.set(defiHolding.flat())
 

@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe, NgClass, NgFor, NgStyle, SlicePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
@@ -8,24 +8,15 @@ import { ModalController } from '@ionic/angular';
 import { AssetModalComponent } from './asset-modal/asset-modal.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { NFT, Token } from 'src/app/models';
+import { Token } from 'src/app/models';
 import { SkeletonPhDirective } from 'src/app/shared/directives/skelaton-ph.directive';
-import { JupStoreService, PortfolioBreakdownService, PriceHistoryService, UtilService } from 'src/app/services';
+import { PortfolioBreakdownService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import {PortfolioDataKeys} from "../../../enums";
+import { PortfolioDataKeys } from "../../../enums";
 
-interface nftTable {
-  collectionName: string
-  floor: number
-  imageUri: string
-  listed: number
-  nfts: Array<{
-    listed?: boolean
-    imageUri: string
-  }>
-  value: number
-}
+
+
 @Component({
   selector: 'app-assets-table',
   templateUrl: './assets-table.component.html',
@@ -74,25 +65,25 @@ export class AssetsTableComponent implements OnInit {
   @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
   @ViewChild('holdingsTpl', { static: true }) holdingsTpl: TemplateRef<any> | any;
   //@ts-ignore
-  public solPrice = this._jupStore.solPrice;
   tableMenuOptions: string[] = [
     'Tokens',
-     'NFTs',
+    'NFTs',
     'Staking',
     'DeFi'
   ];
 
 
   constructor(
-    private _jupStore: JupStoreService,
     private _portfolioService: PortfolioService,
     private _portfolioBreakdownService: PortfolioBreakdownService,
     private _modalCtrl: ModalController,
-    public utils:UtilService
+    public utils: UtilService
   ) {
-    addIcons({ arrowBack, arrowForward });
+    addIcons({arrowBack, arrowForward});
   }
-  public showBalance = this._portfolioService.privateMode
+
+  public showBalance = this._portfolioService.privateMode;
+  public solPrice = this._portfolioBreakdownService.solPrice;
   selectedTab = signal(PortfolioDataKeys.TOKENS);
   columns = computed(() => this._columnsOptions[this.selectedTab().toLowerCase()])
   tableData = computed(() => {
@@ -104,7 +95,7 @@ export class AssetsTableComponent implements OnInit {
 
     switch (tableType) {
       case PortfolioDataKeys.NFTS:
-        return this.nftDataAggregator(this._portfolioService[tableType]())
+        return this._portfolioBreakdownService.getNFTsBreakdown()
       case PortfolioDataKeys.TOKENS:
         return this._portfolioBreakdownService.getTokensBreakdown()
       default:
@@ -113,50 +104,9 @@ export class AssetsTableComponent implements OnInit {
   })
 
   private _columnsOptions = {}
-  public _groupNftCollections(nfts) {
+  showLong: boolean = false
 
-  }
-  showLong: boolean=false
-
-  nftDataAggregator(nfts: NFT[]): nftTable[] {
-
-    const collections = nfts.reduce((acc, nft) => {
-      const collectionName = nft.collection.name || nft.collectionMagicEdenStatSymbol?.replace(/_/g, ' ') || 'unknown';
-      const collectionSymbol = nft.collection.symbol || nft.collectionMagicEdenStatSymbol || '';
-      // const collectionKey = collectionName.toLowerCase().slice(0, 5);
-
-      const existingCollection = acc.find(c =>
-        c.collectionName.toLowerCase() === collectionName.toLowerCase() ||
-        c.collectionSymbol.toLowerCase() === collectionSymbol.toLowerCase()
-        // c.collectionKey === collectionKey
-      );
-
-      if (existingCollection) {
-        existingCollection.nfts.push(nft);
-        existingCollection.value += (Number(nft.floorPrice) || 0) * this.solPrice();
-        existingCollection.listed += nft.listStatus === "listed" ? 1 : 0;
-        existingCollection.floorPrice = Math.min(existingCollection.floorPrice, Number(nft.floorPrice) || Infinity);
-      } else {
-        acc.push({
-          collectionName,
-          collectionSymbol,
-          // collectionKey,
-          nfts: [nft],
-          value: (Number(nft.floorPrice) || 0) * this.solPrice(),
-          imageUri: nft.collection.image_uri,
-          listed: nft.listStatus === "listed" ? 1 : 0,
-          floorPrice: Number(nft.floorPrice) || 0
-        });
-      }
-      return acc;
-    }, []);
-
-    const mergedCollections = collections.map(({ collectionSymbol, collectionKey, ...rest }) => rest);
-    const sortedCollections = mergedCollections.sort((a, b) => b.value - a.value);
-    return sortedCollections;
-  }
   async ngOnInit() {
-
     this._columnsOptions = {
       tokens: [
         { key: 'token', title: 'Token', cellTemplate: this.tokenTpl, width: '50%' },
@@ -190,7 +140,6 @@ export class AssetsTableComponent implements OnInit {
       ]
 
     }
-
   }
 
   eventEmitted($event): void {
@@ -209,8 +158,4 @@ export class AssetsTableComponent implements OnInit {
     });
     modal.present();
   }
-
-
-
-
 }

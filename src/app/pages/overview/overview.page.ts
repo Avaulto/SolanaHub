@@ -28,6 +28,7 @@ export class OverviewPage implements OnInit {
   private readonly _portfolioBreakDownService = inject(PortfolioBreakdownService)
   private readonly _portfolioService = inject(PortfolioService)
   public readonly allWalletsAssets = this._portfolioBreakDownService.getEnabledWalletsAssets;
+  public readonly portfolioTotalUsdValue =  this._portfolioBreakDownService.portfolioTotalUsdValue;
 
   /**
    * Computed property that returns a Map of total USD values for all wallets.

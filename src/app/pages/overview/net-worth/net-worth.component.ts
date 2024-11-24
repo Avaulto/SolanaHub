@@ -1,9 +1,9 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import {Component, computed, Input, Signal, signal} from '@angular/core';
 import { addIcons } from 'ionicons';
-import {eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { IonSkeletonText, IonIcon, IonText, IonSelectOption,IonSelect, IonToggle } from '@ionic/angular/standalone';
-import { PortfolioBreakdownService, PortfolioService } from "../../../services";
+import { JupStoreService, PortfolioService } from "../../../services";
 
 @Component({
   selector: 'app-net-worth',
@@ -13,15 +13,16 @@ import { PortfolioBreakdownService, PortfolioService } from "../../../services";
   imports:[DecimalPipe, CurrencyPipe,NgClass,IonText, IonToggle, IonSelectOption,IonSelect , AsyncPipe, IonSkeletonText, IonIcon]
 })
 export class NetWorthComponent {
-  public portfolioTotalUsdValue =  this._portfolioBreakdownService.portfolioTotalUsdValue;
-  public portfolioValueInSOL = this._portfolioBreakdownService.portfolioValueInSOL;
+  @Input() portfolioTotalUsdValue: Signal<number>;
+
+  public readonly portfolioValueInSOL = computed(() => this.portfolioTotalUsdValue() / this._jupStore.solPrice());
   public showBalance = this._portfolioService.privateMode
   public hideBalance = signal(false);
   public simulatePortfolio = signal('usd')
 
   constructor(
+    private _jupStore:JupStoreService,
     private _portfolioService: PortfolioService,
-    private _portfolioBreakdownService: PortfolioBreakdownService,
   ){
     addIcons({eyeOutline, eyeOffOutline });
   }
