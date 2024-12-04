@@ -25,11 +25,11 @@
           </div>
           <!-- </ion-col> -->
           }
-          <!-- @if(tableName.toLowerCase() === 'zero value assets'){
+          @if(stash.label.toLowerCase() === 'zero value assets'){
           <div id="toggle-swap">
             <ion-toggle color="danger" mode="md" (ionChange)="showUnknownSource($event)" /><span>Unknown source</span>
           </div>
-          } -->
+          }
           <ion-button (click)="openStashPopup(selectedData())" id="action-btn" [disabled]="!selectedData().length"
             class="ion-text-capitalize">
             @if(stash.actionTitle === 'swap'){

@@ -15,7 +15,6 @@ export class OutOfRangeDeFiPositionsService {
     private utils: UtilService
   ) {
     this.updateOutOfRangeDeFiPositions();
-    console.log('out of range defi positions service', this._helpersService.utils.serverlessAPI);
   }
 
   public findOutOfRangeDeFiPositions = computed(() => {
@@ -60,13 +59,12 @@ export class OutOfRangeDeFiPositionsService {
             logoURI: token.logoURI
           })),
           account: this._helpersService.utils.addrUtil(p.address),
-          source: 'out of range',
+          source: p.type === 'outOfRange' ? 'out of range' : 'no liquidity',
           platform: p.platform,
           platformLogoURI: p.platformLogoURI,
           extractedValue: {
             [p.poolTokenA.symbol]: Number(p.pooledAmountAWithRewards),
             [p.poolTokenB.symbol]: Number(p.pooledAmountBWithRewards),
-     
           },
           action: 'Withdraw & Close',
           type: 'defi-position',
@@ -75,8 +73,10 @@ export class OutOfRangeDeFiPositionsService {
           }
           if(p.accountRentFee){
             console.log('accountRentFee', p.accountRentFee);
-            defiAsset.extractedValue['SOL'] += p.accountRentFee
+            !defiAsset.extractedValue['SOL'] ? defiAsset.extractedValue['SOL'] = Number(p.accountRentFee) : defiAsset.extractedValue['SOL'] += Number(p.accountRentFee)
           }
+          // filter out all extracted values that are 0
+          defiAsset.extractedValue = Object.fromEntries(Object.entries(defiAsset.extractedValue).filter(([key, value]) => value !== 0));
           return defiAsset
         })
       }

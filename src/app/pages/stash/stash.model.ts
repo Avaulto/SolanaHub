@@ -47,6 +47,7 @@ export interface StashGroup {
   }
 
   export interface OutOfRange {
+    type: 'outOfRange' | 'noLiquidity',
     accountRentFee?: number,
     address: string
     positionData: any
