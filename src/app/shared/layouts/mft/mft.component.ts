@@ -7,7 +7,8 @@ import {
   TemplateRef,
   ViewChild,
   effect,
-  signal
+  signal,
+  computed
 } from '@angular/core';
 
 import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
@@ -32,7 +33,7 @@ export class MftComponent implements OnInit {
   @Input() tableColumns
   @Input() tableData
   @Input() expandDetails: boolean = false
-
+  @Input() class: string = ''
 
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
   @Output() onData = new EventEmitter()
@@ -62,11 +63,31 @@ export class MftComponent implements OnInit {
     paginationRangeEnabled: false,
     paginationEnabled: false,
     detailsTemplate: false,
+    // infiniteScrollThrottleTime means how often check if scroll reached end on the collection
+    // to load the new items. By default set to 200ms.
+    infiniteScrollThrottleTime: 20,
+    rows: 20,
     // showDetailsArrow: this.expandDetails,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
     isLoading: true,
   };
+
+  public configurationState = computed(() => {
+    if (!this.tableData) {
+      return {
+        isLoading: true,
+        paginationEnabled: false,
+      };
+    }
+
+    const data = this.tableData();
+    return {
+      isLoading: data === undefined,
+      paginationEnabled: data?.length >= this.tableRows,
+    };
+  });
+
   ngOnInit(): void {
     this.configuration.checkboxes = this.checkBox
     this.configuration.rows = this.tableRows;
@@ -75,24 +96,6 @@ export class MftComponent implements OnInit {
     if (this._platform.width() < 992) {
       this.configuration.horizontalScroll = true;
     }
-
-    if (this.checkBox) {
-
-      // Modify the first column to use custom template if it's a checkbox column
-      // const checkboxRow  = {
-      //   key: 'select',
-      //   title: '',
-      //   searchEnabled: false,
-      //   orderEnabled: false,
-      //   width: '30px',
-      //   custom: true,
-      //   customTemplate: this.checkboxTemplate
-      // };
-
-      // // Add checkbox column as the first column
-      // this.tableData.update(row => [checkboxRow, ...cols]);
-    }
-
 
   }
 
@@ -126,18 +129,12 @@ export class MftComponent implements OnInit {
   }
   constructor(private _platform: Platform) {
     effect(() => {
-      if (!this.tableData) {
-        this.configuration.isLoading = true;
-        this.configuration.paginationEnabled = false;
-        return;
-      }
-
-      const data = this.tableData();
-      this.configuration.isLoading = data === undefined;
-      this.configuration.paginationEnabled = data?.length >= this.tableRows;
-
+      const { isLoading, paginationEnabled } = this.configurationState();
+      this.configuration.isLoading = isLoading;
+      this.configuration.paginationEnabled = paginationEnabled;
     });
   }
+  
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
@@ -151,39 +148,44 @@ export class MftComponent implements OnInit {
   public selected = new Set();
 
   eventEmitted($event: { event: string; value: any }): void {
-    if (['onCheckboxSelect', 'onSelectAll', 'onClick'].includes($event.event)) {
+    if (['onCheckboxSelect', 'onSelectAll'].includes($event.event)) {
     let data = $event.value;
     switch ($event.event) {
-      case 'onCheckboxSelect':
-
-        if (this.selected.has($event.value.rowId)) {
-          this.selected.delete($event.value.rowId);
-        } else {
-          this.selected.add($event.value.rowId);
-        }
-        data = this.tableData().filter((_, index) => this.selected.has(index))
-        break;
+      // case 'onCheckboxSelect':
+      // case 'onClick':
+      //   if (this.selected.has($event.value.rowId)) {
+      //     this.selected.delete($event.value.rowId);
+      //   } else {
+      //     this.selected.add($event.value.rowId);
+      //   }
+      //   data = this.tableData().filter((item, index) => 
+      //     this.selected.has(index)
+      //   ).map(item => ({ ...item, checked: true }));
+      //   console.log('checked data', data);
+      //   break;
       case 'onSelectAll':
         if ($event.value) {
-          data = this.tableData()
+          data = this.tableData().map(item => ({ ...item, checked: true }))
         } else {
           data = []
         }
         break;
-      case 'onClick':
-        this.table.apiEvent({
-          type: API.toggleRowIndex,
-          value: $event.value.rowId,
-        });
-        
-        // check if the data is an array, if yes, remove it from the array if it exists, if data is not an array, return data as new array and with selected data
-        if (Array.isArray(data)) {
-          data = data.filter(item => item !== $event.value)
-        } else {
-          data = []
-          data.push($event.value.row)
-        }
-        break;
+      // case 'onClick':
+      //   this.table.apiEvent({
+      //     type: API.toggleRowIndex,
+      //     value: $event.value.rowId,
+      //   });
+      //   // check if the data is an array, if yes, remove it from the array if it exists, if data is not an array, return data as new array and with selected data
+      //   if (Array.isArray(data)) {
+      //     data = data.filter(item => item !== $event.value)
+      //   } else {
+      //     // find the property in the tabledata array and toggle the checked property
+      //     const index = this.tableData().findIndex(item => item.id === $event.value.rowId)
+      //     if (index !== -1) {
+      //       data = this.tableData().splice(index, 1, { ...this.tableData()[index], checked: !this.tableData()[index].checked })
+      //     }
+      //   }
+      //   break;
     }
     // emit data only if its on of the above cases
       this.onData.emit(data)

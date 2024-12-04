@@ -21,7 +21,6 @@ import { NgxTurnstileModule } from 'ngx-turnstile';
     NetWorthComponent,
     PortfolioBreakdownComponent,
     AssetsTableComponent,
-    TransactionsHistoryTableComponent
   ]
 
 })

@@ -1,14 +1,16 @@
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { IonRow, IonCol,  IonButton, IonImg, IonIcon, IonToggle, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup } from '@ionic/angular/standalone';
+import { CurrencyPipe, DecimalPipe, KeyValuePipe } from '@angular/common';
+import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges, output, ViewChildren, QueryList, computed } from '@angular/core';
+import { IonRow, IonCol,  IonButton, IonImg, IonIcon, IonToggle, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup, IonSkeletonText } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowUpOutline, funnelOutline } from 'ionicons/icons';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { StashGroup } from '../stash.model';
-import { PopoverController } from '@ionic/angular';
+import { StashAsset, StashGroup } from '../stash.model';
+import { PopoverController, ModalController } from '@ionic/angular';
 import { RangeBoxComponent } from './range-box/range-box.component';
 import { StashService } from '../stash.service';
+import { StashModalComponent } from '../stash-modal/stash-modal.component';
+import { UtilService } from 'src/app/services/util.service';
 @Component({
   selector: 'stash-table',
   templateUrl: './table.component.html',
@@ -18,55 +20,90 @@ import { StashService } from '../stash.service';
     IonIcon,
     ChipComponent,
     IonRow,
-    IonIcon,
-    IonItem,
-    IonCol,
     IonCheckbox,
     IonAccordionGroup,
     IonAccordion,
-    IonText,
-     IonChip, 
-     IonButton,
-     IonLabel, 
-     IonImg,
-     IonToggle,
-     MftModule,
-     DecimalPipe,
-     CurrencyPipe,
+    IonButton,
+    IonLabel, 
+    IonImg,
+    IonToggle,
+    MftModule,
+    DecimalPipe,
+    CurrencyPipe,
+    KeyValuePipe
   ]
 })
 export class TableComponent  implements OnChanges {
+  @ViewChild('checkboxTpl', { static: true }) checkboxTpl: TemplateRef<any> | any;
+  @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
+  @ViewChild('accountTpl', { static: true }) accountTpl: TemplateRef<any> | any;
+  @ViewChild('amountTpl', { static: true }) amountTpl: TemplateRef<any> | any;
+  @ViewChild('valueTpl', { static: true }) valueTpl: TemplateRef<any> | any;
+  @ViewChild('actionTpl', { static: true }) actionTpl: TemplateRef<any> | any;
+  @ViewChild('sourceTpl', { static: true }) sourceTpl: TemplateRef<any> | any;
+  @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
+  @ViewChildren('checkAsset') checkAssets: QueryList<IonCheckbox>
 
-  @Output() onAction = new EventEmitter()
-  @Input() hasFees: boolean = false;
-  @Input() columns;
-  @Input() stash: StashGroup;
-  @Input() tableName: string;
-  @Input() tableDescription: string;
-  @Input() actionTitle: string;
-  public tableData = signal([])
-  public swapTohubSOL = false;
   @Output() swapTohubSOLChange = new EventEmitter<boolean>();
-  // 1% of portfolio tokens value
+  @Input() stash: StashGroup;
+
+  public swapTohubSOL = false;
   public portfolioShare = 3
-  constructor(private _stashService: StashService,public _popoverController: PopoverController) { 
+  constructor(
+    private _stashService: StashService,
+    public _popoverController: PopoverController,
+    private _modalCtrl: ModalController,
+    private _util: UtilService
+  ) { 
     addIcons({funnelOutline,arrowUpOutline});
     effect(()=>{
       // console.log(this.selectedData());
       
     })
   }
+  public tableColumn = signal([])
+  public tableData = signal([])
   public tempTableData = []
+  public selectedData = signal<StashAsset[]>([])
+  ngOnInit(): void {
+
+  
+    
+  }
+
+  private createTableColumnConfig(assetTitle: string, accountOrPlatformTitle: string) {
+    return [
+      { key: 'select', width: '6%', cellTemplate: this.checkboxTpl, cssClass: { name: 'select-box', includeHeader: true } },
+      { key: 'asset', title: assetTitle, width: '30%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: accountOrPlatformTitle.toLowerCase(), title: accountOrPlatformTitle, width: '15%', cellTemplate: this.getTemplateForTitle(accountOrPlatformTitle), cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
+      { key: 'value', title: 'Extractable', width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '15%', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'action', title: '', width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+    ];
+  }
+
+  private getTemplateForTitle(title: string): TemplateRef<any> {
+    return title === 'Platform' ? this.platformIconTpl : this.accountTpl;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    this.tableData.set(this.stash.data.assets)
+    const isZeroYieldZone = this.stash.label === 'zero yield zones';
+    this.tableColumn.set(this.createTableColumnConfig(
+      isZeroYieldZone ? 'Pool' : 'Asset',
+      isZeroYieldZone ? 'Platform' : 'Account'
+    ));
+    this.tableData.set(this.stash.data.assets.sort((a, b) => a.value - b.value));
   }
 
   onSwapTohubSOLChange(ev){
-    this.swapTohubSOLChange.emit(ev)
+    console.log(ev);
+    
+    this.swapTohubSOL = ev
   }
   @ViewChild('accordionGroup', { static: true }) accordionGroup: IonAccordionGroup;
 
   public async openRangeBox(event: any) {
+
     const modal = await this._popoverController.create({
       component: RangeBoxComponent,
       cssClass: 'range-popover',
@@ -102,15 +139,45 @@ export class TableComponent  implements OnChanges {
       nativeEl.value = 'first';
     }
   };
-  public selectedData = signal([])
-  emitData(){
-    
-    this.onAction.emit(this.selectedData())
-  }
 
+  updateSelectedData(ev){
+
+    if(Array.isArray(ev)){
+      this.selectedData.set(ev.filter(item => item?.checked))
+    }else{
+      if(ev?.checked){
+        this.selectedData.set([...this.selectedData(), {...ev.value, checked: true}])
+      }else {
+        this.selectedData.set(this.selectedData().filter(item => item.id !== ev.value.id))
+      }
+    }
+  }
 
   showUnknownSource(ev){
     this._stashService.updateZeroValueAssetsByBalance(ev.detail.checked)
     
+  }
+
+  async openStashPopup(event: StashAsset[]) {
+
+    const modal = await this._modalCtrl.create({
+      component: StashModalComponent,
+      componentProps: {
+        stashAssets: event,
+        actionTitle: event[0].action,
+        swapTohubSOL: this.swapTohubSOL
+      },
+      cssClass: 'modal-style'
+    });
+    modal.present();
+    // this.onActionSelected.emit(true)
+  }
+
+  public fixedNumber(value: any): string {
+    return this._util.fixedNumber(value)
+  }
+
+  isRowSelected(row: StashAsset){
+    return this.selectedData().some(item => item.id === row.id && item.checked)
   }
 }

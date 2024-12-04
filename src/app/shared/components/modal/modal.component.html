@@ -2,9 +2,9 @@
   <div id="modal-intro">
     <div>
 
-      @if(config.imgUrl){
+      @if(config.logoURI){
       <div class="icon-wrapper">
-          <ion-img [src]="config.imgUrl" />
+          <ion-img [src]="config.logoURI" />
         </div>
       }
       <div id="title">{{config.title}}</div>
@@ -14,9 +14,6 @@
     <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
   </div>
   @switch (componentName) {
-    @case ("stash-modal") {
-      <stash-modal [stashAssets]="data.stashAssets" />
-      }
   @case ("validators-modal") {
   <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
   }

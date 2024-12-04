@@ -23,11 +23,11 @@ export class PositionsComponent implements OnInit, OnChanges {
   public stakePosButton = [
     {
       label: 'native',
-      imgUrl: 'assets/images/lock-icon.svg'
+      logoURI: 'assets/images/lock-icon.svg'
     },
     {
       label: 'liquid',
-      imgUrl: 'assets/images/droplets-icon.svg'
+      logoURI: 'assets/images/droplets-icon.svg'
     }
   ]
   public stakeAccounts = this._portfolio.staking
@@ -61,7 +61,7 @@ export class PositionsComponent implements OnInit, OnChanges {
         value: Number(lst.value),
         state: pool?.poolName === "jito" || pool?.poolName === "solblaze" || pool?.poolName === 'marinade' ? 'delegationStrategyPool' : 'directStake',
         symbol: lst?.symbol,
-        imgUrl: pool?.tokenImageURL,
+        logoURI: pool?.tokenImageURL,
         // validatorName: lst[directStake[lst.symbol]] ? lst?.extraData?.validator?.name : null,
         pool: pool,
         apy: pool?.apy * 100,

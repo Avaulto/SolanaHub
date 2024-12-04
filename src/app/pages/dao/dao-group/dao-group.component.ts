@@ -31,7 +31,7 @@ export class DaoGroupComponent implements OnInit {
   async openProposal(proposal: Proposal){
     const modal = await this._modalCtrl.create({
       component: ProposalPopupComponent,
-      componentProps: {proposal, govInfo:{name:this.gov.name, imgURL: this.gov.imgURL}},
+      componentProps: {proposal, govInfo:{name:this.gov.name, logoURI: this.gov.logoURI}},
       cssClass: 'modal-style'
     });
     modal.present();

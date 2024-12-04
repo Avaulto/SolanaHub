@@ -12,7 +12,7 @@ import { Validator } from "./stakewiz.model"
 //     value: number
 //     state: 'activating' | 'deactivating' | 'active' | 'inactive' | 'directStake' | 'delegationStrategyPool'
 //     apy: number
-//     imgUrl: string
+//     logoURI: string
 //     symbol: string
 // }
 export interface StakeAccountShyft{

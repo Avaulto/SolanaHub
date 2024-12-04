@@ -64,7 +64,7 @@ export class InputComponent implements OnInit, OnChanges {
   }
   async openTokensModal() {
     const config = {
-      imgUrl: 'assets/images/tokens-icon.svg',
+      logoURI: 'assets/images/tokens-icon.svg',
       title: 'Select Token',
       desc: 'Select token you wish to swap',
       btnText: 'select',

@@ -30,7 +30,6 @@ import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal
   imports: [
     IonButton,
     IonImg,
-    StashModalComponent,
     ValidatorsModalComponent,
     DelegateLSTModalComponent,
     InstantUnstakeModalComponent,
@@ -40,7 +39,6 @@ import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    BurnNftModalComponent,
     UnstakeLstModalComponent,
     FaqModalComponent
   ]
@@ -49,7 +47,7 @@ import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal
 export class ModalComponent implements AfterViewInit {
   public onSubmit: boolean = false;
   @Input() config = {
-    imgUrl: null,
+    logoURI: null,
     title: null,
     desc: null,
     btnText: null

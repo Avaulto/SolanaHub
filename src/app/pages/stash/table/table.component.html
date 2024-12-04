@@ -1,54 +1,140 @@
 <div class="data-set">
-  <ion-accordion-group [multiple]="true"  [value]="['first']">
-  <ion-accordion  value="first" toggleIcon="arrow-up-outline" toggleIconSlot="end">
-   <ion-row slot="header" (click)="alternateClick($event)" class="gap table-head ion-align-items-center ion-justify-content-between">
-   <div class="">
-      <div id="head-line">
-        <ion-label>{{tableName}}</ion-label> 
-        <chip [name]="tableData().length + ' • ' + (stash.value| currency)"></chip>
+  <ion-accordion-group [multiple]="true" [value]="['first']">
+    <ion-accordion value="first" toggleIcon="arrow-up-outline" toggleIconSlot="end">
+      <ion-row slot="header" (click)="alternateClick($event)"
+        class="gap table-head ion-align-items-center ion-justify-content-between">
+        <div class="">
+          <div id="head-line">
+            <ion-label>{{stash.label}}</ion-label>
+            <chip [name]=" tableData().length + ' • ' + (stash.value| currency)"></chip>
 
-      </div>
-
-        <p>
-          {{tableDescription}}
-          <!-- SolanaHub a 1% fee for this service, and the amount reclaimed is paid in SOL. -->
-        </p>
-      
-      <div class="ion-margin-button ion-hide-lg-down"></div>
-    </div>
-    <div style="display: flex; align-items: center; gap: 10px;    margin-inline-end: 15px;">
-
-      @if(tableName.toLowerCase() === 'dust value'){
-        <!-- <ion-col  size="3" sizeLg="2"> -->
-          <div id="toggle-swap">
-            <ion-toggle mode="md" [value]="swapTohubSOL" (ionChange)="onSwapTohubSOLChange($event.detail.value)" /><span>Swap to hubSOL</span>
           </div>
-        <!-- </ion-col> -->
-      }
-      @if(tableName.toLowerCase() === 'zero value assets'){
-        <div id="toggle-swap">
-          <ion-toggle color="danger" mode="md" (ionChange)="showUnknownSource($event)" /><span>Unknown source</span>
+
+          <p>
+            {{stash.description}}
+          </p>
+
+          <div class="ion-margin-button ion-hide-lg-down"></div>
         </div>
-      }
-      <ion-button (click)="emitData()" id="action-btn" [disabled]="!selectedData().length" class="ion-text-capitalize">{{stash.actionTitle}} | {{selectedData().length}}</ion-button>
-      @if(tableName.toLowerCase() === 'dust value'){
-        <ion-button (click)="openRangeBox($event)" id="range-btn" fill="clear" ><ion-icon name="funnel-outline"/> <span>min. value</span> <chip [name]="portfolioShare + '%'"></chip></ion-button>
-      }
-   
-    </div>
-    
-      <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow" name="arrow-up-outline"/></ion-button>
- 
-  </ion-row>
-  <app-mft 
+        <div id="action-btn-wrapper">
+
+          @if(stash.label.toLowerCase() === 'dust value'){
+          <!-- <ion-col  size="3" sizeLg="2"> -->
+          <div id="toggle-swap">
+            <ion-toggle mode="md" (ionChange)="onSwapTohubSOLChange($event.detail.checked)" /><span>Swap to hubSOL</span>
+          </div>
+          <!-- </ion-col> -->
+          }
+          <!-- @if(tableName.toLowerCase() === 'zero value assets'){
+          <div id="toggle-swap">
+            <ion-toggle color="danger" mode="md" (ionChange)="showUnknownSource($event)" /><span>Unknown source</span>
+          </div>
+          } -->
+          <ion-button (click)="openStashPopup(selectedData())" id="action-btn" [disabled]="!selectedData().length"
+            class="ion-text-capitalize">
+            @if(stash.actionTitle === 'swap'){
+            <ion-img src="assets/images/swap-icon.svg"/>
+            }
+            <span>{{stash.actionTitle}} | {{selectedData().length}}</span>
+       
+          </ion-button>
+          @if(stash.label.toLowerCase() === 'dust value'){
+          <ion-button (click)="openRangeBox($event)" id="range-btn" fill="clear"><ion-icon name="funnel-outline" />
+            <span>max. value</span>
+            <chip [name]="portfolioShare + '%'"></chip>
+          </ion-button>
+          }
+
+        </div>
+
+        <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow"
+            name="arrow-up-outline" /></ion-button>
+
+      </ion-row>
+      
+      <app-mft 
     [checkBox]="true"
     slot="content"
-    (onData)="selectedData.set($event)"
+    (onData)="updateSelectedData($event)"
     [tableRows]="1000"
-    [tableId]="'savings-table'+ tableName" 
-    [tableColumns]="columns" 
+    [tableId]="'stash-table'+ '-'+stash.label" 
+    [class]="'stash-table'"
+    [tableColumns]="tableColumn" 
     [tableData]="tableData"
      />
+      
     </ion-accordion>
   </ion-accordion-group>
 </div>
+
+
+<ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="platform-icon-wrapper">
+    <ion-img [src]="row.platformLogoURI" alt="platform icon"></ion-img>
+  </div>
+</ng-template>
+
+<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="item">
+    <div class="item-img-wrapper">
+      <!-- if logoURI is array then forLoop -->
+      @if(row.type === 'defi-position'){
+      @for(img of row.logoURI; track img){
+      <ion-img [src]="img" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+      }
+      }@else{
+      <ion-img [src]="row.logoURI" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
+      }
+    </div>
+    <div class="item-info">
+
+      <div class="item-bold">{{row.name || 'unknown'}}</div>
+      <div class="item-light">{{row.token }}</div>
+
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-center" style="justify-content: center; display: flex; min-width: 70px;">
+    <ion-checkbox  mode="md" 
+    [value]="row"
+    (ionChange)="updateSelectedData($event.detail)"
+    [checked]="isRowSelected(row)"
+      />
+  </div>
+</ng-template>
+
+<ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left">
+    {{row.balance | number: '1.0-5'}} {{row.symbol}}
+  </div>
+</ng-template>
+
+<ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left">
+    @for(item of row.extractedValue | keyvalue; track item.key){
+    <div class="sol-value">
+      {{fixedNumber(item.value) }} {{item.key}}
+    </div>
+    }
+  </div>
+</ng-template>
+<ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="ion-text-left account-info">
+    {{row?.account?.addrShort}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img>
+    </a>
+  </div>
+</ng-template>
+<ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="openStashPopup([row])">
+    {{row.action}}
+  </ion-button>
+</ng-template>
+
+<ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
+  <div class="source-type ion-text-left ion-text-capitalize">
+    <chip [name]="row.source"
+      [color]="row.source === 'empty account' ? 'focus'  : row.source === 'out of range' ? 'danger' : row.source == 'excess balance' ? 'active' : ''" />
+  </div>
+</ng-template>

@@ -1,7 +1,7 @@
 export interface AssetBase {
   name: string;
   symbol: string;
-  imgUrl: string | string[];
+  logoURI: string | string[];
   address: string;
   value?: number;
 }
@@ -10,7 +10,7 @@ export interface TokenInfo {
   address: string;
   decimals: number;
   symbol: string;
-  imgUrl: string;
+  logoURI: string;
 }
 export interface StashGroup {
     // networkId: string
@@ -25,11 +25,12 @@ export interface StashGroup {
     }
   }
   export interface StashAsset {
+    id: number,
     name: string,
     symbol: string,
-    imgUrl: string | string[],
-    platformImgUrl?: string,
-    tokens?: { address: string, decimals: number, symbol: string, imgUrl: string }[],
+    logoURI: string | string[],
+    platformlogoURI?: string,
+    tokens?: { address: string, decimals: number, symbol: string, logoURI: string }[],
     balance?: number,
     mint?: string,
     decimals?: number,
@@ -42,26 +43,29 @@ export interface StashGroup {
     action: string,
     type: string,
     positionData?: any
+    checked: boolean
   }
 
   export interface OutOfRange {
+    accountRentFee?: number,
+    address: string
     positionData: any
     poolPair: string
     poolTokenA: {
       address: string,
       decimals: number,
       symbol: string,
-      imgUrl: string,
+      logoURI: string,
     },
     poolTokenB: {
       address: string,
       decimals: number,
       symbol: string,
-      imgUrl: string,
+      logoURI: string,
     },
     isOutOfRange: boolean,
     platform: string,
-    platformImgUrl: string,
+    platformLogoURI: string,
     pooledAmountAWithRewards: string,
     pooledAmountBWithRewards: string,
     pooledAmountAWithRewardsUSDValue: number,

@@ -1,25 +1,15 @@
-import { CurrencyPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
-import { Component, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, computed, effect, signal } from '@angular/core';
-import { IonRow, IonCol, IonSelect, IonSelectOption, IonContent, IonGrid, IonList, IonTabButton, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
-import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
-import { ModalComponent, PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
-import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
-import { TableHeadComponent } from 'src/app/shared/layouts/mft/table-head/table-head.component';
-import { TableMenuComponent } from 'src/app/shared/layouts/mft/table-menu/table-menu.component';
-import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { Component, OnInit, computed,  signal } from '@angular/core';
+import { IonRow, IonCol,  IonContent, IonGrid, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
+import { SolanaHelpersService, UtilService } from 'src/app/services';
+import {  PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
 import { PromoComponent } from './promo/promo.component';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { BurnNftModalComponent } from "../collectibles/burn-nft-modal/burn-nft-modal.component";
+import { animate, style, transition, trigger } from '@angular/animations';
 import {  StashService } from './stash.service';
-import { TableComponent } from './table/table.component';
-import { AnimatedIconComponent } from "../../shared/components/animated-icon/animated-icon.component";
-import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { addIcons } from 'ionicons';
-import { closeOutline } from 'ionicons/icons';
-import { StashAsset } from './stash.model';
+import { closeOutline, heartHalfOutline } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
-import { StashModalComponent } from './stash-modal/stash-modal.component';
 import { FaqPopupComponent } from 'src/app/shared/components/faq-popup/faq-popup.component';
+import { EarningComponent, TableComponent } from './';
 
 
 @Component({
@@ -41,68 +31,33 @@ import { FaqPopupComponent } from 'src/app/shared/components/faq-popup/faq-popup
     ])
   ],
   imports: [
-    ChipComponent,
-    AnimatedIconComponent,
-    JsonPipe,
-    IonCheckbox,
-    IonText,
-    IonChip,
-    IonLabel,
+    EarningComponent,
     TableComponent,
     PortfolioBreakdownComponent,
-    IonSkeletonText,
-    IonProgressBar,
     PromoComponent,
-    IonToggle,
-    TableHeadComponent,
-    TableMenuComponent,
-    IonIcon,
     IonButton,
-    CurrencyPipe,
     PageHeaderComponent,
-    DecimalPipe,
     IonRow,
     IonContent,
     IonCol,
     IonGrid,
-    IonImg,
-    MftModule,
-    TooltipModule,
-    BurnNftModalComponent,
-    AnimatedIconComponent,
-    KeyValuePipe
 ]
 })
 export class StashPage implements OnInit {
-  @ViewChild('checkboxTpl', { static: true }) checkboxTpl: TemplateRef<any> | any;
-  @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
-  @ViewChild('accountTpl', { static: true }) accountTpl: TemplateRef<any> | any;
-  @ViewChild('amountTpl', { static: true }) amountTpl: TemplateRef<any> | any;
-  @ViewChild('valueTpl', { static: true }) valueTpl: TemplateRef<any> | any;
-  @ViewChild('actionTpl', { static: true }) actionTpl: TemplateRef<any> | any;
-  @ViewChild('sourceTpl', { static: true }) sourceTpl: TemplateRef<any> | any;
-  @ViewChild('platformIconTpl', { static: true }) platformIconTpl: TemplateRef<any> | any;
-  @ViewChildren('checkAsset') checkNfts: QueryList<IonCheckbox>
+
+
   public analyzeStage = signal(0);
   public hideStash = signal(false)
   public selectedTab = signal('assets');
-  public tableMenuOptions: string[] = ['Assets', 'Positions', 'Stake'];
-  private _columnsOptions = null
-  public swapTohubSOL = false;
-  public columns = computed(() => {
-    //@ts-ignore
-    return this._columnsOptions[this.selectedTab().toLowerCase()]
-  })
+  
+
   constructor(
     private _stashService: StashService,
-    private _shs: SolanaHelpersService,
-    private _util: UtilService,
     private _modalCtrl: ModalController
   ) { 
-    addIcons({closeOutline})
+    addIcons({heartHalfOutline,closeOutline});
 
   }
-  public tableColumn = signal([])
 
   public stashTotalUsdValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
 
@@ -117,8 +72,6 @@ export class StashPage implements OnInit {
   public assets = computed(() => {
     if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.dustValueTokens() && !this.zeroValueAssets()) return []
     const assets = []
-    console.log(this.dustValueTokens());
-    
 
     if(this.unstakedOverflow()) {
       assets.push(this.unstakedOverflow())
@@ -141,39 +94,16 @@ export class StashPage implements OnInit {
       return valueB - valueA;
     });
   })
-  public tableColumnDeFiPositions = signal([])
-   async ngOnInit() {
+
+  async ngOnInit() {
     // this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
-    this.tableColumn = signal([
-      // { key: 'select', width: '8%',cellTemplate: this.checkboxTpl },
-      { key: 'asset', title: 'Asset', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'tokenAccount', title: 'Account', width: '15%',cellTemplate: this.accountTpl, cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
-      { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-    ])
-
-    this.tableColumnDeFiPositions = signal([
-      // { key: 'select', width: '8%',cellTemplate: this.checkboxTpl },
-      { key: 'asset', title: 'Pool', width: '35%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      // { key: 'balance', title: 'Balance', cellTemplate: this.amountTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'platform', title: 'Platform', width: '15%',cellTemplate: this.platformIconTpl, cssClass: { name: 'ion-text-capitalize ion-text-center', includeHeader: true } },
-      { key: 'value', title: 'Extractable',width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', width: '12%',cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'action', title: '',width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-    ])
-
   }
   async getSavingData() {
-
     const minLoadingTime = 3000
 
-
-    // this.analyzeStage.set(1)
     setTimeout(() => {
       const interval = setInterval(() => {
-        if(this.assets().length >3) {
+        if(this.assets().length > 0) {
           clearInterval(interval)
           this.analyzeStage.set(1)
         }
@@ -181,23 +111,7 @@ export class StashPage implements OnInit {
     }, minLoadingTime);
 
   }
-   async openStashPopup(event: StashAsset[]) {
-    const modal = await this._modalCtrl.create({
-      component: StashModalComponent,
-      componentProps: {
-        stashAssets: event,
-        actionTitle: event[0].action,
-        swapTohubSOL: this.swapTohubSOL
-      },
-      cssClass: 'modal-style'
-    });
-    modal.present();
-    // this.onActionSelected.emit(true)
-  }
-
-  public fixedNumber(value: any): string {
-    return this._util.fixedNumber(value)
-  }
+   
 
   public async openFaqPopOver() {
     const modal = await this._modalCtrl.create({
@@ -253,4 +167,6 @@ export class StashPage implements OnInit {
     })
     modal.present()
   }
+
+
 }

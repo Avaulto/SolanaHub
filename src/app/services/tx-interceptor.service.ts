@@ -102,54 +102,70 @@ export class TxInterceptorService {
     extraSigners?: Keypair[] | Signer[],
     record?: { message: string, data?: {} },
   ): Promise<string[]> {
-
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
 
-
-    Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
-    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
+    if(transactions[0] instanceof Transaction){
+      Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
+    }
+    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[] | VersionedTransaction[];
     if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
 
-
     var signatures = [];
+    var successfulSignatures = [];
+    
+    // Send all transactions first
     for await (const tx of signedTx) {
-      const rawTransaction = tx.serialize({ requireAllSignatures: false })
-      const confirmTransaction = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
-      signatures.push(confirmTransaction);
+      try {
+        const rawTransaction = tx.serialize({ requireAllSignatures: false })
+        const confirmTransaction = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
+        signatures.push(confirmTransaction);
+      } catch (error) {
+        console.warn('Failed to send transaction:', error);
+      }
     }
 
     const url = `${this._util.explorer}/tx/${signatures[0]}?cluster=${environment.solanaEnv}`
-
+    
+    // Show initial toast for submitted transactions
     const txSend: toastData = {
-      message: `Transaction Submitted`,
+      message: `Transactions Submitted`,
       btnText: `view on explorer`,
       segmentClass: "toastInfo",
       duration: 50000,
       cb: () => window.open(url)
     }
     this._toasterService.msg.next(txSend)
-    const config: BlockheightBasedTransactionConfirmationStrategy = {
-      signature: signatures[0], blockhash, lastValidBlockHeight
+
+    // Confirm all transactions
+    for (const signature of signatures) {
+      try {
+        const config: BlockheightBasedTransactionConfirmationStrategy = {
+          signature, blockhash, lastValidBlockHeight
+        }
+        await this._shs.connection.confirmTransaction(config, 'processed')
+        successfulSignatures.push(signature);
+      } catch (error) {
+        console.warn('Failed to confirm transaction:', signature, error);
+      }
     }
-   
-    await this._shs.connection.confirmTransaction(config, 'processed')
-    const txCompleted: toastData = {
-      message: 'Transaction Completed',
-      segmentClass: "toastInfo"
+
+    // Show completion toast only if at least one transaction succeeded
+    if (successfulSignatures.length > 0) {
+      const txCompleted: toastData = {
+        message: `${successfulSignatures.length}/${signatures.length} Transactions Completed`,
+        segmentClass: "toastInfo"
+      }
+      if (record) {
+        va.track(record.message, record.data)
+      }
+      this._toasterService.msg.next(txCompleted)
+
+      setTimeout(() => {
+        this._fetchPortfolioService.triggerFetch()
+      }, 500);
     }
-    if (record) {
 
-
-      va.track(record.message, record.data)
-    }
-    this._toasterService.msg.next(txCompleted)
-
-    setTimeout(() => {
-      this._fetchPortfolioService.triggerFetch()
-    }, 500);
-    return signatures
-
-
+    return successfulSignatures;
   }
 
   public async sendSol(lamportsToSend: number, toAddress: PublicKey, walletOwnerPk: PublicKey): Promise<any> {

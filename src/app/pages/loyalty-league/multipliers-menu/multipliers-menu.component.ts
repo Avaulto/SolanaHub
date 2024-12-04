@@ -103,8 +103,8 @@ export class MultipliersMenuComponent implements OnInit {
         img: 'assets/images/ll/kamino.svg',
         title: 'kamino',
         pts: 0,
-        link: 'https://app.kamino.finance/liquidity/7ycAn4vg4eZ82zeRWHey5qLQ53htEmeGq8CJ2tVXpPt9',
-        badges: [{ strategy: 'vault', protocolBoosted: false, solanahubboosted: true }]
+        link: 'https://app.kamino.finance',
+        badges: [{ strategy: 'all products', protocolBoosted: false, solanahubboosted: true }]
 
       },
       {
@@ -115,13 +115,7 @@ export class MultipliersMenuComponent implements OnInit {
         badges: [{ strategy: 'Liquidity pools', protocolBoosted: false, solanahubboosted: true }]
 
       },
-      {
-        img: 'assets/images/ll/yieldfan.webp',
-        title: 'yield.fan',
-        pts: 0,
-        link: 'https://yield.fan/dashboard',
-        badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: false }]
-      },
+
 
       {
         img: 'assets/images/ll/raydium.svg',
@@ -224,25 +218,21 @@ export class MultipliersMenuComponent implements OnInit {
           ...this.defaultMultipliers.hubSOLBoosters[4],
           pts: fetchedMultipliers.hubSOLDeFiBoost.meteora / fetchedMultipliers.hubSOL,
         },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[5],
-          pts: "up to 3x" as any,
-        },
 
         {
-          ...this.defaultMultipliers.hubSOLBoosters[6],
+          ...this.defaultMultipliers.hubSOLBoosters[5],
           pts: fetchedMultipliers.hubSOLDeFiBoost.raydium / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[7],
+          ...this.defaultMultipliers.hubSOLBoosters[6],
           pts: fetchedMultipliers.hubSOLDeFiBoost.solayer / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[8],
+          ...this.defaultMultipliers.hubSOLBoosters[7],
           pts: fetchedMultipliers.hubSOLDeFiBoost.texture / fetchedMultipliers.hubSOL,
         },
         {
-          ...this.defaultMultipliers.hubSOLBoosters[9],
+          ...this.defaultMultipliers.hubSOLBoosters[8],
           pts: fetchedMultipliers.hubSOLDeFiBoost.rainfi / fetchedMultipliers.hubSOL,
         },
       ] // .sort((a: any, b: any) => b.pts - a.pts)

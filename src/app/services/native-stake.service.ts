@@ -107,7 +107,7 @@ export class NativeStakeService {
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
     const validatorName = account.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
-    const imgUrl = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image || "assets/images/unknown.svg")
+    const logoURI = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image || "assets/images/unknown.svg")
 
     const stakeAccountInfo: Stake = {
       link: this._utils.explorer + '/account/' + address,
@@ -128,7 +128,7 @@ export class NativeStakeService {
       stakeAuth: account.meta.authorized.staker,
       withdrawAuth: account.meta.authorized.withdrawer,
       validatorName: validatorName || null,
-      imgUrl: imgUrl || null,
+      logoURI: logoURI || null,
       apy: validator?.total_apy || null
     }
 

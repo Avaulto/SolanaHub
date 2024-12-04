@@ -105,6 +105,7 @@ export class UtilService {
     return this.jupTokens
   }
   public addTokenData(assets: any, tokensInfo: JupToken[], mapBy: string = 'address'): any[] {
+    
     return assets.map((res: any) => {
       
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
@@ -112,14 +113,14 @@ export class UtilService {
       // res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
 
       const token = tokensInfo.find(token => token.address === res?.data[mapBy])
-   
+ 
       
       res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res?.data?.address
       res.mint = token?.mint ? token.mint : '';
-      res.name = token?.name ? token.name : '';
+      res.name = token?.name ? token.name : 'unknown';
       res.name === 'Wrapped SOL' ? res.name = 'Solana' : res.name
-      res.symbol = token?.symbol ? token.symbol : '';
-      res.imgUrl = token?.logoURI ? token.logoURI : 'assets/images/unknown.svg';
+      res.symbol = token?.symbol;
+      res.logoURI = token?.logoURI ? token.logoURI : 'assets/images/unknown.svg';
       res.decimals = token?.decimals ? token.decimals : '';;
       res.balance = res.data?.amount ? res.data?.amount : 0
       return res
@@ -131,6 +132,18 @@ export class UtilService {
       return item
     })
   }
+
+  async getTokenInfo2(mintAddress: string){
+    try{
+      const tokenInfo = await (await fetch(`${this.serverlessAPI}/api/portfolio/get-token-info?mintAddress=${mintAddress}`)).json()
+      return tokenInfo
+    }catch(error){
+      console.error(error);
+      return null
+    }
+  }
+
+
   public memorySizeOf(obj) {
     var bytes = 0;
 
@@ -184,7 +197,7 @@ public fixedNumber(value: any): string {
   const absNum = Math.abs(num);
 
   // Find the minimum number of decimal places needed
-  let decimalPlaces = 2; // Start with minimum 2 decimal places
+  let decimalPlaces = 3; // Start with minimum 2 decimal places
   let tempNum = absNum;
   while (tempNum < 0.01 && tempNum > 0) {
     tempNum *= 10;

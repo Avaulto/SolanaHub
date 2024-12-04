@@ -165,7 +165,7 @@ export class NotificationsService {
             type = 'Generic'
             break;
         }
-        return { type, imgURL: dappData.avatarUrl, name: dappData.name, ...m }
+        return { type, logoURI: dappData.avatarUrl, name: dappData.name, ...m }
       }
       return m
     })

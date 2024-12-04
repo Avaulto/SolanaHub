@@ -37,6 +37,7 @@
 </ng-template>
 <div id="table-wrapper">
   <ngx-table #table 
+    [class]="class"
     [id]="tableId"
     (event)="eventEmitted($event)" 
     [configuration]="configuration" 

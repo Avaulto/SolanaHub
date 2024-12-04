@@ -11,7 +11,7 @@ import {
 } from 'node_modules/@solana/spl-token';
 
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft, Token } from '../models';
 import { ApiService } from './api.service';
 
 import { SessionStorageService } from './session-storage.service';
@@ -204,13 +204,14 @@ export class SolanaHelpersService {
       TOKEN_PROGRAM_ID,   //SPL Token Program, new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA")
       { filters }
     );
+
     let tokensBalance = accounts.map((account, i) => {
       //Parse the account data
       const parsedAccountInfo: any = account.account.data;
       const mint: string = parsedAccountInfo["parsed"]["info"]["mint"];
       const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
       const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
-      return { data: { address: account.pubkey.toString(), mint, balance, decimals } }
+      return { data: { address: account.pubkey.toString(), mint, balance, decimals } } as any
     })
     if (getType) {
       if (getType == 'nft') {
@@ -223,7 +224,19 @@ export class SolanaHelpersService {
       const jupTokens = await this._utils.getJupTokens()
       const mapBy = 'mint';
 
-      tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens, mapBy)
+      tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens, mapBy) as Token[]
+      // find tokens that couldnt be found in jup and fetch there data from our server
+      tokensBalance = await Promise.all(tokensBalance.map(async (item: any) => {
+        if(!item.symbol || !item.logoURI){
+          
+          const tokenInfo = await this._utils.getTokenInfo2(item.mint)
+          item.symbol = tokenInfo?.symbol
+          item.logoURI = tokenInfo?.logoURI
+          item.decimals = tokenInfo?.decimals
+          item.name = tokenInfo?.name
+        }
+        return item
+      }))
 
     }
     if (emptyAccountOnly) {
