@@ -136,7 +136,7 @@ export class StashModalComponent implements OnInit {
       this.storeEarningsRecord(signatures)
       this.dataToReload(dataToReload)
       this.closeModal()
-     
+
     }
     this.stashState.set(this.actionTitle)
 
@@ -148,7 +148,7 @@ export class StashModalComponent implements OnInit {
         break
         // already gets updated after tx submitted in fetchPortfolio call under txi service
       case 'dust-value':
-        this._stashService.updateZeroValueAssetsByBalance(true)
+        this._stashService.getZeroValueAssetsByBalance(false)
         break
     }
   }

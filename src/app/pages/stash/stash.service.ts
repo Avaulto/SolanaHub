@@ -42,7 +42,7 @@ export class StashService {
   // zero value assets fn:
   public findZeroValueAssets = this._zeroValueAssetsService.findZeroValueAssets.bind(this._zeroValueAssetsService)
   public updateZeroValueAssets = this._zeroValueAssetsService.updateZeroValueAssets.bind(this._zeroValueAssetsService)
-  public updateZeroValueAssetsByBalance = this._zeroValueAssetsService.updateZeroValueAssetsByBalance.bind(this._zeroValueAssetsService)
+  public getZeroValueAssetsByBalance = this._zeroValueAssetsService.getZeroValueAssetsByBalance.bind(this._zeroValueAssetsService)
   public burnZeroValueAssets = this._zeroValueAssetsService.burnAccounts.bind(this._zeroValueAssetsService)
 
 

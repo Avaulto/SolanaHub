@@ -93,6 +93,8 @@ export class TableComponent  implements OnChanges {
       isZeroYieldZone ? 'Platform' : 'Account'
     ));
     this.tableData.set(this.stash.data.assets.sort((a, b) => a.value - b.value));
+
+    this.selectedData.set([])
   }
 
   onSwapTohubSOLChange(ev){
@@ -154,7 +156,7 @@ export class TableComponent  implements OnChanges {
   }
 
   showUnknownSource(ev){
-    this._stashService.updateZeroValueAssetsByBalance(ev.detail.checked)
+    this._stashService.getZeroValueAssetsByBalance(ev.detail.checked)
     
   }
 
@@ -170,14 +172,15 @@ export class TableComponent  implements OnChanges {
       cssClass: 'modal-style'
     });
     modal.present();
-    // this.onActionSelected.emit(true)
   }
 
   public fixedNumber(value: any): string {
     return this._util.fixedNumber(value)
   }
 
-  isRowSelected(row: StashAsset){
-    return this.selectedData().some(item => item.id === row.id && item.checked)
+  isSelected(row: any) {
+    return computed(() => {
+      return this.selectedData().some(item => item === row);
+    });
   }
 }

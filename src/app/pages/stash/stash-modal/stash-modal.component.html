@@ -60,7 +60,7 @@
             }@else{
               @for (item of summary | keyvalue; track $index) {
 
-              <div class="item-value">{{item.value}} {{item.key}}</div>
+              <div class="item-value">{{utils.fixedNumber(item.value)}} {{item.key}}</div>
               }
             }
           </div>

@@ -100,7 +100,7 @@
     <ion-checkbox  mode="md" 
     [value]="row"
     (ionChange)="updateSelectedData($event.detail)"
-    [checked]="isRowSelected(row)"
+    [checked]="isSelected(row)()"
       />
   </div>
 </ng-template>

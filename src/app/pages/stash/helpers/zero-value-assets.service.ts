@@ -88,7 +88,7 @@ export class ZeroValueAssetsService {
     }
   }
 
-  async updateZeroValueAssetsByBalance(showAssetWithBalance: boolean = false) {
+  async getZeroValueAssetsByBalance(showAssetWithBalance: boolean = false) {
     const zeroValueAssets = !showAssetWithBalance
       ? this.allZeroValueAssets.filter(acc => acc.balance === 0)
       : this.allZeroValueAssets;
