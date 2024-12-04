@@ -226,6 +226,7 @@ export class SolanaHelpersService {
 
       tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens, mapBy) as Token[]
       // find tokens that couldnt be found in jup and fetch there data from our server
+      if(tokensBalance.length <20){
       tokensBalance = await Promise.all(tokensBalance.map(async (item: any) => {
         if(!item.symbol || !item.logoURI){
           
@@ -236,8 +237,8 @@ export class SolanaHelpersService {
           item.name = tokenInfo?.name
         }
         return item
-      }))
-
+        }))
+      }
     }
     if (emptyAccountOnly) {
       // console.log('emptyAccountOnly:::::', tokensBalance);
