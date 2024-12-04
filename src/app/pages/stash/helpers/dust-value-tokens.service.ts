@@ -122,8 +122,7 @@ export class DustValueTokensService {
         });
       };
       // const instructions = swapencodedIx.map(tx => extractInstructions(tx));
-      const extractedSOL = tokens.reduce((acc, curr) => acc + curr.extractedValue.SOL, 0)
-      return await this._helpersService._simulateBulkSendTx(swapencodedIx, extractedSOL)
+      return await this._helpersService._simulateBulkSendTx(swapencodedIx)
 
     } catch (error) {
       console.log(error);

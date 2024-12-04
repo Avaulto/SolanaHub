@@ -100,7 +100,7 @@ export class ZeroValueAssetsService {
 
   public async burnAccounts(accounts: StashAsset[], walletOwner: PublicKey, simulate: boolean = false) {
     const instructions: TransactionInstruction[] = [];
-    const extractedSOL = accounts.reduce((acc, curr) => acc + curr.extractedValue.SOL, 0)
+
     await Promise.all(accounts.filter(acc => acc.balance !== 0).map(async acc => {
       instructions.push(createBurnCheckedInstruction(
         new PublicKey(acc.account.addr),
@@ -118,7 +118,7 @@ export class ZeroValueAssetsService {
         walletOwner
       ));
     }));
-    return await this._helpersService._simulateBulkSendTx(instructions.flat(), extractedSOL)
+    return await this._helpersService._simulateBulkSendTx(instructions.flat())
   }
 
 } 

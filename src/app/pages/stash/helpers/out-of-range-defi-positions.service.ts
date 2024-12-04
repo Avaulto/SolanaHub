@@ -32,7 +32,7 @@ export class OutOfRangeDeFiPositionsService {
     }
   }
 
-  private async updateOutOfRangeDeFiPositions() {
+  public async updateOutOfRangeDeFiPositions() {
     const positions = await this.getOutOfRangeDeFiPositions();
     if (!positions) {
       this.outOfRangeDeFiPositionsSignal.set(null);
@@ -87,7 +87,6 @@ export class OutOfRangeDeFiPositionsService {
 
 
   async closeOutOfRangeDeFiPosition(positions: StashAsset[], walletOwner: PublicKey) {
-    console.log('close out of range defi position', this._helpersService);
 
     try {
 
@@ -109,14 +108,10 @@ export class OutOfRangeDeFiPositionsService {
       //     this.updateOutOfRangeDeFiPositions()
       //   }
       // })
-      const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
+      const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')).instructions).flat()
       console.log(txArray);
-      const extractedSOL = positions.reduce((acc, curr) => acc + curr.extractedValue.SOL, 0)
-      this._helpersService._simulateBulkSendTx(txArray, extractedSOL).then(res => {
-        if (res) {
-          this.updateOutOfRangeDeFiPositions()
-        }
-      })
+      return await this._helpersService._simulateBulkSendTx(txArray)
+
     } catch (error) {
       console.log(error);
       return null

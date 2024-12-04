@@ -29,7 +29,7 @@ export interface StashGroup {
     name: string,
     symbol: string,
     logoURI: string | string[],
-    platformlogoURI?: string,
+    platformLogoURI?: string,
     tokens?: { address: string, decimals: number, symbol: string, logoURI: string }[],
     balance?: number,
     mint?: string,

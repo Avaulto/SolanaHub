@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 
-import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
+import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { Record, toastData } from '../models';
 import va from '@vercel/analytics';
 import { environment } from 'src/environments/environment';
@@ -104,15 +104,31 @@ export class TxInterceptorService {
   ): Promise<string[]> {
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
 
-    if(transactions[0] instanceof Transaction){
+    if (transactions[0] instanceof Transaction) {
       Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
+    }
+    if (transactions[0] instanceof VersionedTransaction) {
+      console.log('versioned tx');
+      
+      const newTransactions: VersionedTransaction[] = transactions as VersionedTransaction[];
+      await Promise.all(transactions.map(async t => {
+        // get priority fee for each transaction
+        const priorityFeeEst = await this._getPriorityFeeEst(t)
+        const batchMessage = new TransactionMessage({
+          payerKey: this._shs.getCurrentWallet().publicKey,
+          recentBlockhash: blockhash,
+          instructions: [priorityFeeEst],
+        }).compileToV0Message();
+        newTransactions.push(new VersionedTransaction(batchMessage))
+      }));
+      transactions = newTransactions;
     }
     let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[] | VersionedTransaction[];
     if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
 
     var signatures = [];
     var successfulSignatures = [];
-    
+
     // Send all transactions first
     for await (const tx of signedTx) {
       try {
@@ -125,7 +141,7 @@ export class TxInterceptorService {
     }
 
     const url = `${this._util.explorer}/tx/${signatures[0]}?cluster=${environment.solanaEnv}`
-    
+
     // Show initial toast for submitted transactions
     const txSend: toastData = {
       message: `Transactions Submitted`,
@@ -224,6 +240,7 @@ export class TxInterceptorService {
   // }
 
   private async _getPriorityFeeEst(transaction: Transaction | VersionedTransaction) {
+    console.log('get tx fee');
 
     // if transaction is array then return array of 
     // Extract all account keys from the transaction

@@ -52,7 +52,7 @@ export class EarningsService {
   ): Promise<void> {
     try {
      
-      const stashUser: StashUser = await (await fetch(`${this._utils.serverlessAPI}/api/stash/user/store-record`, {
+      const stashUser: StashUser = await (await fetch(`${this._utils.serverlessAPI}/api/stash/user/store-user-record`, {
         method: 'POST',
         body: JSON.stringify({
           userRecord: stashUserRecord,

@@ -22,7 +22,7 @@
       <!-- <stash-modal-item [stash]="stash"/> -->
       <div class="stash-item">
         <div class="stash-profile">
-          <ion-img [src]="item.platformlogoURI || item.logoURI" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
+          <ion-img [src]="item.platformLogoURI || item.logoURI" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
           <div>
             <ion-label>{{item.name}}</ion-label>
             <ion-text>{{item.symbol}}</ion-text>

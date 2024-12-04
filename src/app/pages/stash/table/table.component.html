@@ -97,11 +97,11 @@
 
 <ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-center" style="justify-content: center; display: flex; min-width: 70px;">
-    <ion-checkbox  mode="md" 
-    [value]="row"
-    (ionChange)="updateSelectedData($event.detail)"
-    [checked]="isSelected(row)()"
-      />
+    <ion-checkbox mode="md" 
+      [value]="row"
+      (ionChange)="updateSelectedData($event.detail)"
+      [checked]="isSelected(row)"
+    />
   </div>
 </ng-template>
 

@@ -81,7 +81,7 @@ export class HelpersService {
                     logoURI: [item.poolTokenA.logoURI, item.poolTokenB.logoURI],
                     tokens: [item.poolTokenA, item.poolTokenB].map(this.mapToTokenInfo),
                     platform: item.platform,
-                    platformlogoURI: item.platformlogoURI,
+                    platformLogoURI: item.platformLogoURI,
                     value: item.pooledAmountAWithRewardsUSDValue + item.pooledAmountBWithRewardsUSDValue,
                     extractedValue: {
                         [item.poolTokenA.symbol]: Number(item.pooledAmountAWithRewards),
@@ -143,7 +143,6 @@ export class HelpersService {
 
     public async _simulateBulkSendTx(
         ixs: TransactionInstruction[] | VersionedTransaction[] | Transaction[],
-        extractedSOL: number
     ): Promise<string[]> {
         let transactions = []
         if (ixs[0] instanceof VersionedTransaction) {
@@ -169,58 +168,120 @@ export class HelpersService {
             }
         });
     }
-    public async splitIntoSubTransactions(instructions: TransactionInstruction[], maxSize: number = 1200): Promise<VersionedTransaction[]> {
+
+
+
+
+    public async splitIntoSubTransactions(
+        instructions: TransactionInstruction[],
+        maxSize: number = 900
+    ): Promise<VersionedTransaction[]> {
         const { publicKey } = this.shs.getCurrentWallet();
         const { blockhash } = await this.shs.connection.getLatestBlockhash();
-
         const transactions: VersionedTransaction[] = [];
         let currentInstructions: TransactionInstruction[] = [];
 
-        // Process each instruction
         for (const instruction of instructions) {
+            // Add safety check for instruction size
+            if (instruction.data.length > maxSize) {
+                console.warn('Large instruction detected, splitting:', instruction.data.length);
+                if (currentInstructions.length > 0) {
+                    const batchMessage = new TransactionMessage({
+                        payerKey: publicKey,
+                        recentBlockhash: blockhash,
+                        instructions: [...currentInstructions],
+                    }).compileToV0Message();
+                    transactions.push(new VersionedTransaction(batchMessage));
+                    currentInstructions = [];
+                }
+
+                // Process large instruction separately
+                const splitInstructions = await this.splitLargeInstruction(instruction);
+                for (const splitIx of splitInstructions) {
+                    const splitMessage = new TransactionMessage({
+                        payerKey: publicKey,
+                        recentBlockhash: blockhash,
+                        instructions: [splitIx],
+                    }).compileToV0Message();
+                    transactions.push(new VersionedTransaction(splitMessage));
+                }
+                continue;
+            }
+
+            // Try adding the instruction to current batch
             currentInstructions.push(instruction);
-
-            // Create test transaction to check size
-            const messageV0 = new TransactionMessage({
-                payerKey: publicKey,
-                recentBlockhash: blockhash,
-                instructions: [...currentInstructions],
-            }).compileToV0Message();
-            const testTx = new VersionedTransaction(messageV0);
-
-            // If current batch exceeds max size, create new transaction
-            if (testTx.serialize().length > maxSize && currentInstructions.length > 1) {
-                // Remove last instruction that caused overflow
-                currentInstructions.pop();
-
-                // Create transaction with current batch
-                const batchMessage = new TransactionMessage({
-                    payerKey: publicKey,
-                    recentBlockhash: blockhash,
-                    instructions: [...currentInstructions],
-                }).compileToV0Message();
-                const batchTx = new VersionedTransaction(batchMessage);
-                transactions.push(batchTx);
-
-                // Start new batch with overflow instruction
-                currentInstructions = [instruction];
+            
+            // Check batch size more frequently
+            if (currentInstructions.length > 1) {
+                try {
+                    const testMessage = new TransactionMessage({
+                        payerKey: publicKey,
+                        recentBlockhash: blockhash,
+                        instructions: [...currentInstructions],
+                    }).compileToV0Message();
+                    const testTx = new VersionedTransaction(testMessage);
+                    const serializedSize = testTx.serialize().length;
+                    
+                    if (serializedSize > maxSize) {
+                        // Remove the last instruction and create a transaction with current batch
+                        currentInstructions.pop();
+                        const batchMessage = new TransactionMessage({
+                            payerKey: publicKey,
+                            recentBlockhash: blockhash,
+                            instructions: [...currentInstructions],
+                        }).compileToV0Message();
+                        transactions.push(new VersionedTransaction(batchMessage));
+                        currentInstructions = [instruction];
+                    }
+                } catch (error) {
+                    console.error('Error while checking transaction size:', error);
+                    // If there's an error, process current instructions and start new batch
+                    if (currentInstructions.length > 1) {
+                        currentInstructions.pop();
+                        const batchMessage = new TransactionMessage({
+                            payerKey: publicKey,
+                            recentBlockhash: blockhash,
+                            instructions: [...currentInstructions],
+                        }).compileToV0Message();
+                        transactions.push(new VersionedTransaction(batchMessage));
+                        currentInstructions = [instruction];
+                    }
+                }
             }
         }
 
-        // Add remaining instructions as final transaction
+        // Process remaining instructions
         if (currentInstructions.length > 0) {
             const finalMessage = new TransactionMessage({
                 payerKey: publicKey,
                 recentBlockhash: blockhash,
                 instructions: [...currentInstructions],
             }).compileToV0Message();
-            const finalTx = new VersionedTransaction(finalMessage);
-            transactions.push(finalTx);
+            transactions.push(new VersionedTransaction(finalMessage));
         }
-
 
         return transactions;
     }
+
+    private async splitLargeInstruction(instruction: TransactionInstruction): Promise<TransactionInstruction[]> {
+        const largeData = instruction.data; 
+        const maxChunkSize = 1000; 
+        const splitInstructions: TransactionInstruction[] = [];
+
+        for (let i = 0; i < largeData.length; i += maxChunkSize) {
+            const chunk = largeData.slice(i, i + maxChunkSize);
+            const splitInstruction = new TransactionInstruction({
+                keys: instruction.keys,
+                programId: instruction.programId,
+                data: chunk,
+            });
+            splitInstructions.push(splitInstruction);
+        }
+
+        return splitInstructions;
+    }
+
+
 
     private async _addPlatformFeeTx(platformFee: number): Promise<VersionedTransaction> {
         const { publicKey } = this.shs.getCurrentWallet();

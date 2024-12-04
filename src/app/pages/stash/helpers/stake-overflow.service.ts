@@ -30,7 +30,6 @@ export class StakeOverflowService {
   });
 
   public async withdrawStakeAccountExcessBalance(accounts: StashAsset[], walletOwner: PublicKey) {
-    const extractedSOL = accounts.reduce((acc, curr) => acc + curr.extractedValue.SOL, 0)
     const withdrawTx = accounts.map(acc => StakeProgram.withdraw({
       stakePubkey: new PublicKey(acc.account.addr),
       authorizedPubkey: walletOwner,
@@ -38,7 +37,7 @@ export class StakeOverflowService {
       lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
     }));
     const instructions = withdrawTx.map(ix => ix.instructions)
-    return await this._helpersService._simulateBulkSendTx(instructions.flat(), extractedSOL)
+    return await this._helpersService._simulateBulkSendTx(instructions.flat())
 
 
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)

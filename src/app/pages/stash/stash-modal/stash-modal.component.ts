@@ -150,6 +150,9 @@ export class StashModalComponent implements OnInit {
       case 'dust-value':
         this._stashService.getZeroValueAssetsByBalance(false)
         break
+      case 'defi-position':
+        this._stashService.updateOutOfRangeDeFiPositions()
+        break
     }
   }
   storeEarningsRecord(signatures: string[]) {

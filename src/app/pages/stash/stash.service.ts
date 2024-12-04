@@ -37,7 +37,7 @@ export class StashService {
   // out of range defi fn:
   public findOutOfRangeDeFiPositions = this._outOfRangeDeFiPositionsService.findOutOfRangeDeFiPositions
   public closeOutOfRangeDeFiPosition = this._outOfRangeDeFiPositionsService.closeOutOfRangeDeFiPosition.bind(this._outOfRangeDeFiPositionsService)
-
+  public updateOutOfRangeDeFiPositions = this._outOfRangeDeFiPositionsService.updateOutOfRangeDeFiPositions.bind(this._outOfRangeDeFiPositionsService)
 
   // zero value assets fn:
   public findZeroValueAssets = this._zeroValueAssetsService.findZeroValueAssets.bind(this._zeroValueAssetsService)
