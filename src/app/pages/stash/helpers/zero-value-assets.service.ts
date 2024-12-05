@@ -12,7 +12,7 @@ import { TransactionInstruction } from '@solana/web3.js';
 })
 export class ZeroValueAssetsService {
   constructor(private _helpersService: HelpersService
-    
+
   ) {
     this.updateZeroValueAssets();
   }
@@ -21,11 +21,12 @@ export class ZeroValueAssetsService {
   private allZeroValueAssets: any[] = [];
 
   public findZeroValueAssets = computed(() => {
-    // const NFTs = this._helpersService.portfolioService.nfts();
-    // const tokens = this._helpersService.portfolioService.tokens();
+    const NFTsOnly = this._helpersService.portfolioService.nfts();
+    const tokensOnly = this._helpersService.portfolioService.tokens();
     const additionalAssets = this.zeroValueAssetsSignal();
 
-    if (!additionalAssets) return null;
+    if (!additionalAssets && !tokensOnly && !NFTsOnly) return null;
+    const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice();
     // console.log( tokens, additionalAssets);
     // const excludeNft = NFTs
     //   ?.filter(acc => acc.floorPrice > 0.001)
@@ -37,17 +38,22 @@ export class ZeroValueAssetsService {
     //   .filter(acc => Number(acc.value) > this._rentFee * this._jupStoreService.solPrice());
     // exclude nfts from additionalAssets by address
     const additionalZeroValueAssetsFinalized = additionalAssets
-    .map((asset, index) => {
-      asset.id = index;
-      asset.type = 'value-deficient';
-      return asset;
-    })
-    // .filter(asset => 
-    //   asset.floorPrice < 0.001 &&
-    //   !asset.name.includes('Orca Whirlpool Position') &&
-    //   !asset.name.includes('Raydium Concentrated Liquidity') &&
-    //   Number(asset.value) < this._rentFee * this._jupStoreService.solPrice()
-    // )     
+      .map((asset, index) => {
+        asset.id = index;
+        asset.type = 'value-deficient';
+        return asset;
+      })
+      .filter(asset => {
+        const existsInTokens = tokensOnly?.filter(token => token.address === asset.mint).filter(token => Number(token.value) > rentFeeInUSD);
+
+        const existsInNFTs = NFTsOnly?.filter(nft => nft.mint === asset.mint).filter(nft => nft.floorPrice > 0.001);
+
+        return existsInTokens || existsInNFTs
+
+      }).filter(asset => (asset.name.includes('Orca Whirlpool Position') || asset.name.includes('Raydium Concentrated Liquidity'))
+        ? asset.balance > 0
+        : true)
+
       .map(asset => this._helpersService.mapToStashAsset(asset, asset.type));
 
 
@@ -65,7 +71,8 @@ export class ZeroValueAssetsService {
   public async getZeroValueAssets() {
     const { publicKey } = this._helpersService.shs.getCurrentWallet()
     try {
-      const unknownAssets = await this._helpersService.shs.getTokenAccountsBalance(publicKey.toBase58(), true, false)
+      const onlyEmptyAccounts = true
+      const unknownAssets = await this._helpersService.shs.getTokenAccountsBalance(publicKey.toBase58(), true, onlyEmptyAccounts)
       console.log('unknownAssets', unknownAssets);
       // remove token with no symbol
       // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
@@ -95,7 +102,7 @@ export class ZeroValueAssetsService {
     this.zeroValueAssetsSignal.set(zeroValueAssets);
   }
 
- 
+
 
 
   public async burnAccounts(accounts: StashAsset[], walletOwner: PublicKey, simulate: boolean = false) {

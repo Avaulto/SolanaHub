@@ -21,6 +21,15 @@ interface StashRecord {
   walletOwner: string,
   referralFee?: number
 }
+
+export interface PlatformUsageRecord {
+  [key: string]: number | string[];
+  txn: string[];
+  totalPlatformFeePaid: number;
+  totalReferralFeePaid: number;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -65,4 +74,38 @@ export class EarningsService {
     }
   }
 
+  public async updatePlatformRecord(
+    positionsCount: number,
+    type: string,
+    extractedSOL: number,
+    platformFee: number,
+    referralFee: number,
+    signatures: string[]
+  ): Promise<void> {
+    // map through stashAssets to update platformRecord
+    const typeCount = type + 'count'
+    const extractedSOLType = type + 'ExtractedSOL'
+    console.log('all stats', typeCount, extractedSOLType, positionsCount, extractedSOL, platformFee, referralFee, signatures);
+    const platformRecord: PlatformUsageRecord = {
+      [typeCount]: positionsCount,
+      [extractedSOLType]: extractedSOL,
+      txn: signatures,
+      harvestCount: 0,
+      totalPlatformFeePaid: platformFee,
+      totalReferralFeePaid: referralFee
+    }
+
+    try {
+     
+       await (await fetch(`${this._utils.serverlessAPI}/api/stash/user/store-platform-record`, {
+        method: 'POST',
+        body: JSON.stringify({
+          platformRecord
+        })
+      })).json()
+   
+    } catch (error) {
+      console.error(error)
+    }
+  }
 } 

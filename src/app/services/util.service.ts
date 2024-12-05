@@ -119,7 +119,7 @@ export class UtilService {
       res.mint = token?.mint ? token.mint : '';
       res.name = token?.name ? token.name : 'unknown';
       res.name === 'Wrapped SOL' ? res.name = 'Solana' : res.name
-      res.symbol = token?.symbol;
+      res.symbol = token?.symbol ? token.symbol : 'unknown';
       res.logoURI = token?.logoURI ? token.logoURI : 'assets/images/unknown.svg';
       res.decimals = token?.decimals ? token.decimals : '';;
       res.balance = res.data?.amount ? res.data?.amount : 0

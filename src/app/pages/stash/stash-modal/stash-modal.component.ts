@@ -81,6 +81,7 @@ export class StashModalComponent implements OnInit {
     }
 
 
+    this.storeEarningPlatformRecord(['asca','34534'])
   }
   private async _fetchHubSOLRate() {
     const hubSOLmint = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'
@@ -115,7 +116,7 @@ export class StashModalComponent implements OnInit {
     switch (type) {
       case 'stake-account':
         signatures = await this._stashService.withdrawStakeAccountExcessBalance(event, publicKey)
-        dataToReload = 'stake-account'
+        dataToReload = 'stake'
         break
       case 'defi-position':
         signatures = await this._stashService.closeOutOfRangeDeFiPosition(event, publicKey)
@@ -130,13 +131,12 @@ export class StashModalComponent implements OnInit {
         dataToReload = 'dust-value'
         break
     }
-    console.log('signatures', signatures);
 
     if (signatures.length > 0) {
       this.storeEarningsRecord(signatures)
       this.dataToReload(dataToReload)
       this.closeModal()
-
+      this.storeEarningPlatformRecord(signatures)
     }
     this.stashState.set(this.actionTitle)
 
@@ -171,11 +171,15 @@ export class StashModalComponent implements OnInit {
           referralFee: platformFee * 0.5,
           walletOwner: this._earningsService.referralAddress()
         }
-        console.log('stashReferralRecord', stashReferralRecord);
     }
     this._earningsService.storeRecord(stashRecord, stashReferralRecord)
-    console.log('stashRecord', stashRecord);
-
+  }
+  storeEarningPlatformRecord(signatures: string[]){
+    const platformFee = this._helpersService.platformFeeInSOL()
+    const referralFee = this._earningsService.referralAddress() ? platformFee * 0.5 : 0
+    const numberOfPositions = this.stashAssets.length
+    const type = this.stashAssets[0].type
+    this._earningsService.updatePlatformRecord(numberOfPositions, type, this.summary['SOL'], platformFee, referralFee, signatures)
   }
   closeModal() {
     this.modalCtrl.dismiss()

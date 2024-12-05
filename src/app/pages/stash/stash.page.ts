@@ -70,7 +70,7 @@ export class StashPage implements OnInit {
 
   // append unstakedOverflow & zeroYieldZones & dustBalanceAccounts & outOfRangeDeFiPositions once they are computed
   public assets = computed(() => {
-    if(!this.unstakedOverflow() && !this.outOfRangeDeFiPositions() && !this.dustValueTokens() && !this.zeroValueAssets()) return []
+    if(!(this.unstakedOverflow() || this.outOfRangeDeFiPositions() || this.dustValueTokens() || this.zeroValueAssets())) return []
     const assets = []
 
     if(this.unstakedOverflow()) {

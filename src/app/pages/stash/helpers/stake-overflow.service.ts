@@ -16,7 +16,8 @@ export class StakeOverflowService {
   public findStakeOverflow = computed(() => {
     const accounts = this._helpersService.portfolioService.staking();
     if (!accounts) return null;
-    const transactionFee = 30000;
+    const transactionFee = 300000;
+    console.log('accounts', accounts);
     const filterExceedBalance = accounts
       .filter(acc => acc.state === 'active' && acc.excessLamport > transactionFee && !acc.locked)
       .map(acc => this._helpersService.mapToStashAsset(acc, 'stake'));

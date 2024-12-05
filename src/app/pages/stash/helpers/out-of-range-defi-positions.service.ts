@@ -75,7 +75,7 @@ export class OutOfRangeDeFiPositionsService {
             !defiAsset.extractedValue['SOL'] ? defiAsset.extractedValue['SOL'] = Number(p.accountRentFee) : defiAsset.extractedValue['SOL'] += Number(p.accountRentFee)
           }
           // filter out all extracted values that are 0
-          // defiAsset.extractedValue = Object.fromEntries(Object.entries(defiAsset.extractedValue).filter(([key, value]) => value !== 0));
+          defiAsset.extractedValue = Object.fromEntries(Object.entries(defiAsset.extractedValue).filter(([key, value]) => value !== 0));
           return defiAsset
         })
       }

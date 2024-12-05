@@ -283,6 +283,7 @@ export class HelpersService {
 
 
 
+
     private async _addPlatformFeeTx(platformFee: number): Promise<VersionedTransaction> {
         const { publicKey } = this.shs.getCurrentWallet();
         const { blockhash } = await this.shs.connection.getLatestBlockhash();

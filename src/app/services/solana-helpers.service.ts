@@ -226,19 +226,24 @@ export class SolanaHelpersService {
 
       tokensBalance = this._utils.addTokenData(tokensBalance, jupTokens, mapBy) as Token[]
       // find tokens that couldnt be found in jup and fetch there data from our server
-      if(tokensBalance.length <20){
+     
+      let metadataCount = 0;
       tokensBalance = await Promise.all(tokensBalance.map(async (item: any) => {
-        if(!item.symbol || !item.logoURI){
-          
+        if ((!item.symbol || !item.logoURI) && metadataCount < 10) {
+          metadataCount++;
           const tokenInfo = await this._utils.getTokenInfo2(item.mint)
           item.symbol = tokenInfo?.symbol
-          item.logoURI = tokenInfo?.logoURI
+          console.log(tokenInfo);
+          
+          item.logoURI = tokenInfo.logoURI ? tokenInfo.logoURI.indexOf('shdw-drive') == -1 ? tokenInfo?.logoURI : item.logoURI : item.logoURI   
           item.decimals = tokenInfo?.decimals
           item.name = tokenInfo?.name
+
+          console.log(item);
+          
         }
         return item
-        }))
-      }
+      }))
     }
     if (emptyAccountOnly) {
       // console.log('emptyAccountOnly:::::', tokensBalance);
