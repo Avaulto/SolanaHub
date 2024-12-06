@@ -25,8 +25,8 @@ interface StashRecord {
 export interface PlatformUsageRecord {
   [key: string]: number | string[];
   txn: string[];
-  totalPlatformFeePaid: number;
-  totalReferralFeePaid: number;
+  platformFeePaid: number;
+  referralFeePaid: number;
 }
 
 
@@ -83,18 +83,18 @@ export class EarningsService {
     signatures: string[]
   ): Promise<void> {
     // map through stashAssets to update platformRecord
-    const typeCount = type + 'count'
-    const extractedSOLType = type + 'ExtractedSOL'
+    const typeCount = type + '-count'
+    const extractedSOLType = type + '-extractedSOL'
     console.log('all stats', typeCount, extractedSOLType, positionsCount, extractedSOL, platformFee, referralFee, signatures);
     const platformRecord: PlatformUsageRecord = {
       [typeCount]: positionsCount,
       [extractedSOLType]: extractedSOL,
       txn: signatures,
-      harvestCount: 0,
-      totalPlatformFeePaid: platformFee,
-      totalReferralFeePaid: referralFee
+      platformFeePaid: platformFee,
+      referralFeePaid: referralFee
     }
-
+    console.log('platformRecord', platformRecord);
+    
     try {
      
        await (await fetch(`${this._utils.serverlessAPI}/api/stash/user/store-platform-record`, {

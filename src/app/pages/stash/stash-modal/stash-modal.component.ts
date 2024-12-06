@@ -79,9 +79,6 @@ export class StashModalComponent implements OnInit {
     if (this.summary['SOL']) {
       this.summary['SOL'] = this.summary['SOL'] - this._helpersService.platformFeeInSOL()
     }
-
-
-    this.storeEarningPlatformRecord(['asca','34534'])
   }
   private async _fetchHubSOLRate() {
     const hubSOLmint = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'

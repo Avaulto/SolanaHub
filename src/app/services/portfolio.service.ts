@@ -126,13 +126,13 @@ export class PortfolioService {
     if (fetchType === 'partial') {
       this._portfolioStaking(walletAddress);
       this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-      this._portfolioNFT(tempNft?.data.assets);
+      this._portfolioNFT(walletAddress);
     } else {
       this._portfolioStaking(walletAddress);
       this._portfolioTokens(extendTokenData as any, tokenJupData as any);
       this._portfolioDeFi(excludeNFTv2, tokenJupData);
-      this._portfolioNFT(tempNft?.data.assets);
-      mergeDuplications.push(tempNft);
+      this._portfolioNFT(walletAddress);
+      // mergeDuplications.push(tempNft);
       this.walletAssets.set(mergeDuplications);
     }
   }
@@ -174,17 +174,22 @@ export class PortfolioService {
     }
   }
 
-  public async _portfolioNFT(nfts: NFT[]) {
+  public async _portfolioNFT(walletAddress: string) {
     try {
+      const getNfts = await fetch(`${this.restAPI}/api/portfolio/nft?address=${walletAddress}`)
+      const nfts = await getNfts.json()
       // loop through nfts and add logoURI from image_uri
-      const nftExtended = nfts?.map(nft => {
+      const nftExtended = nfts.data.assets?.map(nft => {
         return {
           ...nft,
           logoURI: nft.image_uri,
           address: nft.mint
         }
       })
+
       this.nfts.set(nftExtended);
+      // append nftExtended to walletAssets
+      this.walletAssets.update(assets => [...assets, nfts]);
     } catch (error) {
       console.error(error);
     }

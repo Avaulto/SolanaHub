@@ -21,12 +21,12 @@ export class ZeroValueAssetsService {
   private allZeroValueAssets: any[] = [];
 
   public findZeroValueAssets = computed(() => {
-    const NFTsOnly = this._helpersService.portfolioService.nfts();
-    const tokensOnly = this._helpersService.portfolioService.tokens();
+    // const NFTsOnly = this._helpersService.portfolioService.nfts();
+    // const tokensOnly = this._helpersService.portfolioService.tokens();
     const additionalAssets = this.zeroValueAssetsSignal();
 
-    if (!additionalAssets && !tokensOnly && !NFTsOnly) return null;
-    const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice();
+    if (!additionalAssets) return null;
+    // const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice();
     // console.log( tokens, additionalAssets);
     // const excludeNft = NFTs
     //   ?.filter(acc => acc.floorPrice > 0.001)
@@ -43,16 +43,16 @@ export class ZeroValueAssetsService {
         asset.type = 'value-deficient';
         return asset;
       })
-      .filter(asset => {
-        const existsInTokens = tokensOnly?.filter(token => token.address === asset.mint).filter(token => Number(token.value) > rentFeeInUSD);
+      // .filter(asset => {
+      //   // const existsInTokens = tokensOnly?.filter(token => token.address === asset.mint).filter(token => Number(token.value) > rentFeeInUSD);
 
-        const existsInNFTs = NFTsOnly?.filter(nft => nft.mint === asset.mint).filter(nft => nft.floorPrice > 0.001);
+      //   // const existsInNFTs = NFTsOnly?.filter(nft => nft.mint === asset.mint).filter(nft => nft.floorPrice > 0.001);
 
-        return existsInTokens || existsInNFTs
+      //   // return existsInTokens || existsInNFTs
 
-      }).filter(asset => (asset.name.includes('Orca Whirlpool Position') || asset.name.includes('Raydium Concentrated Liquidity'))
-        ? asset.balance > 0
-        : true)
+      // }).filter(asset => (asset.name.includes('Orca Whirlpool Position') || asset.name.includes('Raydium Concentrated Liquidity'))
+      //   ? asset.balance > 0
+      //   : true)
 
       .map(asset => this._helpersService.mapToStashAsset(asset, asset.type));
 
