@@ -71,14 +71,25 @@
         </div>
       </div>
     </div>
+    @if(stashAssets[0].type == 'value-deficient'){
+      <div class="ion-margin-bottom">
+        <alert type="danger" text="Not all tokens have visible market price, burn with caution" />
+        <ion-checkbox (ionChange)="burnWithCautionConfirmed = $event.detail.checked">I understand the risks</ion-checkbox>
+      </div>
+    }
     @if(stashAssets[0].type == 'dust-value'){
       <div class="ion-margin-bottom">
-        <alert type="danger" text="bulk swap may have price slippage or failed routes" />
+        <alert type="warning" text="Bulk swap may have price slippage or failed routes" />
+      </div>
+    }
+    @if(stashAssets[0].type == 'defi-position'){
+      <div class="ion-margin-bottom">
+        <alert type="focus" text="Balances from unclaimed fees not visible in the summary" />
       </div>
     }
     <div id="modal-controls">
       <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
-      <ion-button [disabled]="stashState() !== actionTitle" (click)="submit(stashAssets)">{{stashState()}}</ion-button>
+      <ion-button [disabled]="stashState() !== actionTitle " (click)="submit(stashAssets)">{{stashState()}}</ion-button>
     </div>
   </div>
 </div>

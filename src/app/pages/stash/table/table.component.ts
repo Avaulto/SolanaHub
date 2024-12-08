@@ -11,12 +11,14 @@ import { RangeBoxComponent } from './range-box/range-box.component';
 import { StashService } from '../stash.service';
 import { StashModalComponent } from '../stash-modal/stash-modal.component';
 import { UtilService } from 'src/app/services/util.service';
+import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 @Component({
   selector: 'stash-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   standalone: true,
   imports:[
+    TooltipModule,
     IonIcon,
     ChipComponent,
     IonRow,
@@ -56,21 +58,12 @@ export class TableComponent  implements OnChanges {
     private _util: UtilService
   ) { 
     addIcons({funnelOutline,arrowUpOutline});
-    effect(()=>{
-      // console.log(this.selectedData());
-      
-    })
   }
   public tableColumn = signal([])
   public tableData = signal([])
   public tempTableData = []
   public selectedData = signal<StashAsset[]>([])
-  ngOnInit(): void {
-
-  
-    
-  }
-
+  public resetCheckAll = false
   private createTableColumnConfig(assetTitle: string, accountOrPlatformTitle: string) {
     return [
       { key: 'select', width: '6%', cellTemplate: this.checkboxTpl, cssClass: { name: 'select-box', includeHeader: true } },
@@ -86,7 +79,7 @@ export class TableComponent  implements OnChanges {
     return title === 'Platform' ? this.platformIconTpl : this.accountTpl;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     const isZeroYieldZone = this.stash.label === 'zero yield zones';
     this.tableColumn.set(this.createTableColumnConfig(
       isZeroYieldZone ? 'Pool' : 'Asset',
@@ -97,8 +90,6 @@ export class TableComponent  implements OnChanges {
   }
 
   onSwapTohubSOLChange(ev){
-    console.log(ev);
-    
     this.swapTohubSOL = ev
   }
   @ViewChild('accordionGroup', { static: true }) accordionGroup: IonAccordionGroup;
@@ -121,7 +112,7 @@ export class TableComponent  implements OnChanges {
     if(data){
       this.portfolioShare = data
 
-      this._stashService.findDustValueTokensWithCustomShare(this.portfolioShare )
+      this._stashService.updateDustValueTokens(this.portfolioShare )
     }
   }
 
@@ -156,7 +147,9 @@ export class TableComponent  implements OnChanges {
 
   showUnknownSource(ev){
     this._stashService.getZeroValueAssetsByBalance(ev.detail.checked)
-    
+
+
+    this.resetCheckAll = !this.resetCheckAll
   }
 
   async openStashPopup(event: StashAsset[]) {

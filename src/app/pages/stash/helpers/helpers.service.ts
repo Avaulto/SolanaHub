@@ -14,6 +14,7 @@ export class HelpersService {
     public platformFee = 0.03
     public platformFeeInSOL = signal(0)
     public rentFee = 0.002039
+    public dasAssets = signal([])
     constructor(
         public shs: SolanaHelpersService,
         public txi: TxInterceptorService,
@@ -23,7 +24,27 @@ export class HelpersService {
         public earningsService: EarningsService
     ) {
         console.log('utils', this.utils.serverlessAPI);
+        // this.getDASAssets()
     }
+
+    public async getDASAssets() {
+        const { publicKey } = this.shs.getCurrentWallet()
+        try {
+          // const onlyEmptyAccounts = true
+          const unknownAssets =await (await fetch(`${this.utils.serverlessAPI}/api/stash/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
+          console.log('unknownAssets', unknownAssets);
+          // remove token with no symbol
+          // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
+          this.dasAssets.set(unknownAssets)
+          return unknownAssets
+        } catch (error) {
+          console.error('error', error);
+          return null
+        }
+      }
+
+      
+
     public createStashGroup = (
         label: string,
         description: string,

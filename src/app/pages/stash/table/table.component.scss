@@ -73,6 +73,11 @@
         span {
             color: var(--ion-light-gray);
             font-size: 12px;
+            display: flex;
+            gap: 4px;
+            ion-img {
+                cursor: pointer;
+            }
         }
     }
 }

@@ -9,41 +9,37 @@ import { TransactionInstruction } from '@solana/web3.js';
   providedIn: 'root'
 })
 export class DustValueTokensService {
-  private dustValueStashGroupSignal = signal(null);
+  private readonly dustValueStashGroupSignal = signal<StashGroup | null>(null);
 
-  constructor(
-    private _helpersService: HelpersService,
-  ) {
+  constructor(private readonly _helpersService: HelpersService) {
     effect(() => {
-      if (this._helpersService.portfolioService.tokens()) {
-        this.createAndUpdateDustValueTokens()
+      const assets = this._helpersService.dasAssets();
+      if (assets) {
+        this.updateDustValueTokens();
       }
-    }, { allowSignalWrites: true })
+    }, { allowSignalWrites: true });
   }
 
-  public findDustValueTokens = computed(() => {
-    const dustTokens = this.dustValueStashGroupSignal();
-    if (!dustTokens) return null;
-    console.log('dustTokens', dustTokens);
-    return dustTokens;
-  });
+  public readonly dustValueTokens = computed(() => this.dustValueStashGroupSignal());
 
-  public findDustValueTokensWithCustomShare = (portfolioShare: number) => {
-    this.dustValueStashGroupSignal.set(this.createAndUpdateDustValueTokens(portfolioShare));
+  public updateDustValueTokensWithShare(portfolioShare: number): void {
+    this.updateDustValueTokens(portfolioShare);
   }
 
+  private updateDustValueTokens(portfolioShare: number = 3): StashGroup | null {
+    const tokens = this._helpersService.dasAssets();
+    if (!tokens?.length) return null;
 
-
-  private createAndUpdateDustValueTokens(portfolioShare: number = 3) {
-    const tokens = this._helpersService.portfolioService.tokens();
-    if (!tokens) return null;
-
-    const totalTokensValue = tokens?.reduce((acc, curr) => acc + Number(curr.value), 0);
+    const totalTokensValue = tokens.reduce((acc, curr) => acc + Number(curr.value), 0);
     const maxDustValue = totalTokensValue * (portfolioShare / 100);
     const rentFeeUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice();
-    const filterDustValueTokens = tokens?.filter(token => Number(token.value) <= maxDustValue)
-      .filter(token => Number(token.value) > rentFeeUSD)
-      .filter(token => token.symbol !== 'SOL')
+
+    const filterDustValueTokens = tokens
+      .filter(token => 
+        Number(token.value) <= maxDustValue &&
+        Number(token.value) > rentFeeUSD &&
+        token.symbol !== 'SOL'
+      )
       .map((token, index) => this._helpersService.mapToStashAsset({ ...token, id: index }, 'dust'));
 
     const dustTokens = this._helpersService.createStashGroup(
@@ -56,7 +52,6 @@ export class DustValueTokensService {
     this.dustValueStashGroupSignal.set(dustTokens);
     return dustTokens;
   }
-
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
     console.log('tokens', tokens);

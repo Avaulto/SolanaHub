@@ -79,30 +79,37 @@ export class MultipliersMenuComponent implements OnInit {
     ],
     hubSOLBoosters: [
       {
+        img: 'assets/images/ll/save.png',
+        title: 'save',
+        pts: 2,
+        link: 'https://save.finance/dashboard',
+        badges: [{ strategy: 'lending', protocolBoosted: false, solanahubboosted: false }]
+      },
+      {
         img: 'assets/images/ll/nx-finance.svg',
         title: 'NX finance',
-        pts: 0,
+        pts: 'up to 10x',
         link: 'https://nxfinance.io/leverage/v2/hubSOL',
         badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: false }]
       },
       {
         img: 'assets/images/ll/loopscale.png',
         title: 'loopscale',
-        pts: 0,
+        pts: 'up to 4x',
         link: 'https://app.loopscale.com/earn',
         badges: [{ strategy: 'Multiply', protocolBoosted: false, solanahubboosted: false }]
       },
       {
         img: 'assets/images/ll/orca.svg',
         title: 'orca',
-        pts: 0,
+        pts: 1.5,
         link: 'https://www.orca.so/pools?tokens=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
         badges: [{ strategy: 'Liquidity pools', protocolBoosted: true, solanahubboosted: false }]
       },
       {
         img: 'assets/images/ll/kamino.svg',
         title: 'kamino',
-        pts: 0,
+        pts: 'up to 5x',
         link: 'https://app.kamino.finance',
         badges: [{ strategy: 'all products', protocolBoosted: false, solanahubboosted: true }]
 
@@ -110,7 +117,7 @@ export class MultipliersMenuComponent implements OnInit {
       {
         img: 'assets/images/ll/meteora.svg',
         title: 'meteora',
-        pts: 0,
+        pts: 1.5,
         link: 'https://app.meteora.ag',
         badges: [{ strategy: 'Liquidity pools', protocolBoosted: false, solanahubboosted: true }]
 
@@ -120,7 +127,7 @@ export class MultipliersMenuComponent implements OnInit {
       {
         img: 'assets/images/ll/raydium.svg',
         title: 'raydium',
-        pts: 0,
+        pts: 1.5,
         link: 'https://raydium.io/liquidity-pools/?token=HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
         badges: [{ strategy: 'Liquidity pools', protocolBoosted: false, solanahubboosted: false }]
 
@@ -129,24 +136,24 @@ export class MultipliersMenuComponent implements OnInit {
       {
         img: 'assets/images/ll/solayer.svg',
         title: 'solayer',
-        pts: 0,
+        pts: 1.2,
         link: 'https://app.solayer.org/dashboard',
         badges: [{ strategy: 'Restaking', protocolBoosted: false, solanahubboosted: false }]
 
       },
 
-      {
-        img: 'assets/images/ll/texture.svg',
-        title: 'texture',
-        pts: 0,
-        link: 'https://texture.finance/lendy/lend',
-        badges: [{ strategy: 'P2P Lending', protocolBoosted: false, solanahubboosted: false }]
-      },
+      // {
+      //   img: 'assets/images/ll/texture.svg',
+      //   title: 'texture',
+      //   pts: 0,
+      //   link: 'https://texture.finance/lendy/lend',
+      //   badges: [{ strategy: 'P2P Lending', protocolBoosted: false, solanahubboosted: false }]
+      // },
 
       {
         img: 'assets/images/ll/rainfi.svg',
         title: 'rainfi',
-        pts: 0,
+        pts: 1.2,
         link: 'https://rain.fi/swap/hubSOL-SOL',
         badges: [{ strategy: 'P2P Lending', protocolBoosted: false, solanahubboosted: false }]
       },
@@ -196,46 +203,8 @@ export class MultipliersMenuComponent implements OnInit {
           pts: fetchedMultipliers.veBLZE,
         }
       ],
-      hubSOLBoosters: [
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[0],
-          pts: "up to 10x" as any,
-        },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[1],
-          pts: "up to 4x" as any,
-        },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[2],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.orca / fetchedMultipliers.hubSOL,
-        },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[3],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.kamino / fetchedMultipliers.hubSOL,
-        },
- 
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[4],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.meteora / fetchedMultipliers.hubSOL,
-        },
-
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[5],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.raydium / fetchedMultipliers.hubSOL,
-        },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[6],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.solayer / fetchedMultipliers.hubSOL,
-        },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[7],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.texture / fetchedMultipliers.hubSOL,
-        },
-        {
-          ...this.defaultMultipliers.hubSOLBoosters[8],
-          pts: fetchedMultipliers.hubSOLDeFiBoost.rainfi / fetchedMultipliers.hubSOL,
-        },
-      ] // .sort((a: any, b: any) => b.pts - a.pts)
+      hubSOLBoosters: this.defaultMultipliers.hubSOLBoosters
+       // .sort((a: any, b: any) => b.pts - a.pts)
     };
   }
   dismissModal(event: any) {

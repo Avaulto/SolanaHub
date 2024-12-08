@@ -30,9 +30,9 @@ export class StashService {
   public withdrawStakeAccountExcessBalance = this._stakeOverflowService.withdrawStakeAccountExcessBalance.bind(this._stakeOverflowService)
 
   // dust value fn:
-  public findDustValueTokens = this._dustValueTokensService.findDustValueTokens.bind(this._dustValueTokensService)
+  public findDustValueTokens = this._dustValueTokensService.dustValueTokens.bind(this._dustValueTokensService)
+  public updateDustValueTokens = this._dustValueTokensService.updateDustValueTokensWithShare.bind(this._dustValueTokensService)
   public swapDustValueTokens = this._dustValueTokensService.bulkSwapDustValueTokens.bind(this._dustValueTokensService)
-  public findDustValueTokensWithCustomShare = this._dustValueTokensService.findDustValueTokensWithCustomShare.bind(this._dustValueTokensService)
 
   // out of range defi fn:
   public findOutOfRangeDeFiPositions = this._outOfRangeDeFiPositionsService.findOutOfRangeDeFiPositions

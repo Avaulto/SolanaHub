@@ -98,33 +98,34 @@ export class TxInterceptorService {
     }
   }
   public async sendMultipleTxn(
-    transactions: Transaction[] | VersionedTransaction[],
+    transactions: (Transaction | VersionedTransaction)[],
     extraSigners?: Keypair[] | Signer[],
     record?: { message: string, data?: {} },
   ): Promise<string[]> {
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
 
-    if (transactions[0] instanceof Transaction) {
-      Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
-    }
-    if (transactions[0] instanceof VersionedTransaction) {
-      console.log('versioned tx');
-      
-      const newTransactions: VersionedTransaction[] = transactions as VersionedTransaction[];
-      await Promise.all(transactions.map(async t => {
-        // get priority fee for each transaction
-        const priorityFeeEst = await this._getPriorityFeeEst(t)
-        const batchMessage = new TransactionMessage({
-          payerKey: this._shs.getCurrentWallet().publicKey,
-          recentBlockhash: blockhash,
-          instructions: [priorityFeeEst],
-        }).compileToV0Message();
-        newTransactions.push(new VersionedTransaction(batchMessage))
-      }));
-      transactions = newTransactions;
-    }
-    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[] | VersionedTransaction[];
-    if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
+    // Handle priority fees for each transaction based on its type
+    // const txWithPriorityFees = []
+    // await Promise.all(transactions.map(async t => {
+    //   const priorityFeeEst = await this._getPriorityFeeEst(t);
+    //   if (t instanceof Transaction) {
+    //         t.add(priorityFeeEst);
+    //         txWithPriorityFees.push(t)
+    //   } else if (t instanceof VersionedTransaction) {
+    //     // Get existing instructions from the versioned transaction
+    //     const batchMessage = new TransactionMessage({
+    //       payerKey: this._shs.getCurrentWallet().publicKey,
+    //       recentBlockhash: blockhash,
+    //       instructions: [priorityFeeEst],
+    //     }).compileToV0Message();
+    //     const txWithFee = new VersionedTransaction(batchMessage);
+    //     txWithPriorityFees.push(t, txWithFee)
+    //   }
+ 
+    // }));
+    // console.log('txWithPriorityFees', txWithPriorityFees);
+    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as (Transaction | VersionedTransaction)[];
+    if (extraSigners?.length > 0) signedTx.map(s => s instanceof Transaction ? s.partialSign(...extraSigners) : s)
 
     var signatures = [];
     var successfulSignatures = [];
@@ -240,12 +241,12 @@ export class TxInterceptorService {
   // }
 
   private async _getPriorityFeeEst(transaction: Transaction | VersionedTransaction) {
-    console.log('get tx fee');
+    console.log('get tx fee', transaction);
 
     // if transaction is array then return array of 
     // Extract all account keys from the transaction
     const accountKeys = transaction instanceof Transaction ? transaction.compileMessage().accountKeys : transaction.message.staticAccountKeys;
-
+    console.log('accountKeys', accountKeys);
     // Convert PublicKeys to base58 strings
     const publicKeys = accountKeys.map(key => key.toBase58());
 

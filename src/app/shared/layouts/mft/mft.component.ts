@@ -8,7 +8,9 @@ import {
   ViewChild,
   effect,
   signal,
-  computed
+  computed,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 
 import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
@@ -19,7 +21,7 @@ import { Platform } from '@ionic/angular';
   styleUrls: ['./mft.component.scss'],
 })
 // multi functional table
-export class MftComponent implements OnInit {
+export class MftComponent implements OnInit, OnChanges {
 
   @ViewChild('checkboxTemplate', { static: true }) checkboxTemplate: TemplateRef<any>;
 
@@ -34,6 +36,7 @@ export class MftComponent implements OnInit {
   @Input() tableData
   @Input() expandDetails: boolean = false
   @Input() class: string = ''
+  @Input() resetCheckAll = false
 
   @Input('searchBoxEnable') searchBoxEnable: boolean = false
   @Output() onData = new EventEmitter()
@@ -43,7 +46,12 @@ export class MftComponent implements OnInit {
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
-
+  @ViewChild('checkAll', {static: false}) checkAll//: IonCheckbox;
+ngOnChanges(changes: SimpleChanges): void {
+  if(changes['resetCheckAll'] && this.checkAll) {
+    this.checkAll.el.setChecked(false);
+  }
+}
   public tab = signal(this.tableMenuOptions[0])
 
   public tabSelected(tab: string) {
@@ -91,7 +99,6 @@ export class MftComponent implements OnInit {
   ngOnInit(): void {
     this.configuration.checkboxes = this.checkBox
     this.configuration.rows = this.tableRows;
-    this.configuration.checkboxes = this.checkBox;
     this.configuration.detailsTemplate = this.expandDetails
     if (this._platform.width() < 992) {
       this.configuration.horizontalScroll = true;
@@ -132,6 +139,10 @@ export class MftComponent implements OnInit {
       const { isLoading, paginationEnabled } = this.configurationState();
       this.configuration.isLoading = isLoading;
       this.configuration.paginationEnabled = paginationEnabled;
+      
+
+ 
+      
     });
   }
   
@@ -148,7 +159,10 @@ export class MftComponent implements OnInit {
   public selected = new Set();
 
   eventEmitted($event: { event: string; value: any }): void {
-    if (['onCheckboxSelect', 'onSelectAll'].includes($event.event)) {
+    console.log(this.checkAll, $event);
+    
+    const isReallyTrue = this.checkAll.el.checked
+    if (['onCheckboxSelect', 'onSelectAll'].includes($event.event) && isReallyTrue) {
     let data = $event.value;
     switch ($event.event) {
       // case 'onCheckboxSelect':

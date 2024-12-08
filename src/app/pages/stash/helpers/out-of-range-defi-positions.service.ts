@@ -107,7 +107,7 @@ export class OutOfRangeDeFiPositionsService {
       //     this.updateOutOfRangeDeFiPositions()
       //   }
       // })
-      const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')).instructions).flat()
+      const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
       console.log(txArray);
       return await this._helpersService._simulateBulkSendTx(txArray)
 

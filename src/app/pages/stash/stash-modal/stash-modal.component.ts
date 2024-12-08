@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import { StashAsset } from '../stash.model';
-import { IonLabel, IonText, IonImg, IonButton, IonSkeletonText } from '@ionic/angular/standalone';
+import { IonLabel, IonText, IonImg, IonButton, IonSkeletonText, IonCheckbox } from '@ionic/angular/standalone';
 import { KeyValuePipe } from '@angular/common';
 import { StashService } from '../stash.service';
 import { ModalController } from '@ionic/angular';
@@ -17,7 +17,7 @@ import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
   providers: [
 
   ],
-  imports: [
+  imports: [IonCheckbox, 
     AlertComponent,
     IonSkeletonText,
     IonButton,
@@ -31,6 +31,7 @@ export class StashModalComponent implements OnInit {
   @Input() stashAssets: StashAsset[] = [];
   @Input() actionTitle: string = ''
   @Input() swapTohubSOL: boolean = false;
+  public burnWithCautionConfirmed = null
   constructor(
     private _stashService: StashService,
     private _helpersService: HelpersService,
@@ -47,6 +48,9 @@ export class StashModalComponent implements OnInit {
   public stashState = signal('')
   public hubSOLRate = null
   ngOnInit() {
+    if(this.stashAssets[0].type == 'value-deficient'){
+      this.burnWithCautionConfirmed = false
+    }
     if (this.swapTohubSOL) {
       this._fetchHubSOLRate()
     }
