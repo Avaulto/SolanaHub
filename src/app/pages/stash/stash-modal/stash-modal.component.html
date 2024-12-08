@@ -55,8 +55,11 @@
           <div class="item-id">get from cleaning up</div>
           <div class="items-wrapper">
             @if(swapTohubSOL){
-
-              <div class="item-value">{{utils.fixedNumber(summary['SOL'] / hubSOLRate)}} hubSOL</div>
+              @if(hubSOLRate){
+                <div class="item-value">{{utils.fixedNumber(summary['SOL'] / hubSOLRate)}} hubSOL</div>
+              }@else{
+                <ion-skeleton-text style="width: 30px;" animated></ion-skeleton-text> hubSOL
+              }
             }@else{
               @for (item of summary | keyvalue; track $index) {
 

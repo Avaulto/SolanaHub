@@ -32,7 +32,8 @@ export class DustValueTokensService {
 
     const totalTokensValue = tokens.reduce((acc, curr) => acc + Number(curr.value), 0);
     const maxDustValue = totalTokensValue * (portfolioShare / 100);
-    const rentFeeUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice();
+    const buffer = 1.5
+    const rentFeeUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice() * buffer;
 
     const filterDustValueTokens = tokens
       .filter(token => 

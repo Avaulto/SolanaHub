@@ -26,7 +26,8 @@ export class ZeroValueAssetsService {
     const additionalAssets = this.zeroValueAssetsSignal();
 
     if (!additionalAssets) return null;
-    const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice();
+    const buffer = 1.5
+    const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice() * buffer;
     // console.log( tokens, additionalAssets);
     // const excludeNft = NFTs
     //   ?.filter(acc => acc.floorPrice > 0.001)
