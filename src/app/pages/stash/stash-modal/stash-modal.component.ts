@@ -145,7 +145,7 @@ export class StashModalComponent implements OnInit {
   dataToReload(data: string) {
     switch (data) {
       case 'value-deficient':
-        this._stashService.updateZeroValueAssets()
+        this._stashService.updateZeroValueAssets(true)
         break
         // already gets updated after tx submitted in fetchPortfolio call under txi service
       case 'dust-value':

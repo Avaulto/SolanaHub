@@ -88,7 +88,10 @@ export class ZeroValueAssetsService {
 
 
 
-  async updateZeroValueAssets() {
+  async updateZeroValueAssets(forceDelay: boolean = false) {
+    console.time('updateZeroValueAssets');
+    if(forceDelay) await this._helpersService.utils.sleep(5000)
+    console.timeEnd('updateZeroValueAssets');
     const zeroValueAssets = await this._helpersService.getDASAssets();
 
     if (zeroValueAssets) {

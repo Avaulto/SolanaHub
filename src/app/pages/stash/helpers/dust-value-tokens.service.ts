@@ -45,7 +45,7 @@ export class DustValueTokensService {
 
     const dustTokens = this._helpersService.createStashGroup(
       'dust value',
-      "tokens worth less than 5% of your portfolio's total value.",
+      "Tokens value with up to 5% of your portfolio's total value.",
       "swap",
       filterDustValueTokens
     );

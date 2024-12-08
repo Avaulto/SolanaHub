@@ -77,7 +77,7 @@
     @if(stashAssets[0].type == 'value-deficient'){
       <div class="ion-margin-bottom">
         <alert type="danger" text="Not all tokens have visible market price, burn with caution" />
-        <ion-checkbox (ionChange)="burnWithCautionConfirmed = $event.detail.checked">I understand the risks</ion-checkbox>
+        <!-- <ion-checkbox (ionChange)="burnWithCautionConfirmed = $event.detail.checked">I understand the risks</ion-checkbox> -->
       </div>
     }
     @if(stashAssets[0].type == 'dust-value'){
