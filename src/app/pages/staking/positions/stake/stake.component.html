@@ -4,7 +4,7 @@
     <div class="validator-profile">
       @if(stake){
         
-      <ion-img [src]="stake?.imgUrl || 'assets/images/unknown.svg'" />
+      <ion-img [src]="stake?.logoURI || 'assets/images/unknown.svg'" />
       }@else{
       <ion-skeleton-text animated />
       }

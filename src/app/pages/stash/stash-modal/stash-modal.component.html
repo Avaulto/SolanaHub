@@ -6,7 +6,7 @@
       </div>
 
       <div id="title">Stash summary</div>
-      <div id="desc">You can clean up your stash by burning your stashs</div>
+      <div id="desc">You can clean up your stash by cleaning up your wallet</div>
     </div>
 
     <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
@@ -22,16 +22,23 @@
       <!-- <stash-modal-item [stash]="stash"/> -->
       <div class="stash-item">
         <div class="stash-profile">
-          <ion-img [src]="item.platformImgUrl || item.imgUrl" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
+          <ion-img [src]="item.platformLogoURI || item.logoURI" #img (ionError)="img.src = 'assets/images/unknown.svg'" />
           <div>
             <ion-label>{{item.name}}</ion-label>
             <ion-text>{{item.symbol}}</ion-text>
           </div>
         </div>
-        @if (item.balance > 0) {
+        
         <div class="floor-price">
-          {{item.balance | number:'1.2-2'}} {{item.symbol}}</div>
-        }
+          @if(item.type === 'defi-position'){
+            @for (balance of item.extractedValue | keyvalue; track $index) {{{ $index === 1 ? '-' : '' }}{{utils.fixedNumber(balance.value || 0)}}}
+            
+          }
+          @else{
+            {{utils.fixedNumber(item?.balance || 0)}} {{item.symbol}}
+          }
+        </div>
+        
       </div>
       }
     </div>
@@ -39,6 +46,7 @@
     <div id="burn-summary">
       <ion-label>Cleanup summary</ion-label>
       <div id="burn-calc">
+  
         <div class="item">
           <div class="item-id">items selected</div>
           <div class="item-value">{{stashAssets.length}}</div>
@@ -46,22 +54,45 @@
         <div class="item">
           <div class="item-id">get from cleaning up</div>
           <div class="items-wrapper">
-          @for (item of summary | keyvalue; track $index) {
+            @if(swapTohubSOL){
+              @if(hubSOLRate){
+                <div class="item-value">{{utils.fixedNumber(summary['SOL'] / hubSOLRate)}} hubSOL</div>
+              }@else{
+                <ion-skeleton-text style="width: 30px;" animated></ion-skeleton-text> hubSOL
+              }
+            }@else{
+              @for (item of summary | keyvalue; track $index) {
 
-          <div class="item-value">{{item.value}} {{item.key}}</div>
-          }
+              <div class="item-value">{{utils.fixedNumber(item.value)}} {{item.key}}</div>
+              }
+            }
           </div>
         </div>
         <div class="item">
           <div class="item-id">platform fee</div>
-          <div class="item-value">{{platformFee}} SOL</div>
+          <div class="item-value">{{utils.fixedNumber(platformFeeInSOL())}} SOL</div>
         </div>
       </div>
     </div>
-
+    @if(stashAssets[0].type == 'value-deficient'){
+      <div class="ion-margin-bottom">
+        <alert type="danger" text="Not all tokens have visible market price, burn with caution" />
+        <!-- <ion-checkbox (ionChange)="burnWithCautionConfirmed = $event.detail.checked">I understand the risks</ion-checkbox> -->
+      </div>
+    }
+    @if(stashAssets[0].type == 'dust-value'){
+      <div class="ion-margin-bottom">
+        <alert type="warning" text="Bulk swap may have price slippage or failed routes" />
+      </div>
+    }
+    @if(stashAssets[0].type == 'defi-position'){
+      <div class="ion-margin-bottom">
+        <alert type="focus" text="Balances from unclaimed fees not visible in the summary" />
+      </div>
+    }
     <div id="modal-controls">
       <!-- <ion-button (click)="closeModal()" fill="clear">cancel</ion-button> -->
-      <ion-button [disabled]="stashState() !== actionTitle" (click)="submit(stashAssets)">{{stashState()}}</ion-button>
+      <ion-button [disabled]="stashState() !== actionTitle " (click)="submit(stashAssets)">{{stashState()}}</ion-button>
     </div>
   </div>
 </div>

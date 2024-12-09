@@ -31,26 +31,26 @@ export class NftPreviewComponent  implements OnInit {
   async openModal(componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal') {
     this._modalCtrl.dismiss()
     let config = {
-      imgUrl: null,
+      logoURI: null,
       title: null,
       desc: null,
       btnText: null
     }
     switch (componentName) {
       case 'list-nft-modal':
-        config.imgUrl = 'assets/images/list-icon.svg'
+        config.logoURI = 'assets/images/list-icon.svg'
         config.title = 'List'
         config.desc = 'List your NFT directly in your favorite market place'
         config.btnText = 'List now'
         break;
       case 'send-nft-modal':
-        config.imgUrl = 'assets/images/send-icon.svg'
+        config.logoURI = 'assets/images/send-icon.svg'
         config.title = `Send`
         config.desc = `Send your NFT to a different wallet`
         config.btnText = `Send`
         break;
       // case 'burn-nft-modal':
-      //   config.imgUrl = 'assets/images/trash-icon.svg'
+      //   config.logoURI = 'assets/images/trash-icon.svg'
       //   config.title = 'Burn'
       //   config.desc = `Burn your NFT forever`
       //   config.btnText = `Burn`

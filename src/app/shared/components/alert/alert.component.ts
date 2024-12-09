@@ -5,7 +5,7 @@ import {
   IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {  alertCircleOutline } from 'ionicons/icons';
+import { alertCircleOutline } from 'ionicons/icons';
 @Component({
   selector: 'alert',
   template: `
@@ -28,9 +28,9 @@ import {  alertCircleOutline } from 'ionicons/icons';
 })
 export class AlertComponent implements OnInit {
   @Input() text: string;
-  @Input() type: 'regular' | 'warning' | 'danger'
-  constructor() { 
-    addIcons({alertCircleOutline})
+  @Input() type: 'regular' | 'focus' | 'warning' | 'danger'
+  constructor() {
+    addIcons({ alertCircleOutline })
   }
 
   ngOnInit() { }

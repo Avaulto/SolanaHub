@@ -4,7 +4,7 @@ export interface DappMessageExtended {
   text: string;
   name: string;
   type: string;
-  imgURL: string;
+  logoURI: string;
   timestamp: Date;
   author: AccountAddress;
   icon?: string;

@@ -22,7 +22,7 @@ export class ReferAFriendModalComponent implements AfterViewInit {
   public baseReferralLink = 'solanahub.app/staking?refCode='
   public blinkLink = 'https://twitter.com/intent/tweet?text=https://dial.to/?action=solana-action:https://blinks.solanahub.app/api/actions/stake-with-friends?ref='
   ngAfterViewInit() {
-    this.baseReferralLink += this.refCode
+    this.baseReferralLink += this.refCode + '&path=LST'
     this.blinkLink += this.refCode
     va.track('loyalty league', { event: 'refer a friend open' })
   } 

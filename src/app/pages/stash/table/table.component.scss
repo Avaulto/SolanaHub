@@ -1,10 +1,26 @@
-:host{
+:host {
     overflow: hidden;
     border-radius: 8px;
 }
+
+#range-btn {
+    border: 1px solid lightgray;
+    color: var(--ion-color-dark);
+    text-transform: capitalize;
+    font-size: 13px;
+    font-weight: 600;
+    span {
+        margin-inline-end: 4px;
+        margin-inline-start: 6px;
+    }
+}
+
 .table-head {
     width: 100%;
-
+    p{
+        color: var(--ion-color-primary);
+        font-size: 13px;
+    }
     ion-label {
         color: var(--ion-color-text-2);
         font-size: 18px;
@@ -45,19 +61,27 @@
         line-height: 100%;
         /* 13px */
     }
+
     ion-toggle {
         margin-inline-end: 8px;
 
     }
-    
+
     #toggle-swap {
         display: flex;
+
         span {
             color: var(--ion-light-gray);
             font-size: 12px;
+            display: flex;
+            gap: 4px;
+            ion-img {
+                cursor: pointer;
+            }
         }
     }
 }
+
 #toggle-btn {
     --box-shadow: 0;
     --color: #9AA4B2;
@@ -66,19 +90,153 @@
     top: 0;
     --background-focused: transparent;
     --background-hover: transparent;
-    ion-icon{
+
+    ion-icon {
         transition: 0.3s ease;
     }
-    .flipArrow{
+
+    .flipArrow {
         transform: rotate(180deg);
-        
+
     }
 }
-
-#action-btn{
-    margin-right: 26px;
+#action-btn-wrapper{
+    display: flex; 
+    align-items: center; 
+    gap: 16px;    
+    margin-inline-end: 25px;
+}
+#action-btn {
+    span {
+        margin-inline-start: 6px;
+    }
 }
 
 ion-accordion {
     background: var(--ion-color-light);
+}
+
+
+
+
+
+// tokens style
+.item {
+    display: flex;
+    align-items: center;
+
+}
+
+.platform-icon-wrapper {
+
+    ion-img {
+        width: 30px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+}
+
+.item-img-wrapper {
+    margin-inline-end: 12px;
+    display: flex;
+    ion-img {
+        margin-inline-end: 4px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+}
+
+.item-info {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.item-bold {
+    color: var(--ion-color-dark);
+    /* Text sm/Medium */
+
+    font-size: 14px;
+
+    font-weight: 500;
+    line-height: 20px;
+    /* 142.857% */
+}
+
+.item-light {
+    color: var(--ion-color-medium);
+
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    /* 166.667% */
+}
+
+.account-info {
+    display: flex;
+    align-items: center;
+
+    ion-img {
+        margin-inline-start: 4px;
+    }
+}
+
+.source-type{
+    ion-chip {
+        font-size: 11px;
+        font-weight: 500;
+        border-radius: var(--radius-full, 1000px);
+        border: 1px solid #D5D9EB;
+        background: #F8F9FC;
+        margin: 0;
+        &.primary {
+            border: 1px solid #FDD1EE;
+            background: var(--ion-color-btn-bg);;
+            color: var(--ion-color-primary);
+        }
+    
+    
+        &.green {
+            border: 1px solid  #ABEFC6;
+            background:  #ECFDF3;
+            color: var(--ion-color-success);
+        }
+    
+        &.blue {
+            border: 1px solid #B2DDFF;
+            background: #EFF8FF;
+            color: rgba(23, 92, 211, 1);
+        }
+    }
+}
+ion-button.close-single {
+    --box-shadow: none;
+    --color: var(--ion-color-dark);
+}
+.sol-value{
+    color: var(--ion-color-medium);
+    font-size: 13px;
+    line-height: 18px;
+}
+.usd-value{
+    color: var(--ion-color-dark);
+    font-size: 13px;
+    line-height: 18px;
+}
+
+:host ::ng-deep {
+    .ngx-table__table--normal > tbody > tr > td, .ngx-table__table--normal > thead > tr > th{
+        text-align: center;
+    }
+    .ngx-form-checkbox input:checked + .ngx-form-icon{
+        background-color: var(--ion-color-primary);
+        border-color: transparent;
+}
+    table tbody > tr > td:first-child{
+        text-align: center;
+        padding-inline-start: 0 !important;
+    }
 }

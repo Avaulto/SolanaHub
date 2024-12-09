@@ -34,12 +34,11 @@ export class OptionsPopoverComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.stake);
-    
+
   }
   private  async openValidatorModal(btnText: string) {
     let config = {
-      imgUrl:'assets/images/validators-icon.svg',
+      logoURI:'assets/images/validators-icon.svg',
       title :'Select Validator',
       desc : 'Pick the right validator for you',
       btnText
@@ -110,44 +109,44 @@ export class OptionsPopoverComponent implements OnInit {
   }
   async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'unstake-lst-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {
     let config = {
-      imgUrl: null,
+      logoURI: null,
       title: null,
       desc: null,
       btnText: null
     }
     switch (componentName) {
       case 'delegate-lst-modal':
-        config.imgUrl = 'assets/images/droplets-icon.svg'
+        config.logoURI = 'assets/images/droplets-icon.svg'
         config.title = 'liquid staking'
         config.desc = 'Turn your stake account into a liquid stake token'
         config.btnText = 'delegate now'
         break;
       case 'instant-unstake-modal':
-        config.imgUrl = 'assets/images/bolt-icon.svg'
+        config.logoURI = 'assets/images/bolt-icon.svg'
         config.title = 'Instantly unstake your SOL'
         config.desc = 'Instantly unstake your SOL power by sanctum'
         config.btnText = 'unstake now'
         break;
       case 'merge-modal':
-        config.imgUrl = 'assets/images/merge-icon.svg'
+        config.logoURI = 'assets/images/merge-icon.svg'
         config.title = 'merge your accounts'
         config.desc = 'you can merge only accounts with the same validator and status'
         config.btnText = 'merge selected accounts'
         break;
       case 'split-modal':
-        config.imgUrl = 'assets/images/split-icon.svg'
+        config.logoURI = 'assets/images/split-icon.svg'
         config.title = 'Split account'
         config.desc = 'you can split your accounts into 2 separate accounts'
         config.btnText = 'split stake account'
         break;
         case 'unstake-lst-modal':
-          config.imgUrl = 'assets/images/hourglass-icon.svg'
+          config.logoURI = 'assets/images/hourglass-icon.svg'
           config.title = 'unstake liquid SOL'
           config.desc = 'remove your SOL from the liquid stake pool'
           config.btnText = 'delayed unstake'
           break;
       case 'transfer-auth-modal':
-        config.imgUrl = 'assets/images/transfer-auth-icon.svg'
+        config.logoURI = 'assets/images/transfer-auth-icon.svg'
         config.title = 'transfer account authority'
         config.desc = 'transfer your stake or withdraw authority to a new wallet'
         config.btnText = 'transfer authorization'

@@ -9,7 +9,16 @@ export interface WalletExtended {
   publicKey: PublicKey,
   signMessage(message: Uint8Array): Observable<Uint8Array> | undefined;
   signTransaction: (transaction: Transaction | VersionedTransaction) => Promise<Transaction | VersionedTransaction>,
-  signAllTransactions: (transactions: Transaction[]) => Promise<Transaction[]>
+  signAllTransactions: (transactions: (Transaction | VersionedTransaction)[]) => Promise<(Transaction | VersionedTransaction)[]>
+}
+export interface Token extends JupToken {
+  type?: string,
+  networkId?: string,
+  logoURI: string,
+  value?: string,
+  price?: number
+  amount?: string
+  extraData?: any
 }
 
 export interface WalletEntry {
@@ -28,24 +37,14 @@ export interface WalletPortfolio {
   enabled: boolean,
 }
 
-
-export interface Token extends JupToken{
-    type?: string,
-    networkId?: string,
-    imgUrl?: string,
-    value?: number,
-    price?: number
-    amount?: string
-    extraData?: any
-}
-export interface NFT{
+export interface NFT {
   collectionMagicEdenStatSymbol?: string
   listStatus: string
   name: string
   symbol: string
   royalty: number
   image_uri: string
-  imgUrl: string
+  logoURI: string
   cached_image_uri: string
   animation_url: string
   cached_animation_url: string
@@ -160,15 +159,15 @@ export interface NFT{
 //   networkId: string
 //   value: any
 // }
-export interface LiquidityProviding{
-    token: Token[]
-    platform: string,
-    apy: string
+export interface LiquidityProviding {
+  token: Token[]
+  platform: string,
+  apy: string
 }
-export interface LendingOrBorrow{
-    token: Token[]
-    platform: string,
-    apy: string
+export interface LendingOrBorrow {
+  token: Token[]
+  platform: string,
+  apy: string
 }
 
 export interface Stake {
@@ -184,7 +183,7 @@ export interface Stake {
   withdrawAuth?: string
   delegatedLamport?: number,
   validator?: Validator
-  imgUrl?: string,
+  logoURI?: string,
   apy?: number,
   pool?: StakePool
   address: string
@@ -199,58 +198,58 @@ export interface Stake {
   link?: string
 }
 
-export interface TransactionHistory{
-    txHash: string
-    timestamp: string
-    from: string
-    to: string
-    fee: number
-    mainAction: string
-    mainActionColor?: string
-    balanceChange: BalanceChange[]
-    contractLabel?: ContractLabel;
-    case: string;
-  }
+export interface TransactionHistory {
+  txHash: string
+  timestamp: string
+  from: string
+  to: string
+  fee: number
+  mainAction: string
+  mainActionColor?: string
+  balanceChange: BalanceChange[]
+  contractLabel?: ContractLabel;
+  case: string;
+}
 
 export interface BalanceChange {
-    type: 'in' | 'out',
-    amount: number
-    symbol?: string
-    name?: string
-    decimals: number
-    address: string
-    logoURI?: string
-    tokenAccount?: string
-    owner?: string
-    programId?: string
-  }
+  type: 'in' | 'out',
+  amount: number
+  symbol?: string
+  name?: string
+  decimals: number
+  address: string
+  logoURI?: string
+  tokenAccount?: string
+  owner?: string
+  programId?: string
+}
 
 export interface ContractLabel {
-    address: string
-    name: string
-    metadata: Metadata
-  }
+  address: string
+  name: string
+  metadata: Metadata
+}
 
 export interface Metadata {
-    icon: string
-  }
+  icon: string
+}
 
 export interface defiHolding {
-    tags?: string[];
-    poolTokens: PoolToken[];
-    platform?:  string;
-    imgURL:     string;
-    type:       string;
-    value:      number;
-      link:       string;
-      holdings: holding[]
-  }
+  tags?: string[];
+  poolTokens: PoolToken[];
+  platform?: string;
+  logoURI: string;
+  type: string;
+  value: number;
+  link: string;
+  holdings: holding[]
+}
 
 export interface PoolToken {
-    imgURL: string;
-    symbol: string;
-    decimals?: number;
-    address:string;
+  logoURI: string;
+  symbol: string;
+  decimals?: number;
+  address: string;
 }
 export interface holding {
   balance: string;
@@ -258,13 +257,13 @@ export interface holding {
 }
 
 
-  export interface Platform {
-    id: string
-    name: string
-    description: string
-    image: string
-    discord: string
-    twitter: string
-    website: string
-    medium: string
-  }
+export interface Platform {
+  id: string
+  name: string
+  description: string
+  image: string
+  discord: string
+  twitter: string
+  website: string
+  medium: string
+}

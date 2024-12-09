@@ -22,6 +22,15 @@
         background: #f790090f;
         color: var(--ion-color-warning);
     }
+    &.focus{
+        border: 1px solid  #B2DDFF;
+        background: #EFF8FF;
+        color: #175CD3;
+
+        // border-color: #f7900912;
+        // background: #f790090f;
+        // color: var(--ion-color-focus);
+    }
     ion-icon {
         width: 18px;
         height: 18px;

@@ -42,7 +42,12 @@
     }
 
 }
-
+.items-wrapper {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    text-transform: initial;
+}
 #stashs-list {
     height: 200px;
     overflow: auto;

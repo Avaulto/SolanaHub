@@ -52,7 +52,7 @@ export class SelectValidatorComponent {
 
   async openValidatorModal() {
     let config = {
-      imgUrl:'assets/images/validators-icon.svg',
+      logoURI:'assets/images/validators-icon.svg',
       title :'Select Validator',
       desc : 'Pick the right validator for you',
       btnText: 'select validator'

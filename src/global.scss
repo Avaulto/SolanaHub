@@ -192,6 +192,14 @@ ion-spinner {
     --background: white;
     overflow: auto;
 }
+.faq-modal {
+
+    --height: fit-content;
+    overflow: auto;
+}
+.range-popover{
+    --width: 260px;
+}
 .modal-style {
     --width: 540px;
     --border-radius: 12px;
@@ -244,6 +252,13 @@ ion-spinner {
     --width: 340px;
     --height: 300px;
     --border-radius: 12px;
+}
+.stash-earn-modal{
+    --width: 550px;
+    --height: auto;
+    --max-width: 95%;
+    --border-radius: 12px;
+    --background: white;
 }
 .refer-a-friend-modal{
     --width: 550px;

@@ -28,15 +28,12 @@
   </label>
 </ng-template> -->
 <ng-template #selectAllTemplate let-changeEvent>
-
-  <ion-checkbox mode="md" (ionChange)="changeEvent($event)" />
-
+  <ion-checkbox mode="md" (ionChange)="changeEvent($event)" #checkAll />
 </ng-template>
-<ng-template #checkboxTemplate let-row let-changeEvent="changeEvent">
-  <ion-checkbox (ionChange)="changeEvent($event)" [checked]="row.checked" />
-</ng-template>
+
 <div id="table-wrapper">
   <ngx-table #table 
+    [class]="class"
     [id]="tableId"
     (event)="eventEmitted($event)" 
     [configuration]="configuration" 

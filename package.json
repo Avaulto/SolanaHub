@@ -45,7 +45,7 @@
     "@solana/web3.js": "1.95.3",
     "@sonarwatch/portfolio-core": "^0.8.115",
     "@vercel/analytics": "^1.2.2",
-    "chart.js": "^4.4.0",
+    "chart.js": "^4.4.6",
     "ionicons": "^7.2.1",
     "lottie-web": "^5.12.2",
     "ngx-easy-table": "^15.5.0",

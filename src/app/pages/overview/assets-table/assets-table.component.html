@@ -52,7 +52,7 @@
 <ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.imgUrl" #img (ionError)="img.src = 'assets/images/unknown.svg'" alt="image" />
+      <ion-img [src]="row.logoURI" #img (ionError)="img.src = 'assets/images/unknown.svg'" alt="image" />
     </div>
     <div class="item-info">
       @if (!row.status) {
@@ -124,7 +124,7 @@
 
     <div class="pool-img-wrapper">
       @for (item of row.poolTokens; track $index) {
-      <ion-img [src]="item.imgURL" alt="image" />
+      <ion-img [src]="item.logoURI" alt="image" />
       }
     </div>
     <div class="pool-symbol-wrapper">
@@ -139,7 +139,7 @@
 
 <ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="platform-icon-wrapper ion-text-center">
-    <ion-img [src]="row.imgURL" alt="platform icon"></ion-img>
+    <ion-img [src]="row.logoURI" alt="platform icon"></ion-img>
   </div>
 </ng-template>
 <ng-template #balanceTpl let-row let-rowIndex="rowIndex" let-column="column">

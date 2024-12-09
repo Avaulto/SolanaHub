@@ -22,6 +22,7 @@ import { PositionsComponent } from './positions/positions.component';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 import { MenuComponent } from 'src/app/shared/components/menu/menu.component';
+import { ActivatedRoute } from '@angular/router';
 interface ValidatorsStats {
   numberOfValidators: number,
   clusterAPY: number,
@@ -65,23 +66,23 @@ export class StakingPage implements OnInit {
     this.validatorsData = [
    
       {
-        imgURL: 'assets/images/coins-icon.svg',
+        logoURI: 'assets/images/coins-icon.svg',
         title: 'Cluster APY',
         desc: data.avgAPY + '%',
       },
       {
-        imgURL: 'assets/images/stake-icon.svg',
+        logoURI: 'assets/images/stake-icon.svg',
         title: 'Total SOL staked',
         //@ts-ignore
         desc: this._util.formatBigNumbers(data.totalStake.activeStake),
       },
       {
-        imgURL: 'assets/images/validators-icon.svg',
+        logoURI: 'assets/images/validators-icon.svg',
         title: 'Validators',
         desc: this._util.decimalPipe.transform(data.validatorsList.length),
       },
       {
-        imgURL: 'assets/images/hourglass-icon.svg',
+        logoURI: 'assets/images/hourglass-icon.svg',
         title: 'EPOCH ' + data.epochInfo.epoch,
         desc: data.epochInfo.ETA,
         extraData: data.epochInfo
@@ -92,22 +93,22 @@ export class StakingPage implements OnInit {
 
   public validatorsData: any = [
     {
-      imgURL: 'assets/images/validators-icon.svg',
+      logoURI: 'assets/images/validators-icon.svg',
       title: 'Validators',
       desc: ''
     },
     {
-      imgURL: 'assets/images/coins-icon.svg',
+      logoURI: 'assets/images/coins-icon.svg',
       title: 'Cluster APY',
       desc: ''
     },
     {
-      imgURL: 'assets/images/hourglass-icon.svg',
+      logoURI: 'assets/images/hourglass-icon.svg',
       title: 'EPOCH ',
       desc: ''
     },
     {
-      imgURL: 'assets/images/stake-icon.svg',
+      logoURI: 'assets/images/stake-icon.svg',
       title: 'Total SOL staked',
       desc: ''
     }
@@ -116,11 +117,14 @@ export class StakingPage implements OnInit {
     private _shs: SolanaHelpersService, 
     private _util: UtilService,
     private _jupStore:JupStoreService,
-    private _lss: LiquidStakeService
+    private _lss: LiquidStakeService,
+
     ) { }
   public solPrice = this._jupStore.solPrice;
   public stakePools = signal([])
+  
   ngOnInit() {
+
     this._validatorsData$.pipe(take(1)).subscribe()
     this._lss.getStakePoolList().then(pl => this.stakePools.set(pl));
   }

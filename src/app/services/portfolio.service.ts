@@ -76,7 +76,6 @@ export class PortfolioService {
 
   public privateMode: BehaviorSubject<boolean> = new BehaviorSubject(false)
   readonly restAPI = this._utils.serverlessAPI
-
   constructor(
     private _navCtrl: NavController,
     private _utils: UtilService,
@@ -87,6 +86,7 @@ export class PortfolioService {
     private _fetchPortfolioService: PortfolioFetchService,
     private _watchModeService: WatchModeService
   ) {
+    this.getPlatformsData()
     this._shs.walletExtended$.subscribe(this.handleWalletChange.bind(this));
   }
 
@@ -232,7 +232,6 @@ export class PortfolioService {
     return this.portfolioMap().has(address)
   }
 
-  // TODO:
   private async waitForTurnStileToken() {
     while (!this._utils.turnStileToken) {
       await this._utils.sleep(500);
@@ -275,15 +274,15 @@ export class PortfolioService {
     return data;
   }
 
-  // private savePortfolioData(portfolioData: any) {
-  //   const storageCap = 4073741824; // 5 MiB
-  //   if (this._utils.memorySizeOf(portfolioData) < storageCap) {
-  //     this._sessionStorageService.saveData('portfolioData', JSON.stringify({
-  //       portfolioData,
-  //       lastSave: Math.floor(Date.now() / 1000)
-  //     }));
-  //   }
-  // }
+  private savePortfolioData(portfolioData: any) {
+    const storageCap = 4073741824; // 5 MiB
+    if (this._utils.memorySizeOf(portfolioData) < storageCap) {
+      this._sessionStorageService.saveData('portfolioData', JSON.stringify({
+        portfolioData,
+        lastSave: Math.floor(Date.now() / 1000)
+      }));
+    }
+  }
 
   private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full') {
     const tempNft = portfolioData.elements.find(group => group.platformId === WalletDataKeys.NFT_V2);
@@ -292,13 +291,13 @@ export class PortfolioService {
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-    await this._portfolioStaking(walletAddress);
-    await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-    await this._portfolioNFT(tempNft?.data.assets);
+    this._portfolioStaking(walletAddress);
+    this._portfolioTokens(extendTokenData as any, tokenJupData as any);
+    this._portfolioNFT(walletAddress);
 
     if (fetchType !== 'partial') {
-      await this._portfolioDeFi(excludeNFTv2, tokenJupData);
-      mergeDuplications.push(tempNft);
+      this._portfolioDeFi(excludeNFTv2, tokenJupData);
+     // mergeDuplications.push(tempNft);
       this.walletAssets.set(mergeDuplications);
       this.netWorth.set(portfolioData.value);
     }
@@ -344,22 +343,25 @@ export class PortfolioService {
     }
   }
 
-  public async _portfolioNFT(nfts: NFT[]) {
+  public async _portfolioNFT(walletAddress: string) {
     try {
-      // loop through nfts and add imgUrl from image_uri
-      const nftExtended = nfts.map(nft => {
+      const getNfts = await fetch(`${this.restAPI}/api/portfolio/nft?address=${walletAddress}`)
+      const nfts = await getNfts.json()
+      // loop through nfts and add logoURI from image_uri
+      const nftExtended = nfts.data.assets?.map(nft => {
         return {
           ...nft,
-          imgUrl: nft.image_uri,
+          logoURI: nft.image_uri,
           address: nft.mint
         }
       })
+
       this.nfts.set(nftExtended);
+      // append nftExtended to walletAssets
+      this.walletAssets.update(assets => [...assets, nfts]);
     } catch (error) {
       console.error(error);
-
     }
-
   }
 
   private _platforms = []
@@ -407,9 +409,9 @@ export class PortfolioService {
 
               records.push({
                 value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
-                imgURL: group.image,
+                logoURI: group.image,
                 holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: a.condition } }) || [],
-                poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
+                poolTokens: extendTokenData?.map(a => { return { address: a.address, logoURI: a.logoURI, symbol: a.symbol, decimals: a.decimals } }) || [],
                 type: group.label,
                 link: group.website,
                 platform: group.platformId,
@@ -434,9 +436,9 @@ export class PortfolioService {
 
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
-              imgURL: group.image,
+              logoURI: group.image,
               holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: a.condition } }) || [],
-              poolTokens: extendTokenData?.map(a => { return { address: a.address, imgURL: asset.imageUri ? asset.imageUri : a.imgUrl, symbol: asset.name ? asset.name : a.symbol, decimals: a.decimals } }) || [],
+              poolTokens: extendTokenData?.map(a => { return { address: a.address, logoURI: asset.imageUri ? asset.imageUri : a.logoURI, symbol: asset.name ? asset.name : a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId,
@@ -458,9 +460,9 @@ export class PortfolioService {
 
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
-              imgURL: group.image,
+              logoURI: group.image,
               holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: 'credit' } }) || [],
-              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
+              poolTokens: extendTokenData.map(a => { return { address: a.address, logoURI: a.logoURI, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId,
@@ -478,9 +480,9 @@ export class PortfolioService {
 
             records.push({
               value: extendTokenData.reduce((acc, asset) => acc + asset.value, 0),
-              imgURL: group.image,
+              logoURI: group.image,
               holdings: extendTokenData.map(a => { return { balance: a.balance, symbol: a.symbol, decimals: a.decimals, condition: 'debt' } }) || [],
-              poolTokens: extendTokenData.map(a => { return { address: a.address, imgURL: a.imgUrl, symbol: a.symbol, decimals: a.decimals } }) || [],
+              poolTokens: extendTokenData.map(a => { return { address: a.address, logoURI: a.logoURI, symbol: a.symbol, decimals: a.decimals } }) || [],
               type: group.label,
               link: group.website,
               platform: group.platformId,
@@ -494,10 +496,10 @@ export class PortfolioService {
         return records
       })
     )
+
     this.defi.set(defiHolding.flat())
 
   }
-
   public async getWalletHistory(walletAddress: string): Promise<WritableSignal<TransactionHistory[]>> {
 
     try {

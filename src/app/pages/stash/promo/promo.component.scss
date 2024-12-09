@@ -1,7 +1,8 @@
-:host{
+:host {
     display: block;
     width: 100%;
 }
+
 #container {
     border-radius: 12px;
     background: var(--ion-color-light);
@@ -10,10 +11,10 @@
     justify-content: center;
     transform: translateY(-70px);
     margin: 0 auto;
-    height: 600px;
     overflow: hidden;
 }
-#stash-box .inner{
+
+#stash-box .inner {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -33,7 +34,7 @@ ion-label {
     color: var(--Gray-900, #101828);
     text-align: center;
     width: 100%;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 600;
     line-height: 28px;
     margin-bottom: 8px;
@@ -46,7 +47,8 @@ ion-text {
     line-height: 25px;
     margin-bottom: 32px;
     max-width: 650px;
-    span{
+
+    span {
         color: var(--ion-color-primary);
     }
 }
@@ -54,14 +56,29 @@ ion-text {
 #btn-wrapper {
     text-align: center;
     width: 100%;
-    ion-button{
+
+    ion-button {
         text-transform: capitalize;
     }
 }
 
-@media only screen and (max-width: 1000px) {
-#container{
-    transform: translateY(-42px);
+#estimated-value {
+    font-size: 11px;
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width:175px;
+    ion-skeleton-text {
+        width: 22%;
+        height: 75%;
+        border-radius: 4px;
+    }
 }
-    
+
+@media only screen and (max-width: 1000px) {
+    #container {
+        transform: translateY(-42px);
+    }
+
 }

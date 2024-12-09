@@ -16,7 +16,12 @@
         <div id="btn-wrapper">
           <ion-button (click)="startAnalyze()">Uncover Hidden Balance</ion-button>
         </div>
-        <p style="text-align: center; font-size: 11px; opacity: 0.7;">Subject to wallet connected</p>
+        <p id="estimated-value" >  <span>Estimated Stash Value: </span>
+          @if(estimateStashValue){
+           <span>{{estimateStashValue | currency:'USD'}}</span>
+          }@else {
+            <ion-skeleton-text animated/>
+          }</p>
       </div>
     }
     

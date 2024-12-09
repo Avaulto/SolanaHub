@@ -1,0 +1,36 @@
+<div id="earning-container">
+  <div id="earning-claimed">
+    <div id="extracted-sol">
+      <div class="earning-sub-title">Total extracted SOL</div>
+      <div class="earning-value">
+        @if(stashUser()){
+          {{formatNumber(stashUser().extractedSOL)}}
+      }@else{
+          <ion-skeleton-text animated/>
+        }
+      </div>
+    </div>
+    <div id="referral-fees">
+      <div class="earning-sub-title">Total referral fees</div>
+      <div class="earning-value">
+        @if(stashUser()){
+          {{formatNumber(stashUser().referralFee)}}
+
+        }@else{
+          <ion-skeleton-text  animated/>
+        }
+      </div>
+    </div>
+  </div>
+  <div id="referral-link">
+    <ion-label>Earn referral fees</ion-label>
+    <ion-text>Share your stash referral link to earn 50% of platform fees.</ion-text>
+    <div id="referral-link-wrapper">
+      <span class="ion-text-capitalize">your referral link</span>
+      <div id="referral-link-input">
+        <ion-input [value]="baseReferralLink()" readonly/>
+        <ion-button class="ref-btn" appCopyText [copyText]="baseReferralLink()" ><ion-icon name="copy-outline"/> Copy</ion-button>
+      </div>
+    </div>
+  </div>
+</div>

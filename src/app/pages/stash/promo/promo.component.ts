@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import {IonButton, IonImg, IonText, IonLabel } from '@ionic/angular/standalone';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {IonButton, IonImg, IonText, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 import lottie from "lottie-web";
 import {
   style,
@@ -7,12 +7,13 @@ import {
   trigger,
   transition,
 } from "@angular/animations";
+import { CurrencyPipe } from '@angular/common';
 @Component({
   selector: 'promo',
   templateUrl: './promo.component.html',
   styleUrls: ['./promo.component.scss'],
   standalone: true,
-  imports: [IonButton, IonImg, IonLabel, IonText],
+  imports: [IonButton, IonImg, IonLabel, IonText, CurrencyPipe, IonSkeletonText],
   animations: [
     trigger('easeOut', [
       transition('* => void', [
@@ -46,6 +47,7 @@ import {
   ]
 })
 export class PromoComponent implements AfterViewInit {
+  @Input() estimateStashValue: number = 0;
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;
   public wordCarousel = ["Dust value", "Stake accounts", "DeFi positions"];
   public wordCounter = -1;

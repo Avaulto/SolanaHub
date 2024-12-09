@@ -1,10 +1,20 @@
 <ion-content [fullscreen]="true">
   <page-header title="Stash" description="
   Discover innovative ways to maximize the potential of your idle assets on Solana.
-    "></page-header>
+    ">
+    <div style="width: 100%;">
+      @if(analyzeStage() === 1){
+        <div id="btns-container">
+          <ion-button fill="clear" id="faq-btn" (click)="openFaqPopOver()">How it works</ion-button>
+        </div>
+      }
+    </div>
+
+
+  </page-header>
   <ion-grid>
     @if(analyzeStage() === 0){
-    <promo  (onStartAnalyze)="getSavingData()" />
+    <promo [estimateStashValue]="stashTotalUsdValue()" (onStartAnalyze)="getSavingData()" />
     }
     
    
@@ -12,110 +22,30 @@
     <div id="stash-wrapper" [hidden]="!hideStash() && analyzeStage() === 0">
 
     <ion-row id="stat-wrapper" class="ion-justify-content-between">
-      <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
-        <div class="icon-wrapper ion-hide-lg-down">
-          <animated-icon  icon="https://cdn.lordicon.com/hpveozzh.json" />
-        </div>
-        <div class="stat-title">Total stash</div>
-        <div class="stat-desc">
-          {{stashTotalUsdValue() | currency}}
-          <!-- @if (stat.desc === '') {
-        <ion-skeleton-text [animated]="true" />
-        } -->
-        </div>
+      <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="6.5">
+        @if(assets()){
+          <portfolio-breakdown [chartText]="'total stash'" [assets]="assets" />
+        }
       </ion-col>
-      <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
-        <portfolio-breakdown [assets]="assets" />
+      <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="5.4">
+        <earning [refCode]="'asd21a'" />
       </ion-col>
+
 
     </ion-row>
-    <div class="ion-hide-lg-down">
+    <div>
 
-
-      @for(stashItem of assets(); track stashItem.label) {
-        <stash-table 
-        class="ion-margin-bottom" 
-        [hasFees]="true" 
-        (onAction)="openStashPopup($event)"
-        [tableName]="stashItem.label"
-        [tableDescription]="stashItem.description"
-        [actionTitle]="stashItem.actionTitle" 
-        [columns]="stashItem.label == 'zero yield zones' ? tableColumnDeFiPositions : tableColumn"
-        [stash]="stashItem" />
+      @if(assets()){
+        @for(stashItem of assets(); track stashItem.label) {
+          <stash-table 
+          
+          class="ion-margin-bottom" 
+          [stash]="stashItem" />
+        }
       }
-    
     </div>
-    <div class="ion-hide-lg-up">
-here
-    </div>
+   
     </div>
   </ion-grid>
 
 </ion-content>
-<ng-template #platformIconTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="platform-icon-wrapper ion-text-center">
-    <ion-img [src]="row.platformImgUrl" alt="platform icon"></ion-img>
-  </div>
-</ng-template>
-
-<ng-template #tokenTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item">
-    <div class="item-img-wrapper">
-      <!-- if imgURL is array then forLoop -->
-      @if(row.type === 'defi-position'){
-        @for(img of row.imgUrl; track img){
-          <ion-img [src]="img" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
-        }
-      }@else{
-        <ion-img [src]="row.imgUrl" #img (ionError)="img.src='assets/images/unknown.svg'" alt="image" />
-      }
-    </div>
-    <div class="item-info">
-
-      <div class="item-bold">{{row.name || 'unknown'}}</div>
-      <div class="item-light">{{row.token }}</div>
-
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #checkboxTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-center" style="justify-content: center; display: flex;">
-    <ion-checkbox mode="md" />
-  </div>
-</ng-template>
-
-<ng-template #amountTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-left">
-    {{row.balance | number: '1.0-5'}} {{row.symbol}}
-  </div>
-</ng-template>
-
-<ng-template #valueTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-left">
-    @for(item of row.extractedValue | keyvalue; track item.key){
-      <div class="sol-value">
-        {{fixedNumber(item.value) }} {{item.key}}
-      </div>
-    }
-  </div>
-</ng-template>
-<ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="ion-text-left account-info">
-    {{row?.account?.addrShort}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img>
-    </a>
-  </div>
-</ng-template>
-<ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <ion-button fill="clear" class="ion-text-capitalize close-single" (click)="openStashPopup([row])">
-     {{row.action}}
-  </ion-button>
-</ng-template>
-
-<ng-template #sourceTpl let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="source-type ion-text-left ion-text-capitalize">
-    <chip 
-     [name]="row.source" 
-     [color]="row.source === 'empty account' ? 'focus'  : row.source === 'out of range' ? 'danger' : row.source == 'excess balance' ? 'active' : ''" />
-  </div>
-</ng-template>
