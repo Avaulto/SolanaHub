@@ -101,7 +101,7 @@ export class AssetsTableComponent implements OnInit {
       case PortfolioDataKeys.DEFI:
         return this._portfolioBreakdownService.getEnabledDefiAssets()
       default:
-        return this._portfolioService[tableType]()
+        return this._portfolioBreakdownService.getEnabledStakeAssets()
     }
   })
 

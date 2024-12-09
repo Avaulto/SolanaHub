@@ -43,6 +43,23 @@ export class PortfolioBreakdownService {
   });
 
   /**
+   * Computes and returns an array of enabled staking assets across portfolios.
+   *
+   * @public
+   * @returns {Signal<any[]>} A signal containing staking entries from enabled portfolios
+   *
+   * @description
+   * Extracts staking assets from each enabled portfolio and flattens them into a single array
+   *
+   */
+  public getEnabledStakeAssets: Signal<any[]> = computed(() => {
+    return this.getEnabledPortfolio()
+      .map(({ portfolio }) => portfolio.staking)
+      .flat()
+  });
+
+
+  /**
    * Merges and consolidates DeFi entries by grouping them based on type, platform, holdings, and pool tokens.
    *
    * @private
@@ -454,7 +471,7 @@ export class PortfolioBreakdownService {
    */
   private getEnabledPortfolio: Signal<WalletEntry[]> = computed(() => {
     return this._portfolioService.portfolio()
-      .filter(({ portfolio }) => portfolio.enabled)
+      .filter(({portfolio}) => portfolio.enabled)
   });
 
   private getRandomColor(): string {
