@@ -19,6 +19,177 @@ export class PortfolioBreakdownService {
   }
 
   /**
+   * Computes and returns an array of enabled DeFi assets after merging entries.
+   *
+   * @public
+   * @returns {Signal<any[]>} A signal containing merged DeFi entries across enabled portfolios
+   *
+   * @description
+   * Retrieves DeFi entries from enabled portfolios, adds wallet addresses, and merges similar entries
+   *
+   * @example
+   * // Returns a signal with merged DeFi entries like:
+   * // [{ walletAddress: '0x123...', type: 'token', holdings: [...], value: 300 }]
+   */
+  public getEnabledDefiAssets: Signal<any[]> = computed(() => {
+    const defi = this.getEnabledPortfolio()
+      .map(({walletAddress, portfolio}) => portfolio.defi.map(value => ({
+          walletAddress,
+          ...value
+        }))
+      ).flat()
+
+    return this.mergeDefiEntries(defi)
+  });
+
+  /**
+   * Merges and consolidates DeFi entries by grouping them based on type, platform, holdings, and pool tokens.
+   *
+   * @private
+   * @param {Array} entries - An array of DeFi entry objects to be merged
+   * @returns {Array} A consolidated array of merged DeFi entries
+   *
+   * @description
+   * This method performs the following operations:
+   * - Groups entries with identical type, platform, holdings, and pool tokens
+   * - Aggregates total value across matching entries
+   * - Merges holdings with the same symbol and decimals
+   * - Collects wallet addresses and their respective balances in a breakdown
+   * - Preserves unique pool tokens
+   *
+   * @example
+   * const entries = [
+   *   {
+   *     type: 'Deposit',
+   *     platform: 'realms',
+   *     holdings: [{ symbol: 'MNGO', decimals: 6, balance: 1 }],
+   *     poolTokens: [{ address: 'MangoCz...', symbol: 'Mango', decimal: 6 }],
+   *     walletAddress: '0x123...',
+   *     value: 100
+   *   },
+   *   {
+   *     type: 'Deposit',
+   *     platform: 'realms',
+   *     holdings: [{ symbol: 'MNGO', decimals: 6, balance: 2 }],
+   *     poolTokens: [{ address: 'MangoCz...', symbol: 'Mango', decimal: 6 }],
+   *     walletAddress: '0x456...',
+   *     value: 200
+   *   },
+   *   {
+   *     type: 'Deposit',
+   *     platform: 'realms',
+   *     holdings: [{ symbol: 'MNGO', decimals: 6, balance: 5 }],
+   *     poolTokens: [{ address: 'TestAdress...', symbol: 'Mango', decimal: 6 }],
+   *     walletAddress: '0x789...',
+   *     value: 50
+   *   }
+   * ];
+   *
+   * // Returns:
+   * [
+   *   {
+   *     type: 'Deposit',
+   *     platform: 'realms',
+   *     holdings: [{ symbol: 'MNGO', decimals: 6, balance: 3 }],
+   *     poolTokens: [{ address: 'MangoCz...', symbol: 'Mango', decimal: 6 }],
+   *     value: 300,
+   *     breakdown: [
+   *       { walletAddress: '0x123...', balance: 1, value: 100 },
+   *       { walletAddress: '0x456...', balance: 2, value: 200 }
+   *     ]
+   *   },
+   *   {
+   *     type: 'token',
+   *     platform: 'ethereum',
+   *     holdings: [{ symbol: 'MNGO', decimals: 6, balance: 5 }],
+   *     poolTokens: [{ address: 'TestAdress...', symbol: 'Mango', decimal: 6 }],,
+   *     value: 50,
+   *     breakdown: [
+   *       { walletAddress: '0x789...', balance: 5, value: 50 }
+   *     ]
+   *   }
+   * ]
+   *
+   */
+  private mergeDefiEntries(entries) {
+    // Group entries by type and platform
+    const groupedEntries = entries.reduce((acc, entry) => {
+      // Create a canonical representation of holdings for comparison
+      const normalizedHoldings = entry.holdings
+        .map(h => JSON.stringify({
+          symbol: h.symbol,
+          decimals: h.decimals
+        }))
+
+      // Create a canonical representation of pool tokens for comparison
+      const normalizedPoolTokens = entry.poolTokens
+        .map(pt => JSON.stringify({
+          address: pt.address,
+          symbol: pt.symbol,
+          decimals: pt.decimals
+        }))
+
+      // Create a key that includes type, platform, and normalized holdings and pool tokens
+      const key = JSON.stringify({
+        type: entry.type,
+        platform: entry.platform,
+        holdings: normalizedHoldings,
+        poolTokens: normalizedPoolTokens
+      });
+
+      if (!acc[key]) {
+        acc[key] = {
+          ...entry,
+          value: 0,
+          holdings: [],
+          poolTokens: [],
+          breakdown: []
+        };
+      }
+
+      // Merge values
+      acc[key].value += entry.value;
+
+      // Merge holdings (assuming same symbol)
+      entry.holdings.forEach(holding => {
+        const existingHolding = acc[key].holdings.find(h =>
+          h.symbol === holding.symbol &&
+          h.decimals === holding.decimals
+        );
+
+        if (existingHolding) {
+          existingHolding.balance += holding.balance;
+        } else {
+          acc[key].holdings.push({...holding});
+        }
+      });
+
+      // Add to breakdown
+      acc[key].breakdown.push({
+        walletAddress: entry.walletAddress,
+        balance: entry.holdings[0].balance,
+        value: entry.value
+      });
+
+      // Merge pool tokens (assuming same address)
+      entry.poolTokens.forEach(poolToken => {
+        const existingPoolToken = acc[key].poolTokens.find(pt =>
+          pt.address === poolToken.address
+        );
+
+        if (!existingPoolToken) {
+          acc[key].poolTokens.push({...poolToken});
+        }
+      });
+
+      return acc;
+    }, {});
+
+    // Convert back to array and remove key
+    return Object.values(groupedEntries)
+  }
+
+  /**
    * Gets an array of assets from enabled wallets.
    *
    * @type {Signal<any[]>}

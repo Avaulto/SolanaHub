@@ -26,7 +26,7 @@ import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { BehaviorSubject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
 import { RoutingPath } from '../shared/constants';
-import { PortfolioDataKeys } from "../enums";
+import { PortfolioDataKeys, WalletDataKeys } from "../enums";
 
 // Add new type definition
 type FetchType = 'full' | 'partial';
@@ -58,11 +58,11 @@ export class PortfolioService {
    * @returns {Array<WalletEntry>}
    */
   public portfolio: Signal<WalletEntry[]> = computed(() =>
-    Array.from(this.portfolioMap().entries())
+    [...Array.from(this.portfolioMap().entries())
     .map(([walletAddress, portfolio]) => ({
     walletAddress,
     portfolio
-  })));
+  }))]);
 
   public currentWalletAddress = signal<string>(null);
 
@@ -252,7 +252,7 @@ export class PortfolioService {
 
     try {
 
-      this.processPortfolioData(portfolioData, walletAddress, fetchType);
+      this.processPortfolioData({...portfolioData}, walletAddress, fetchType);
 
       va.track('fetch portfolio', {
         status: 'success',
@@ -271,7 +271,7 @@ export class PortfolioService {
 
 
     this._utils.turnStileToken = null;
-    data.elements = data.elements.filter(e => e?.platformId !== 'wallet-nfts');
+    data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
     return data;
   }
 

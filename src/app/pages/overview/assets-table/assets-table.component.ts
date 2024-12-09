@@ -98,6 +98,8 @@ export class AssetsTableComponent implements OnInit {
         return this._portfolioBreakdownService.getNFTsBreakdown()
       case PortfolioDataKeys.TOKENS:
         return this._portfolioBreakdownService.getTokensBreakdown()
+      case PortfolioDataKeys.DEFI:
+        return this._portfolioBreakdownService.getEnabledDefiAssets()
       default:
         return this._portfolioService[tableType]()
     }
