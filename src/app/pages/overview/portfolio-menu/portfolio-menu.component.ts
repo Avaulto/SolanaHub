@@ -1,9 +1,9 @@
-import {Component, computed, effect} from '@angular/core';
+import {Component, computed, effect, inject} from '@angular/core';
 import {PortfolioBoxComponent} from './portfolio-box/portfolio-box.component';
 import {IonButton, IonIcon, IonImg, IonInput, IonLabel, IonRippleEffect, IonText} from "@ionic/angular/standalone";
 import {addIcons} from 'ionicons';
 import {addOutline} from 'ionicons/icons';
-import {PortfolioService, UtilService} from 'src/app/services';
+import {PortfolioService, UtilService, WalletBoxSpinnerService} from 'src/app/services';
 import {PopoverController} from '@ionic/angular';
 import {JsonPipe} from '@angular/common';
 import {AddPortfolioPopupComponent} from "./add-portfolio-popup/add-portfolio-popup.component";
@@ -33,11 +33,9 @@ export class PortfolioMenuComponent {
     private _utils: UtilService
   ) {
     addIcons({addOutline});
-    effect(() => {
-      console.log(this._portfolioService.portfolio());
-    });
   }
 
+  protected readonly walletBoxSpinnerService = inject(WalletBoxSpinnerService)
   public canAddWallet = computed(() => this.walletsPortfolio().length < 3);
 
   public walletsPortfolio = computed(() =>
@@ -50,6 +48,9 @@ export class PortfolioMenuComponent {
   })))
 
   async openNewPortfolioSetup() {
+    if(this.walletBoxSpinnerService.spinner())
+      return;
+
     const modal = await this._popover.create({
       component: AddPortfolioPopupComponent,
       mode: 'ios',
@@ -58,7 +59,8 @@ export class PortfolioMenuComponent {
     });
     await modal.present();
     const { data} = await modal.onDidDismiss()
-    if (data ) {
+    if (data) {
+      this.walletBoxSpinnerService.show();
       this._portfolioService.syncPortfolios(data);
     }
   }

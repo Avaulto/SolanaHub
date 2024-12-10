@@ -1,8 +1,17 @@
-import { CurrencyPipe } from '@angular/common';
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import { IonButton, IonRippleEffect, IonText, IonLabel, IonIcon ,IonToggle} from "@ionic/angular/standalone";
+import { CurrencyPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  IonButton,
+  IonRippleEffect,
+  IonText,
+  IonLabel,
+  IonIcon,
+  IonToggle,
+  IonSkeletonText
+} from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
+import {WalletBoxSpinnerService} from "../../../../services";
 
 @Component({
   selector: 'portfolio-box',
@@ -16,11 +25,14 @@ import { trashOutline } from 'ionicons/icons';
     IonText,
     IonRippleEffect,
     IonButton,
-    CurrencyPipe
+    CurrencyPipe,
+    IonSkeletonText,
+    NgIf
   ],
    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioBoxComponent {
+  protected readonly spinnerState = inject(WalletBoxSpinnerService).spinner;
   @Input() isPrimary = false;
   @Input() wallet: { walletAddressShort: string, walletAddress: string, value: number, enabled: boolean };
 

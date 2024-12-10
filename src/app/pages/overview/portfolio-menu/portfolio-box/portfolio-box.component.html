@@ -15,6 +15,9 @@
   } @else {
   <div class="portfolio-box-empty">
     <ion-label>Add wallet</ion-label>
+    <div class="portfolio-box-empty__skeleton">
+      <ion-skeleton-text [animated]="true" *ngIf="spinnerState()"/>
+    </div>
   </div>
   }
   <ion-ripple-effect/>

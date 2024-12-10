@@ -1,4 +1,4 @@
-import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { UtilService } from './util.service';
 import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
 import {
@@ -17,7 +17,7 @@ import {
 
 import va from '@vercel/analytics';
 
-import { NativeStakeService, SolanaHelpersService } from './';
+import { NativeStakeService, SolanaHelpersService, WalletBoxSpinnerService } from './';
 import { NavController } from '@ionic/angular';
 import { SessionStorageService } from './session-storage.service';
 import { historyResultShyft, TransactionHistoryShyft } from '../models/trsanction-history.model';
@@ -84,7 +84,8 @@ export class PortfolioService {
     private _toastService: ToasterService,
     private _sessionStorageService: SessionStorageService,
     private _fetchPortfolioService: PortfolioFetchService,
-    private _watchModeService: WatchModeService
+    private _watchModeService: WatchModeService,
+    private walletBoxSpinnerService: WalletBoxSpinnerService
   ) {
     this.getPlatformsData()
     this._shs.walletExtended$.subscribe(this.handleWalletChange.bind(this));
@@ -131,6 +132,7 @@ export class PortfolioService {
       enabled: true
     });
     this.portfolioMap.set(newMap);
+    this.walletBoxSpinnerService.hide();
   }
 
   /**
@@ -293,7 +295,7 @@ export class PortfolioService {
 
     this._portfolioStaking(walletAddress);
     this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-    this._portfolioNFT(walletAddress);
+    await this._portfolioNFT(walletAddress);
 
     if (fetchType !== 'partial') {
       this._portfolioDeFi(excludeNFTv2, tokenJupData);
@@ -489,10 +491,7 @@ export class PortfolioService {
               tags: group.tags
             })
           })
-
         }
-
-
         return records
       })
     )

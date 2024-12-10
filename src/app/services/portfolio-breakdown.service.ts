@@ -32,12 +32,16 @@ export class PortfolioBreakdownService {
    * // [{ walletAddress: '0x123...', type: 'token', holdings: [...], value: 300 }]
    */
   public getEnabledDefiAssets: Signal<any[]> = computed(() => {
-    const defi = this.getEnabledPortfolio()
-      .map(({walletAddress, portfolio}) => portfolio.defi.map(value => ({
-          walletAddress,
-          ...value
-        }))
-      ).flat()
+    const defi = this.getEnabledPortfolio().map(({walletAddress, portfolio}) => {
+        if (portfolio.defi) {
+          return portfolio.defi?.map(value => ({
+            walletAddress,
+            ...value
+          }))
+        }
+        return [];
+      }
+    ).flat()
 
     return this.mergeDefiEntries(defi)
   });
@@ -54,8 +58,10 @@ export class PortfolioBreakdownService {
    */
   public getEnabledStakeAssets: Signal<any[]> = computed(() => {
     return this.getEnabledPortfolio()
-      .map(({ portfolio }) => portfolio.staking)
-      .flat()
+      .map(({portfolio}) => {
+        if (portfolio.staking) return portfolio.staking
+        return []
+      }).flat()
   });
 
 
@@ -219,7 +225,7 @@ export class PortfolioBreakdownService {
    */
   public getEnabledWalletsAssets: Signal<any[]> = computed(() => {
     return this.getEnabledPortfolio()
-      .map(({ portfolio}) => portfolio.walletAssets)
+      .map(({ portfolio }) => portfolio.walletAssets)
       .flat()
   });
 
@@ -233,7 +239,7 @@ export class PortfolioBreakdownService {
    * It aggregates balances and values across all wallets for each unique token address.
    * The resulting data structure includes aggregated values, balances, and a breakdown of contributing wallets.
    */
-  public getTokensBreakdown: Signal<any[]> =  computed(() => {
+  public getTokensBreakdown: Signal<any[]> = computed(() => {
     const assets = this.getEnabledPortfolio();
     if (!assets) return [];
 
@@ -315,10 +321,10 @@ export class PortfolioBreakdownService {
 
         nftCollectionMap.set(collectionName, {
           ...existingToken,
-          nfts: [ ...(existingToken.nfts || []), ...nfts],
+          nfts: [...(existingToken.nfts || []), ...nfts],
           count: existingToken.count + 1,
           value: existingToken.value + value,
-          breakdown: currentBreakdown.set(walletAddress,( currentBreakdown.get(walletAddress) || 0) + value)
+          breakdown: currentBreakdown.set(walletAddress, (currentBreakdown.get(walletAddress) || 0) + value)
         })
       });
     });
@@ -348,7 +354,7 @@ export class PortfolioBreakdownService {
 
       if (existingCollection) {
         existingCollection.nfts.push(nft);
-        existingCollection.value +=  (Number(nft.floorPrice) || 0) * this.solPrice();
+        existingCollection.value += (Number(nft.floorPrice) || 0) * this.solPrice();
         existingCollection.listed += nft.listStatus === "listed" ? 1 : 0;
         existingCollection.floorPrice = Math.min(existingCollection.floorPrice, Number(nft.floorPrice) || Infinity);
       } else {
@@ -433,6 +439,23 @@ export class PortfolioBreakdownService {
       });
     }
 
+  /**
+   * Gets an array of enabled portfolios.
+   *
+   * @type {Signal<WalletEntry[]>}
+   * @readonly
+   * @description
+   * This computed property returns a Signal that contains an array of portfolios
+   * where each portfolio has an enabled status set to true.
+   *
+   * @returns {Signal<WalletEntry[]>} A Signal representing an array of enabled portfolios.
+   */
+  private getEnabledPortfolio: Signal<WalletEntry[]> = computed(() => {
+    return this._portfolioService.portfolio()
+      .filter(({portfolio}) => portfolio.enabled)
+  });
+
+
   public assetClassValue = computed(() => {
     const assets = this.getEnabledWalletsAssets();
 
@@ -458,34 +481,8 @@ export class PortfolioBreakdownService {
       .sort((a, b) => b.value - a.value);
   });
 
-  /**
-   * Gets an array of enabled portfolios.
-   *
-   * @type {Signal<WalletEntry[]>}
-   * @readonly
-   * @description
-   * This computed property returns a Signal that contains an array of portfolios
-   * where each portfolio has an enabled status set to true.
-   *
-   * @returns {Signal<WalletEntry[]>} A Signal representing an array of enabled portfolios.
-   */
-  private getEnabledPortfolio: Signal<WalletEntry[]> = computed(() => {
-    return this._portfolioService.portfolio()
-      .filter(({portfolio}) => portfolio.enabled)
-  });
-
-  private getRandomColor(): string {
-    let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
-
   private colorPicker(assetClass: string): string {
     let color = ''
-
     switch (assetClass) {
       case 'Wallet':
         color = '#341663'
@@ -494,13 +491,16 @@ export class PortfolioBreakdownService {
         color = '#7209B7'
         break;
       case 'NFTs':
+      case 'unstaked overflow':
         color = '#F7E8FF'
         break;
 
       case 'LiquidityPool':
+      case 'zero yield zones':
         color = '#560BAD'
         break;
       case 'Lending':
+      case 'zero value assets':
         color = '#B5179E'
         break;
       case 'Rewards':
@@ -510,6 +510,7 @@ export class PortfolioBreakdownService {
         color = '#b82568'
         break;
       case 'Deposit':
+      case 'dust value':
         color = '#E9CDC2'
         break;
       case 'Farming':
@@ -527,5 +528,14 @@ export class PortfolioBreakdownService {
     }
 
     return color
+  }
+
+  private getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 }
