@@ -23,27 +23,25 @@ export class HelpersService {
         public jupStoreService: JupStoreService,
         public earningsService: EarningsService
     ) {
-        console.log('utils', this.utils.serverlessAPI);
         // this.getDASAssets()
     }
 
     public async getDASAssets() {
         const { publicKey } = this.shs.getCurrentWallet()
         try {
-          // const onlyEmptyAccounts = true
-          const unknownAssets =await (await fetch(`${this.utils.serverlessAPI}/api/stash/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
-          console.log('unknownAssets', unknownAssets);
-          // remove token with no symbol
-          // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
-          this.dasAssets.set(unknownAssets)
-          return unknownAssets
+            // const onlyEmptyAccounts = true
+            const unknownAssets = await (await fetch(`${this.utils.serverlessAPI}/api/stash/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
+            // remove token with no symbol
+            // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
+            this.dasAssets.set(unknownAssets)
+            return unknownAssets
         } catch (error) {
-          console.error('error', error);
-          return null
+            console.error('error', error);
+            return null
         }
-      }
+    }
 
-      
+
 
     public createStashGroup = (
         label: string,
@@ -76,16 +74,17 @@ export class HelpersService {
             name: category === 'stake' ? item.validatorName : item.name,
             symbol: item.symbol,
             logoURI: item.logoURI,
-            url: this.utils.explorer + '/account/' + item['address'],
-            mint: item.mint,
+            url: this.utils.explorer + '/account/' + item.mint,
+            mint: item.mint ? this.utils.addrUtil(item.mint) : null,
             decimals: item?.decimals,
             account: this.utils.addrUtil(item['address'] || 'default'),
             balance: item.balance,
             action: this.getActionByCategory(category),
             type: this.getTypeByCategory(category),
-            source: this.getSourceByCategory(category, item.balance),
+            source: this.getSourceByCategory(category, item.balance, item.type),
             ...extraData
         };
+
 
         switch (category) {
             case 'dust':
@@ -95,7 +94,7 @@ export class HelpersService {
                     extractedValue: { SOL: item.value / this.jupStoreService.solPrice() }
                 };
             case 'defi':
-                return {
+                const defiAsset = {
                     ...baseAsset,
                     name: item.poolPair,
                     symbol: item.poolPair,
@@ -105,11 +104,22 @@ export class HelpersService {
                     platformLogoURI: item.platformLogoURI,
                     value: item.pooledAmountAWithRewardsUSDValue + item.pooledAmountBWithRewardsUSDValue,
                     extractedValue: {
-                        [item.poolTokenA.symbol]: Number(item.pooledAmountAWithRewards),
-                        [item.poolTokenB.symbol]: Number(item.pooledAmountBWithRewards)
+                        [item.poolTokenA.symbol]: Number(this.utils.fixedNumber(item.pooledAmountAWithRewards)),
+                        [item.poolTokenB.symbol]: Number(this.utils.fixedNumber(item.pooledAmountBWithRewards))
                     },
                     positionData: item.positionData
+
                 };
+                if (item.accountRentFee) {
+                    const solValue = Number(defiAsset.extractedValue['SOL']) || 0
+                    defiAsset.extractedValue['SOL'] = solValue + Number(item.accountRentFee)
+                    defiAsset.value = defiAsset.value + (Number(item.accountRentFee) * this.jupStoreService.solPrice())
+                }
+                // filter out all extracted values that are 0
+                defiAsset.extractedValue = Object.fromEntries(
+                    Object.entries(defiAsset.extractedValue).filter(([_, value]) => Number(value) !== 0)
+                );
+                return defiAsset
             case 'stake':
                 return {
                     ...baseAsset,
@@ -152,9 +162,10 @@ export class HelpersService {
         };
         return types[category] || types.default;
     }
-    private getSourceByCategory(category: string, balance: number): string {
+    private getSourceByCategory(category: string, balance: number, type): string {
+        // const defiType = type === 'out of range' ? 'out of range' : 'no liquidity';
         const sources = {
-            defi: 'out of range',
+            defi: type,
             stake: 'excess balance',
             dust: 'dust value',
             default: balance === 0 ? 'empty account' : 'no market value'
@@ -173,15 +184,12 @@ export class HelpersService {
         } else {
             transactions = await this.splitIntoSubTransactions(ixs as TransactionInstruction[])
         }
-        let platformFee = Math.ceil(this.platformFeeInSOL() * LAMPORTS_PER_SOL)
-        const platformFeeTx = await this._addPlatformFeeTx(platformFee)
-        transactions.push(platformFeeTx)
+        // let platformFee = Math.ceil(this.platformFeeInSOL() * LAMPORTS_PER_SOL)
+        // const platformFeeTx = await this._addPlatformFeeTx(platformFee)
+        // transactions.push(platformFeeTx)
         return new Promise<string[]>(async (resolve, reject) => {
             try {
-
-                console.log('transactions', transactions);
                 const signatures = await this.txi.sendMultipleTxn(transactions);
-                console.log('signatures', signatures);
                 resolve(signatures); // Indicate success
             } catch (error) {
                 console.error(error);
@@ -231,7 +239,7 @@ export class HelpersService {
 
             // Try adding the instruction to current batch
             currentInstructions.push(instruction);
-            
+
             // Check batch size more frequently
             if (currentInstructions.length > 1) {
                 try {
@@ -242,7 +250,7 @@ export class HelpersService {
                     }).compileToV0Message();
                     const testTx = new VersionedTransaction(testMessage);
                     const serializedSize = testTx.serialize().length;
-                    
+
                     if (serializedSize > maxSize) {
                         // Remove the last instruction and create a transaction with current batch
                         currentInstructions.pop();
@@ -285,8 +293,8 @@ export class HelpersService {
     }
 
     private async splitLargeInstruction(instruction: TransactionInstruction): Promise<TransactionInstruction[]> {
-        const largeData = instruction.data; 
-        const maxChunkSize = 1000; 
+        const largeData = instruction.data;
+        const maxChunkSize = 1000;
         const splitInstructions: TransactionInstruction[] = [];
 
         for (let i = 0; i < largeData.length; i += maxChunkSize) {

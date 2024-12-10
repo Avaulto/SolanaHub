@@ -28,6 +28,7 @@ export class DustValueTokensService {
 
   private updateDustValueTokens(portfolioShare: number = 3): StashGroup | null {
     const tokens = this._helpersService.dasAssets();
+
     if (!tokens?.length) return null;
 
     const totalTokensValue = tokens.reduce((acc, curr) => acc + Number(curr.value), 0);
@@ -55,7 +56,7 @@ export class DustValueTokensService {
   }
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
-    console.log('tokens', tokens);
+
     try {
 
       const swapencodedIx = await Promise.all(tokens.map(async token => {

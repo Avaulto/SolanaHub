@@ -8,7 +8,7 @@ import { UtilService } from 'src/app/services/util.service';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { EarningsService, HelpersService } from '../helpers';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
-
+import va from '@vercel/analytics'
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -48,6 +48,12 @@ export class StashModalComponent implements OnInit {
   public stashState = signal('')
   public hubSOLRate = null
   ngOnInit() {
+    va.track('stash', {
+      state: 'modal',
+      action: 'modal opened',
+      type: this.stashAssets[0].type,
+      assets: this.stashAssets.length
+    })
     if(this.stashAssets[0].type == 'value-deficient'){
       this.burnWithCautionConfirmed = false
     }
@@ -106,7 +112,12 @@ export class StashModalComponent implements OnInit {
   }
 
   async submit(event: StashAsset[]) {
-    console.log('event', event)
+    va.track('stash', {
+      state: 'modal',
+      action: 'submit',
+      type: event[0].type,
+      assets: event.length
+    })
     const { publicKey } = this._helpersService.shs.getCurrentWallet()
     const type = event[0].type
 
@@ -133,7 +144,7 @@ export class StashModalComponent implements OnInit {
         break
     }
 
-    if (signatures.length > 0) {
+    if (signatures?.length > 0) {
       this.storeEarningsRecord(signatures)
       this.dataToReload(dataToReload)
       this.closeModal()

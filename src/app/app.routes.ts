@@ -24,7 +24,7 @@ export const routes: Routes = [
   {
     path: RoutingPath.STASH,
     loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage),
-    canActivate: [() => !environment.production || stashBeta === 'true', isConnectedGuard]
+    canActivate: [isConnectedGuard]
   },
   {
     path: RoutingPath.COLLECTIBLES,

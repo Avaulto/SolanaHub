@@ -38,49 +38,12 @@ export class OutOfRangeDeFiPositionsService {
       return;
     }
 
-    const stashGroup: StashGroup = {
-      label: 'zero yield zones',
-      description: "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
-      actionTitle: "Withdraw & Close",
-      value: 0,
-      data: {
-        assets: positions.map((p, index) => {
-          
-          const defiAsset = {
-          id: index,
-          checked: false,
-          name: p.poolPair,
-          symbol: p.poolPair,
-          logoURI: [p.poolTokenA.logoURI, p.poolTokenB.logoURI],
-          tokens: [p.poolTokenA, p.poolTokenB].map(token => ({
-            address: token.address,
-            decimals: token.decimals,
-            symbol: token.symbol,
-            logoURI: token.logoURI
-          })),
-          account: this._helpersService.utils.addrUtil(p.address),
-          source: p.type === 'outOfRange' ? 'out of range' : 'no liquidity',
-          platform: p.platform,
-          platformLogoURI: p.platformLogoURI,
-          extractedValue: {
-            [p.poolTokenA.symbol]: Number(p.pooledAmountAWithRewards),
-            [p.poolTokenB.symbol]: Number(p.pooledAmountBWithRewards),
-          },
-          action: 'Withdraw & Close',
-          type: 'defi-position',
-          value: p.pooledAmountAWithRewardsUSDValue + p.pooledAmountBWithRewardsUSDValue,
-          positionData: p.positionData
-          }
-          if(p.accountRentFee){
-            !defiAsset.extractedValue['SOL'] ? defiAsset.extractedValue['SOL'] = Number(p.accountRentFee) : defiAsset.extractedValue['SOL'] += Number(p.accountRentFee)
-          }
-          // filter out all extracted values that are 0
-          defiAsset.extractedValue = Object.fromEntries(Object.entries(defiAsset.extractedValue).filter(([key, value]) => value !== 0));
-          return defiAsset
-        })
-      }
-    };
-    stashGroup.value = stashGroup.data.assets.reduce((acc, curr) => acc + (curr.value || 0), 0);
+    const stashGroup = this._helpersService.createStashGroup(
+      'zero yield zones',
+      "This dataset includes open positions in DeFi protocols that are not used and sit idle ready to be withdrawal.",
+      "Withdraw & Close",
+      positions.map((p, index) => this._helpersService.mapToStashAsset({ ...p, id: index }, 'defi'))
+    );
     this.outOfRangeDeFiPositionsSignal.set(stashGroup);
   }
 
@@ -93,7 +56,8 @@ export class OutOfRangeDeFiPositionsService {
       const positionsData = positionsToClose.map(p => {
         return {
           ...p.positionData,
-          platform: p.platform
+          platform: p.platform,
+          source: p.source
         }
       })
       // get remove liquidity tx instructions
@@ -101,14 +65,8 @@ export class OutOfRangeDeFiPositionsService {
         method: 'POST',
         body: JSON.stringify({ wallet: walletOwner.toBase58(), positions: positionsData })
       })).json()
-      // return await this._wrapBulkSendTx(encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')).instructions))
-      // .then(res => {
-      //   if (res) {
-      //     this.updateOutOfRangeDeFiPositions()
-      //   }
-      // })
-      const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')))
-      console.log(txArray);
+
+      const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')).instructions).flat()
       return await this._helpersService._simulateBulkSendTx(txArray)
 
     } catch (error) {

@@ -8,6 +8,7 @@ import {
   transition,
 } from "@angular/animations";
 import { CurrencyPipe } from '@angular/common';
+import va from '@vercel/analytics'
 @Component({
   selector: 'promo',
   templateUrl: './promo.component.html',
@@ -58,6 +59,10 @@ export class PromoComponent implements AfterViewInit {
   constructor() { }
 
   startAnalyze(){
+    va.track('stash', {
+      state: 'promo',
+      action: 'start analyze'
+    })
     this.preview = false;
     setTimeout(() => {
       
@@ -71,6 +76,11 @@ export class PromoComponent implements AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.toggle = false;
+    })
+
+    va.track('stash', {
+      state: 'promo',
+      action: 'loaded'
     })
 
   }

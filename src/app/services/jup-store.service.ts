@@ -43,7 +43,7 @@ export class JupStoreService {
     try {
 
       bestRoute = await (
-        await fetch(`https://quote-api.jup.ag/v6/quote?inputMint=${inputToken.address}&outputMint=${outputToken.address}&amount=${inputAmountInSmallestUnits}`)
+        await fetch(`https://quote-api.jup.ag/v6/quote?slippageBps=100&inputMint=${inputToken.address}&outputMint=${outputToken.address}&amount=${inputAmountInSmallestUnits}`)
       ).json();
 
     } catch (error) {

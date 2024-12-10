@@ -21,38 +21,26 @@ export class ZeroValueAssetsService {
   private allZeroValueAssets: any[] = [];
 
   public findZeroValueAssets = computed(() => {
-    const NFTsOnly = this._helpersService.portfolioService.nfts();
-    const tokensOnly = this._helpersService.portfolioService.tokens();
+    // const NFTsOnly = this._helpersService.portfolioService.nfts();
+    // const tokensOnly = this._helpersService.portfolioService.tokens();
     const additionalAssets = this.zeroValueAssetsSignal();
-
     if (!additionalAssets) return null;
+
     const buffer = 1.5
     const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice() * buffer;
-    // console.log( tokens, additionalAssets);
-    // const excludeNft = NFTs
-    //   ?.filter(acc => acc.floorPrice > 0.001)
-    //   .filter(token => token.name.includes('Orca Whirlpool Position')
-    //     && token.name.includes('Raydium Concentrated Liquidity'));
-
-    // // filter token with value less than rent fee cost in USD
-    // const excludeToken = tokens
-    //   .filter(acc => Number(acc.value) > this._rentFee * this._jupStoreService.solPrice());
-    // exclude nfts from additionalAssets by address
 
     const additionalZeroValueAssetsFinalized = additionalAssets
-      .filter(asset => !asset.frozen && asset.value < rentFeeInUSD)
-      // .filter(asset => {
-      //   const existsInTokens = tokensOnly?.filter(token => token.address === asset.mint).filter(token => Number(token.value) > rentFeeInUSD);
-      //   // Only keep assets that don't exist in tokens (existsInTokens should be empty or undefined)
-      //   return !existsInTokens?.length;
-      // })
+    // filter frozen assets and asset with balance
+    .filter(asset => !asset.frozen)
+      // .filter(asset => !asset.frozen && asset.value < rentFeeInUSD)
+
       .map((asset, index) => {
-        const tempMint = asset.mint
+        // const tempMint = asset.mint
         asset.id = index;
         asset.type = 'value-deficient';
         // swap mint and address on empty accounts due to inconsistency in the of address as ATA address and account address
-        asset.mint = asset.address
-        asset.address = tempMint
+        // asset.mint = asset.address
+        // asset.address = tempMint
         return asset;
       })
       // .filter(asset => {
@@ -62,19 +50,18 @@ export class ZeroValueAssetsService {
 
       //   return existsInTokens || existsInNFTs
       // })
-        .filter(asset => {
-          // hide orca whirlpool position and raydium concentrated liquidity lp positions with balance
-          if(!((asset?.symbol?.includes('RLC') || asset?.symbol?.includes('OWP') || asset?.name?.includes('Orca Whirlpool Position') || asset?.name?.includes('Raydium Concentrated Liquidity')) && asset.balance > 0)){
-            // its not an LP position with balance, so include it
-            return asset
-          } 
-          
-        })
+        // .filter(asset => {
+        //   const blackList = ['RLC', 'OWP', 'Orca Whirlpool Position', 'Raydium Concentrated Liquidity'];
+        //   // hide orca whirlpool position and raydium concentrated liquidity lp positions with balance of 1
+        //   if (!(blackList.includes(asset?.symbol) && asset.balance === 1)) {
+        //     // it's not an LP position with balance of 1, so include it
+        //     return asset;
+        //   }
+        // })
 
       .map(asset => this._helpersService.mapToStashAsset(asset, asset.type));
 
 
-    console.log(additionalZeroValueAssetsFinalized);
 
     return this._helpersService.createStashGroup(
       'zero value assets',
@@ -89,9 +76,9 @@ export class ZeroValueAssetsService {
 
 
   async updateZeroValueAssets(forceDelay: boolean = false) {
-    console.time('updateZeroValueAssets');
-    if(forceDelay) await this._helpersService.utils.sleep(5000)
-    console.timeEnd('updateZeroValueAssets');
+    // console.time('updateZeroValueAssets');
+    // if(forceDelay) await this._helpersService.utils.sleep(5000)
+    // console.timeEnd('updateZeroValueAssets');
     const zeroValueAssets = await this._helpersService.getDASAssets();
 
     if (zeroValueAssets) {
@@ -116,8 +103,8 @@ export class ZeroValueAssetsService {
 
     await Promise.all(accounts.filter(acc => acc.balance !== 0).map(async acc => {
       instructions.push(createBurnCheckedInstruction(
+        new PublicKey(acc.mint.addr),
         new PublicKey(acc.account.addr),
-        new PublicKey(acc.mint),
         walletOwner,
         BigInt(Math.floor(acc.balance * 10 ** acc.decimals)),
         acc.decimals,
@@ -126,7 +113,7 @@ export class ZeroValueAssetsService {
 
     await Promise.all(accounts.map(async acc => {
       instructions.push(createCloseAccountInstruction(
-        new PublicKey(acc.account.addr),
+        new PublicKey(acc.mint.addr),
         walletOwner,
         walletOwner
       ));
