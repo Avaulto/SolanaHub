@@ -148,7 +148,7 @@ export class HelpersService {
             defi: 'Withdraw & Close',
             stake: 'harvest',
             dust: 'swap',
-            default: 'burn'
+            default: 'close'
         };
         return actions[category] || actions.default;
     }
