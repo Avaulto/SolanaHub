@@ -69,8 +69,8 @@ export class TableComponent  implements OnChanges {
       { key: 'select', width: '6%', cellTemplate: this.checkboxTpl, cssClass: { name: 'select-box', includeHeader: true } },
       { key: 'asset', title: assetTitle, width: '30%', cellTemplate: this.tokenTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: accountOrPlatformTitle.toLowerCase(), title: accountOrPlatformTitle, width: '15%', cellTemplate: this.getTemplateForTitle(accountOrPlatformTitle), cssClass: { name: 'ion-text-capitalize ion-text-left', includeHeader: true } },
-      { key: 'value', title: 'Extractable', width: '15%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
-      { key: 'source', title: 'Source', width: '15%', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'value', title: 'Extractable', width: '17%', cellTemplate: this.valueTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
+      { key: 'source', title: 'Source', width: '17%', cellTemplate: this.sourceTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
       { key: 'action', title: '', width: '15%', cellTemplate: this.actionTpl, cssClass: { name: 'ion-text-left', includeHeader: true } },
     ];
   }

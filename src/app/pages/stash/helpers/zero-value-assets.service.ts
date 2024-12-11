@@ -30,8 +30,8 @@ export class ZeroValueAssetsService {
     const rentFeeInUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice() * buffer;
 
     const additionalZeroValueAssetsFinalized = additionalAssets
-    // filter frozen assets and asset with balance
-    .filter(asset => !asset.frozen)
+      // filter frozen assets and asset with balance
+      .filter(asset => !asset.frozen)
       // .filter(asset => !asset.frozen && asset.value < rentFeeInUSD)
 
       .map((asset, index) => {
@@ -50,23 +50,23 @@ export class ZeroValueAssetsService {
 
       //   return existsInTokens || existsInNFTs
       // })
-        // .filter(asset => {
-        //   const blackList = ['RLC', 'OWP', 'Orca Whirlpool Position', 'Raydium Concentrated Liquidity'];
-        //   // hide orca whirlpool position and raydium concentrated liquidity lp positions with balance of 1
-        //   if (!(blackList.includes(asset?.symbol) && asset.balance === 1)) {
-        //     // it's not an LP position with balance of 1, so include it
-        //     return asset;
-        //   }
-        // })
+      // .filter(asset => {
+      //   const blackList = ['RLC', 'OWP', 'Orca Whirlpool Position', 'Raydium Concentrated Liquidity'];
+      //   // hide orca whirlpool position and raydium concentrated liquidity lp positions with balance of 1
+      //   if (!(blackList.includes(asset?.symbol) && asset.balance === 1)) {
+      //     // it's not an LP position with balance of 1, so include it
+      //     return asset;
+      //   }
+      // })
 
       .map(asset => this._helpersService.mapToStashAsset(asset, asset.type));
 
 
-
+    // todo add desc "or with balance but no market value found." once we add tokens with balance
     return this._helpersService.createStashGroup(
       'zero value assets',
-      "This dataset includes empty NFTs and token accounts or with balance but no market value found.",
-      "burn",
+      "Empty NFTs and token accounts",
+      "Close",
       additionalZeroValueAssetsFinalized
     );
   });

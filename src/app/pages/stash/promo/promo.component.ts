@@ -7,14 +7,14 @@ import {
   trigger,
   transition,
 } from "@angular/animations";
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgIf } from '@angular/common';
 import va from '@vercel/analytics'
 @Component({
   selector: 'promo',
   templateUrl: './promo.component.html',
   styleUrls: ['./promo.component.scss'],
   standalone: true,
-  imports: [IonButton, IonImg, IonLabel, IonText, CurrencyPipe, IonSkeletonText],
+  imports: [NgIf,IonButton, IonImg, IonLabel, IonText, CurrencyPipe, IonSkeletonText],
   animations: [
     trigger('easeOut', [
       transition('* => void', [
@@ -31,7 +31,7 @@ import va from '@vercel/analytics'
         style({
             opacity: 0
         }),
-        animate("500ms ease-in-out", style({
+        animate("500ms 300ms ease-in-out", style({
             opacity: 1
         }))
     ]),

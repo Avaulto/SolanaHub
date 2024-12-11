@@ -17,11 +17,13 @@
           <div class="ion-margin-button ion-hide-lg-down"></div>
         </div>
         <div id="action-btn-wrapper">
-
+  
           @if(stash.label.toLowerCase() === 'dust value'){
           <!-- <ion-col  size="3" sizeLg="2"> -->
           <div id="toggle-swap">
-            <ion-toggle mode="md" (ionChange)="onSwapTohubSOLChange($event.detail.checked)" /><span>Swap to hubSOL</span>
+            <ion-toggle mode="md" [tooltip]="toolTipTpl" (ionChange)="onSwapTohubSOLChange($event.detail.checked)" />
+            <ng-template #toolTipTpl>Bulk Swap to {{swapTohubSOL ? 'hubSOL' : 'SOL'}}</ng-template>
+            <!-- <span>Swap to hubSOL</span> -->
           </div>
           <!-- </ion-col> -->
           }
@@ -44,11 +46,11 @@
           </ion-button>
           @if(stash.label.toLowerCase() === 'dust value'){
           <ion-button (click)="openRangeBox($event)" id="range-btn" fill="clear"><ion-icon name="funnel-outline" />
-            <span>max. value</span>
+            <span class="ion-hide-md-down">max. value</span>
             <chip [name]="portfolioShare + '%'"></chip>
           </ion-button>
           }
-
+          <div class="ion-margin-end ion-hide-md-down"></div>
         </div>
 
         <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow"
