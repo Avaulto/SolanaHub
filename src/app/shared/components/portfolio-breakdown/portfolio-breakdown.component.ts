@@ -141,7 +141,7 @@ export class PortfolioBreakdownComponent implements AfterViewInit {
     this.chartData ? this.chartData.destroy() : null
     const chartEl = this.breakdownChart?.nativeElement
     const filterPortfolioLowValue = this.assetClassValue().filter((assets: any) => !assets.excluded);
-    const groupNames = filterPortfolioLowValue.map((assets: any) => assets.group)
+    const groupNames = filterPortfolioLowValue.map((assets: any) => assets.group.charAt(0).toUpperCase() + assets.group.slice(1))
     const groupColors = filterPortfolioLowValue.map((assets: any) => assets.color)
     const groupValue = filterPortfolioLowValue.map((assets: any) => assets.value)
 

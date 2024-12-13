@@ -48,7 +48,7 @@ import va from '@vercel/analytics'
   ]
 })
 export class PromoComponent implements AfterViewInit {
-  @Input() estimateStashValue: number = 0;
+  @Input() estimateStashValue: number = null;
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;
   public wordCarousel = ["Dust value", "Stake accounts", "DeFi positions"];
   public wordCounter = -1;
