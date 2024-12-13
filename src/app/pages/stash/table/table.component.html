@@ -1,6 +1,6 @@
 <div class="data-set">
-  <ion-accordion-group [multiple]="true" [value]="['first']">
-    <ion-accordion value="first" toggleIcon="arrow-up-outline" toggleIconSlot="end">
+  <ion-accordion-group [multiple]="true" [value]="tableData().length ? ['first'] : []">
+    <ion-accordion value="first" toggleIconSlot="end">
       <ion-row slot="header" (click)="alternateClick($event)"
         class="gap table-head ion-align-items-center ion-justify-content-between">
         <div class="">
@@ -53,8 +53,9 @@
           <div class="ion-margin-end ion-hide-md-down"></div>
         </div>
 
-        <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()"><ion-icon [class.flipArrow]="flipArrow"
-            name="arrow-up-outline" /></ion-button>
+        <ion-button id="toggle-btn" fill="clear" (click)="toggleAccordion()">
+          <ion-icon [class.flipArrow]="tableData().length ? flipArrow : !flipArrow" name="arrow-up-outline" />
+        </ion-button>
 
       </ion-row>
       

@@ -78,7 +78,7 @@ ngOnChanges(changes: SimpleChanges): void {
     // showDetailsArrow: this.expandDetails,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
-    isLoading: true,
+    isLoading: false,
   };
 
   public configurationState = computed(() => {
@@ -140,8 +140,6 @@ ngOnChanges(changes: SimpleChanges): void {
       this.configuration.isLoading = isLoading;
       this.configuration.paginationEnabled = paginationEnabled;
       
-
- 
       
     });
   }
