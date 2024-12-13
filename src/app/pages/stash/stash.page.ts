@@ -161,7 +161,13 @@ export class StashPage implements OnInit {
             "id": 8,
             "question": "What are the risks of using Stash?",
             "answer": "Stash operates in a 'safe mode' by default, meaning it excludes unknown or potentially valuable assets from its suggestions. However, there is still some risk. For example, certain assets might appear valueless, like NFTs with no floor price or tokens with no active market, but they could hold hidden value. If you burn or swap such assets, you might unknowingly lose something valuable. It's essential to review all recommendations carefully and understand the implications before taking action."
+          },
+          {
+            "id": 9,
+            "question": "Do I need to pay for using Stash?",
+            "answer": "Yes, there is a simple fee structure for using Stash. For most operations, we charge a flat 3% fee based on the value of the transaction. However, for identifying and managing 'out of range' DeFi positions, there is a fixed fee of 0.01 SOL per position. This pricing ensures transparency while allowing us to maintain and improve the service for all users."
           }
+          
         ]
         
       }
