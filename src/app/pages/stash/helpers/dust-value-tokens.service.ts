@@ -98,8 +98,10 @@ export class DustValueTokensService {
 
       console.log('swapencodedIx', swapencodedIx.flat());
       
+      // filter null and flat
+      const ixs = swapencodedIx.flat().filter(ix => ix !== null)
       // const instructions = swapencodedIx.map(tx => extractInstructions(tx));
-      return await this._helpersService._simulateBulkSendTx(swapencodedIx.flat())
+      return await this._helpersService._simulateBulkSendTx(ixs)
 
     } catch (error) {
       console.log(error);

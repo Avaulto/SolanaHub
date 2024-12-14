@@ -9,6 +9,7 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { EarningsService, HelpersService } from '../helpers';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import va from '@vercel/analytics'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -91,8 +92,16 @@ export class StashModalComponent implements OnInit {
     }
   }
   private async _fetchHubSOLRate() {
-    const hubSOLmint = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'
-    this.hubSOLRate = (await this._lss.getStakePoolList()).find(pool => pool.tokenMint === hubSOLmint)?.exchangeRate
+    try {
+      const hubSOLratio = await fetch('https://extra-api.sanctum.so/v1/sol-value/current?lst=hubSOL')
+      const hubSOLratioData = await hubSOLratio.json()
+      const exchangeRate = hubSOLratioData.solValues.hubSOL / LAMPORTS_PER_SOL;
+      this.hubSOLRate = exchangeRate
+      return exchangeRate
+    } catch (error) {
+      console.log(error)
+      return 0
+    }
   }
   private _calculatePlatformFee() {
     const type = this.stashAssets[0].type
