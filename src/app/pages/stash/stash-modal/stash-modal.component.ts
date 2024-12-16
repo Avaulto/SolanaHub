@@ -169,7 +169,8 @@ export class StashModalComponent implements OnInit {
         break
         // already gets updated after tx submitted in fetchPortfolio call under txi service
       case 'dust-value':
-        this._stashService.getZeroValueAssetsByBalance(false)
+        this._helpersService.getDASAssets()
+        this._stashService.updateDustValueTokens(false)
         break
       case 'defi-position':
         this._stashService.updateOutOfRangeDeFiPositions()
