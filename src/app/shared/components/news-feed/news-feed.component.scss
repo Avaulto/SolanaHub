@@ -8,7 +8,7 @@
     overflow: hidden;
     position: relative;
     ion-img {
-        min-height: 280px;
+        min-height: fit-content;
     }
     div {
         position: absolute;

@@ -5,9 +5,7 @@
     <div id="main-feed">
       <chip [name]="mainFeed.type" [color]="mainFeed.color" id="featured-chip" />
       <ion-img [src]="mainFeed.image" />
-      <div>
-        {{mainFeed.description}}
-      </div>
+      <div [innerHTML]="mainFeed.description"></div>
     </div>
     @for (feed of feed; track feed.title) {
     <div class="feed-item">
