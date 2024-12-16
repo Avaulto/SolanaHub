@@ -29,7 +29,7 @@ export class NewsFeedComponent implements OnInit {
     type: "promotion",
     color: "active",
     image: "https://pbs.twimg.com/media/Ge7aUTBXUAAOB8W?format=jpg&name=medium",
-    description: `Extract your SOL in 1 click <a href='https://discord.gg/bcVhnpww7N'>get it a try</a>`
+    description: `Extract your SOL in 1 click <a href='/stash'>get it a try</a>`
   }
   feed = [
     {
