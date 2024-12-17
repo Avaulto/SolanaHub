@@ -10,6 +10,7 @@ import { EarningsService, HelpersService } from '../helpers';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import va from '@vercel/analytics'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -39,7 +40,8 @@ export class StashModalComponent implements OnInit {
     public utils: UtilService,
     public modalCtrl: ModalController,
     private _lss: LiquidStakeService,
-    private _earningsService: EarningsService
+    private _earningsService: EarningsService,
+    private _loyaltyLeagueService: LoyaltyLeagueService
   ) {
   }
 
@@ -158,6 +160,9 @@ export class StashModalComponent implements OnInit {
       this.dataToReload(dataToReload)
       this.closeModal()
       this.storeEarningPlatformRecord(signatures)
+
+      this._loyaltyLeagueService.completeQuest(publicKey.toBase58(), 'stashInteract')
+
     }
     this.stashState.set(this.actionTitle)
 
