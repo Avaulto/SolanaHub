@@ -13,7 +13,7 @@ import { ModalController } from '@ionic/angular';
 export class ProposalPopupComponent  implements OnInit {
   @Input() proposal: Proposal;
   private _modalCtrl= inject(ModalController);
-  @Input() daoInfo: {name: string, imgURL: string} = null
+  @Input() daoInfo: {name: string, logoURI: string} = null
   constructor() { }
 
   ngOnInit() {}

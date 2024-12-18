@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, effect, inject, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NFT, Stake, Validator } from 'src/app/models';
-import { IonButton, IonImg, IonContent } from '@ionic/angular/standalone'
+import { IonButton, IonImg } from '@ionic/angular/standalone'
 
 import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
@@ -19,7 +19,8 @@ import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal
 import { NftsService } from 'src/app/services/nfts.service';
 import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/unstake-lst-modal/unstake-lst-modal.component';
 import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-modal.component';
-import { FreemiumModule } from '../../layouts/freemium/freemium.module';
+import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal.component';
+
 
 @Component({
   selector: 'app-modal',
@@ -27,8 +28,6 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
   styleUrls: ['./modal.component.scss'],
   standalone: true,
   imports: [
-    IonContent, 
-    FreemiumModule,
     IonButton,
     IonImg,
     ValidatorsModalComponent,
@@ -40,7 +39,6 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    // BurnNftModalComponent,
     UnstakeLstModalComponent,
     FaqModalComponent
   ]
@@ -49,7 +47,7 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
 export class ModalComponent implements AfterViewInit {
   public onSubmit: boolean = false;
   @Input() config = {
-    imgUrl: null,
+    logoURI: null,
     title: null,
     desc: null,
     btnText: null
@@ -77,7 +75,6 @@ export class ModalComponent implements AfterViewInit {
       
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
-        console.log(pool);
         this._lss.stakePoolStakeAccount(this.data.stake, pool)
         break;
       case 'unstake-lst-modal':

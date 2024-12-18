@@ -1,0 +1,38 @@
+<div id="faq-popup" class="ion-padding">
+  <div id="modal-intro">
+    <div>
+
+
+      <div class="icon-wrapper">
+        <ion-img src="assets/images/faq-icon.svg" />
+      </div>
+
+      <div id="title" [innerHTML]="title"></div>
+      <div id="desc" [innerHTML]="desc"></div>
+    </div>
+
+    <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+  </div>
+  <div id="faq-container">
+    <ion-accordion-group>
+      @for (item of faq; track item.id) {
+      <ion-accordion [value]="item.id">
+        <ion-item lines="none" slot="header">
+          <ion-label>{{item.question}}</ion-label>
+        </ion-item>
+        <ion-text class="ion-padding" slot="content" [innerHTML]="item.answer"></ion-text>
+      </ion-accordion>
+      }
+    </ion-accordion-group>
+
+    <div id="resource">
+      <ion-text>
+        <!-- Enhance your knowledge by diving deep into the Loyalty League -->
+        For further information, visit:
+      </ion-text>
+      <a href="https://docs.solanahub.app" target="_blank">
+        <ion-button color="light">Documentation <ion-icon name="exit-outline"></ion-icon></ion-button>
+      </a>
+    </div>
+  </div>
+</div>

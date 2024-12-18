@@ -19,26 +19,26 @@ export class FeatureToastComponent  implements OnInit {
   ngOnInit() {}
   async openModal(componentName: 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal') {
     let config = {
-      imgUrl: null,
+      logoURI: null,
       title: null,
       desc: null,
       btnText: null
     }
     switch (componentName) {
       case 'list-nft-modal':
-        config.imgUrl = 'assets/images/list-icon.svg'
+        config.logoURI = 'assets/images/list-icon.svg'
         config.title = 'List'
         config.desc = 'List your NFT directly in your favorite market place'
         config.btnText = 'List now'
         break;
       case 'send-nft-modal':
-        config.imgUrl = 'assets/images/send-icon.svg'
+        config.logoURI = 'assets/images/send-icon.svg'
         config.title = `Send`
         config.desc = `Send your NFT${this.nfts.length > 1 ? 's' : ''} to a different wallet`
         config.btnText = `Send ${this.nfts.length} NFT${this.nfts.length > 1 ? 's' : ''}`
         break;
       case 'burn-nft-modal':
-        config.imgUrl = 'assets/images/trash-icon.svg'
+        config.logoURI = 'assets/images/trash-icon.svg'
         config.title = 'Burn'
         config.desc = `Burn your NFT${this.nfts.length > 1 ? 's' : ''} and get SOL back`
         config.btnText = `Burn ${this.nfts.length} NFT${this.nfts.length > 1 ? 's' : ''}`

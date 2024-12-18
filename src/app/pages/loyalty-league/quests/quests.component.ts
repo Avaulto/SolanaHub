@@ -57,6 +57,14 @@ export class QuestsComponent implements OnInit {
       task: 'friendInvite'
     },
     {
+      icon: 'assets/images/wallet-icon.svg',
+      title: 'Clean up your wallet',
+      description: 'Interact with stash page',
+      pts: 1000,
+      completed: false,
+      task: 'stashInteract'
+    },
+    {
       icon: 'assets/images/ll/swap-icon.svg',
       title: 'Swap on SolanaHub',
       description: 'Use Jupiter integrated button to swap on SolanaHub',

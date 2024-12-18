@@ -1,8 +1,8 @@
 <div id="container">
   <div id="stash-box">
-    @if(preview){
-      <div class="inner" @easeOut>
-
+    
+      <div class="inner" @easeOut *ngIf="preview">
+        
         <div id="img-wrapper">
           <ion-img src="/assets/images/stash-icon.svg"/>
         </div>
@@ -16,19 +16,23 @@
         <div id="btn-wrapper">
           <ion-button (click)="startAnalyze()">Uncover Hidden Balance</ion-button>
         </div>
-        <p style="text-align: center; font-size: 11px; opacity: 0.7;">Subject to wallet connected</p>
+        <p id="estimated-value" >  <span>Estimated Stash Value: </span>
+          @if(estimateStashValue){
+           <span style="font-weight: 600; color: var(--ion-color-secondary);">{{estimateStashValue | currency:'USD'}}</span>
+          }@else {
+            <ion-skeleton-text animated/>
+          }</p>
       </div>
-    }
     
-    @else{
-      <div class="inner" @easeIn>
+    
+      <div class="inner" @easeIn *ngIf="!preview">
 
         <div #animationEl style="width:400px"></div>
         <ion-text>
           Looking for value in <span [@fadeAnimation]="toggle" (@fadeAnimation.done)="nextWord($event)">{{wordCarousel[wordCounter]}}</span>
         </ion-text>
       </div>
-    }
+    
 
  
   </div>

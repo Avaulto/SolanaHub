@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, effect, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild, WritableSignal, effect, signal } from '@angular/core';
 import {
   IonImg,
   IonItem,
@@ -23,17 +23,23 @@ import {
     IonCol
   ]
 })
-export class StakePathComponent implements OnInit {
+export class StakePathComponent implements OnInit, OnChanges {
   @ViewChild('selectedPath', { static: false }) selectedPath: IonRadioGroup;
+  @Input() stakePath: string = 'native'
   @Output() onSelectPath = new EventEmitter()
   constructor() {
 
   }
 
   ngOnInit() {
-
   }
+  
   selectPath(ev) {
-    this.onSelectPath.emit(ev.detail.value)
+    const value = ev?.detail?.value ?? this.stakePath
+    this.onSelectPath.emit(value)
+  }
+  
+  ngOnChanges(changes): void {
+    this.selectPath(this.stakePath)
   }
 }

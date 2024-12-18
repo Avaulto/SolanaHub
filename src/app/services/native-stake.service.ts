@@ -17,6 +17,7 @@ import {
   Transaction,
 
 } from '@solana/web3.js';
+const { struct, u32, u8 } = require('@solana/buffer-layout');
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 import { Stake, StakeAccountShyft, Validator, WalletExtended } from '../models';
@@ -34,6 +35,32 @@ export class NativeStakeService {
   ) { }
 
 
+  private async _getStakeAccountState(stakeAccountPubkey: PublicKey) {
+    // Fetch the account information
+    const accountInfo = await this._shs.connection.getAccountInfo(stakeAccountPubkey);
+    const StakeAccountLayout = struct([
+      u32('state'),
+      u8('rentExemptReserve'),
+      // Add other fields as necessary
+    ]);
+  
+    if (accountInfo === null) {
+      console.log('Stake account not found');
+      return;
+    }
+  
+    if (!accountInfo.owner.equals(StakeProgram.programId)) {
+      console.log('Not a stake account');
+      return;
+    }
+  
+    const data = Buffer.from(accountInfo.data);
+    const decodedData = StakeAccountLayout.decode(data);
+    //@ts-ignore
+    const state = decodedData.state;
+     //@ts-ignore
+    console.log('Stake account state:', state);
+  }
 
   private async _extendStakeAccount(
     account: StakeAccountShyft,
@@ -61,9 +88,15 @@ export class NativeStakeService {
       // otherwise it's active
       
       const stakeState = data.value?.data['parsed']?.info?.stake.delegation
-      state = stakeState.deactivationEpoch > getCurrentEpoch.epoch ? "active" : stakeState.activationEpoch < getCurrentEpoch.epoch ? "inactive" : stakeState.activationEpoch == getCurrentEpoch.epoch ? "activating" : stakeState.deactivationEpoch === getCurrentEpoch.epoch ? "deactivating" : "active"
 
-  
+      state = stakeState.activationEpoch == getCurrentEpoch.epoch ? "activating" 
+        : stakeState.deactivationEpoch == getCurrentEpoch.epoch ? "deactivating" 
+        : stakeState.deactivationEpoch > getCurrentEpoch.epoch ? "active" 
+        : stakeState.activationEpoch < getCurrentEpoch.epoch ? "inactive" 
+        : "active"
+
+      
+      
 
     } catch (error) {
       state = "inactive";
@@ -74,7 +107,7 @@ export class NativeStakeService {
     const delegatedLamport = accountLamport - rentReserve
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
     const validatorName = account.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
-    const imgUrl = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image || "assets/images/unknown.svg")
+    const logoURI = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image || "assets/images/unknown.svg")
 
     const stakeAccountInfo: Stake = {
       link: this._utils.explorer + '/account/' + address,
@@ -95,7 +128,7 @@ export class NativeStakeService {
       stakeAuth: account.meta.authorized.staker,
       withdrawAuth: account.meta.authorized.withdrawer,
       validatorName: validatorName || null,
-      imgUrl: imgUrl || null,
+      logoURI: logoURI || null,
       apy: validator?.total_apy || null
     }
 

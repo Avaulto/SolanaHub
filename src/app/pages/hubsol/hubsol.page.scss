@@ -360,7 +360,7 @@
   .platform {
     height: 92px;
     padding-left: 25px;
-    border-left: 1px solid #CDD5DF;
+    border-left: 1px solid var(--ion-color-border);
     margin-block-end: 5vh;
 
     .wrapper {
@@ -408,7 +408,7 @@
         color: #175CD3;
       }
 
-      .DEX {
+      .DEX, .lending {
         background: #FFF1F3;
         color: #C01048;
       }

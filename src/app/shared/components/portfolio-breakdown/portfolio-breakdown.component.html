@@ -1,9 +1,9 @@
 <div id="chart-breakdown">
   @if (assetClassValue().length) {
-  <ion-row style="width: 100%" class="ion-justify-content-between ion-align-items-start">
+  <ion-row style="width: 100%" class="ion-justify-content-between ion-align-items-center">
     
     <ion-col sizeXl="4" size="12">
-        <div style="height: 140px; width: 140px;">
+        <div id="chart-wrapper" style="height: 150px; width: 150px;">
           <canvas style="cursor: pointer;" #breakdownChart (click)="onChartClick($event)"></canvas>
         </div>
     </ion-col>

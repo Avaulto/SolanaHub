@@ -12,6 +12,6 @@ import { TableMenuComponent } from './table-menu/table-menu.component';
 @NgModule({
   declarations: [MftComponent],
   imports: [JsonPipe, TableModule,TableHeadComponent,TableMenuComponent, IonCheckbox,SearchBoxComponent, IonRow,IonCol ,IonImg,IonSearchbar, CurrencyPipe, DecimalPipe, IonButton, IonSpinner],
-  exports: [MftComponent]
+  exports: [MftComponent,]
 })
 export class MftModule { }

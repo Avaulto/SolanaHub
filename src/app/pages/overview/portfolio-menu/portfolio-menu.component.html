@@ -1,13 +1,11 @@
 <div id="portfolio-menu">
-  @for (wallet of walletsPortfolio(); track $index) {
-    <portfolio-box [wallet]="wallet"/>
+  @for (wallet of walletsPortfolio(); let i = $index; track i) {
+    <portfolio-box [isPrimary]="i === 0" [wallet]="wallet" (delete)="delete($event)" (toggle)="toggle($event)"/>
   }
 
-  <div class="portfolio-box" (click)="openNewPortfolioSetup()">
-    <div class="portfolio-box-body" >
-      <ion-icon name="add-outline"></ion-icon>
-      add new portfolio
+  @if(canAddWallet()) {
+    <div (click)="openNewPortfolioSetup()">
+      <portfolio-box />
     </div>
-    <ion-ripple-effect/>
-  </div>
+  }
 </div>

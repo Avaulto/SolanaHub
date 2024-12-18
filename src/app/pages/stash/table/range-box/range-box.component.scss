@@ -1,0 +1,27 @@
+:host{
+    background: white;
+    padding: 12px;
+}
+ion-label{
+    color: var(--ion-color-dark-hard);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 18px;
+    margin-bottom: 4px;
+    display: block;
+}
+ion-text{
+    color:var(--ion-color-dark);
+    font-size: 12px;
+    line-height: 18px;
+    display: block;
+    margin-bottom: 12px;
+}
+ion-segment-button {
+    --border-radius: 4px;
+    --background: white;
+    --indicator-color: var(--ion-color-primary);
+    --color-checked: white;
+    width: 45px;
+    min-width: 45px;
+}

@@ -1,14 +1,12 @@
-import { Component, OnInit, WritableSignal, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component, OnInit, computed, inject, Signal} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { NetWorthComponent } from './net-worth/net-worth.component';
 import { AssetsTableComponent } from './assets-table/assets-table.component';
 import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent} from 'src/app/shared/components';
-import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { PortfolioService } from 'src/app/services/portfolio.service';
-import { TransactionHistory } from 'src/app/models';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
+import { PortfolioBreakdownService } from "../../services";
 
 
 @Component({
@@ -25,46 +23,35 @@ import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.componen
     TransactionsHistoryTableComponent,
     PortfolioMenuComponent
   ]
-
 })
 export class OverviewPage implements OnInit {
-  private _jupStore = inject(JupStoreService)
-  private _portfolioService = inject(PortfolioService)
-  
-  public walletAssets = this._portfolioService.walletAssets
-  
-  // Add computed signals for all wallets
-  public allWalletsAssets = computed(() => {
-    const portfolioMap = this._portfolioService.portfolioMap();
-    return Array.from(portfolioMap.values())
-      .map(portfolio => portfolio.walletAssets)
-      .flat()
-      .filter(Boolean);
-  });
+  private readonly _portfolioBreakDownService = inject(PortfolioBreakdownService)
+  private readonly _portfolioService = inject(PortfolioService)
+  public readonly allWalletsAssets = this._portfolioBreakDownService.getEnabledWalletsAssets;
+  public readonly portfolioTotalUsdValue =  this._portfolioBreakDownService.portfolioTotalUsdValue;
 
-  // Update total value computation to use all wallets
-  public portfolioTotalUsdValue = computed(() => 
-    this.allWalletsAssets()
-      ?.filter(data => data?.value)
-      .reduce((accumulator, currentValue) => accumulator + currentValue.value, 0)
-  )
-
-  public portfolioValueInSOL = computed(() => 
-    this.portfolioTotalUsdValue() / this._jupStore.solPrice()
-  )
-
-  // Optional: Add individual wallet totals if needed
-  public walletTotals = computed(() => {
-    const portfolioMap = this._portfolioService.portfolioMap();
+  /**
+   * Computed property that returns a Map of total USD values for all wallets.
+   *
+   * This computed property iterates through all portfolios in the _portfolioService,
+   * calculates the total USD value for each wallet, and stores these totals in a Map.
+   * The Map keys are wallet addresses, and the values are the corresponding total USD amounts.
+   *
+   * @type {Map<string, number>}
+   * @readonly
+   */
+  public walletTotals: Signal<Map<string, number>> = computed(() => {
+    const portfolioList = this._portfolioService.portfolio();
     const totals = new Map<string, number>();
-    
-    portfolioMap.forEach((portfolio, address) => {
+
+    portfolioList.forEach((p) => {
+      const { walletAddress, portfolio } = p;
       const total = portfolio.walletAssets
-        ?.filter(data => data?.value)
+        ?.filter(data => (data?.value))
         .reduce((acc, curr) => acc + curr.value, 0) || 0;
-      totals.set(address, total);
+      totals.set(walletAddress, total);
     });
-    
+
     return totals;
   })
 
@@ -73,7 +60,7 @@ export class OverviewPage implements OnInit {
 
     //    this._portfolioService.getWalletHistory(wallet.publicKey.toBase58())
     // })
-    
+
   }
   // public walletHistory: WritableSignal<TransactionHistory[]> = this._portfolioService.walletHistory
 }

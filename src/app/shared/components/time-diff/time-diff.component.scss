@@ -2,7 +2,7 @@ ion-button {
     width: fit-content;
     text-transform: capitalize;
     --border-radius: 6px;
-    --border-color: #CDD5DF;
+    --border-color: var(--ion-color-border);
     --background: var(--ion-color-light);
     --border-width: 1px;
     --border-style: solid;

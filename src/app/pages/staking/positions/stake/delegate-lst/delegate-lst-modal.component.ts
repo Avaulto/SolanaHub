@@ -39,14 +39,11 @@ constructor(private _lss: LiquidStakeService){
 
 }
   async ngOnInit() {
-    console.log(this.stakePools);
     
-    const _listedPools = ['solblaze','the vault', 'solanahub staked sol']
-    if(this.stake.validator.vote_identity === '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh' || this.stake.accountLamport < LAMPORTS_PER_SOL){
-      _listedPools.unshift('solanahub staked SOL')
-    }
-    if(this.stake.accountLamport > LAMPORTS_PER_SOL){
-       _listedPools.push('marinade')
+    const _listedPools = ['solanahub staked sol','solblaze','the vault']
+    if(this.stake.validator.vote_identity !== '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh' ){
+     // find and remove solanahub staked sol from the list
+      _listedPools.splice(_listedPools.indexOf('solanahub staked sol'), 1)
     }
     const SP = await this._lss.getStakePoolList()
     this.stakePools = SP.filter(p => _listedPools.includes(p.poolName.toLowerCase()))

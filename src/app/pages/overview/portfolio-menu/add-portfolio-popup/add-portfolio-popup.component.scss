@@ -1,0 +1,54 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.content-header {
+  display: inline-flex;
+  justify-content: space-between;
+  gap: .5rem;
+
+  &__wallet-image {
+    color: black;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    gap: 0;
+    border-radius: .5rem;
+    border: 1px solid #E3E8EF;
+  }
+}
+
+.content-body {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: 1rem;
+
+  &__title {
+    color: #121926;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 28px;
+  }
+
+  &__description {
+    color: #697586;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 18px;
+    margin-bottom: .8rem;
+  }
+
+  &__input-feedback {
+    display: inline-flex;
+    align-items: center;
+    gap: .2rem;
+    font-size: 12px;
+    padding-top: .4rem;
+    color: var(--ion-color-danger);
+  }
+}

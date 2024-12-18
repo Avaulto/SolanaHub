@@ -1,9 +1,17 @@
-import { CurrencyPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { IonButton, IonRippleEffect, IonText, IonLabel, IonIcon ,IonToggle} from "@ionic/angular/standalone";
+import { CurrencyPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  IonButton,
+  IonRippleEffect,
+  IonText,
+  IonLabel,
+  IonIcon,
+  IonToggle,
+  IonSkeletonText
+} from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
-import { WalletPortfolio } from 'src/app/models/portfolio.model';
+import {WalletBoxSpinnerService} from "../../../../services";
 
 @Component({
   selector: 'portfolio-box',
@@ -12,27 +20,34 @@ import { WalletPortfolio } from 'src/app/models/portfolio.model';
   standalone: true,
   imports: [
     IonToggle,
-    IonIcon, 
-    IonLabel, 
-    IonText, 
-    IonRippleEffect, 
+    IonIcon,
+    IonLabel,
+    IonText,
+    IonRippleEffect,
     IonButton,
-    CurrencyPipe
-
-  ]
+    CurrencyPipe,
+    IonSkeletonText,
+    NgIf
+  ],
+   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PortfolioBoxComponent  implements OnInit {
+export class PortfolioBoxComponent {
+  protected readonly spinnerState = inject(WalletBoxSpinnerService).spinner;
   @Input() isPrimary = false;
-  @Input() wallet: {walletAddress: string, netWorth: number};
-  constructor() { 
+  @Input() wallet: { walletAddressShort: string, walletAddress: string, value: number, enabled: boolean };
+
+  @Output() delete = new EventEmitter<string>()
+  @Output() toggle = new EventEmitter<string>()
+
+  constructor() {
     addIcons({trashOutline});
   }
 
-  ngOnInit() {
-    console.log(this.wallet);
+  deleteWallet(walletAddress: string) {
+    this.delete.emit(walletAddress)
   }
 
-  deleteWallet() {
-    console.log('delete wallet');
+  toggleWallet(walletAddress: string) {
+    this.toggle.emit(walletAddress)
   }
 }
