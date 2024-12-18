@@ -1,32 +1,52 @@
 .portfolio-box {
-    border-radius: 10px;
-    padding: 12px;
-    cursor: pointer;
-    background-color: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  background-color: #fff;
+  height: 100%;
 }
+
 .portfolio-actions {
-    display: flex;
+  display: inline-flex;
+  gap: .5rem;
 }
+
 .portfolio-box-header {
-    font-weight: 600;
-    color: var(--ion-color-dark);
-    display: flex;
-    justify-content: space-between;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.portfolio-box-header-text{
-    color: var(--ion-color-primary);
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 28px;
-    letter-spacing: 0.16px;
+
+.portfolio-box-header-text {
+  color: var(--ion-color-primary);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0.16px;
 }
 
 .portfolio-box-body {
-    display: flex;
-    justify-content: space-between;
-    text-transform: capitalize;
-    font-size: 16px;
-    font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: 0.16px;
+}
+
+.portfolio-box-empty {
+  ion-label {
+    color: #37264A;
+    font-size: 1rem;
+    font-weight: 700;
     line-height: 28px;
-    letter-spacing: 0.16px;
+  }
+
+  &__skeleton {
+    height: 20px;
+    border-radius: .3rem;
+  }
 }

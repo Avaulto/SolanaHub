@@ -70,7 +70,7 @@ ngOnChanges(changes: SimpleChanges): void {
     showDetailsArrow: true,
     paginationRangeEnabled: false,
     paginationEnabled: false,
-    detailsTemplate: false,
+    detailsTemplate: true,
     // infiniteScrollThrottleTime means how often check if scroll reached end on the collection
     // to load the new items. By default set to 200ms.
     infiniteScrollThrottleTime: 20,
@@ -139,11 +139,9 @@ ngOnChanges(changes: SimpleChanges): void {
       const { isLoading, paginationEnabled } = this.configurationState();
       this.configuration.isLoading = isLoading;
       this.configuration.paginationEnabled = paginationEnabled;
-      
-      
     });
   }
-  
+
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
@@ -158,7 +156,7 @@ ngOnChanges(changes: SimpleChanges): void {
 
   eventEmitted($event: { event: string; value: any }): void {
     // console.log(this.checkAll, $event);
-    
+
     // const isReallyTrue = this.checkAll.el.checked
     if (['onCheckboxSelect', 'onSelectAll'].includes($event.event)) {
     let data = $event.value;
@@ -170,7 +168,7 @@ ngOnChanges(changes: SimpleChanges): void {
       //   } else {
       //     this.selected.add($event.value.rowId);
       //   }
-      //   data = this.tableData().filter((item, index) => 
+      //   data = this.tableData().filter((item, index) =>
       //     this.selected.has(index)
       //   ).map(item => ({ ...item, checked: true }));
       //   console.log('checked data', data);

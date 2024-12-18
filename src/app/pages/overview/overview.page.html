@@ -4,20 +4,20 @@
     <portfolio-menu/>
     <ion-row class="ion-justify-content-between">
       <ion-col id="net-worth" class="gap data-set" size="12" sizeXl="4.3">
-        <app-net-worth #netWorthComponent></app-net-worth>
+        <app-net-worth [portfolioTotalUsdValue]="portfolioTotalUsdValue" />
       </ion-col>
       <ion-col id="portfolio-breakdown" class="gap data-set" size="12" sizeXl="7.5">
-        <portfolio-breakdown [assets]="walletAssets" (totalAssetsChange)="netWorthComponent.onTotalAssetsChange($event)"/>
+        <portfolio-breakdown [assets]="allWalletsAssets"/>
       </ion-col>
     </ion-row>
     <ion-row class="ion-margin-vertical">
       <ion-col class=" data-set" size="12">
-        <app-assets-table  #netWorthComponent/>
+        <app-assets-table />
       </ion-col>
     </ion-row>
     <ion-row style="margin-top:20px">
   <!-- <ion-col class=" data-set" size="12">
-    
+
     <app-transactions-history-table [tableData]="walletHistory"/>
   </ion-col> -->
 </ion-row>

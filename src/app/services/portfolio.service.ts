@@ -1,23 +1,32 @@
-import { Injectable, Signal, WritableSignal, inject, signal } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { UtilService } from './util.service';
-import { FetchersResult, PortfolioElementMultiple, mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
-import { Token, NFT, Stake, TransactionHistory, WalletExtended, Platform, defiHolding, BalanceChange, WalletPortfolio } from '../models/portfolio.model';
-import { JupToken } from '../models/jup-token.model'
+import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
+import {
+  BalanceChange,
+  defiHolding,
+  NFT,
+  Platform,
+  Stake,
+  Token,
+  JupToken,
+  TransactionHistory,
+  WalletExtended,
+  WalletPortfolio,
+  WalletEntry
+} from '../models';
 
 import va from '@vercel/analytics';
 
-import { NativeStakeService, SolanaHelpersService } from './';
+import { NativeStakeService, SolanaHelpersService, WalletBoxSpinnerService } from './';
 import { NavController } from '@ionic/angular';
 import { SessionStorageService } from './session-storage.service';
-import { TransactionHistoryShyft, historyResultShyft } from '../models/trsanction-history.model';
+import { historyResultShyft, TransactionHistoryShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
-import { PublicKey } from '@solana/web3.js';
 import { RoutingPath } from '../shared/constants';
-
-import { MenuController } from '@ionic/angular';
+import { PortfolioDataKeys, WalletDataKeys } from "../enums";
 
 // Add new type definition
 type FetchType = 'full' | 'partial';
@@ -27,8 +36,35 @@ type FetchType = 'full' | 'partial';
 })
 export class PortfolioService {
 
-  public portfolioMap: WritableSignal<Map<string, WalletPortfolio>> = signal(new Map());
-  public currentWalletAddress: string = null;
+  /**
+   * A writable signal representing the portfolio map.
+   * Contains a Map<string, WalletPortfolio> where keys are wallet addresses and values are WalletPortfolio objects.
+   *
+   * @type {WritableSignal<Map<string, WalletPortfolio>>}
+   */
+  private portfolioMap: WritableSignal<Map<string, WalletPortfolio>> = signal(new Map());
+
+  public getPortfolioMapByAddress(walletAddress: string): WalletPortfolio {
+    return (this.portfolioMap().get(walletAddress) || {} as WalletPortfolio)
+  }
+
+  /**
+   * A computed property that returns an array of wallet objects from the portfolio map.
+   * Each wallet object contains the wallet address and portfolio data.
+   *
+   * @remarks
+   * This computed property will automatically rerender whenever the underlying `portfolioMap` signal changes.
+   *
+   * @returns {Array<WalletEntry>}
+   */
+  public portfolio: Signal<WalletEntry[]> = computed(() =>
+    [...Array.from(this.portfolioMap().entries())
+    .map(([walletAddress, portfolio]) => ({
+    walletAddress,
+    portfolio
+  }))]);
+
+  public currentWalletAddress = signal<string>(null);
 
   public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
@@ -48,7 +84,8 @@ export class PortfolioService {
     private _toastService: ToasterService,
     private _sessionStorageService: SessionStorageService,
     private _fetchPortfolioService: PortfolioFetchService,
-    private _watchModeService: WatchModeService
+    private _watchModeService: WatchModeService,
+    private walletBoxSpinnerService: WalletBoxSpinnerService
   ) {
     this.getPlatformsData()
     this._shs.walletExtended$.subscribe(this.handleWalletChange.bind(this));
@@ -67,7 +104,22 @@ export class PortfolioService {
     }
   }
 
-  private saveToPortfolioMap(address: string) {
+  /**
+   * Saves current wallet data to the portfolio map.
+   *
+   * @param {string} address - The solana address of the wallet.
+   * @returns {void}
+   *
+   * @description
+   * This method updates the portfolio map with the latest wallet data for a given address.
+   * It creates a new Map based on the current portfolio map, sets the wallet data as a new entry,
+   * and updates the portfolio map with this new entry.
+   *
+   * @example
+   * // Example usage:
+   * wallet.saveToPortfolioMap("0x1234567890123456789012345678901234567890", false);
+   */
+  private saveToPortfolioMap(address: string): void {
     const newMap = new Map(this.portfolioMap());
     newMap.set(address, {
       walletAssets: this.walletAssets(),
@@ -76,32 +128,121 @@ export class PortfolioService {
       staking: this.staking(),
       defi: this.defi(),
       walletHistory: this.walletHistory(),
-      netWorth: this.netWorth()
+      netWorth: this.netWorth(),
+      enabled: true
     });
     this.portfolioMap.set(newMap);
+    this.walletBoxSpinnerService.hide();
   }
 
-  private async handleWalletChange(wallet: WalletExtended) {
-    if (wallet) {
-      const address = wallet.publicKey.toBase58();
-      this.currentWalletAddress = address;
-      
-      // Check if we already have data for this wallet
-      if (!this.portfolioMap().has(address)) {
-        await this.waitForTurnStileToken();
-        await this.getPortfolioAssets(address, this._utils.turnStileToken);
-      } else {
-        this.updateCurrentWalletSignals(address);
-      }
+  /**
+   * Removes the specified address from the portfolio map.
+   *
+   * @remarks
+   * The portfolio signal will get re-rendered after this operation.
+   *
+   * @param {string} address - The address of the wallet to remove from the portfolio.
+   * @returns {void}
+   */
+  public removeFromPortfolioMap(address: string): void {
+    const newMap = new Map(this.portfolioMap());
+    newMap.delete(address)
+    this.portfolioMap.set(newMap)
+  }
 
-      this._fetchPortfolioService.refetchPortfolio().subscribe(async ({ shouldRefresh, fetchType }) => {
-        if (shouldRefresh) {
-          const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
-          await this.waitForTurnStileToken();
-          this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
-        }
-      });
+  /**
+   * Updates portfolio data for the specified address by key-value pair.
+   *
+   * @remarks
+   * The portfolio signal will get re-rendered after this operation.
+   *
+   * @param {string} walletAddress - The address of the wallet to update.
+   * @param {string} key - The key of the data to update.
+   * @param {any} value - The new value for the specified key.
+   * @returns {void}
+   */
+  private updateWalletDataByKey(walletAddress: string, key: string, value: any): void {
+    const walletPortfolio = this.portfolioMap().get(walletAddress)!;
+    const newMap = new Map(this.portfolioMap());
+    this.portfolioMap.set(newMap.set(walletAddress, {
+      ...walletPortfolio,
+      [key]: value
+    }));
+  }
+
+  /**
+   * Toggles the wallet status for the specified address.
+   *
+   * @param {string} walletAddress - The address of the wallet to toggle.
+   * @returns {void}
+   */
+  public toggleWallet(walletAddress: string): void {
+    const walletPortfolio = this.portfolioMap().get(walletAddress)!;
+    this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.ENABLED, !walletPortfolio.enabled);
+  }
+
+  private handleWalletChange(wallet: WalletExtended) {
+    if (!wallet) return;
+    const address = this.extractAddressOnWalletChanges(wallet);
+    this.syncPortfolios(address)
+  }
+
+  /**
+   * Extracts and returns the public key address from a WalletExtended object.
+   *
+   * @param {WalletExtended} wallet - The WalletExtended object containing the public key.
+   * @returns {string} The extracted public key address as a base58 string.
+   */
+  private extractAddressOnWalletChanges(wallet: WalletExtended): string {
+    const address = wallet.publicKey.toBase58();
+    this.currentWalletAddress.set(address);
+    return address;
+  }
+
+  /**
+   * Synchronizes portfolios for a given wallet address.
+   *
+   * This method checks if data already exists for the provided address,
+   * and either fetches new data or updates existing signals accordingly.
+   *
+   * @param {string} address - The wallet address to synchronize.
+   */
+  public async syncPortfolios(address: string) {
+    if (!this.containsWallet(address)) {
+      console.log('syncPortfolios', address);
+      this.walletBoxSpinnerService.show();
+      // await this.waitForTurnStileToken();
+      console.log('turnStileToken', this._utils.turnStileToken);
+      await this.getPortfolioAssets(address, this._utils.turnStileToken);
+    } else {
+      this.updateCurrentWalletSignals(address);
     }
+
+    this._fetchPortfolioService.refetchPortfolio().subscribe(async ({shouldRefresh, fetchType}) => {
+      if (shouldRefresh) {
+        const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
+        // await this.waitForTurnStileToken();
+        this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
+      }
+    });
+
+    // Sets the first provided address as the primary wallet address if the portfolio map is empty.
+    if(this.portfolioMap().size === 0) {
+      this.currentWalletAddress.set(address);
+    }
+
+    // Always save primary portfolio data for use outside the presentation page.
+    this.updateCurrentWalletSignals(this.currentWalletAddress())
+  }
+
+  /**
+   * Checks if a wallet address exists in the portfolio map.
+   *
+   * @param {string} address - The wallet address to check.
+   * @returns {boolean} True if the address exists in the portfolio map, false otherwise.
+   */
+  public containsWallet(address: string): boolean {
+    return this.portfolioMap().has(address)
   }
 
   private async waitForTurnStileToken() {
@@ -119,11 +260,12 @@ export class PortfolioService {
     watchMode: boolean = false,
     fetchType: FetchType = 'full'
   ) {
+    console.log('getPortfolioAssets', walletAddress);
     let portfolioData = await this.fetchPortfolioData(walletAddress, turnStileToken, fetchType);
 
     try {
 
-      this.processPortfolioData(portfolioData, walletAddress, fetchType);
+      this.processPortfolioData({...portfolioData}, walletAddress, fetchType);
 
       va.track('fetch portfolio', {
         status: 'success',
@@ -142,37 +284,36 @@ export class PortfolioService {
 
 
     this._utils.turnStileToken = null;
-    data.elements = data.elements.filter(e => e?.platformId !== 'wallet-nfts');
+    data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
     return data;
   }
 
-  // private savePortfolioData(portfolioData: any) {
-  //   const storageCap = 4073741824; // 5 MiB
-  //   if (this._utils.memorySizeOf(portfolioData) < storageCap) {
-  //     this._sessionStorageService.saveData('portfolioData', JSON.stringify({
-  //       portfolioData,
-  //       lastSave: Math.floor(Date.now() / 1000)
-  //     }));
-  //   }
-  // }
+  private savePortfolioData(portfolioData: any) {
+    const storageCap = 4073741824; // 5 MiB
+    if (this._utils.memorySizeOf(portfolioData) < storageCap) {
+      this._sessionStorageService.saveData('portfolioData', JSON.stringify({
+        portfolioData,
+        lastSave: Math.floor(Date.now() / 1000)
+      }));
+    }
+  }
 
   private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full') {
-    const tempNft = portfolioData.elements.find(group => group.platformId === 'wallet-nfts-v2');
-    const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== 'wallet-nfts-v2');
+    const tempNft = portfolioData.elements.find(group => group.platformId === WalletDataKeys.NFT_V2);
+    const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== WalletDataKeys.NFT_V2);
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
-    const extendTokenData = mergeDuplications.find(group => group.platformId === 'wallet-tokens');
+    const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-    if (fetchType === 'partial') {
-      this._portfolioStaking(walletAddress);
-      this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-      this._portfolioNFT(walletAddress);
-    } else {
-      this._portfolioStaking(walletAddress);
-      this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-      this._portfolioDeFi(excludeNFTv2, tokenJupData);
-      this._portfolioNFT(walletAddress);
-      // mergeDuplications.push(tempNft);
+    await Promise.all([
+      this._portfolioStaking(walletAddress),
+      this._portfolioTokens(extendTokenData as any, tokenJupData as any),
+      this._portfolioNFT(walletAddress)
+    ]);
+
+    if (fetchType !== 'partial') {
+      await this._portfolioDeFi(excludeNFTv2, tokenJupData);
+     // mergeDuplications.push(tempNft);
       this.walletAssets.set(mergeDuplications);
       this.netWorth.set(portfolioData.value);
     }
@@ -237,9 +378,10 @@ export class PortfolioService {
     } catch (error) {
       console.error(error);
     }
-
   }
+
   private _platforms = []
+
   public async getPlatformsData(): Promise<Platform[]> {
     if (this._platforms.length) {
       return this._platforms
@@ -252,10 +394,11 @@ export class PortfolioService {
     }
     return this._platforms
   }
+
   private async _portfolioDeFi(editedDataExtended, tokensInfo) {
     // add more data for platforms
     const getPlatformsData = await this.getPlatformsData();
-    const excludeList = ['wallet-tokens', 'wallet-nfts', 'native-stake']
+    const excludeList = [WalletDataKeys.TOKENS, WalletDataKeys.NFTs, WalletDataKeys.NATIVE_STAKE]
     const defiHolding = await Promise.all(editedDataExtended
       .filter(g => !excludeList.includes(g.platformId))
       .sort((a: defiHolding, b: defiHolding) => a.value > b.value ? -1 : 1)
@@ -263,18 +406,18 @@ export class PortfolioService {
 
 
         let records: defiHolding[] = [];
-        // add if id =juptier jupiter-governance 
-        group.platformId = group.platformId === 'jupiter-governance' ? 'jupiter-exchange' : group.platformId
+        // add if id =juptier jupiter-governance
+        group.platformId = group.platformId === WalletDataKeys.JUPITER_GOVERNANCE ? WalletDataKeys.JUPITER_EXCHANGE : group.platformId
         const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
         Object.assign(group, platformData);
 
-        if (group.type === "liquidity") {
+        if (group.type === WalletDataKeys.LIQUIDITY) {
           if (group.data.liquidities) {
             group.data.liquidities.map(async position => {
 
               const extendTokenData = this._utils.addTokenData(position.assets, tokensInfo)
 
-                      // if symbol is wSOL, then replace it to SOL
+              // if symbol is wSOL, then replace it to SOL
               extendTokenData.map(asset => {
                 asset.symbol = asset.symbol === 'wSOL' ? 'SOL' : asset.symbol
               })
@@ -321,7 +464,7 @@ export class PortfolioService {
           // assets = assets.flat()
         }
 
-        if (group.type === "borrowlend") {
+        if (group.type === WalletDataKeys.BORROW_LEND) {
 
           group.data.suppliedAssets.map(async asset => {
             const extendTokenData = this._utils.addTokenData([asset], tokensInfo)
@@ -362,13 +505,9 @@ export class PortfolioService {
               tags: group.tags
             })
           })
-
         }
-
-
         return records
       })
-
     )
 
     this.defi.set(defiHolding.flat())
@@ -508,28 +647,30 @@ export class PortfolioService {
   }
 
   public async clearWallet() {
-    if (this.currentWalletAddress) {
+    if (this.currentWalletAddress()) {
       const newMap = new Map(this.portfolioMap());
-      newMap.delete(this.currentWalletAddress);
+      newMap.delete(this.currentWalletAddress());
       this.portfolioMap.set(newMap);
     }
-    
+
     // clear state of wallet connect
     this._watchModeService.watchedWallet$.next(null)
 
     // clean session storage
     this._sessionStorageService.clearData()
 
+    this.clearCurrentPortfolioData();
+    this._fetchPortfolioService.triggerFetch()
+    this._navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
+  }
 
-
+  private clearCurrentPortfolioData() {
     this.walletAssets.set(null)
     this.tokens.set(null)
     this.nfts.set(null)
     this.defi.set(null)
     this.staking.set(null)
     this.walletHistory.set(null)
-
-    this._fetchPortfolioService.triggerFetch()
-    this._navCtrl.navigateBack([RoutingPath.NOT_CONNECTED]);
+    this.netWorth.set(null)
   }
 }

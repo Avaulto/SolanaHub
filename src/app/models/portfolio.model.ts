@@ -15,11 +15,28 @@ export interface Token extends JupToken {
   type?: string,
   networkId?: string,
   logoURI: string,
-  value?: string,
+  value?: number,
   price?: number
   amount?: string
   extraData?: any
 }
+
+export interface WalletEntry {
+  walletAddress: string;
+  portfolio: WalletPortfolio
+}
+
+export interface WalletPortfolio {
+  walletAssets: any;
+  tokens: Token[];
+  nfts: NFT[];
+  staking: Stake[];
+  defi: defiHolding[];
+  walletHistory: TransactionHistory[];
+  netWorth: number;
+  enabled: boolean,
+}
+
 export interface NFT {
   collectionMagicEdenStatSymbol?: string
   listStatus: string
