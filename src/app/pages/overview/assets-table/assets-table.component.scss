@@ -63,7 +63,7 @@
     border-radius: 50%;
     margin-inline-end: 4px;
     overflow: hidden;
-    background-color: #CDD5DF;
+    background-color: var(--ion-color-border);
     object-fit: cover;
 
     ion-img {

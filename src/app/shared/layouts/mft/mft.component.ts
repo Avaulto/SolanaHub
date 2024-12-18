@@ -36,21 +36,21 @@ export class MftComponent implements OnInit, OnChanges {
   @Input() tableData
   @Input() expandDetails: boolean = false
   @Input() class: string = ''
-  @Input() resetCheckAll = false
+  // @Input() resetCheckAll = false
 
-  @Input() searchBoxEnable: boolean = false
+  @Input('searchBoxEnable') searchBoxEnable: boolean = false
   @Output() onData = new EventEmitter()
-  @Output() onTabSelected = new EventEmitter()
-  @Output() onSearch = new EventEmitter()
+  @Output('onTabSelected') onTabSelected = new EventEmitter()
+  @Output('onSearch') onSearch = new EventEmitter()
 
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
   @ViewChild('checkAll', {static: false}) checkAll//: IonCheckbox;
 ngOnChanges(changes: SimpleChanges): void {
-  if(changes['resetCheckAll'] && this.checkAll) {
-    this.checkAll.el.setChecked(false);
-  }
+  // if(changes['resetCheckAll'] && this.checkAll) {
+  //   this.checkAll.el.setChecked(false);
+  // }
 }
   public tab = signal(this.tableMenuOptions[0])
 
@@ -78,7 +78,7 @@ ngOnChanges(changes: SimpleChanges): void {
     // showDetailsArrow: this.expandDetails,
     // fixedColumnWidth: true,
     // horizontalScroll: true,
-    isLoading: true,
+    isLoading: false,
   };
 
   public configurationState = computed(() => {
@@ -155,10 +155,10 @@ ngOnChanges(changes: SimpleChanges): void {
   public selected = new Set();
 
   eventEmitted($event: { event: string; value: any }): void {
-    console.log(this.checkAll, $event);
+    // console.log(this.checkAll, $event);
 
-    const isReallyTrue = this.checkAll.el.checked
-    if (['onCheckboxSelect', 'onSelectAll'].includes($event.event) && isReallyTrue) {
+    // const isReallyTrue = this.checkAll.el.checked
+    if (['onCheckboxSelect', 'onSelectAll'].includes($event.event)) {
     let data = $event.value;
     switch ($event.event) {
       // case 'onCheckboxSelect':

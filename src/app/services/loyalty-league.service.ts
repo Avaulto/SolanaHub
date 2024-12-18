@@ -1,7 +1,7 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError, retry } from 'rxjs';
+import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError, retry, firstValueFrom } from 'rxjs';
 import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
@@ -143,7 +143,12 @@ export class LoyaltyLeagueService {
   }
 
   public async completeQuest(walletAddress: string, task: string) {
-    console.log('completeQuest', task)
+    // check if task is already completed
+    const member = await firstValueFrom(this.member$)
+    if (member.quests[task]) {
+      console.log('task already completed', task)
+      return
+    }
     try {
       const res = await fetch(`${this.api}/quests?walletAddress=${walletAddress}&task=${task}`)
       const data = await res.json()

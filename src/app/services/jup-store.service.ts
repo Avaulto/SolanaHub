@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { JupRoute, JupToken, JupiterPriceFeed } from '../models/jup-token.model';
-import { Transaction, VersionedTransaction } from '@solana/web3.js';
+import { Transaction, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 
@@ -72,14 +72,16 @@ export class JupStoreService {
             userPublicKey: walletOwner,
             // auto wrap and unwrap SOL. default is true
             wrapUnwrapSOL: true,
-            asLegacyTransaction: false,
+            // asLegacyTransaction: true,
+            dynamicSlippage: { "maxBps": 300 },
             // feeAccount is optional. Use if you want to charge a fee.  feeBps must have been passed in /quote API.
             // feeAccount: "fee_account_public_key"
+            prioritizationFeeLamports: 'auto'
           })
         })
       ).json();
-      const swapTransactionBuf = Buffer.from(swapTransaction, 'base64');
-      var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+      const swapTx = Buffer.from(swapTransaction, 'base64');
+      var transaction = VersionedTransaction.deserialize(swapTx);
       
       // const record = { message: 'swap', data: { symbol:routeInfo.inputMint, amount: routeInfo.inAmount  } }
       return  transaction 

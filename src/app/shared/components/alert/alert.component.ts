@@ -10,12 +10,13 @@ import { alertCircleOutline } from 'ionicons/icons';
   selector: 'alert',
   template: `
   <div id="alert" [class]="type">
-    <div>
-
-    <ion-icon name="alert-circle-outline"></ion-icon>
-</div>
-  <ion-text [innerHTML]="text">
-  </ion-text>
+    <div class="alert-content">
+    <div class="alert-icon">
+       <ion-icon name="alert-circle-outline"></ion-icon>
+    </div>
+  <ion-text [innerHTML]="text"/>
+ </div>
+  <ng-content/>
 </div>
 `,
   styleUrls: ['./alert.component.scss'],

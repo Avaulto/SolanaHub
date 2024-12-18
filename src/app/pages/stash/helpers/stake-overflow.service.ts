@@ -1,23 +1,31 @@
-import { Injectable, computed, inject } from '@angular/core';
-import { PortfolioService } from 'src/app/services';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { NativeStakeService, PortfolioService } from 'src/app/services';
 import { StashAsset, StashGroup } from '../stash.model';
 import { HelpersService } from './helpers.service';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { StakeProgram } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
+import { Stake } from 'src/app/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StakeOverflowService {
-  constructor(private _helpersService: HelpersService) {
+  constructor(private _helpersService: HelpersService, private _nss: NativeStakeService) {
+    this.getStakeAccounts()
+  }
 
+  private _stakeAccounts = signal<Stake[]>(null)
+  private getStakeAccounts = async () => {
+    const {publicKey} = this._helpersService.shs.getCurrentWallet()
+    const accounts = await this._nss.getOwnerNativeStake(publicKey.toString());
+    this._stakeAccounts.set(accounts)
   }
   public findStakeOverflow = computed(() => {
-    const accounts = this._helpersService.portfolioService.staking();
+    const accounts = this._stakeAccounts();
+
     if (!accounts) return null;
     const transactionFee = 300000;
-    console.log('accounts', accounts);
     const filterExceedBalance = accounts
       .filter(acc => acc.state === 'active' && acc.excessLamport > transactionFee && !acc.locked)
       .map(acc => this._helpersService.mapToStashAsset(acc, 'stake'));
@@ -38,7 +46,11 @@ export class StakeOverflowService {
       lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
     }));
     const instructions = withdrawTx.map(ix => ix.instructions)
-    return await this._helpersService._simulateBulkSendTx(instructions.flat())
+    const signatures = await this._helpersService._simulateBulkSendTx(instructions.flat())
+    if(signatures) {
+      this.getStakeAccounts()
+    }
+    return signatures
 
 
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)

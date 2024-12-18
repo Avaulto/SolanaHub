@@ -41,6 +41,7 @@
     [columns]="tableColumns()"
     [selectAllTemplate]="selectAllTemplate"
     [loadingTemplate]="loadingTemplate"
+    [noResultsTemplate]="noResultsTemplate"
              [detailsTemplate]="detailsTemplate"
     >
   </ngx-table>
@@ -88,4 +89,8 @@
   </div>
 </ng-template>
 
-
+<ng-template #noResultsTemplate>
+  <td [attr.colspan]="tableColumns().length" class="no-results">
+    No results found
+  </td>
+</ng-template>

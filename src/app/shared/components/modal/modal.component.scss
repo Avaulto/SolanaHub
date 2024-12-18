@@ -63,7 +63,7 @@
       text-transform: capitalize;
       &.button-clear{
         color: var(--ion-color-dark);
-        border: 1px solid #CDD5DF;
+        border: 1px solid var(--ion-color-border);
       }
       &.ion-color-primary {
         border: 1px solid var(--ion-color-primary);

@@ -48,7 +48,7 @@ ion-grid {
     padding-block-start: 20px;
     padding-block-end: 100px;
     // padding-block-end:66px ;
-    padding-inline: 3vw;
+    padding-inline: 2vw;
     margin: 0;
 }
 
@@ -123,12 +123,12 @@ ion-input {
     overflow: hidden;
     --color: var(-ion-color-dark);
     --placeholder-color: var(--ion-light-gray) !important;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis;    
     font-weight: 400;
     line-height: 18px;
     font-size: 13px;
     border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--colors-border-border-primary, #CDD5DF);
+    border: 1px solid var(--ion-color-border);
     background: var(--ion-color-menu);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     --background: transparent;

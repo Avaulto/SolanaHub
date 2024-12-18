@@ -41,7 +41,7 @@ ion-button {
     //     display: none;
     // }
     .stash-table{
-        th.select-box, tbody > tr > td:first-child {
+        th.select-box, tbody > tr > td:first-child:not(.no-results) {
             display: none;
         }
     }

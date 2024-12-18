@@ -46,7 +46,10 @@ export class StashService {
   public burnZeroValueAssets = this._zeroValueAssetsService.burnAccounts.bind(this._zeroValueAssetsService)
 
 
-
+  // earnings fn:
   public getOrCreateUser = this._earningsService.getOrCreateUser.bind(this._earningsService)
-
+  public storeRecord = this._earningsService.storeRecord.bind(this._earningsService)
+  public updatePlatformRecord = this._earningsService.updatePlatformRecord.bind(this._earningsService)
+  public stashUser = this._earningsService.stashUser.bind(this._earningsService)
+  public referralAddress = this._earningsService.referralAddress.bind(this._earningsService)
 }

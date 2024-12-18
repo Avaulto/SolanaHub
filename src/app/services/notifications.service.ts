@@ -129,7 +129,7 @@ export class NotificationsService {
   public notifRead() {
     // console.log('store last notif');
 
-    this.storeLastNotification(JSON.stringify(this._messages[0].timestamp))
+    this.storeLastNotification(JSON.stringify(this._messages[0]?.timestamp))
     this.notifIndicator.set(null)
   }
   private _messages: DappMessage[] = null
@@ -221,7 +221,7 @@ export class NotificationsService {
     // If not, let's register it
     if (!address) {
       console.log(`Address not found, creating...`);
-      const newAddress = this._dialectSDK.wallet.addresses.create({
+      const newAddress = await this._dialectSDK.wallet.addresses.create({
         value: this._dialectSDK.wallet.address,
         type: AddressType.Wallet,
       });

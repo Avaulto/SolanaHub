@@ -228,7 +228,7 @@ export class AppComponent implements OnInit {
           title: 'Stash',
           url: `/${RoutingPath.STASH}`,
           icon: 'https://cdn.lordicon.com/hpveozzh.json',
-          active: environment.production ? false : true
+          active: true
         },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
    

@@ -28,6 +28,7 @@ export class DustValueTokensService {
 
   private updateDustValueTokens(portfolioShare: number = 3): StashGroup | null {
     const tokens = this._helpersService.dasAssets();
+
     if (!tokens?.length) return null;
 
     const totalTokensValue = tokens.reduce((acc, curr) => acc + Number(curr.value), 0);
@@ -55,7 +56,7 @@ export class DustValueTokensService {
   }
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
-    console.log('tokens', tokens);
+
     try {
 
       const swapencodedIx = await Promise.all(tokens.map(async token => {
@@ -95,32 +96,12 @@ export class DustValueTokensService {
       }));
       // Deserialize each transaction in the array
 
-
-      // Function to extract TransactionInstruction objects from a VersionedTransaction
-      const extractInstructions = (versionedTransaction) => {
-        console.log('versionedTransaction', versionedTransaction);
-        const message = versionedTransaction.message;
-
-        // Combine static account keys and lookup table keys
-        const accountKeys = message.staticAccountKeys.concat(
-          message.addressTableLookups.flatMap((lookup) => lookup.accountKeys)
-        );
-
-        // Decode instructions
-        return message.compiledInstructions.map((compiled) => {
-          const programId = accountKeys[compiled.programIdIndex];
-          const accounts = compiled.accountKeyIndexes.map((index) => accountKeys[index]);
-          const data = compiled.data;
-
-          return new TransactionInstruction({
-            programId,
-            keys: accounts.map((pubkey) => ({ pubkey, isSigner: false, isWritable: false })),
-            data,
-          });
-        });
-      };
+      console.log('swapencodedIx', swapencodedIx.flat());
+      
+      // filter null and flat
+      const ixs = swapencodedIx.flat().filter(ix => ix !== null)
       // const instructions = swapencodedIx.map(tx => extractInstructions(tx));
-      return await this._helpersService._simulateBulkSendTx(swapencodedIx)
+      return await this._helpersService._simulateBulkSendTx(ixs)
 
     } catch (error) {
       console.log(error);

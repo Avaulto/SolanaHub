@@ -23,27 +23,25 @@ export class HelpersService {
         public jupStoreService: JupStoreService,
         public earningsService: EarningsService
     ) {
-        console.log('utils', this.utils.serverlessAPI);
         // this.getDASAssets()
     }
 
     public async getDASAssets() {
         const { publicKey } = this.shs.getCurrentWallet()
         try {
-          // const onlyEmptyAccounts = true
-          const unknownAssets =await (await fetch(`${this.utils.serverlessAPI}/api/stash/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
-          console.log('unknownAssets', unknownAssets);
-          // remove token with no symbol
-          // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
-          this.dasAssets.set(unknownAssets)
-          return unknownAssets
+            // const onlyEmptyAccounts = true
+            const unknownAssets = await (await fetch(`${this.utils.serverlessAPI}/api/stash/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
+            // remove token with no symbol
+            // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
+            this.dasAssets.set(unknownAssets)
+            return unknownAssets
         } catch (error) {
-          console.error('error', error);
-          return null
+            console.error('error', error);
+            return null
         }
-      }
+    }
 
-      
+
 
     public createStashGroup = (
         label: string,
@@ -76,16 +74,17 @@ export class HelpersService {
             name: category === 'stake' ? item.validatorName : item.name,
             symbol: item.symbol,
             logoURI: item.logoURI,
-            url: this.utils.explorer + '/account/' + item['address'],
-            mint: item.mint,
+            url: this.utils.explorer + '/account/' + item.mint,
+            mint: item.mint ? this.utils.addrUtil(item.mint) : null,
             decimals: item?.decimals,
             account: this.utils.addrUtil(item['address'] || 'default'),
             balance: item.balance,
             action: this.getActionByCategory(category),
             type: this.getTypeByCategory(category),
-            source: this.getSourceByCategory(category, item.balance),
+            source: this.getSourceByCategory(category, item.balance, item.type),
             ...extraData
         };
+
 
         switch (category) {
             case 'dust':
@@ -95,7 +94,7 @@ export class HelpersService {
                     extractedValue: { SOL: item.value / this.jupStoreService.solPrice() }
                 };
             case 'defi':
-                return {
+                const defiAsset = {
                     ...baseAsset,
                     name: item.poolPair,
                     symbol: item.poolPair,
@@ -105,11 +104,22 @@ export class HelpersService {
                     platformLogoURI: item.platformLogoURI,
                     value: item.pooledAmountAWithRewardsUSDValue + item.pooledAmountBWithRewardsUSDValue,
                     extractedValue: {
-                        [item.poolTokenA.symbol]: Number(item.pooledAmountAWithRewards),
-                        [item.poolTokenB.symbol]: Number(item.pooledAmountBWithRewards)
+                        [item.poolTokenA.symbol]: Number(this.utils.fixedNumber(item.pooledAmountAWithRewards)),
+                        [item.poolTokenB.symbol]: Number(this.utils.fixedNumber(item.pooledAmountBWithRewards))
                     },
                     positionData: item.positionData
+
                 };
+                if (item.accountRentFee) {
+                    const solValue = Number(defiAsset.extractedValue['SOL']) || 0
+                    defiAsset.extractedValue['SOL'] = solValue + Number(item.accountRentFee)
+                    defiAsset.value = defiAsset.value + (Number(item.accountRentFee) * this.jupStoreService.solPrice())
+                }
+                // filter out all extracted values that are 0
+                defiAsset.extractedValue = Object.fromEntries(
+                    Object.entries(defiAsset.extractedValue).filter(([_, value]) => Number(value) !== 0)
+                );
+                return defiAsset
             case 'stake':
                 return {
                     ...baseAsset,
@@ -138,7 +148,7 @@ export class HelpersService {
             defi: 'Withdraw & Close',
             stake: 'harvest',
             dust: 'swap',
-            default: 'burn'
+            default: 'close'
         };
         return actions[category] || actions.default;
     }
@@ -152,9 +162,10 @@ export class HelpersService {
         };
         return types[category] || types.default;
     }
-    private getSourceByCategory(category: string, balance: number): string {
+    private getSourceByCategory(category: string, balance: number, type): string {
+        // const defiType = type === 'out of range' ? 'out of range' : 'no liquidity';
         const sources = {
-            defi: 'out of range',
+            defi: type,
             stake: 'excess balance',
             dust: 'dust value',
             default: balance === 0 ? 'empty account' : 'no market value'
@@ -165,106 +176,84 @@ export class HelpersService {
     public async _simulateBulkSendTx(
         ixs: TransactionInstruction[] | VersionedTransaction[] | Transaction[],
     ): Promise<string[]> {
-        let transactions = []
+        let transactions: (Transaction | VersionedTransaction)[] = [];
+
+        // First, prepare all transactions
         if (ixs[0] instanceof VersionedTransaction) {
-            transactions = ixs as VersionedTransaction[]
+            transactions = ixs as VersionedTransaction[];
         } else if (ixs[0] instanceof Transaction) {
-            transactions = ixs as Transaction[]
+            transactions = ixs as Transaction[];
         } else {
-            transactions = await this.splitIntoSubTransactions(ixs as TransactionInstruction[])
+            transactions = await this.splitIntoSubTransactions(ixs as TransactionInstruction[]);
         }
-        let platformFee = Math.ceil(this.platformFeeInSOL() * LAMPORTS_PER_SOL)
-        const platformFeeTx = await this._addPlatformFeeTx(platformFee)
-        transactions.push(platformFeeTx)
-        return new Promise<string[]>(async (resolve, reject) => {
-            try {
 
-                console.log('transactions', transactions);
-                const signatures = await this.txi.sendMultipleTxn(transactions);
-                console.log('signatures', signatures);
-                resolve(signatures); // Indicate success
-            } catch (error) {
-                console.error(error);
-                resolve([]); // Indicate failure
+        // Add platform fee to each transaction
+        if (ixs[0] instanceof VersionedTransaction) {
+            // Add a single fee transaction for versioned transactions
+            const platformFeeP = Math.floor(this.platformFeeInSOL() * LAMPORTS_PER_SOL);
+            const platformFeeTxsVersioned = await this._addPlatformFeeTx('versionedTx', platformFeeP);
+            transactions.push(platformFeeTxsVersioned as VersionedTransaction);
+        } else {
+            // Calculate platform fee per transaction
+            const platformFeePerTx = Math.floor(this.platformFeeInSOL() * LAMPORTS_PER_SOL / transactions.length);
+            const platformFeeTxsIn = await this._addPlatformFeeTx('instructions', platformFeePerTx);
+            // Add fee to each legacy transaction
+            for (const tx of transactions) {
+                (tx as Transaction).add(...platformFeeTxsIn as TransactionInstruction[]);
             }
-        });
-    }
+        }
 
+        // Send transactions
+        try {
+            const signatures = await this.txi.sendMultipleTxn(transactions);
+            return signatures;
+        } catch (error) {
+            console.error('Error sending transactions:', error);
+            return [];
+        }
+    }
 
 
 
     public async splitIntoSubTransactions(
         instructions: TransactionInstruction[],
         maxSize: number = 900
-    ): Promise<VersionedTransaction[]> {
+    ): Promise<Transaction[]> {
         const { publicKey } = this.shs.getCurrentWallet();
         const { blockhash } = await this.shs.connection.getLatestBlockhash();
-        const transactions: VersionedTransaction[] = [];
+        const transactions: Transaction[] = [];
         let currentInstructions: TransactionInstruction[] = [];
 
         for (const instruction of instructions) {
-            // Add safety check for instruction size
-            if (instruction.data.length > maxSize) {
-                console.warn('Large instruction detected, splitting:', instruction.data.length);
-                if (currentInstructions.length > 0) {
-                    const batchMessage = new TransactionMessage({
-                        payerKey: publicKey,
-                        recentBlockhash: blockhash,
-                        instructions: [...currentInstructions],
-                    }).compileToV0Message();
-                    transactions.push(new VersionedTransaction(batchMessage));
-                    currentInstructions = [];
-                }
+            // ... existing instruction size check ...
 
-                // Process large instruction separately
-                const splitInstructions = await this.splitLargeInstruction(instruction);
-                for (const splitIx of splitInstructions) {
-                    const splitMessage = new TransactionMessage({
-                        payerKey: publicKey,
-                        recentBlockhash: blockhash,
-                        instructions: [splitIx],
-                    }).compileToV0Message();
-                    transactions.push(new VersionedTransaction(splitMessage));
-                }
-                continue;
-            }
-
-            // Try adding the instruction to current batch
             currentInstructions.push(instruction);
-            
-            // Check batch size more frequently
+
             if (currentInstructions.length > 1) {
                 try {
-                    const testMessage = new TransactionMessage({
-                        payerKey: publicKey,
-                        recentBlockhash: blockhash,
-                        instructions: [...currentInstructions],
-                    }).compileToV0Message();
-                    const testTx = new VersionedTransaction(testMessage);
-                    const serializedSize = testTx.serialize().length;
-                    
+                    // Create legacy transaction for size testing
+                    const testTx = new Transaction().add(...currentInstructions);
+                    testTx.recentBlockhash = blockhash;
+                    testTx.feePayer = publicKey;
+                    const serializedSize = testTx.serialize({ requireAllSignatures: false }).length;
+
                     if (serializedSize > maxSize) {
-                        // Remove the last instruction and create a transaction with current batch
                         currentInstructions.pop();
-                        const batchMessage = new TransactionMessage({
-                            payerKey: publicKey,
-                            recentBlockhash: blockhash,
-                            instructions: [...currentInstructions],
-                        }).compileToV0Message();
-                        transactions.push(new VersionedTransaction(batchMessage));
+                        // Create legacy transaction for batch
+                        const batchTx = new Transaction().add(...currentInstructions);
+                        batchTx.recentBlockhash = blockhash;
+                        batchTx.feePayer = publicKey;
+                        transactions.push(batchTx);
                         currentInstructions = [instruction];
                     }
                 } catch (error) {
                     console.error('Error while checking transaction size:', error);
-                    // If there's an error, process current instructions and start new batch
                     if (currentInstructions.length > 1) {
                         currentInstructions.pop();
-                        const batchMessage = new TransactionMessage({
-                            payerKey: publicKey,
-                            recentBlockhash: blockhash,
-                            instructions: [...currentInstructions],
-                        }).compileToV0Message();
-                        transactions.push(new VersionedTransaction(batchMessage));
+                        const batchTx = new Transaction().add(...currentInstructions);
+                        batchTx.recentBlockhash = blockhash;
+                        batchTx.feePayer = publicKey;
+                        transactions.push(batchTx);
                         currentInstructions = [instruction];
                     }
                 }
@@ -273,20 +262,127 @@ export class HelpersService {
 
         // Process remaining instructions
         if (currentInstructions.length > 0) {
-            const finalMessage = new TransactionMessage({
-                payerKey: publicKey,
-                recentBlockhash: blockhash,
-                instructions: [...currentInstructions],
-            }).compileToV0Message();
-            transactions.push(new VersionedTransaction(finalMessage));
+            const finalTx = new Transaction().add(...currentInstructions);
+            finalTx.recentBlockhash = blockhash;
+            finalTx.feePayer = publicKey;
+            transactions.push(finalTx);
         }
+
+        console.log('transactions', transactions.length);
 
         return transactions;
     }
+    // public async splitIntoSubTransactions2(
+    //     instructions: TransactionInstruction[],
+    //     maxSize: number = 1000
+    // ): Promise<VersionedTransaction[]> {
+    //     const { publicKey } = this.shs.getCurrentWallet();
+    //     const { blockhash } = await this.shs.connection.getLatestBlockhash();
+    //     const transactions: VersionedTransaction[] = [];
+    //     let currentInstructions: TransactionInstruction[] = [];
+
+    //     for (const instruction of instructions) {
+    //         // Add safety check for instruction size
+    //         if (instruction.data.length > maxSize) {
+    //             console.warn('Large instruction detected, splitting:', instruction.data.length);
+    //             if (currentInstructions.length > 0) {
+    //                 const batchMessage = new TransactionMessage({
+    //                     payerKey: publicKey,
+    //                     recentBlockhash: blockhash,
+    //                     instructions: [...currentInstructions],
+    //                 }).compileToV0Message();
+    //                 transactions.push(new VersionedTransaction(batchMessage));
+    //                 currentInstructions = [];
+    //             }
+
+    //             // Process large instruction separately
+    //             const splitInstructions = await this.splitLargeInstruction(instruction);
+    //             for (const splitIx of splitInstructions) {
+    //                 const splitMessage = new TransactionMessage({
+    //                     payerKey: publicKey,
+    //                     recentBlockhash: blockhash,
+    //                     instructions: [splitIx],
+    //                 }).compileToV0Message();
+    //                 transactions.push(new VersionedTransaction(splitMessage));
+    //             }
+    //             continue;
+    //         }
+
+    //         // Try adding the instruction to current batch
+    //         currentInstructions.push(instruction);
+
+    //         // Check batch size more frequently
+    //         if (currentInstructions.length > 1) {
+    //             try {
+    //                 const testMessage = new TransactionMessage({
+    //                     payerKey: publicKey,
+    //                     recentBlockhash: blockhash,
+    //                     instructions: [...currentInstructions],
+    //                 }).compileToV0Message();
+    //                 const testTx = new VersionedTransaction(testMessage);
+    //                 const serializedSize = testTx.serialize().length;
+
+    //                 if (serializedSize > maxSize) {
+    //                     // Remove the last instruction and create a transaction with current batch
+    //                     currentInstructions.pop();
+    //                     const batchMessage = new TransactionMessage({
+    //                         payerKey: publicKey,
+    //                         recentBlockhash: blockhash,
+    //                         instructions: [...currentInstructions],
+    //                     }).compileToV0Message();
+    //                     transactions.push(new VersionedTransaction(batchMessage));
+    //                     currentInstructions = [instruction];
+    //                 }
+    //             } catch (error) {
+    //                 console.error('Error while checking transaction size:', error);
+    //                 // If there's an error, process current instructions and start new batch
+    //                 if (currentInstructions.length > 1) {
+    //                     currentInstructions.pop();
+    //                     const batchMessage = new TransactionMessage({
+    //                         payerKey: publicKey,
+    //                         recentBlockhash: blockhash,
+    //                         instructions: [...currentInstructions],
+    //                     }).compileToV0Message();
+    //                     transactions.push(new VersionedTransaction(batchMessage));
+    //                     currentInstructions = [instruction];
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     // Process remaining instructions
+    //     if (currentInstructions.length > 0) {
+    //         const finalMessage = new TransactionMessage({
+    //             payerKey: publicKey,
+    //             recentBlockhash: blockhash,
+    //             instructions: [...currentInstructions],
+    //         }).compileToV0Message();
+    //         transactions.push(new VersionedTransaction(finalMessage));
+    //     }
+    //     // divide platform fee between number of transactions and add to each transaction
+    //     // Calculate platform fee per transaction
+    //     // let platformFeePerTx = Math.ceil(this.platformFeeInSOL() * LAMPORTS_PER_SOL / transactions.length);
+    //     // console.log('platformFeePerTx', platformFeePerTx);
+    //     // // Add platform fee transaction to each transaction
+    //     // const updatedTransactions = await Promise.all(transactions.map(async (tx) => {
+    //     //     const platformFeeTxs = this._addPlatformFeeTx(platformFeePerTx);
+    //     //     const message = new TransactionMessage({
+    //     //         payerKey: publicKey,
+    //     //         recentBlockhash: blockhash,
+    //     //         instructions: [...tx.message.staticAccountKeys.map(key => new TransactionInstruction({
+    //     //             keys: [{ pubkey: key, isSigner: false, isWritable: true }],
+    //     //             programId: key,
+    //     //             data: Buffer.from([])
+    //     //         })), ...platformFeeTxs],
+    //     //     }).compileToV0Message();
+    //     //     return new VersionedTransaction(message);
+    //     // }));
+    //     return transactions;
+    // }
 
     private async splitLargeInstruction(instruction: TransactionInstruction): Promise<TransactionInstruction[]> {
-        const largeData = instruction.data; 
-        const maxChunkSize = 1000; 
+        const largeData = instruction.data;
+        const maxChunkSize = 1000;
         const splitInstructions: TransactionInstruction[] = [];
 
         for (let i = 0; i < largeData.length; i += maxChunkSize) {
@@ -305,17 +401,17 @@ export class HelpersService {
 
 
 
-    private async _addPlatformFeeTx(platformFee: number): Promise<VersionedTransaction> {
+    private async _addPlatformFeeTx(as: 'instructions' | 'versionedTx', platformFee: number): Promise<TransactionInstruction[] | VersionedTransaction> {
         const { publicKey } = this.shs.getCurrentWallet();
         const { blockhash } = await this.shs.connection.getLatestBlockhash();
 
         let referralFee = null
+        let transferTxs: (TransactionInstruction | VersionedTransaction)[] = []
         if (this.earningsService.referralAddress()) {
             platformFee = Math.ceil(platformFee * 0.5)
             // referral address gets 50% of platform fee
             referralFee = Math.ceil(platformFee)
         }
-        let transferTxs = []
         const transferPlatformFeeTx = SystemProgram.transfer({
             fromPubkey: publicKey,
             toPubkey: new PublicKey(environment.platformFeeCollector),
@@ -330,13 +426,17 @@ export class HelpersService {
             })
             transferTxs.push(transferReferralFeeTx)
         }
-        const message = new TransactionMessage({
-            payerKey: publicKey,
-            recentBlockhash: blockhash,
-            instructions: transferTxs, // Add your instructions here
-        }).compileToV0Message();
+        if (as === 'instructions') {
+            return transferTxs as TransactionInstruction[]
+        } else {
+            const message = new TransactionMessage({
+                payerKey: publicKey,
+                recentBlockhash: blockhash,
+                instructions: transferTxs as TransactionInstruction[], // Add your instructions here
+            }).compileToV0Message();
 
-        // Create the VersionedTransaction
-        return new VersionedTransaction(message);
+            // Create the VersionedTransaction
+            return new VersionedTransaction(message);
+        }
     }
 }

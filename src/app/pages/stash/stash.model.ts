@@ -32,7 +32,7 @@ export interface StashGroup {
     platformLogoURI?: string,
     tokens?: { address: string, decimals: number, symbol: string, logoURI: string }[],
     balance?: number,
-    mint?: string,
+    mint?: { addr: string, addrShort: string },
     decimals?: number,
     account: { addr: string, addrShort: string },
     platform?: string,
@@ -47,7 +47,7 @@ export interface StashGroup {
   }
 
   export interface OutOfRange {
-    type: 'outOfRange' | 'noLiquidity',
+    type: 'out of range' | 'no liquidity',
     accountRentFee?: number,
     address: string
     positionData: any

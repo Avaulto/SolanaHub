@@ -49,8 +49,8 @@ ion-text {
 ion-button {
     --color: var(--ion-color-dark);
     border-radius: var(--radius-sm, 6px);
-    border: 1px solid var(--Component-colors-Components-Buttons-Secondary-button-secondary-border, #CDD5DF);
-    --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, var(--ion-color-light));
+    border: 1px solid  var(--ion-color-border);
+    --background: var(--ion-color-light);
     font-size: 13px;
     font-weight: 600;
 

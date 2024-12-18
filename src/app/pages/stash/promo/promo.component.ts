@@ -7,13 +7,14 @@ import {
   trigger,
   transition,
 } from "@angular/animations";
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgIf } from '@angular/common';
+import va from '@vercel/analytics'
 @Component({
   selector: 'promo',
   templateUrl: './promo.component.html',
   styleUrls: ['./promo.component.scss'],
   standalone: true,
-  imports: [IonButton, IonImg, IonLabel, IonText, CurrencyPipe, IonSkeletonText],
+  imports: [NgIf,IonButton, IonImg, IonLabel, IonText, CurrencyPipe, IonSkeletonText],
   animations: [
     trigger('easeOut', [
       transition('* => void', [
@@ -30,7 +31,7 @@ import { CurrencyPipe } from '@angular/common';
         style({
             opacity: 0
         }),
-        animate("500ms ease-in-out", style({
+        animate("500ms 300ms ease-in-out", style({
             opacity: 1
         }))
     ]),
@@ -47,7 +48,7 @@ import { CurrencyPipe } from '@angular/common';
   ]
 })
 export class PromoComponent implements AfterViewInit {
-  @Input() estimateStashValue: number = 0;
+  @Input() estimateStashValue: number = null;
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;
   public wordCarousel = ["Dust value", "Stake accounts", "DeFi positions"];
   public wordCounter = -1;
@@ -58,6 +59,10 @@ export class PromoComponent implements AfterViewInit {
   constructor() { }
 
   startAnalyze(){
+    va.track('stash', {
+      state: 'promo',
+      action: 'start analyze'
+    })
     this.preview = false;
     setTimeout(() => {
       
@@ -71,6 +76,11 @@ export class PromoComponent implements AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.toggle = false;
+    })
+
+    va.track('stash', {
+      state: 'promo',
+      action: 'loaded'
     })
 
   }

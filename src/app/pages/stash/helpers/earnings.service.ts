@@ -2,7 +2,8 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { PortfolioService, UtilService } from 'src/app/services';
 import { StashAsset, StashGroup } from '../stash.model';
 import { HelpersService } from './helpers.service';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
+import { environment } from 'src/environments/environment';
 
 interface Stash {
   stashReferralAddress: string
@@ -108,4 +109,6 @@ export class EarningsService {
       console.error(error)
     }
   }
+
+
 } 

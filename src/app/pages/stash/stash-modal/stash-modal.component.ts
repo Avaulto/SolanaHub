@@ -8,7 +8,9 @@ import { UtilService } from 'src/app/services/util.service';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { EarningsService, HelpersService } from '../helpers';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
-
+import va from '@vercel/analytics'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -38,7 +40,8 @@ export class StashModalComponent implements OnInit {
     public utils: UtilService,
     public modalCtrl: ModalController,
     private _lss: LiquidStakeService,
-    private _earningsService: EarningsService
+    private _earningsService: EarningsService,
+    private _loyaltyLeagueService: LoyaltyLeagueService
   ) {
   }
 
@@ -48,6 +51,12 @@ export class StashModalComponent implements OnInit {
   public stashState = signal('')
   public hubSOLRate = null
   ngOnInit() {
+    va.track('stash', {
+      state: 'modal',
+      action: 'modal opened',
+      type: this.stashAssets[0].type,
+      assets: this.stashAssets.length
+    })
     if(this.stashAssets[0].type == 'value-deficient'){
       this.burnWithCautionConfirmed = false
     }
@@ -85,8 +94,16 @@ export class StashModalComponent implements OnInit {
     }
   }
   private async _fetchHubSOLRate() {
-    const hubSOLmint = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX'
-    this.hubSOLRate = (await this._lss.getStakePoolList()).find(pool => pool.tokenMint === hubSOLmint)?.exchangeRate
+    try {
+      const hubSOLratio = await fetch('https://extra-api.sanctum.so/v1/sol-value/current?lst=hubSOL')
+      const hubSOLratioData = await hubSOLratio.json()
+      const exchangeRate = hubSOLratioData.solValues.hubSOL / LAMPORTS_PER_SOL;
+      this.hubSOLRate = exchangeRate
+      return exchangeRate
+    } catch (error) {
+      console.log(error)
+      return 0
+    }
   }
   private _calculatePlatformFee() {
     const type = this.stashAssets[0].type
@@ -106,7 +123,12 @@ export class StashModalComponent implements OnInit {
   }
 
   async submit(event: StashAsset[]) {
-    console.log('event', event)
+    va.track('stash', {
+      state: 'modal',
+      action: 'submit',
+      type: event[0].type,
+      assets: event.length
+    })
     const { publicKey } = this._helpersService.shs.getCurrentWallet()
     const type = event[0].type
 
@@ -133,11 +155,14 @@ export class StashModalComponent implements OnInit {
         break
     }
 
-    if (signatures.length > 0) {
+    if (signatures?.length > 0) {
       this.storeEarningsRecord(signatures)
       this.dataToReload(dataToReload)
       this.closeModal()
       this.storeEarningPlatformRecord(signatures)
+
+      this._loyaltyLeagueService.completeQuest(publicKey.toBase58(), 'stashInteract')
+
     }
     this.stashState.set(this.actionTitle)
 
@@ -149,7 +174,8 @@ export class StashModalComponent implements OnInit {
         break
         // already gets updated after tx submitted in fetchPortfolio call under txi service
       case 'dust-value':
-        this._stashService.getZeroValueAssetsByBalance(false)
+        this._helpersService.getDASAssets()
+        this._stashService.updateDustValueTokens(false)
         break
       case 'defi-position':
         this._stashService.updateOutOfRangeDeFiPositions()
