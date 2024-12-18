@@ -209,6 +209,7 @@ export class PortfolioService {
    */
   public async syncPortfolios(address: string) {
     if (!this.containsWallet(address)) {
+      this.walletBoxSpinnerService.show();
       await this.waitForTurnStileToken();
       await this.getPortfolioAssets(address, this._utils.turnStileToken);
     } else {
@@ -222,6 +223,14 @@ export class PortfolioService {
         this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
       }
     });
+
+    // Sets the first provided address as the primary wallet address if the portfolio map is empty.
+    if(this.portfolioMap().size === 0) {
+      this.currentWalletAddress.set(address);
+    }
+
+    // Always save primary portfolio data for use outside the presentation page.
+    this.updateCurrentWalletSignals(this.currentWalletAddress())
   }
 
   /**
@@ -293,12 +302,14 @@ export class PortfolioService {
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-    this._portfolioStaking(walletAddress);
-    this._portfolioTokens(extendTokenData as any, tokenJupData as any);
-    await this._portfolioNFT(walletAddress);
+    await Promise.all([
+      this._portfolioStaking(walletAddress),
+      this._portfolioTokens(extendTokenData as any, tokenJupData as any),
+      this._portfolioNFT(walletAddress)
+    ]);
 
     if (fetchType !== 'partial') {
-      this._portfolioDeFi(excludeNFTv2, tokenJupData);
+      await this._portfolioDeFi(excludeNFTv2, tokenJupData);
      // mergeDuplications.push(tempNft);
       this.walletAssets.set(mergeDuplications);
       this.netWorth.set(portfolioData.value);

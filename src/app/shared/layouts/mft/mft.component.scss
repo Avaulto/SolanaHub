@@ -12,3 +12,27 @@ ion-img{
     margin-inline:6px ;
 }
 
+.wallet-details-wrapper {
+  background-color: #f3f3f3;
+  margin-inline-end: 2em;
+  margin-block: 1rem;
+  padding-block: .5rem;
+  border-radius: 8px;
+}
+
+.wallet-details-header, .wallet-details-breakdown {
+  display: flex;
+  justify-content: space-between;
+  padding-inline: .5rem;
+  line-height: .5;
+
+  & > * {
+    width: 150px;
+  }
+}
+
+.wallet-details-breakdown {
+  margin-block: .2rem;
+  border-radius: 2px;
+//  border-left: 4px solid hsl(321, 48%, 41%);
+}

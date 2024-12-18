@@ -2,6 +2,7 @@ import { computed, effect, inject, Injectable, Signal, signal } from "@angular/c
 import { JupStoreService } from "./jup-store.service";
 import { PortfolioService } from "./portfolio.service";
 import { NFT, NftTable, WalletEntry } from "../models";
+import { UtilService } from "./util.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { NFT, NftTable, WalletEntry } from "../models";
 export class PortfolioBreakdownService {
   public readonly _jupStore = inject(JupStoreService)
   public readonly _portfolioService = inject(PortfolioService)
+  public readonly _utils = inject(UtilService)
   private readonly excludedAssets = signal<Set<string>>(new Set());
   public readonly solPrice = this._jupStore.solPrice;
 
@@ -189,6 +191,7 @@ export class PortfolioBreakdownService {
 
       // Add to breakdown
       acc[key].breakdown.push({
+        walletAddressShort: this._utils.addrUtil(entry.walletAddress).addrShort,
         walletAddress: entry.walletAddress,
         balance: entry.holdings[0].balance,
         value: entry.value
@@ -266,8 +269,10 @@ export class PortfolioBreakdownService {
         existingToken.value += newValue;
         existingToken.balance += newBalance;
         existingToken.breakdown.push({
+          walletAddressShort: this._utils.addrUtil(walletAddress).addrShort,
           walletAddress,
-          value
+          value,
+          balance
         });
       });
     });
@@ -312,20 +317,31 @@ export class PortfolioBreakdownService {
             ...rest,
             count: 0,
             value: 0,
-            breakdown: new Map<string, number>()
+            breakdown: []
           });
         }
 
         const existingToken = { ...nftCollectionMap.get(collectionName) };
         const currentBreakdown = existingToken.breakdown;
 
+        // Find the index of the wallet address in the breakdown array
+        const walletIndex = currentBreakdown.findIndex(item => item.walletAddress === walletAddress);
+
         nftCollectionMap.set(collectionName, {
           ...existingToken,
           nfts: [...(existingToken.nfts || []), ...nfts],
           count: existingToken.count + 1,
           value: existingToken.value + value,
-          breakdown: currentBreakdown.set(walletAddress, (currentBreakdown.get(walletAddress) || 0) + value)
+          breakdown: walletIndex !== -1
+            ? currentBreakdown.map((item, index) =>
+              index === walletIndex
+                ? { ...item, value: item.value + value }
+                : item
+            )
+            : [...currentBreakdown, { walletAddressShort: this._utils.addrUtil(walletAddress).addrShort, walletAddress, value }]
         })
+
+
       });
     });
 
@@ -426,18 +442,18 @@ export class PortfolioBreakdownService {
    * Set accordingly. If the group is already excluded, it will be added back;
    * otherwise, it will be excluded.
    */
-    toggleAssetExclusion(group: string): void {
-      const normalizedGroup = group.replace(/\s+/g, '');
-      this.excludedAssets.update(set => {
-        const newSet = new Set(set);
-        if (newSet.has(normalizedGroup)) {
-          newSet.delete(normalizedGroup);
-        } else {
-          newSet.add(normalizedGroup);
-        }
-        return newSet;
-      });
-    }
+  toggleAssetExclusion(group: string): void {
+    const normalizedGroup = group.replace(/\s+/g, '');
+    this.excludedAssets.update(set => {
+      const newSet = new Set(set);
+      if (newSet.has(normalizedGroup)) {
+        newSet.delete(normalizedGroup);
+      } else {
+        newSet.add(normalizedGroup);
+      }
+      return newSet;
+    });
+  }
 
   /**
    * Gets an array of enabled portfolios.
@@ -454,7 +470,6 @@ export class PortfolioBreakdownService {
     return this._portfolioService.portfolio()
       .filter(({portfolio}) => portfolio.enabled)
   });
-
 
   public assetClassValue = computed(() => {
     const assets = this.getEnabledWalletsAssets();

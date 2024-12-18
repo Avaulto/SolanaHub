@@ -15,7 +15,7 @@ export interface Token extends JupToken {
   type?: string,
   networkId?: string,
   logoURI: string,
-  value?: string,
+  value?: number,
   price?: number
   amount?: string
   extraData?: any

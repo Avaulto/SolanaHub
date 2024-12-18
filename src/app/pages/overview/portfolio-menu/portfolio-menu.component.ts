@@ -60,7 +60,6 @@ export class PortfolioMenuComponent {
     await modal.present();
     const { data} = await modal.onDidDismiss()
     if (data) {
-      this.walletBoxSpinnerService.show();
       this._portfolioService.syncPortfolios(data);
     }
   }
