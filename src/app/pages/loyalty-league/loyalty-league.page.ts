@@ -72,7 +72,7 @@ export class LoyaltyLeaguePage implements OnInit {
 
   public async openFaqPopOver() {
     let config = {
-      imgUrl: null,
+      logoURI: null,
       title: 'Loyalty League FAQ',
       desc: 'This is a quick overview of the Loyalty Program, for detailed information visit the docs in the end'
     }

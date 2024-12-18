@@ -1,7 +1,7 @@
 
 export interface Gov{
     name: string
-    imgURL: string
+    logoURI: string
     realmsId: string
     proposals: Proposal[]
 }

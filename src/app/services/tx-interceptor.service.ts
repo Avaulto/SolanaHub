@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 
-import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, VersionedTransaction } from '@solana/web3.js';
+import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { Record, toastData } from '../models';
 import va from '@vercel/analytics';
 import { environment } from 'src/environments/environment';
@@ -103,58 +103,91 @@ export class TxInterceptorService {
     }
   }
   public async sendMultipleTxn(
-    transactions: Transaction[],
+    transactions: (Transaction | VersionedTransaction)[],
     extraSigners?: Keypair[] | Signer[],
     record?: { message: string, data?: {} },
   ): Promise<string[]> {
-
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
 
-
-    Promise.all(transactions.map(async t => t.add(await this._getPriorityFeeEst(t))))
-    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as Transaction[];
-    if (extraSigners?.length > 0) signedTx.map(s => s.partialSign(...extraSigners))
-
+    // Handle priority fees for each transaction based on its type
+    // const txWithPriorityFees = []
+    // await Promise.all(transactions.map(async t => {
+    //   const priorityFeeEst = await this._getPriorityFeeEst(t);
+    //   if (t instanceof Transaction) {
+    //         t.add(priorityFeeEst);
+    //         txWithPriorityFees.push(t)
+    //   } else if (t instanceof VersionedTransaction) {
+    //     // Get existing instructions from the versioned transaction
+    //     const batchMessage = new TransactionMessage({
+    //       payerKey: this._shs.getCurrentWallet().publicKey,
+    //       recentBlockhash: blockhash,
+    //       instructions: [priorityFeeEst],
+    //     }).compileToV0Message();
+    //     const txWithFee = new VersionedTransaction(batchMessage);
+    //     txWithPriorityFees.push(t, txWithFee)
+    //   }
+ 
+    // }));
+    // console.log('txWithPriorityFees', txWithPriorityFees);
+    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as (Transaction | VersionedTransaction)[];
+    if (extraSigners?.length > 0) signedTx.map(s => s instanceof Transaction ? s.partialSign(...extraSigners) : s)
 
     var signatures = [];
+    var successfulSignatures = [];
+
+    // Send all transactions first
     for await (const tx of signedTx) {
-      const rawTransaction = tx.serialize({ requireAllSignatures: false })
-      const confirmTransaction = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
-      signatures.push(confirmTransaction);
+      try {
+        const rawTransaction = tx.serialize({ requireAllSignatures: false })
+        const confirmTransaction = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
+        signatures.push(confirmTransaction);
+      } catch (error) {
+        console.warn('Failed to send transaction:', error);
+      }
     }
 
     const url = `${this._util.explorer}/tx/${signatures[0]}?cluster=${environment.solanaEnv}`
 
+    // Show initial toast for submitted transactions
     const txSend: toastData = {
-      message: `Transaction Submitted`,
+      message: `Transactions Submitted`,
       btnText: `view on explorer`,
       segmentClass: "toastInfo",
       duration: 50000,
       cb: () => window.open(url)
     }
     this._toasterService.msg.next(txSend)
-    const config: BlockheightBasedTransactionConfirmationStrategy = {
-      signature: signatures[0], blockhash, lastValidBlockHeight
+
+    // Confirm all transactions
+    for (const signature of signatures) {
+      try {
+        const config: BlockheightBasedTransactionConfirmationStrategy = {
+          signature, blockhash, lastValidBlockHeight
+        }
+        await this._shs.connection.confirmTransaction(config, 'processed')
+        successfulSignatures.push(signature);
+      } catch (error) {
+        console.warn('Failed to confirm transaction:', signature, error);
+      }
     }
-   
-    await this._shs.connection.confirmTransaction(config, 'processed')
-    const txCompleted: toastData = {
-      message: 'Transaction Completed',
-      segmentClass: "toastInfo"
+
+    // Show completion toast only if at least one transaction succeeded
+    if (successfulSignatures.length > 0) {
+      const txCompleted: toastData = {
+        message: `${successfulSignatures.length}/${signatures.length} Transactions Completed`,
+        segmentClass: "toastInfo"
+      }
+      if (record) {
+        va.track(record.message, record.data)
+      }
+      this._toasterService.msg.next(txCompleted)
+
+      setTimeout(() => {
+        this._fetchPortfolioService.triggerFetch()
+      }, 500);
     }
-    if (record) {
 
-
-      va.track(record.message, record.data)
-    }
-    this._toasterService.msg.next(txCompleted)
-
-    setTimeout(() => {
-      this._fetchPortfolioService.triggerFetch()
-    }, 500);
-    return signatures
-
-
+    return successfulSignatures;
   }
 
   public async sendSol(lamportsToSend: number, toAddress: PublicKey, walletOwnerPk: PublicKey): Promise<any> {
@@ -169,55 +202,56 @@ export class TxInterceptorService {
     // if (validTx) {
     // }
   }
-  public async sendTxV2(txParam: VersionedTransaction, record?: { message: string, data: {} }) {
-    try {
-      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-      const priorityFeeEst = await this._getPriorityFeeEst(txParam)
-      let signedTx = await this._shs.getCurrentWallet().signTransaction(txParam);
+  // public async sendTxV2(txParam: VersionedTransaction | VersionedTransaction[], record?: { message: string, data: {} }) {
+  //   try {
+  //     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+  //     const priorityFeeEst = await this._getPriorityFeeEst(txParam)
+  //     let signedTx = await this._shs.getCurrentWallet().signAllTransactions(txParam);
 
-      const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
-      const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
-      const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
-      const txSend: toastData = {
-        message: `Transaction Submitted`,
-        btnText: `view on explorer`,
-        segmentClass: "toastInfo",
-        duration: 5000,
-        cb: () => window.open(url)
-      }
-      this._toasterService.msg.next(txSend)
-      const config: BlockheightBasedTransactionConfirmationStrategy = {
-        signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
-      }
-      await this._shs.connection.confirmTransaction(config, 'processed')
-      const txCompleted: toastData = {
-        message: 'Transaction Completed',
-        segmentClass: "toastInfo"
-      }
+  //     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
+  //     const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
+  //     const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
+  //     const txSend: toastData = {
+  //       message: `Transaction Submitted`,
+  //       btnText: `view on explorer`,
+  //       segmentClass: "toastInfo",
+  //       duration: 5000,
+  //       cb: () => window.open(url)
+  //     }
+  //     this._toasterService.msg.next(txSend)
+  //     const config: BlockheightBasedTransactionConfirmationStrategy = {
+  //       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
+  //     }
+  //     await this._shs.connection.confirmTransaction(config, 'processed')
+  //     const txCompleted: toastData = {
+  //       message: 'Transaction Completed',
+  //       segmentClass: "toastInfo"
+  //     }
 
-      // if(record){
-      //   va.track(record.message, record.data)
-      // }
-      this._toasterService.msg.next(txCompleted)
+  //     // if(record){
+  //     //   va.track(record.message, record.data)
+  //     // }
+  //     this._toasterService.msg.next(txCompleted)
 
-      setTimeout(() => {
-        this._fetchPortfolioService.triggerFetch()
-      }, 500);
-      return signature
+  //     setTimeout(() => {
+  //       this._fetchPortfolioService.triggerFetch()
+  //     }, 500);
+  //     return signature
 
-    } catch (error) {
-      console.warn(error)
-      return null
-      // onMsg('transaction failed', 'error')
-    }
-  }
+  //   } catch (error) {
+  //     console.warn(error)
+  //     return null
+  //     // onMsg('transaction failed', 'error')
+  //   }
+  // }
 
   private async _getPriorityFeeEst(transaction: Transaction | VersionedTransaction) {
+    console.log('get tx fee', transaction);
 
     // if transaction is array then return array of 
     // Extract all account keys from the transaction
     const accountKeys = transaction instanceof Transaction ? transaction.compileMessage().accountKeys : transaction.message.staticAccountKeys;
-
+    console.log('accountKeys', accountKeys);
     // Convert PublicKeys to base58 strings
     const publicKeys = accountKeys.map(key => key.toBase58());
 

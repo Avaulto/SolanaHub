@@ -5,17 +5,18 @@ import {
   IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import {  alertCircleOutline } from 'ionicons/icons';
+import { alertCircleOutline } from 'ionicons/icons';
 @Component({
   selector: 'alert',
   template: `
   <div id="alert" [class]="type">
-    <div>
-
-    <ion-icon name="alert-circle-outline"></ion-icon>
-</div>
-  <ion-text [innerHTML]="text">
-  </ion-text>
+    <div class="alert-content">
+    <div class="alert-icon">
+       <ion-icon name="alert-circle-outline"></ion-icon>
+    </div>
+  <ion-text [innerHTML]="text"/>
+ </div>
+  <ng-content/>
 </div>
 `,
   styleUrls: ['./alert.component.scss'],
@@ -28,9 +29,9 @@ import {  alertCircleOutline } from 'ionicons/icons';
 })
 export class AlertComponent implements OnInit {
   @Input() text: string;
-  @Input() type: 'regular' | 'warning' | 'danger'
-  constructor() { 
-    addIcons({alertCircleOutline})
+  @Input() type: 'regular' | 'focus' | 'warning' | 'danger'
+  constructor() {
+    addIcons({ alertCircleOutline })
   }
 
   ngOnInit() { }

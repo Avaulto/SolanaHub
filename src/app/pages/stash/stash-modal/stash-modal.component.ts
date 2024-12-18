@@ -1,33 +1,71 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
-import { AlertComponent } from 'src/app/shared/components';
 import { StashAsset } from '../stash.model';
-import { IonLabel, IonText, IonImg, IonButton } from '@ionic/angular/standalone';
-import { DecimalPipe, KeyValuePipe } from '@angular/common';
+import { IonLabel, IonText, IonImg, IonButton, IonSkeletonText, IonCheckbox } from '@ionic/angular/standalone';
+import { KeyValuePipe } from '@angular/common';
 import { StashService } from '../stash.service';
 import { ModalController } from '@ionic/angular';
+import { UtilService } from 'src/app/services/util.service';
+import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+import { EarningsService, HelpersService } from '../helpers';
+import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
+import va from '@vercel/analytics'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
   styleUrls: ['./stash-modal.component.scss'],
   standalone: true,
-  imports: [IonButton, IonImg, IonText,
-    IonLabel,
+  providers: [
+
+  ],
+  imports: [IonCheckbox, 
     AlertComponent,
-    DecimalPipe,
+    IonSkeletonText,
+    IonButton,
+    IonImg,
+    IonText,
+    IonLabel,
     KeyValuePipe
   ]
 })
 export class StashModalComponent implements OnInit {
   @Input() stashAssets: StashAsset[] = [];
   @Input() actionTitle: string = ''
-  private _stashService = inject(StashService)
-  private modalCtrl = inject(ModalController)
+  @Input() swapTohubSOL: boolean = false;
+  public burnWithCautionConfirmed = null
+  constructor(
+    private _stashService: StashService,
+    private _helpersService: HelpersService,
+    public utils: UtilService,
+    public modalCtrl: ModalController,
+    private _lss: LiquidStakeService,
+    private _earningsService: EarningsService,
+    private _loyaltyLeagueService: LoyaltyLeagueService
+  ) {
+  }
+
+
   public summary: { [key: string]: number } = {};
-  public platformFee: number = 0
+  public platformFeeInSOL = this._helpersService.platformFeeInSOL
   public stashState = signal('')
+  public hubSOLRate = null
   ngOnInit() {
+    va.track('stash', {
+      state: 'modal',
+      action: 'modal opened',
+      type: this.stashAssets[0].type,
+      assets: this.stashAssets.length
+    })
+    if(this.stashAssets[0].type == 'value-deficient'){
+      this.burnWithCautionConfirmed = false
+    }
+    if (this.swapTohubSOL) {
+      this._fetchHubSOLRate()
+    }
     this.stashState.set(this.actionTitle)
     console.log('stashAssets', this.stashAssets);
+
 
     // add 1% platform fee from total summery value
     this.summary = this.stashAssets.map(item => item.extractedValue).reduce((acc, item) => {
@@ -43,35 +81,132 @@ export class StashModalComponent implements OnInit {
     }, {})
     // loop through summary and add toFixedNoRounding 2 
     Object.keys(this.summary).forEach(key => {
-      this.summary[key] = Number(this.summary[key]).toFixedNoRounding(3)
+      this.summary[key] = Number(this.summary[key]).toFixedNoRounding(5)
     })
     // filter zero values
     this.summary = Object.fromEntries(Object.entries(this.summary).filter(([key, value]) => value > 0))
-    this.platformFee = 0.002
+
+    this._calculatePlatformFee()
+
+    // if summary contain SOL, deduct platform fee
+    if (this.summary['SOL']) {
+      this.summary['SOL'] = this.summary['SOL'] - this._helpersService.platformFeeInSOL()
+    }
+  }
+  private async _fetchHubSOLRate() {
+    try {
+      const hubSOLratio = await fetch('https://extra-api.sanctum.so/v1/sol-value/current?lst=hubSOL')
+      const hubSOLratioData = await hubSOLratio.json()
+      const exchangeRate = hubSOLratioData.solValues.hubSOL / LAMPORTS_PER_SOL;
+      this.hubSOLRate = exchangeRate
+      return exchangeRate
+    } catch (error) {
+      console.log(error)
+      return 0
+    }
+  }
+  private _calculatePlatformFee() {
+    const type = this.stashAssets[0].type
+    switch (type) {
+      case 'stake-account':
+      case 'value-deficient':
+      case 'dust-value':
+        this._helpersService.platformFeeInSOL.set(this.summary['SOL'] * this._helpersService.platformFee)
+        break
+      case 'defi-position':
+        let costPerPosition = 0.01
+        this._helpersService.platformFeeInSOL.set(this.stashAssets.length * costPerPosition)
+        break
+
+
+    }
   }
 
   async submit(event: StashAsset[]) {
-    console.log('event', event)
+    va.track('stash', {
+      state: 'modal',
+      action: 'submit',
+      type: event[0].type,
+      assets: event.length
+    })
+    const { publicKey } = this._helpersService.shs.getCurrentWallet()
     const type = event[0].type
-    this.stashState.set('preparing transactions')
 
+      this.stashState.set('preparing transactions')
+    
+    let signatures: string[] = []
+    let dataToReload =''
     switch (type) {
       case 'stake-account':
-         await this._stashService.withdrawStakeAccountExcessBalance(event)
-
+        signatures = await this._stashService.withdrawStakeAccountExcessBalance(event, publicKey)
+        dataToReload = 'stake'
         break
       case 'defi-position':
-         await this._stashService.closeOutOfRangeDeFiPosition(event)
+        signatures = await this._stashService.closeOutOfRangeDeFiPosition(event, publicKey)
+        dataToReload = 'defi-position'  
         break
-      case 'empty-account':
-      case 'nft':
-        await this._stashService.burnAccounts(event)
+      case 'value-deficient':
+        signatures = await this._stashService.burnZeroValueAssets(event, publicKey)
+        dataToReload = 'value-deficient'
+        break
+      case 'dust-value':
+        signatures = await this._stashService.swapDustValueTokens(event, this.swapTohubSOL)
+        dataToReload = 'dust-value'
         break
     }
 
+    if (signatures?.length > 0) {
+      this.storeEarningsRecord(signatures)
+      this.dataToReload(dataToReload)
+      this.closeModal()
+      this.storeEarningPlatformRecord(signatures)
 
+      this._loyaltyLeagueService.completeQuest(publicKey.toBase58(), 'stashInteract')
 
-    this.closeModal()
+    }
+    this.stashState.set(this.actionTitle)
+
+  }
+  dataToReload(data: string) {
+    switch (data) {
+      case 'value-deficient':
+        this._stashService.updateZeroValueAssets(true)
+        break
+        // already gets updated after tx submitted in fetchPortfolio call under txi service
+      case 'dust-value':
+        this._helpersService.getDASAssets()
+        this._stashService.updateDustValueTokens(false)
+        break
+      case 'defi-position':
+        this._stashService.updateOutOfRangeDeFiPositions()
+        break
+    }
+  }
+  storeEarningsRecord(signatures: string[]) {
+    const { publicKey } = this._helpersService.shs.getCurrentWallet();
+    const extractedSOL = this.summary['SOL']
+    const stashRecord = {
+      txs: signatures,
+      extractedSOL,
+      walletOwner: publicKey.toBase58()
+    }
+    let stashReferralRecord = null
+    if (this._earningsService.referralAddress()) {
+      const platformFee = this._helpersService.platformFeeInSOL()
+        stashReferralRecord = {
+          txs: signatures,
+          referralFee: platformFee * 0.5,
+          walletOwner: this._earningsService.referralAddress()
+        }
+    }
+    this._earningsService.storeRecord(stashRecord, stashReferralRecord)
+  }
+  storeEarningPlatformRecord(signatures: string[]){
+    const platformFee = this._helpersService.platformFeeInSOL()
+    const referralFee = this._earningsService.referralAddress() ? platformFee * 0.5 : 0
+    const numberOfPositions = this.stashAssets.length
+    const type = this.stashAssets[0].type
+    this._earningsService.updatePlatformRecord(numberOfPositions, type, this.summary['SOL'], platformFee, referralFee, signatures)
   }
   closeModal() {
     this.modalCtrl.dismiss()

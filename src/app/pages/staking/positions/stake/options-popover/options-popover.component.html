@@ -73,12 +73,12 @@
       </div>
     </ion-button>
   }@else {
-    <ion-button [routerLink]="'/swap/'+stake.symbol+'-SOL'" expand="block" fill="clear">
+    <!-- <ion-button [routerLink]="'/swap/'+stake.symbol+'-SOL'" expand="block" fill="clear">
       <div class="ion-text-left">
         <ion-icon name="swap-vertical"></ion-icon>
         Immediately swap for SOL
       </div>
-    </ion-button>
+    </ion-button> -->
     @if(stake.pool.poolName != 'marinade'){
 
       <ion-button (click)="openModal('unstake-lst-modal')" expand="block" fill="clear">

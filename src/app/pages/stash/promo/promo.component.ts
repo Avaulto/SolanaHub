@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
-import {IonButton, IonImg, IonText, IonLabel } from '@ionic/angular/standalone';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {IonButton, IonImg, IonText, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 import lottie from "lottie-web";
 import {
   style,
@@ -7,12 +7,14 @@ import {
   trigger,
   transition,
 } from "@angular/animations";
+import { CurrencyPipe, NgIf } from '@angular/common';
+import va from '@vercel/analytics'
 @Component({
   selector: 'promo',
   templateUrl: './promo.component.html',
   styleUrls: ['./promo.component.scss'],
   standalone: true,
-  imports: [IonButton, IonImg, IonLabel, IonText],
+  imports: [NgIf,IonButton, IonImg, IonLabel, IonText, CurrencyPipe, IonSkeletonText],
   animations: [
     trigger('easeOut', [
       transition('* => void', [
@@ -29,7 +31,7 @@ import {
         style({
             opacity: 0
         }),
-        animate("500ms ease-in-out", style({
+        animate("500ms 300ms ease-in-out", style({
             opacity: 1
         }))
     ]),
@@ -46,6 +48,7 @@ import {
   ]
 })
 export class PromoComponent implements AfterViewInit {
+  @Input() estimateStashValue: number = null;
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;
   public wordCarousel = ["Dust value", "Stake accounts", "DeFi positions"];
   public wordCounter = -1;
@@ -56,6 +59,10 @@ export class PromoComponent implements AfterViewInit {
   constructor() { }
 
   startAnalyze(){
+    va.track('stash', {
+      state: 'promo',
+      action: 'start analyze'
+    })
     this.preview = false;
     setTimeout(() => {
       
@@ -69,6 +76,11 @@ export class PromoComponent implements AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.toggle = false;
+    })
+
+    va.track('stash', {
+      state: 'promo',
+      action: 'loaded'
     })
 
   }

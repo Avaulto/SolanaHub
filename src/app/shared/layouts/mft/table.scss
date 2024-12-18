@@ -3,6 +3,7 @@
     text-align: center;
     display: block;
 }
+
 div#table-wrapper {
     position: relative;
     #table-controls {
@@ -39,6 +40,12 @@ ion-button {
     // .checkbox-on table thead > tr > th:nth-child(2) {
     //     display: none;
     // }
+    .stash-table{
+        th.select-box, tbody > tr > td:first-child:not(.no-results) {
+            display: none;
+        }
+    }
+    
     .ngx-table{
         font-family: var(--ion-font-family);
     }

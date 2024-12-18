@@ -40,7 +40,6 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    // BurnNftModalComponent,
     UnstakeLstModalComponent,
     FaqModalComponent
   ]
@@ -49,7 +48,7 @@ import { FreemiumModule } from '../../layouts/freemium/freemium.module';
 export class ModalComponent implements AfterViewInit {
   public onSubmit: boolean = false;
   @Input() config = {
-    imgUrl: null,
+    logoURI: null,
     title: null,
     desc: null,
     btnText: null
@@ -77,7 +76,6 @@ export class ModalComponent implements AfterViewInit {
       
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
-        console.log(pool);
         this._lss.stakePoolStakeAccount(this.data.stake, pool)
         break;
       case 'unstake-lst-modal':

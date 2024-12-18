@@ -4,7 +4,7 @@
 
       @if(notification){
       <div>
-        <ion-img [src]="notification?.imgURL || 'assets/images/unknown.svg' " />
+        <ion-img [src]="notification?.logoURI || 'assets/images/unknown.svg' " />
       </div>
       <ion-label>{{notification?.metadata?.title || notification?.name }}</ion-label>
       }@else{

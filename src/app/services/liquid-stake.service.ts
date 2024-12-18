@@ -41,6 +41,9 @@ export class LiquidStakeService {
 
   public async getStakePoolList(): Promise<StakePool[]> {
     let stakePools: StakePool[] = [];
+    if(this.stakePools.length > 0){
+      return this.stakePools
+    }
     try {
       const result = await (await fetch(`${this.restAPI}/api/get-stake-pools`)).json();
       stakePools = result //result.filter(s => poolIncludes.includes(s.poolName.toLowerCase()));

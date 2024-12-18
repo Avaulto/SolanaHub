@@ -22,8 +22,6 @@ import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.componen
     NetWorthComponent,
     PortfolioBreakdownComponent,
     AssetsTableComponent,
-    TransactionsHistoryTableComponent,
-    PortfolioMenuComponent
   ]
 
 })

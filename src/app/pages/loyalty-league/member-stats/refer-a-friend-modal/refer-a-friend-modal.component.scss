@@ -3,7 +3,7 @@
 }
 
 #refer-a-friend-modal {
-    width: 320px;
+    width: 350px;
     margin: 0 auto;
     #close-icon{
         width: 24px;
@@ -64,7 +64,7 @@ ion-input {
     --border-radius: 6px;
     --border-style: solid;
     --border-width: 1px;
-    --border-color: #CDD5DF;
+    --border-color: var(--ion-color-border);
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
     ion-icon {

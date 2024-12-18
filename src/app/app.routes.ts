@@ -5,6 +5,10 @@ import { NotConnectedComponent } from './shared/layouts/not-connected/not-connec
 import { environment } from '../environments/environment';
 import { isConnectedGuard } from './shared/guards/is-connected.guard';
 
+
+const stashBeta = new URLSearchParams(window.location.search).get('beta')
+console.log(stashBeta);
+
 export const routes: Routes = [
   {
     path: '',
@@ -20,7 +24,7 @@ export const routes: Routes = [
   {
     path: RoutingPath.STASH,
     loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage),
-    canActivate: [() => !environment.production, isConnectedGuard]
+    canActivate: [isConnectedGuard]
   },
   {
     path: RoutingPath.COLLECTIBLES,
