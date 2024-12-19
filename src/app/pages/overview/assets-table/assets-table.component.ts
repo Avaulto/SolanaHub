@@ -25,20 +25,14 @@ import { PortfolioDataKeys } from "../../../enums";
   imports: [
     ChipComponent,
     AsyncPipe,
-    SkeletonPhDirective,
     MftModule,
     IonImg,
     IonSkeletonText,
     CurrencyPipe,
     DecimalPipe,
-    SlicePipe,
-    IonButton,
-    IonIcon,
-    IonChip,
     NgClass,
     NgStyle,
     PriceChartComponent,
-    JsonPipe
   ]
 })
 export class AssetsTableComponent implements OnInit {
@@ -84,19 +78,16 @@ export class AssetsTableComponent implements OnInit {
 
   public showBalance = this._portfolioService.privateMode;
   public solPrice = this._portfolioBreakdownService.solPrice;
+  public expandableTable = computed(() =>  this._portfolioBreakdownService.getEnabledPortfolio().length > 1)
   selectedTab = signal(PortfolioDataKeys.TOKENS);
   columns = computed(() => this._columnsOptions[this.selectedTab().toLowerCase()])
   tableData = computed(() => {
     let tableType: string = this.selectedTab().toLowerCase();
 
-    // if(tableType === 'tokens'){
-    //   return tokenDummyPlaceholder
-    // }
-
     switch (tableType) {
       case PortfolioDataKeys.NFTS:
         return this._portfolioBreakdownService.getNFTsBreakdown()
-      case PortfolioDataKeys.TOKENS:
+      case PortfolioDataKeys.TOKENS:     
         return this._portfolioBreakdownService.getTokensBreakdown()
       case PortfolioDataKeys.DEFI:
         return this._portfolioBreakdownService.getEnabledDefiAssets()

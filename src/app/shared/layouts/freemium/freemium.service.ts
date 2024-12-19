@@ -25,10 +25,10 @@ export class FreemiumService {
     private _shs: SolanaHelpersService,
     private _storageService: LocalStorageService,
   ) {
-    this._initializeService();
-    effect(() => {
-      this._updateAccount();
-    });
+    // this._initializeService();
+    // effect(() => {
+    //   this._updateAccount();
+    // });
   }
 
   private async _initializeService(): Promise<void> {

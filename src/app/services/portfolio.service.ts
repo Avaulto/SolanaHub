@@ -284,7 +284,7 @@ export class PortfolioService {
 
 
     this._utils.turnStileToken = null;
-    data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
+    // data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
     return data;
   }
 
@@ -305,11 +305,11 @@ export class PortfolioService {
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-    await Promise.all([
+    // await Promise.all([
       this._portfolioStaking(walletAddress),
       this._portfolioTokens(extendTokenData as any, tokenJupData as any),
       this._portfolioNFT(walletAddress)
-    ]);
+    // ]);
 
     if (fetchType !== 'partial') {
       await this._portfolioDeFi(excludeNFTv2, tokenJupData);
@@ -318,6 +318,7 @@ export class PortfolioService {
       this.netWorth.set(portfolioData.value);
     }
 
+    
     // Save processed data to map
     this.saveToPortfolioMap(walletAddress);
   }
@@ -343,24 +344,14 @@ export class PortfolioService {
 
 
       // add pipes
-      const tokensAggregated: Token[] = tokensData.filter(item => item.value).map((item: Token) => {
-        // if(LST_direct_stake.mSOL && item.symbol.toLowerCase() === 'msol'){
-        //   item.extraData = LST_direct_stake.mSOL;
-        // }
-        // if(LST_direct_stake.bSOL && item.symbol.toLowerCase() === 'bsol'){
-        //   item.extraData = LST_direct_stake.bSOL[0];
-
-        // }
-        // item.amount = this._utilService.decimalPipe.transform(item.amount, '1.2') || '0'
-        // item.price = this._utils.currencyPipe.transform(item.price,'USD','symbol','1.2-5') || '0'
-        return item
-      })
-      this.tokens.set(tokensAggregated)
+      // const tokensAggregated: Token[] = tokensData.filter(item => item.value)
+      this.tokens.set(tokensData)
     }
   }
 
   public async _portfolioNFT(walletAddress: string) {
     try {
+      console.log('nftExtended', walletAddress);
       const getNfts = await fetch(`${this.restAPI}/api/portfolio/nft?address=${walletAddress}`)
       const nfts = await getNfts.json()
       // loop through nfts and add logoURI from image_uri
@@ -368,13 +359,15 @@ export class PortfolioService {
         return {
           ...nft,
           logoURI: nft.image_uri,
-          address: nft.mint
+          address: nft.mint,
+          value: nft.value
         }
       })
-
       this.nfts.set(nftExtended);
-      // append nftExtended to walletAssets
-      this.walletAssets.update(assets => [...assets, nfts]);
+      const nftsValue = nfts.value
+      this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.NFTS, this.nfts());
+      this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.NETWORTH, this.netWorth() + nftsValue);
+      this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.WALLET_ASSETS, [...this.portfolioMap().get(walletAddress).walletAssets, nfts]);
     } catch (error) {
       console.error(error);
     }
@@ -638,6 +631,8 @@ export class PortfolioService {
 
     const getStakeAccountsWithInfaltionRewards = await this._nss.getStakeRewardsInflation(stakeAccounts)
     this.staking.set(getStakeAccountsWithInfaltionRewards)
+    this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.STAKING, this.staking());
+    console.log('getStakeAccountsWithInfaltionRewards', this.staking());
   }
 
   public filteredTxHistory = (filterByAddress?: string, filterByAction?: string) => {

@@ -45,7 +45,7 @@ import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
 import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
-import { FreemiumService } from './shared/layouts/freemium/freemium.service';
+// import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
 import va from '@vercel/analytics'; 
 @Component({
@@ -84,7 +84,7 @@ import va from '@vercel/analytics';
 })
 export class AppComponent implements OnInit {
 
-  public adShouldShow = this._freemiumService.adShouldShow;
+  // public adShouldShow = this._freemiumService.adShouldShow;
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
   // readonly isReady$ = this._walletStore.connected$.pipe
@@ -106,7 +106,7 @@ export class AppComponent implements OnInit {
 
 
   constructor(
-    private _freemiumService: FreemiumService,
+    // private _freemiumService: FreemiumService,
     public router: Router,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,

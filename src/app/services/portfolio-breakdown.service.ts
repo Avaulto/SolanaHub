@@ -245,7 +245,7 @@ export class PortfolioBreakdownService {
   public getTokensBreakdown: Signal<any[]> = computed(() => {
     const assets = this.getEnabledPortfolio();
     if (!assets) return [];
-
+    console.log("assets", assets)
     const tokenMap = new Map();
     assets.forEach(wallet => {
       const { walletAddress, portfolio } = wallet
@@ -466,7 +466,7 @@ export class PortfolioBreakdownService {
    *
    * @returns {Signal<WalletEntry[]>} A Signal representing an array of enabled portfolios.
    */
-  private getEnabledPortfolio: Signal<WalletEntry[]> = computed(() => {
+  public getEnabledPortfolio: Signal<WalletEntry[]> = computed(() => {
     return this._portfolioService.portfolio()
       .filter(({portfolio}) => portfolio.enabled)
   });
