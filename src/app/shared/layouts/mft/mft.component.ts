@@ -46,14 +46,10 @@ export class MftComponent implements OnInit, OnChanges {
   //@ts-ignore
   @ViewChild('table', { static: true }) table: APIDefinition;
 
-  @ViewChild('checkAll', {static: false}) checkAll//: IonCheckbox;
-ngOnChanges(changes: SimpleChanges): void {
-  this.configuration.detailsTemplate = this.expandDetails
-  
-  // if(changes['resetCheckAll'] && this.checkAll) {
-  //   this.checkAll.el.setChecked(false);
-  // }
-}
+  @ViewChild('checkAll', { static: false }) checkAll//: IonCheckbox;
+  ngOnChanges(): void {
+    this.configuration.detailsTemplate = this.expandDetails
+  }
   public tab = signal(this.tableMenuOptions[0])
 
   public tabSelected(tab: string) {
@@ -141,11 +137,11 @@ ngOnChanges(changes: SimpleChanges): void {
       const { isLoading, paginationEnabled } = this.configurationState();
       this.configuration.isLoading = isLoading;
       this.configuration.paginationEnabled = paginationEnabled;
-      
-      
+
+
     });
   }
-  
+
   public searchTerm = signal('')
   searchItem(term: any) {
     this.searchTerm.set(term);
@@ -160,48 +156,48 @@ ngOnChanges(changes: SimpleChanges): void {
 
   eventEmitted($event: { event: string; value: any }): void {
     // console.log(this.checkAll, $event);
-    
+
     // const isReallyTrue = this.checkAll.el.checked
     if (['onCheckboxSelect', 'onSelectAll'].includes($event.event)) {
-    let data = $event.value;
-    switch ($event.event) {
-      // case 'onCheckboxSelect':
-      // case 'onClick':
-      //   if (this.selected.has($event.value.rowId)) {
-      //     this.selected.delete($event.value.rowId);
-      //   } else {
-      //     this.selected.add($event.value.rowId);
-      //   }
-      //   data = this.tableData().filter((item, index) => 
-      //     this.selected.has(index)
-      //   ).map(item => ({ ...item, checked: true }));
-      //   console.log('checked data', data);
-      //   break;
-      case 'onSelectAll':
-        if ($event.value) {
-          data = this.tableData().map(item => ({ ...item, checked: true }))
-        } else {
-          data = []
-        }
-        break;
-      // case 'onClick':
-      //   this.table.apiEvent({
-      //     type: API.toggleRowIndex,
-      //     value: $event.value.rowId,
-      //   });
-      //   // check if the data is an array, if yes, remove it from the array if it exists, if data is not an array, return data as new array and with selected data
-      //   if (Array.isArray(data)) {
-      //     data = data.filter(item => item !== $event.value)
-      //   } else {
-      //     // find the property in the tabledata array and toggle the checked property
-      //     const index = this.tableData().findIndex(item => item.id === $event.value.rowId)
-      //     if (index !== -1) {
-      //       data = this.tableData().splice(index, 1, { ...this.tableData()[index], checked: !this.tableData()[index].checked })
-      //     }
-      //   }
-      //   break;
-    }
-    // emit data only if its on of the above cases
+      let data = $event.value;
+      switch ($event.event) {
+        // case 'onCheckboxSelect':
+        // case 'onClick':
+        //   if (this.selected.has($event.value.rowId)) {
+        //     this.selected.delete($event.value.rowId);
+        //   } else {
+        //     this.selected.add($event.value.rowId);
+        //   }
+        //   data = this.tableData().filter((item, index) => 
+        //     this.selected.has(index)
+        //   ).map(item => ({ ...item, checked: true }));
+        //   console.log('checked data', data);
+        //   break;
+        case 'onSelectAll':
+          if ($event.value) {
+            data = this.tableData().map(item => ({ ...item, checked: true }))
+          } else {
+            data = []
+          }
+          break;
+        // case 'onClick':
+        //   this.table.apiEvent({
+        //     type: API.toggleRowIndex,
+        //     value: $event.value.rowId,
+        //   });
+        //   // check if the data is an array, if yes, remove it from the array if it exists, if data is not an array, return data as new array and with selected data
+        //   if (Array.isArray(data)) {
+        //     data = data.filter(item => item !== $event.value)
+        //   } else {
+        //     // find the property in the tabledata array and toggle the checked property
+        //     const index = this.tableData().findIndex(item => item.id === $event.value.rowId)
+        //     if (index !== -1) {
+        //       data = this.tableData().splice(index, 1, { ...this.tableData()[index], checked: !this.tableData()[index].checked })
+        //     }
+        //   }
+        //   break;
+      }
+      // emit data only if its on of the above cases
       this.onData.emit(data)
     }
   }
