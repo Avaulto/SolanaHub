@@ -104,7 +104,6 @@ export class PortfolioBreakdownComponent {
           const total = groupValue.reduce((sum: number, value: number) => sum + value, 0);
           const formattedTotal = `$${this.utilService.formatBigNumbers(total)}`;
 
-          // Title text - "Total stash"
           ctx.font = '13px Inter';
           ctx.color = '#4B5565'
           ctx.fontWeight = '500'
@@ -112,7 +111,7 @@ export class PortfolioBreakdownComponent {
           ctx.fillStyle = '#000000';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText('Total stash', width / 2, height / 2 - 13); // Move up by 12px
+          ctx.fillText(this.chartText, width / 2, height / 2 - 13); // Move up by 12px
 
           // Value text
           ctx.font = '24px Inter';

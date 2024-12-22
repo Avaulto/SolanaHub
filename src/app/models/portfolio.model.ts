@@ -35,6 +35,7 @@ export interface WalletPortfolio {
   walletHistory: TransactionHistory[];
   netWorth: number;
   enabled: boolean,
+  nickname?: string
 }
 
 export interface NFT {

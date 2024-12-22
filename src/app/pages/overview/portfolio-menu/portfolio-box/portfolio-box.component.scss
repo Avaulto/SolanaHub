@@ -1,9 +1,8 @@
 .portfolio-box {
-  border-radius: 10px;
-  padding: 12px;
-  cursor: pointer;
+  padding: 12px 20px;
   background-color: #fff;
   height: 100%;
+  border-top: 1px solid #E3E8EF;
 }
 
 .portfolio-actions {
@@ -20,21 +19,16 @@
 }
 
 .portfolio-box-header-text {
-  color: var(--ion-color-primary);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 28px;
-  letter-spacing: 0.16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
 }
 
 .portfolio-box-body {
   display: flex;
   justify-content: space-between;
   text-transform: capitalize;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 28px;
-  letter-spacing: 0.16px;
+  font-size: 12px;
 }
 
 .portfolio-box-empty {

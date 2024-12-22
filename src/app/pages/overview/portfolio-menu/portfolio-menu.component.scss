@@ -1,7 +1,41 @@
 #portfolio-menu {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(280px, 1fr));
-  gap: 12px;
-  margin-block-end: 12px;
+  margin-block-start: 20px;
 }
 
+#portfolio-menu-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px 20px;
+  align-items: center;
+}
+
+#portfolio-menu-header-title {
+  color: var(--ion-color-text-2);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+#portfolio-menu-header-button {
+
+  #portfolio-menu-header-button-add {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full, 9999px);
+    border: 1px dashed var(--Colors-Border-border-primary, #CDD5DF);
+    background: #FFF;
+  }
+
+  ion-icon {
+    color: #9AA4B2;
+  }
+}
+
+#portfolio-menu-header-subtitle {
+  color: var(--ion-light-gray);
+  font-size: 13px;
+}

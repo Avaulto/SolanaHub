@@ -61,6 +61,7 @@ export class PortfolioService {
     [...Array.from(this.portfolioMap().entries())
     .map(([walletAddress, portfolio]) => ({
     walletAddress,
+    nickname: portfolio?.nickname,
     portfolio
   }))]);
 
@@ -119,7 +120,7 @@ export class PortfolioService {
    * // Example usage:
    * wallet.saveToPortfolioMap("0x1234567890123456789012345678901234567890", false);
    */
-  private saveToPortfolioMap(address: string): void {
+  private saveToPortfolioMap(address: string, nickname?: string): void {
     const newMap = new Map(this.portfolioMap());
     newMap.set(address, {
       walletAssets: this.walletAssets(),
@@ -129,7 +130,8 @@ export class PortfolioService {
       defi: this.defi(),
       walletHistory: this.walletHistory(),
       netWorth: this.netWorth(),
-      enabled: true
+      enabled: true,
+      nickname: nickname || null
     });
     this.portfolioMap.set(newMap);
     this.walletBoxSpinnerService.hide();
@@ -207,13 +209,15 @@ export class PortfolioService {
    *
    * @param {string} address - The wallet address to synchronize.
    */
-  public async syncPortfolios(address: string) {
+  public async syncPortfolios(address: string, nickname?: string) {
     if (!this.containsWallet(address)) {
       console.log('syncPortfolios', address);
       this.walletBoxSpinnerService.show();
-      // await this.waitForTurnStileToken();
-      console.log('turnStileToken', this._utils.turnStileToken);
-      await this.getPortfolioAssets(address, this._utils.turnStileToken);
+      await this.getPortfolioAssets(address, this._utils.turnStileToken, true, false, 'full', nickname);
+      
+      if (nickname) {
+        this.updateWalletDataByKey(address, 'nickname', nickname);
+      }
     } else {
       this.updateCurrentWalletSignals(address);
     }
@@ -221,8 +225,7 @@ export class PortfolioService {
     this._fetchPortfolioService.refetchPortfolio().subscribe(async ({shouldRefresh, fetchType}) => {
       if (shouldRefresh) {
         const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
-        // await this.waitForTurnStileToken();
-        this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
+        await this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
       }
     });
 
@@ -258,14 +261,14 @@ export class PortfolioService {
     turnStileToken: string,
     forceFetch = false,
     watchMode: boolean = false,
-    fetchType: FetchType = 'full'
+    fetchType: FetchType = 'full',
+    nickname?: string
   ) {
-    console.log('getPortfolioAssets', walletAddress);
     let portfolioData = await this.fetchPortfolioData(walletAddress, turnStileToken, fetchType);
 
     try {
 
-      this.processPortfolioData({...portfolioData}, walletAddress, fetchType);
+      this.processPortfolioData({...portfolioData}, walletAddress, fetchType, nickname);
 
       va.track('fetch portfolio', {
         status: 'success',
@@ -298,7 +301,7 @@ export class PortfolioService {
     }
   }
 
-  private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full') {
+  private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full', nickname?: string) {
     const tempNft = portfolioData.elements.find(group => group.platformId === WalletDataKeys.NFT_V2);
     const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== WalletDataKeys.NFT_V2);
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
@@ -320,7 +323,7 @@ export class PortfolioService {
 
     
     // Save processed data to map
-    this.saveToPortfolioMap(walletAddress);
+    this.saveToPortfolioMap(walletAddress, nickname);
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {
@@ -667,5 +670,9 @@ export class PortfolioService {
     this.staking.set(null)
     this.walletHistory.set(null)
     this.netWorth.set(null)
+  }
+
+  public updateWalletNickname(address: string, nickname: string): void {
+    this.updateWalletDataByKey(address, 'nickname', nickname);
   }
 }

@@ -30,10 +30,10 @@ export class AddPortfolioPopupComponent {
   public invalidWallet = "Oops! invalid wallet"
 
   constructor() {
-    addIcons({alertCircleOutline, closeOutline})
+    addIcons({alertCircleOutline,closeOutline});
   }
 
-  addNewPortfolio(walletAddress) {
+  addNewPortfolio(walletAddress: any, nickname: any) {
     if (!this._addressValidatorService.isValid(walletAddress)) {
       this.errorMessage.set(this.invalidWallet);
       return
@@ -45,10 +45,10 @@ export class AddPortfolioPopupComponent {
     }
 
     this.errorMessage.set(null);
-    this.dismissModal(walletAddress)
+    this.dismissModal(walletAddress, nickname)
   }
 
-  dismissModal(address?: string | null) {
-    this._popover.dismiss(address)
+  dismissModal(address?: string | null, nickname?: string | null) {
+    this._popover.dismiss({address, nickname})
   }
 }
