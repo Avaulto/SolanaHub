@@ -31,6 +31,8 @@
                   routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
                   @if(p.title === 'hubSOL'){
                   <ion-img src="/assets/images/hubSOL.svg" />
+                  }@else if(p.title === 'Hubbie Agent'){
+                  <ion-img src="/assets/images/hubbie.svg" />
                   }@else {
                   <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
                   }

@@ -1,0 +1,53 @@
+<div class="chat-box">
+  @if(messages.length === 0){
+  <div class="chat-box-header">
+    What Hubbie can help you with?
+  </div>
+  }
+  <div class="chat-box-body" #chatBoxBody [class.chat-box-has-messages]="messages.length > 0">
+    <!--  iterate over messages, every odd message is from you, every even message is from hubbie -->
+    @for (message of messages; track message) {
+      @if ($index % 2 === 0) {
+        <div class="ltr chat-box-item">
+          <div class="you chat-setting">
+            {{ message }}
+          </div>
+        </div>
+      } @else {
+        <div class="rtl chat-box-item">
+          <div class="hubbie chat-setting">
+            <div class="hubbie-img">
+              <ion-img src="assets/images/hubbie.svg"/>
+            </div>
+            <div class="hubbie-response">
+              {{ message }}
+            </div>
+          </div>
+        </div> 
+      }
+    }
+    
+    @if (isLoading) {
+      <div class="rtl chat-box-item">
+        <div class="hubbie chat-setting">
+          <div class="hubbie-img">
+            <ion-img src="assets/images/hubbie.svg"/>
+          </div>
+          <div class="hubbie-response">
+            {{ hubbieResponse }}
+          </div>
+        </div>
+      </div>
+    }
+
+  </div>
+  <ion-textarea
+  placeholder="Ask Hubbie"
+  [autoGrow]="true"
+  [value]="prompt"
+  (ionInput)="prompt = $event.target.value"
+>
+
+  <ion-button [disabled]="prompt === '' || isLoading" (click)="sendMessage()"><ion-icon name="send"/><span>send</span></ion-button>
+</ion-textarea>
+</div>

@@ -1,0 +1,12 @@
+<div class="kickstart-tasks">
+  @for (task of quickTasks; track task) {
+    <ion-button fill="clear" (click)="sendMessage(task.task)">
+      <ion-icon [name]="task.icon" slot="start"/>
+      {{task.task}}
+  </ion-button>
+  }
+  <!-- <ion-button fill="clear">
+    <ion-icon name="search-outline" slot="start"/>
+    How much SOL i stake in total
+  </ion-button> -->
+</div>

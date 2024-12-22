@@ -182,6 +182,12 @@ export class AppComponent implements OnInit {
           active: true
         },
         {
+          title: 'Hubbie Agent',
+          url: `/${RoutingPath.AGENT}`,
+          icon: 'https://cdn.lordicon.com/vpdodofb.json',
+          active: true
+        },
+        {
           title: 'Collectibles',
           url: `/${RoutingPath.COLLECTIBLES}`,
           icon: 'https://cdn.lordicon.com/yvvkyhue.json',

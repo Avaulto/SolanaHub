@@ -1,5 +1,6 @@
 export enum RoutingPath {
     OVERVIEW = 'overview',
+    AGENT = 'agent',
     FOLDER = 'folder',
     COLLECTIBLES = 'collectibles',
     BRIDGE = 'bridge',

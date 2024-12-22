@@ -1,0 +1,81 @@
+.chat-box{
+    margin-block: 10px;
+}
+.chat-box-header {
+    color: var(--ion-color-dark);
+    text-align: center;
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+ion-skeleton-text {
+    width: 150px;
+    border-radius: 4px;
+    padding: 2px;
+}
+ion-textarea {
+    margin-top: 50px;
+    height: 100px;
+    textarea{
+        max-width: 85%;
+    }
+    position: relative;
+}
+ion-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-transform: capitalize;
+    z-index: 2;
+}
+ion-icon{
+    margin-inline-end: 6px;
+    transform: rotate(-45deg);
+    font-size: 14px;
+}
+.rtl{
+    direction: rtl;
+}
+
+.ltr{
+    direction: ltr;
+}
+.chat-box-body {
+    height: 0;
+    overflow-y: auto;
+    transition: height 0.3s ease-in-out;
+}
+.chat-box-body.chat-box-has-messages {
+    height: 400px;
+}
+
+.chat-setting{
+    width: fit-content;
+    margin-block-end: 14px;
+    max-width: 80%;
+    font-size: 14px;
+}
+.you{
+    padding: 8px 12px;
+    border-radius: 24px;
+    border: 1px solid  #EAECF0;
+    background:  #F9FAFB;
+    
+}
+.hubbie{
+    display: flex;
+    align-items: center;
+    ion-img{
+        width: 35px;
+        background: white;
+        border-radius: 50%;
+        padding: 3px;
+        margin-inline-end: 14px;
+    }
+    .hubbie-response {
+        text-align: justify;
+        line-height: 20px;
+        letter-spacing: 0.02em;
+        color: var(--ion-color-secondary);
+    }
+}

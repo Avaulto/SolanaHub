@@ -1,0 +1,20 @@
+.kickstart-tasks {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+ion-button {
+    text-transform: capitalize;
+    color: var(--ion-light-gray);
+    font-size: 13px;
+    font-weight: 600;
+    --border: 1px solid #FFF;
+    background: #F8FAFC;
+
+}
+ion-icon{
+    margin-inline-end: 6px;
+}
+

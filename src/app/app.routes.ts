@@ -22,6 +22,11 @@ export const routes: Routes = [
     canActivate: [isConnectedGuard]
   },
   {
+    path: RoutingPath.AGENT,
+    loadComponent: () => import('./pages/agent/agent.page').then( m => m.AgentPage),
+    canActivate: [isConnectedGuard]
+  },
+  {
     path: RoutingPath.STASH,
     loadComponent: () => import('./pages/stash/stash.page').then( m => m.StashPage),
     canActivate: [isConnectedGuard]
@@ -83,4 +88,5 @@ export const routes: Routes = [
     path:"**",
     redirectTo: RoutingPath.OVERVIEW
   },
+
 ];

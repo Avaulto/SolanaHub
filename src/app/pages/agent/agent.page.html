@@ -1,0 +1,16 @@
+<ion-content [fullscreen]="true">
+  <page-header class="agent-header" title="Hubbie Agent"
+    description="your friendly SENDAI agent to help you maximize your portfolio and network state">
+  </page-header>
+  <ion-grid>
+    @if(!showAgentPromo){
+      <agent-promo (showAgent)="showAgentPromo = false"/>
+    }@else{
+      <chat-box [prompt]="quickTaskPrompt"/>
+      <kickstart-tasks (onSendMessage)="sendMessage($event)"/>
+    }
+  </ion-grid>
+  
+
+  
+</ion-content>
