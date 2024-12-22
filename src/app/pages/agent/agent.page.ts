@@ -35,25 +35,7 @@ export class AgentPage implements OnInit {
     // this.initAgentKit();
   }
 
-  // async initAgentKit() {
-  //   // generate new private key
-  //   const privateKey = bs58.encode(Keypair.generate().secretKey);
-  //   // Initialize with private key and optional RPC URL
-  //   const agent = new SolanaAgentKit(
-  //     privateKey,
-  //     environment.solanaCluster,
-  //     "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"
-  //   );
-
-  //   // Create LangChain tools
-  //   const tools = createSolanaTools(agent);
-  //   const price = await fetchPrice(
-  //         agent,
-  //         "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" // Token mint address
-  //       );
-    
-  //   console.log("Price in USDC:", price);
-  // }
+  
   public quickTaskPrompt = '';
   sendMessage(task: string) {
     this.quickTaskPrompt = task;
