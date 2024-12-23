@@ -237,8 +237,6 @@ export class PortfolioService {
       this.updateCurrentWalletSignals(this.mainWalletAddress())
     }
 
-    // Always save primary portfolio data for use outside the presentation page.
-    this.updateCurrentWalletSignals(this.mainWalletAddress())
     console.log('portfolioMap', this.portfolioMap());
     // this._portfolioLinkedWallet(this.portfolioMap())
   }
