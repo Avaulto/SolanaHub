@@ -675,4 +675,7 @@ export class PortfolioService {
   public updateWalletNickname(address: string, nickname: string): void {
     this.updateWalletDataByKey(address, 'nickname', nickname);
   }
+
+  // the purpose of this is to link saved wallet with the conn
+  private _portfolioLinkedWallet(){}
 }

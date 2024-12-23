@@ -6,7 +6,7 @@
         @if(!isPrimary) {
           <ion-icon style="cursor: pointer; margin-inline-start: 6px;" (click)="deleteWallet(wallet.walletAddress)" name="trash-outline"></ion-icon>
         }
-        <ion-toggle color="primary" [checked]="wallet.enabled" (ionChange)="toggleWallet(wallet.walletAddress)"></ion-toggle>
+        <ion-toggle color="primary" mode="md" [checked]="wallet.enabled" (ionChange)="toggleWallet(wallet.walletAddress)"></ion-toggle>
      
       </div>
     </div>
