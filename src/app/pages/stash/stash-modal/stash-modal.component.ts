@@ -33,7 +33,8 @@ export class StashModalComponent implements OnInit {
   @Input() stashAssets: StashAsset[] = [];
   @Input() actionTitle: string = ''
   @Input() swapTohubSOL: boolean = false;
-  public burnWithCautionConfirmed = null
+  public burnWithCautionConfirmed = null;
+  public extraWarning =null
   constructor(
     private _stashService: StashService,
     private _helpersService: HelpersService,
@@ -51,6 +52,7 @@ export class StashModalComponent implements OnInit {
   public stashState = signal('')
   public hubSOLRate = null
   ngOnInit() {
+    this.extraWarning = this.stashAssets[0].type == 'value-deficient' && this.stashAssets.filter(asset => asset.balance > 0).length > 0
     va.track('stash', {
       state: 'modal',
       action: 'modal opened',
