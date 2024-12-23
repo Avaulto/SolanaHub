@@ -42,7 +42,9 @@ export class ChatBoxComponent implements OnInit {
       });
       this.hubbieResponse = await this._agentActionsService.askAgent(prompt)
       this.messages.push(this.hubbieResponse);
-      this.scrollToBottom();
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
       this.isLoading = false;
     } catch (error) {
       console.error('Error sending message', error);
