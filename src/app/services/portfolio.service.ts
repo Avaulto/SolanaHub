@@ -231,8 +231,10 @@ export class PortfolioService {
     });
 
     // Sets the first provided address as the primary wallet address if the portfolio map is empty.
-    if(!this.mainWalletAddress()) {
+    if(this.portfolioMap().size === 0) {
       this.mainWalletAddress.set(address);
+
+      this.updateCurrentWalletSignals(this.mainWalletAddress())
     }
 
     // Always save primary portfolio data for use outside the presentation page.
@@ -269,7 +271,7 @@ export class PortfolioService {
 
     try {
 
-      this.processPortfolioData({...portfolioData}, walletAddress, fetchType, nickname);
+      await this.processPortfolioData({...portfolioData}, walletAddress, fetchType, nickname);
 
       va.track('fetch portfolio', {
         status: 'success',
@@ -325,7 +327,7 @@ export class PortfolioService {
     this.saveToPortfolioMap(walletAddress, nickname);
 
     // Load NFT afterward, since call is expensive
-    this._portfolioNFT(walletAddress)
+   await this._portfolioNFT(walletAddress)
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {
@@ -372,6 +374,7 @@ export class PortfolioService {
       this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.NFTS, this.nfts());
       this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.NETWORTH, this.netWorth() + nftsValue);
       this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.WALLET_ASSETS, [...this.portfolioMap().get(walletAddress).walletAssets, nfts]);
+      this.updateCurrentWalletSignals(this.mainWalletAddress())
     } catch (error) {
       console.error(error);
     }
