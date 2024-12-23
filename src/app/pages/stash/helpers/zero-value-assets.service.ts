@@ -50,14 +50,14 @@ export class ZeroValueAssetsService {
 
       //   return existsInTokens || existsInNFTs
       // })
-      // .filter(asset => {
-      //   const blackList = ['RLC', 'OWP', 'Orca Whirlpool Position', 'Raydium Concentrated Liquidity'];
-      //   // hide orca whirlpool position and raydium concentrated liquidity lp positions with balance of 1
-      //   if (!(blackList.includes(asset?.symbol) && asset.balance === 1)) {
-      //     // it's not an LP position with balance of 1, so include it
-      //     return asset;
-      //   }
-      // })
+      .filter(asset => {
+        // const blackList = ['RLC', 'OWP', 'Orca Whirlpool Position', 'Raydium Concentrated Liquidity'];
+        // hide orca whirlpool position and raydium concentrated liquidity lp positions with balance of 1
+        if (!(asset.decimals === 0 && asset.balance === 1)) {
+          // it's not an LP position with balance of 1, so include it
+          return asset;
+        }
+      })
 
       .map(asset => this._helpersService.mapToStashAsset(asset, asset.type));
 
