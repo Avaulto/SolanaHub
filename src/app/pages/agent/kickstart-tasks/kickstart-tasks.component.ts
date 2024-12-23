@@ -31,7 +31,7 @@ export class KickstartTasksComponent  implements OnInit {
       icon: 'search-outline',
     },
     {
-      task: 'Fetch token price',
+      task: 'Hubbie, fetch jup price',
       icon: 'cloud-download-outline',
     },
     {
