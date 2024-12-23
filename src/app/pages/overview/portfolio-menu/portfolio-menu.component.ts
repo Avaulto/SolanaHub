@@ -31,7 +31,7 @@ export class PortfolioMenuComponent {
 
   protected readonly walletBoxSpinnerService = inject(WalletBoxSpinnerService)
   public canAddWallet = computed(() => this.walletsPortfolio().length < 4);
-  public currentWalletAddress =  this._shs?.getCurrentWallet()?.publicKey?.toBase58()
+  public connectedWalletAddress =  this._shs?.getCurrentWallet()?.publicKey?.toBase58()
   public walletsPortfolio = computed(() =>
     this._portfolioService.portfolio().map(
       ({ walletAddress, portfolio }) => ({
@@ -40,7 +40,13 @@ export class PortfolioMenuComponent {
         value: portfolio.netWorth,
         enabled: portfolio.enabled,
         nickname: portfolio.nickname
-      })))
+      })
+    ).sort((a, b) => {
+      if (a.walletAddress === this.connectedWalletAddress) return -1;
+      if (b.walletAddress === this.connectedWalletAddress) return 1;
+      return 0;
+    })
+  )
 
   async openPortfolioSetup(walletAddress?: string) {
     if (this.walletBoxSpinnerService.spinner())
