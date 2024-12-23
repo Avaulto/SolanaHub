@@ -200,6 +200,11 @@ ion-spinner {
 .range-popover{
     --width: 260px;
 }
+.portfolio-box-popover{
+    --width: auto;
+    --box-shadow: 0 0 0;
+    --background: transparent;
+}
 .modal-style {
     --width: 540px;
     --border-radius: 12px;

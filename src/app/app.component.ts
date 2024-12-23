@@ -87,18 +87,22 @@ export class AppComponent implements OnInit {
   // public adShouldShow = this._freemiumService.adShouldShow;
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
-  // readonly isReady$ = this._walletStore.connected$.pipe
+
   readonly watchMode$ = this._watchModeService.watchMode$
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-      console.log('wallet',wallet);
-      
+      console.log('wallet', wallet);
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
         });
       }
+      // fetch linked wallets stored in localstorage
+      console.log('wallet', wallet);
+      setTimeout(() => {
+        this._portfolioService.manageLinkedWallets()
+      }, 500);
       return wallet || watchMode;
     }))
 
@@ -108,6 +112,7 @@ export class AppComponent implements OnInit {
   constructor(
     // private _freemiumService: FreemiumService,
     public router: Router,
+    private _portfolioService: PortfolioService,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,

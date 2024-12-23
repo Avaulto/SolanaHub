@@ -12,7 +12,7 @@
       wallets
     </ion-text>
     <div class="content-body__input">
-      <ion-input #input style="    margin-block-end: 12px;" placeholder="Enter wallet address" inputmode="text"/>
+      <ion-input #input style="    margin-block-end: 12px;" [value]="walletAddress" placeholder="Enter wallet address" inputmode="text"/>
 
       <ion-input #input2 placeholder="Enter nickname(optional)" maxlength="10" inputmode="text"/>
       @if (errorMessage()) {

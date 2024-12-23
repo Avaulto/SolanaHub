@@ -245,7 +245,6 @@ export class PortfolioBreakdownService {
   public getTokensBreakdown: Signal<any[]> = computed(() => {
     const assets = this.getEnabledPortfolio();
     if (!assets) return [];
-    console.log("assets", assets)
     const tokenMap = new Map();
     assets.forEach(wallet => {
       const { walletAddress, portfolio } = wallet
@@ -474,7 +473,7 @@ export class PortfolioBreakdownService {
   public assetClassValue = computed(() => {
     const assets = this.getEnabledWalletsAssets();
 
-    if (!assets) return [];
+    if (!assets) return null;
     return assets
       .map(assetClass => ({
         group: assetClass?.label ? (assetClass?.label === 'NFTs' ? 'NFTs' : assetClass?.label.replace(/([A-Z])/g, ' $1').trim()) : assetClass?.label,

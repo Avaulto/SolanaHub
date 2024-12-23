@@ -7,8 +7,7 @@ import {
   IonImg,
   IonChip,
   IonIcon,
-  IonPopover
-} from '@ionic/angular/standalone';
+  IonPopover, IonButton, IonContent } from '@ionic/angular/standalone';
 import { CurrencyPipe, DatePipe, DecimalPipe, JsonPipe, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { JupStoreService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
@@ -22,7 +21,7 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
   templateUrl: './stake.component.html',
   styleUrls: ['./stake.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonContent, IonButton, 
     IonSkeletonText,
     IonAvatar,
     IonImg,

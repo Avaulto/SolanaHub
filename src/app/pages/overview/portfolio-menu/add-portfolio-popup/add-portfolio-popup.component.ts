@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal, Input} from '@angular/core';
 import {PopoverController} from "@ionic/angular";
 import {IonButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonText} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
@@ -23,6 +23,7 @@ export class AddPortfolioPopupComponent {
   private _popover = inject(PopoverController)
   private _addressValidatorService = inject(AddressValidatorService)
   private _portfolioService = inject(PortfolioService)
+  @Input() walletAddress?: string
   // const testAddress = 'HUB3kyuE5kLojcsJn4csoN5Gd27mJpERzTqVuoUTTmUV';
 
   public errorMessage = signal(null)

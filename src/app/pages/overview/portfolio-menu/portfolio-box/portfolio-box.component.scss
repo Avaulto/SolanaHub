@@ -1,13 +1,23 @@
 .portfolio-box {
-  padding: 12px 20px;
+  padding: 16px 20px;
   background-color: #fff;
   height: 100%;
   border-top: 1px solid #E3E8EF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
+.portfolio-box-empty{
+  width: 100%;
+}
 .portfolio-actions {
   display: inline-flex;
   gap: .5rem;
+  align-items: center;
+  ion-icon {
+    font-size: 20px;
+    cursor: pointer;
+  }
 }
 
 .portfolio-box-header {
@@ -18,15 +28,13 @@
   align-items: center;
 }
 
-.portfolio-box-header-text {
+.portfolio-box-wallet-text {
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
 }
 
 .portfolio-box-body {
-  display: flex;
-  justify-content: space-between;
   text-transform: capitalize;
   font-size: 12px;
 }
@@ -43,4 +51,31 @@
     height: 20px;
     border-radius: .3rem;
   }
+}
+
+#presentPopover {
+  cursor: pointer;
+}
+
+#actions-wrapper {
+  border-radius: 12px;
+  border: 1px solid #E3E8EF;
+  background: white;
+
+  ion-button {
+
+    --color: var(--ion-color-dark);
+    --box-shadow: 0 0 0;
+    text-transform: capitalize;
+
+    div {
+      width: 100%;
+      display: flex;
+
+      ion-icon {
+        margin-inline-end: 4px;
+      }
+    }
+  }
+
 }
