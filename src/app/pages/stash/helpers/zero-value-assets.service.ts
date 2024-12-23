@@ -65,7 +65,7 @@ export class ZeroValueAssetsService {
     // todo add desc "or with balance but no market value found." once we add tokens with balance
     return this._helpersService.createStashGroup(
       'zero value assets',
-      "Empty NFTs and token accounts",
+      "Zero value NFTs and token accounts",
       "Close",
       additionalZeroValueAssetsFinalized
     );
