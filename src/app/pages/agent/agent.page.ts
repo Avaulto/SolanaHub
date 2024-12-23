@@ -33,5 +33,7 @@ export class AgentPage implements OnInit {
   public quickTaskPrompt = '';
   sendMessage(task: string) {
     this.quickTaskPrompt = task;
+    // clear quick task prompt
+    console.log('quickTaskPrompt', this.quickTaskPrompt);
   }
 }
