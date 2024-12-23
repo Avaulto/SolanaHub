@@ -281,9 +281,10 @@ export class HelpersService {
         let transferTxs: (TransactionInstruction | VersionedTransaction)[] = []
         if (this.earningsService.referralAddress()) {
             const sharedFee = 0.2
-            platformFee = Math.ceil(platformFee * sharedFee)
+            let feeLessReferral = platformFee * sharedFee
+            platformFee = Math.ceil(platformFee - feeLessReferral)
             // referral address gets 20% of platform fee
-            referralFee = Math.ceil(platformFee)
+            referralFee = Math.ceil(feeLessReferral)
         }
         const transferPlatformFeeTx = SystemProgram.transfer({
             fromPubkey: publicKey,
