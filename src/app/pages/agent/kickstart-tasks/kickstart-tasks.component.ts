@@ -23,11 +23,11 @@ export class KickstartTasksComponent  implements OnInit {
   }
   public quickTasks = [
     {
-      task: 'Find best USDC yield',
+      task: 'What hubSOL apy?',
       icon: 'search-outline',
     },
     {
-      task: 'How loyalty league points are calculated',
+      task: 'How loyalty league points are calculated?',
       icon: 'search-outline',
     },
     {
@@ -35,7 +35,7 @@ export class KickstartTasksComponent  implements OnInit {
       icon: 'cloud-download-outline',
     },
     {
-      task: 'Whats my biggest defi position',
+      task: 'what madlad floor price?',
       icon: 'search-outline',
     }
   ]

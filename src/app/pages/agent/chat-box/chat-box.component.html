@@ -8,19 +8,18 @@
     <!--  iterate over messages, every odd message is from you, every even message is from hubbie -->
     @for (message of messages; track message) {
       @if ($index % 2 === 0) {
-        <div class="ltr chat-box-item">
+        <div class="rtl chat-box-item">
           <div class="you chat-setting">
             {{ message }}
           </div>
         </div>
       } @else {
-        <div class="rtl chat-box-item">
+        <div class="ltr chat-box-item">
           <div class="hubbie chat-setting">
             <div class="hubbie-img">
               <ion-img src="assets/images/hubbie.svg"/>
             </div>
-            <div class="hubbie-response">
-              {{ message }}
+            <div class="hubbie-response" [innerHTML]="message">
             </div>
           </div>
         </div> 
@@ -28,7 +27,7 @@
     }
     
     @if (isLoading) {
-      <div class="rtl chat-box-item">
+      <div class="ltr chat-box-item">
         <div class="hubbie chat-setting">
           <div class="hubbie-img">
             <ion-img src="assets/images/hubbie.svg"/>

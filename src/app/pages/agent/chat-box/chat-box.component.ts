@@ -32,13 +32,15 @@ export class ChatBoxComponent implements OnInit {
   async sendMessage() {
     console.log('sendMessage', this.prompt);
     try {
-      this.messages.push(this.prompt);
+      const prompt = this.prompt;
+      this.prompt = '';
+      this.messages.push(prompt);
       this.isLoading = true;
       this.hubbieResponse = 'Hubbie is thinking...';
       setTimeout(() => {
         this.scrollToBottom();
       });
-      this.hubbieResponse = await this._agentActionsService.askAgent(this.prompt)
+      this.hubbieResponse = await this._agentActionsService.askAgent(prompt)
       this.messages.push(this.hubbieResponse);
       this.scrollToBottom();
       this.isLoading = false;
@@ -46,6 +48,6 @@ export class ChatBoxComponent implements OnInit {
       console.error('Error sending message', error);
     }
 
-    this.prompt = '';
+
   }
 }
