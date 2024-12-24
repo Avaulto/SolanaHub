@@ -1,96 +1,98 @@
 @if(label){
-<table-head [label]="label" [desc]="desc"></table-head>
-}
-
-<ion-row class="ion-align-items-center ">
-
-  @if(tableMenuOptions.length){
-  <div class="ion-margin-start ion-hide-lg-down"></div>
-  <ion-col>
-    <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)" />
-  </ion-col>
+  <table-head [label]="label" [desc]="desc"></table-head>
   }
-  @if(searchBoxEnable){
-  <ion-col size="3.9" sizeLg="auto">
-    <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
-  </ion-col>
-  <div class="ion-margin-end ion-hide-lg-down"></div>
-  }
-
-</ion-row>
-
-
-
-<!-- <ng-template #selectAllTemplate let-changeEvent>
-  <label class="ngx-form-checkbox">
-    <input type="checkbox" (input)="changeEvent()" />
-    <i class="ngx-form-icon custom-checkbox-color" id="selectAllCheckbox"></i>
-  </label>
-</ng-template> -->
-<ng-template #selectAllTemplate let-changeEvent>
-  <ion-checkbox mode="md" (ionChange)="changeEvent($event)" #checkAll />
-</ng-template>
-
-<div id="table-wrapper">
-  <ngx-table #table
-    [class]="class"
-    [id]="tableId"
-    (event)="eventEmitted($event)"
-    [configuration]="configuration"
-    [data]="tableData()"
-    [columns]="tableColumns()"
-    [selectAllTemplate]="selectAllTemplate"
-    [loadingTemplate]="loadingTemplate"
-    [noResultsTemplate]="noResultsTemplate"
-    [detailsTemplate]="detailsTemplate"
-    >
-  </ngx-table>
-  <ng-template #detailsTemplate let-row>
-    <div class="wallet-details-wrapper">
-      <div class="wallet-details-header">
-        <p>Wallet</p>
-        <p>Balance</p>
-        <p>Value</p>
+  
+  <ion-row class="ion-align-items-center ">
+  
+    @if(tableMenuOptions.length){
+    <div class="ion-margin-start ion-hide-lg-down"></div>
+    <ion-col>
+      <app-table-menu [menu]="tableMenuOptions" [currentTab]="tableMenuOptions[0]" (onSelectTab)="tabSelected($event)" />
+    </ion-col>
+    }
+    @if(searchBoxEnable){
+    <ion-col size="3.9" sizeLg="auto">
+      <app-search-box (search)="searchItem($event)" [value]="searchTerm()" [placeholder]="'Search'" />
+    </ion-col>
+    <div class="ion-margin-end ion-hide-lg-down"></div>
+    }
+  
+  </ion-row>
+  
+  
+  
+  <!-- <ng-template #selectAllTemplate let-changeEvent>
+    <label class="ngx-form-checkbox">
+      <input type="checkbox" (input)="changeEvent()" />
+      <i class="ngx-form-icon custom-checkbox-color" id="selectAllCheckbox"></i>
+    </label>
+  </ng-template> -->
+  <ng-template #selectAllTemplate let-changeEvent>
+    <ion-checkbox mode="md" (ionChange)="changeEvent($event)" #checkAll />
+  </ng-template>
+  
+  <div id="table-wrapper">
+    <ngx-table #table
+      [class]="class"
+      [id]="tableId"
+      (event)="eventEmitted($event)"
+      [configuration]="configuration"
+      [data]="tableData()"
+      [columns]="tableColumns()"
+      [selectAllTemplate]="selectAllTemplate"
+      [loadingTemplate]="loadingTemplate"
+      [noResultsTemplate]="noResultsTemplate"
+      [detailsTemplate]="detailsTemplate"
+      >
+    </ngx-table>
+    <ng-template #detailsTemplate let-row>
+      <div class="wallet-details-wrapper">
+        <!-- <div class="wallet-details-header">
+          <p style="margin-inline-start: 30px;">Wallet</p>
+          <p>Balance</p>
+          <p>Value</p>
+        </div> -->
+        @for (breakdown of row.breakdown; track breakdown) {
+          <div class="wallet-details-breakdown">
+            <p>{{ breakdown.walletAddressShort }}</p>
+            <p>{{ breakdown.balance | number: '1.1-3' }}</p>
+            <p>{{ breakdown.value | currency: 'USD':'symbol':'1.1-2' }}</p>
+          </div>
+        }
       </div>
-      @for (breakdown of row.breakdown; track breakdown) {
-        <div class="wallet-details-breakdown">
-          <p>{{ breakdown.walletAddressShort }}</p>
-          <p>{{ breakdown.balance | number: '1.1-3' }}</p>
-          <p>{{ breakdown.value | currency: 'USD':'symbol':'1.1-2' }}</p>
-        </div>
-      }
+    </ng-template>
+  
+  
+    @if (configuration.paginationEnabled && !configuration.isLoading) {
+    <div id="table-controls">
+      <ion-button mode="md" fill="clear" (click)="previousPage()">
+        <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" />
+        <span class="ion-hide-md-down">
+          previous
+        </span>
+      </ion-button>
+      <ion-button mode="md" fill="clear" (click)="nextPage()">
+        <span class="ion-hide-md-down">
+          next
+        </span>
+        <ion-img src="/assets/icon/arrow-right.svg" />
+  
+      </ion-button>
+    </div>
+    }
+  </div>
+  
+  
+  <ng-template #loadingTemplate>
+    <div>
+      <ion-spinner color="primary" name="crescent"></ion-spinner>
     </div>
   </ng-template>
-
-
-  @if (configuration.paginationEnabled && !configuration.isLoading) {
-  <div id="table-controls">
-    <ion-button mode="md" fill="clear" (click)="previousPage()">
-      <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" />
-      <span class="ion-hide-md-down">
-        previous
-      </span>
-    </ion-button>
-    <ion-button mode="md" fill="clear" (click)="nextPage()">
-      <span class="ion-hide-md-down">
-        next
-      </span>
-      <ion-img src="/assets/icon/arrow-right.svg" />
-
-    </ion-button>
-  </div>
-  }
-</div>
-
-
-<ng-template #loadingTemplate>
-  <div>
-    <ion-spinner color="primary" name="crescent"></ion-spinner>
-  </div>
-</ng-template>
-
-<ng-template #noResultsTemplate>
-  <td [attr.colspan]="tableColumns().length" class="no-results">
-    No results found
-  </td>
-</ng-template>
+  
+  <ng-template #noResultsTemplate>
+    <td [attr.colspan]="tableColumns().length" class="no-results">
+      No results found
+    </td>
+  </ng-template>
+  
+  
