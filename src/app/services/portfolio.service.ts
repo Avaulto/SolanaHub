@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { computed, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { UtilService } from './util.service';
 import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
 import {
@@ -65,7 +65,7 @@ export class PortfolioService {
     portfolio
   }))]);
 
-  public currentWalletAddress = signal<string>(null);
+  public mainWalletAddress = signal<string>(null);
 
   public walletAssets = signal(null);
   public tokens = signal<Token[]>(null);
@@ -150,6 +150,7 @@ export class PortfolioService {
   public removeFromPortfolioMap(address: string): void {
     const newMap = new Map(this.portfolioMap());
     newMap.delete(address)
+    this.removedLinkedWallet(address);
     this.portfolioMap.set(newMap)
   }
 
@@ -198,7 +199,7 @@ export class PortfolioService {
    */
   private extractAddressOnWalletChanges(wallet: WalletExtended): string {
     const address = wallet.publicKey.toBase58();
-    this.currentWalletAddress.set(address);
+    this.mainWalletAddress.set(address);
     return address;
   }
 
@@ -216,12 +217,10 @@ export class PortfolioService {
 
       this.walletBoxSpinnerService.show();
       await this.getPortfolioAssets(address, this._utils.turnStileToken, true, false, 'full', nickname);
-      
+
       if (nickname) {
         this.updateWalletDataByKey(address, 'nickname', nickname);
       }
-    } else {
-      this.updateCurrentWalletSignals(address);
     }
 
     this._fetchPortfolioService.refetchPortfolio().subscribe(async ({shouldRefresh, fetchType}) => {
@@ -233,11 +232,11 @@ export class PortfolioService {
 
     // Sets the first provided address as the primary wallet address if the portfolio map is empty.
     if(this.portfolioMap().size === 0) {
-      this.currentWalletAddress.set(address);
+      this.mainWalletAddress.set(address);
+
+      this.updateCurrentWalletSignals(this.mainWalletAddress())
     }
 
-    // Always save primary portfolio data for use outside the presentation page.
-    this.updateCurrentWalletSignals(this.currentWalletAddress())
     console.log('portfolioMap', this.portfolioMap());
     // this._portfolioLinkedWallet(this.portfolioMap())
   }
@@ -258,8 +257,6 @@ export class PortfolioService {
     }
   }
 
-
-
   public async getPortfolioAssets(
     walletAddress: string,
     turnStileToken: string,
@@ -272,7 +269,7 @@ export class PortfolioService {
 
     try {
 
-      this.processPortfolioData({...portfolioData}, walletAddress, fetchType, nickname);
+      await this.processPortfolioData({...portfolioData}, walletAddress, fetchType, nickname);
 
       va.track('fetch portfolio', {
         status: 'success',
@@ -312,11 +309,10 @@ export class PortfolioService {
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-    // await Promise.all([
+     await Promise.all([
       this._portfolioStaking(walletAddress),
       this._portfolioTokens(extendTokenData as any, tokenJupData as any),
-      this._portfolioNFT(walletAddress)
-    // ]);
+     ]);
 
     if (fetchType !== 'partial') {
       await this._portfolioDeFi(excludeNFTv2, tokenJupData);
@@ -325,9 +321,11 @@ export class PortfolioService {
       this.netWorth.set(portfolioData.value);
     }
 
-    
     // Save processed data to map
     this.saveToPortfolioMap(walletAddress, nickname);
+
+    // Load NFT afterward, since call is expensive
+   await this._portfolioNFT(walletAddress)
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {
@@ -374,6 +372,7 @@ export class PortfolioService {
       this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.NFTS, this.nfts());
       this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.NETWORTH, this.netWorth() + nftsValue);
       this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.WALLET_ASSETS, [...this.portfolioMap().get(walletAddress).walletAssets, nfts]);
+      this.updateCurrentWalletSignals(this.mainWalletAddress())
     } catch (error) {
       console.error(error);
     }
@@ -648,9 +647,9 @@ export class PortfolioService {
   }
 
   public async clearWallet() {
-    if (this.currentWalletAddress()) {
+    if (this.mainWalletAddress()) {
       const newMap = new Map(this.portfolioMap());
-      newMap.delete(this.currentWalletAddress());
+      newMap.delete(this.mainWalletAddress());
       this.portfolioMap.set(newMap);
     }
 
@@ -682,24 +681,35 @@ export class PortfolioService {
   // the purpose of this is to link saved wallet with the conn
   private readonly MAX_LINKED_WALLETS = 3;
 
-  public manageLinkedWallets(newWallet?: { address: string; nickname: string }): void {
+  public loadLinkedWallets(): void {
+    // Get existing linked wallets from localStorage
+    const linkedWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
+
+    // Sync portfolios for all linked wallets
+    linkedWallets.forEach(async (wallet) => {
+        await this.syncPortfolios(wallet.address, false, wallet.nickname);
+      }
+    );
+  }
+
+  public updateLinkedWallets(newWallet?: { address: string; nickname: string }): void {
     // Get connected wallet address
     const connectedWalletAddress = this._shs.getCurrentWallet().publicKey.toBase58();
-    
+
     // Get existing linked wallets from localStorage
     const existingWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
-    
+
     // Create new array with existing wallets
     let linkedWallets = [...existingWallets];
-    
+
     // Add new wallet if provided
     if (newWallet) {
       linkedWallets.push(newWallet);
     }
-    
+
     // Remove duplicates and connected wallet
     linkedWallets = linkedWallets
-      .filter((wallet, index, self) => 
+      .filter((wallet, index, self) =>
         // Remove duplicates
         index === self.findIndex(w => w.address === wallet.address) &&
         // Remove connected wallet
@@ -707,13 +717,18 @@ export class PortfolioService {
       )
       // Limit to MAX_LINKED_WALLETS
       .slice(0, this.MAX_LINKED_WALLETS);
-    
+
     // Save to localStorage
     this._localStorageService.saveData('linkedWallets', JSON.stringify(linkedWallets));
-    
-    // Sync portfolios for all linked wallets
-    linkedWallets.forEach(wallet => 
-      this.syncPortfolios(wallet.address, false, wallet.nickname)
-    );
+  }
+
+
+  removedLinkedWallet(address: string): void {
+    const linkedWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
+    const index = linkedWallets.findIndex(item => item.address === address);
+    if (index !== -1) {
+      linkedWallets.splice(index, 1);
+      this._localStorageService.saveData('linkedWallets', JSON.stringify(linkedWallets));
+    }
   }
 }

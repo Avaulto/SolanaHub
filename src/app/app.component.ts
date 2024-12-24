@@ -47,7 +47,7 @@ import { NewsFeedComponent } from './shared/components/news-feed/news-feed.compo
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
 // import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
-import va from '@vercel/analytics'; 
+import va from '@vercel/analytics';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -98,11 +98,7 @@ export class AppComponent implements OnInit {
           this._notifService.checkAndSetIndicator()
         });
       }
-      // fetch linked wallets stored in localstorage
-      console.log('wallet', wallet);
-      setTimeout(() => {
-        this._portfolioService.manageLinkedWallets()
-      }, 500);
+
       return wallet || watchMode;
     }))
 
@@ -128,10 +124,10 @@ export class AppComponent implements OnInit {
     if(!showNewsFeed || new Date(showNewsFeed.date).getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000){
       this.openNewsFeedModal()
     }
-    
+
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
 
-
+    this._portfolioService.loadLinkedWallets()
   }
 
   async openNewsFeedModal(){
@@ -159,7 +155,7 @@ export class AppComponent implements OnInit {
   sendCaptchaResponse(token) {
     this._utilService.turnStileToken = token
   }
-  path;;
+
   async ngOnInit() {
 
     // set stored theme
@@ -228,7 +224,6 @@ export class AppComponent implements OnInit {
           active: true
         },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
-   
       ],
     },
     {

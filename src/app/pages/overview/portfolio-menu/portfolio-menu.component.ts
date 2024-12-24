@@ -70,13 +70,14 @@ export class PortfolioMenuComponent {
       }
       console.log('data', data);
       this._portfolioService.syncPortfolios(data.address,null, data?.nickname);
-      this._portfolioService.manageLinkedWallets({address: data.address, nickname: data?.nickname})
-
+      this._portfolioService.updateLinkedWallets({address: data.address, nickname: data?.nickname})
     }
   }
+
   reload(walletAddress: string) {
     this._portfolioService.syncPortfolios(walletAddress, true);
   }
+
   delete(walletAddress: string) {
     this._portfolioService.removeFromPortfolioMap(walletAddress)
   }
