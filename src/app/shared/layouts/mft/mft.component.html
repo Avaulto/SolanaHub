@@ -54,9 +54,9 @@
         </div> -->
         @for (breakdown of row.breakdown; track breakdown) {
           <div class="wallet-details-breakdown">
-            <p>{{ breakdown.walletAddressShort }}</p>
-            <p>{{ breakdown.balance | number: '1.1-3' }}</p>
-            <p>{{ breakdown.value | currency: 'USD':'symbol':'1.1-2' }}</p>
+            <p style="width: 50%;">{{ breakdown.walletAddressShort }}</p>
+            <p style="width: 25%;">{{ breakdown.balance | number: '1.1-3' }}</p>
+            <p style="width: 25%;">{{ breakdown.value | currency: 'USD':'symbol':'1.1-2' }}</p>
           </div>
         }
       </div>
