@@ -49,6 +49,7 @@ export class MftComponent implements OnInit, OnChanges {
   @ViewChild('checkAll', { static: false }) checkAll//: IonCheckbox;
   ngOnChanges(): void {
     this.configuration.detailsTemplate = this.expandDetails
+    this.configuration.showDetailsArrow = this.expandDetails
   }
   public tab = signal(this.tableMenuOptions[0])
 
