@@ -1,11 +1,11 @@
 import { Injectable, effect, signal } from '@angular/core';
 import { UtilService } from './util.service';
 import { ApiService } from './api.service';
-import {  catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError, retry, firstValueFrom } from 'rxjs';
+import { catchError, interval, map, Observable, of, shareReplay, startWith, Subject, switchMap, take, tap, throwError, retry, firstValueFrom } from 'rxjs';
 import { loyaltyLeagueMember, Multipliers, Season, Tier } from '../models';
 import { ToasterService } from './toaster.service';
 import { SolanaHelpersService } from './solana-helpers.service';
-import va from '@vercel/analytics'; 
+import va from '@vercel/analytics';
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +15,7 @@ export class LoyaltyLeagueService {
   constructor(
     private _utilService: UtilService,
     private _apiService: ApiService,
-    private _toasterService:ToasterService,
+    private _toasterService: ToasterService,
     private _shs: SolanaHelpersService
   ) {
     // if (!this._loyaltyLeagueLeaderBoard$.value) {
@@ -46,7 +46,7 @@ export class LoyaltyLeagueService {
     }),
     shareReplay()
   );
-  
+
   private _formatErrors(error: any) {
     va.track('loyalty league', { error: error.message })
 
@@ -105,19 +105,67 @@ export class LoyaltyLeagueService {
     )
   }
   public multipliers: Multipliers = null
+  public supportedDeFi = [
+    // {
+    //   img: 'assets/images/wallet-icon.svg',
+    //   title:'wallet'
+    // },
+    {
+    img: 'assets/images/ll/save.png',
+    title: 'save',
+  },
+  {
+    img: 'assets/images/ll/nx-finance.svg',
+    title: 'nxfinance',
+  },
+  {
+    img: 'assets/images/ll/loopscale.png',
+    title: 'loopscale',
+  },
+  {
+    img: 'assets/images/ll/orca.svg',
+    title: 'orca',
+  },
+  {
+    img: 'assets/images/ll/kamino.svg',
+    title: 'kamino',
+
+  },
+  {
+    img: 'assets/images/ll/meteora.svg',
+    title: 'meteora',
+  },
+
+
+  {
+    img: 'assets/images/ll/raydium.svg',
+    title: 'raydium',
+  },
+
+  {
+    img: 'assets/images/ll/solayer.svg',
+    title: 'solayer',
+  },
+
+
+  {
+    img: 'assets/images/ll/rainfi.svg',
+    title: 'rainfi',
+  }
+  ]
   public async getBoosters(): Promise<Multipliers> {
     if (this.multipliers) {
       return this.multipliers
     }
     try {
-      const res = await(await fetch(`${this.api}/multipliers`)).json()
+      const res = await (await fetch(`${this.api}/multipliers`)).json()
       this.multipliers = res
       return res
     } catch (error) {
       this._formatErrors(error)
       return null
     }
-   
+
   }
   public getLeaderBoard(): Observable<loyaltyLeagueMember[]> {
     return this._apiService.get(`${this.api}/leader-board`).pipe(

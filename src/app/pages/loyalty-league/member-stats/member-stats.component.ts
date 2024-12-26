@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, Input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
 import { IonButton, IonRow, IonCol, IonIcon, IonImg, IonTitle, IonLabel, IonSkeletonText, IonInput } from '@ionic/angular/standalone';
-import { AsyncPipe, DecimalPipe, JsonPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe, NgStyle } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { copyOutline, discOutline, informationCircleOutline } from 'ionicons/icons';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
@@ -12,7 +12,7 @@ import { loyaltyLeagueMember, Tier } from 'src/app/models';
 import { ReferAFriendModalComponent, LoyaltyPathComponent, LoyaltyBadgeComponent } from '../';
 import { NumberCounterComponent } from "../../../shared/components/number-counter/number-counter.component";
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
-import { map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { distinctUntilChanged, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { CodesComponent } from './codes/codes.component';
 import { QuestsComponent } from '../quests/quests.component';
@@ -25,27 +25,25 @@ import va from '@vercel/analytics';
   templateUrl: './member-stats.component.html',
   styleUrls: ['./member-stats.component.scss'],
   standalone: true,
-  imports: [IonInput, 
+  imports: [
     TooltipModule,
     IonSkeletonText, 
-    NumberCounterComponent,
     IonLabel,
-    IonTitle,
+    JsonPipe,
+    KeyValuePipe,
     LoyaltyPathComponent,
     IonImg,
     LoyaltyBadgeComponent,
     TooltipModule,
     DecimalPipe,
     AsyncPipe,
-    JsonPipe,
-    IonButton,
+
+
     IonRow,
     IonCol,
-    NgStyle,
+
     IonIcon,
-    CopyTextDirective, 
-    NumberCounterComponent,
-    CodesComponent],
+   ],
   animations: [
     trigger('slideInOut', [
       state('void', style({
@@ -74,8 +72,30 @@ export class MemberStatsComponent implements OnChanges {
   tiers: Tier[] = this._loyaltyLeagueService.tiers
   public hiddenPts = signal('🍳 🧑‍🍳 🍳 👨‍🍳 🍳')
   public wallet$ = this._shs.walletExtended$
-  public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$
+  public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$.pipe(
 
+    map(member => {
+      console.log(member, Object.keys(member.hubSOLBreakdown).length > 0);
+      
+       member.hubSOLBreakdown = Object.entries(member.hubSOLBreakdown)
+        .filter(([_, value]) => Number(value) >= 0.001)
+        .reduce((acc, [key, value]) => ({
+          ...acc,
+          [key]: value
+        }), {}) as any;
+        console.log(member.hubSOLBreakdown);
+
+      if(Object.keys(member.hubSOLBreakdown).length > 0){
+     this.pointCategories.push({title: 'Snapshot', key:'hubSOLBreakdown', tooltip: 'Your current hubSOL holding according to last snapshot.'})
+      }
+
+      return member
+    }),
+    shareReplay(1),
+  ) 
+  toFixedNoRounding(num: any) {
+    return num.toFixedNoRounding(3)
+  }
   ngOnChanges(changes: SimpleChanges): void {
 
 
@@ -101,11 +121,11 @@ export class MemberStatsComponent implements OnChanges {
 
     return numStr;
   }
-
+  public getDeFiImg(name: any) {
+    return this._loyaltyLeagueService.supportedDeFi.find(defi => defi.title === name)?.img
+  }
   public async openReferAFriendModal() {
     const refCode = this._loyaltyLeagueService._member.referralCode
-    console.log(refCode);
-    
     const modal = await this._modalCtrl.create({
       component: ReferAFriendModalComponent,
       componentProps: {
@@ -120,7 +140,7 @@ export class MemberStatsComponent implements OnChanges {
     { title: 'Staking', key: 'stakingPts', tooltip: 'Staking points are earned by staking your SOL or LST with SolanaHub validator.' },
     { title: 'DAO', key: 'daoPts', tooltip: 'DAO points are earned by participating in marinade and SolBlaze DAO tokens voting stake allocation towards SolanaHub validator. (check SolanaHub docs for more details)' },
     { title: 'Referrals', key: 'referralPts', tooltip: 'Referral points are earned by referred friends who stake with SolanaHub validator.' },
-    { title: 'Quests', key: 'questsPts', tooltip: 'Quests are special activities that earn you points. Check the quests section for more details.'  }
+    { title: 'Quests', key: 'questsPts', tooltip: 'Quests are special activities that earn you points. Check the quests section for more details.'  },
   ];
   //'Bonus points earned from loyalty tier boost and quests.'
   public async openQuests(event: any) {
