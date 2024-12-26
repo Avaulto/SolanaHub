@@ -126,8 +126,6 @@ export class AppComponent implements OnInit {
     }
 
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
-
-    this._portfolioService.loadLinkedWallets()
   }
 
   async openNewsFeedModal(){
