@@ -4,15 +4,15 @@ import { mergePortfolioElementMultiples } from '@sonarwatch/portfolio-core';
 import {
   BalanceChange,
   defiHolding,
+  JupToken,
   NFT,
   Platform,
   Stake,
   Token,
-  JupToken,
   TransactionHistory,
+  WalletEntry,
   WalletExtended,
-  WalletPortfolio,
-  WalletEntry
+  WalletPortfolio
 } from '../models';
 
 import va from '@vercel/analytics';
@@ -185,10 +185,16 @@ export class PortfolioService {
     this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.ENABLED, !walletPortfolio.enabled);
   }
 
-  private handleWalletChange(wallet: WalletExtended) {
+  private async handleWalletChange(wallet: WalletExtended) {
     if (!wallet) return;
     const address = this.extractAddressOnWalletChanges(wallet);
-    this.syncPortfolios(address)
+
+    if(address != this.mainWalletAddress()) { // the wallet connect callback is executed twice
+      this.mainWalletAddress.set(address);
+      await this.syncPortfolios(address)
+      this.updateCurrentWalletSignals(this.mainWalletAddress())
+      await this.loadLinkedWallets()
+    }
   }
 
   /**
@@ -198,9 +204,7 @@ export class PortfolioService {
    * @returns {string} The extracted public key address as a base58 string.
    */
   private extractAddressOnWalletChanges(wallet: WalletExtended): string {
-    const address = wallet.publicKey.toBase58();
-    this.mainWalletAddress.set(address);
-    return address;
+    return wallet.publicKey.toBase58();
   }
 
   /**
@@ -211,7 +215,7 @@ export class PortfolioService {
    *
    * @param {string} address - The wallet address to synchronize.
    */
-  public async syncPortfolios(address: string,resync: boolean = false, nickname?: string) {
+  public async syncPortfolios(address: string, resync: boolean = false, nickname?: string) {
     if (!this.containsWallet(address) || resync) {
       console.log('syncPortfolios:', address, "resync:", resync);
 
@@ -230,14 +234,6 @@ export class PortfolioService {
       }
     });
 
-    // Sets the first provided address as the primary wallet address if the portfolio map is empty.
-    if(this.portfolioMap().size === 0) {
-      this.mainWalletAddress.set(address);
-
-      this.updateCurrentWalletSignals(this.mainWalletAddress())
-    }
-
-    console.log('portfolioMap', this.portfolioMap());
     // this._portfolioLinkedWallet(this.portfolioMap())
   }
 
@@ -309,23 +305,22 @@ export class PortfolioService {
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-     await Promise.all([
-      this._portfolioStaking(walletAddress),
-      this._portfolioTokens(extendTokenData as any, tokenJupData as any),
-     ]);
+      await this._portfolioStaking(walletAddress);
+      await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
 
-    if (fetchType !== 'partial') {
-      await this._portfolioDeFi(excludeNFTv2, tokenJupData);
-     // mergeDuplications.push(tempNft);
-      this.walletAssets.set(mergeDuplications);
-      this.netWorth.set(portfolioData.value);
-    }
+       if (fetchType !== 'partial') {
+         await this._portfolioDeFi(excludeNFTv2, tokenJupData);
+         // mergeDuplications.push(tempNft);
+         this.walletAssets.set(mergeDuplications);
+         this.netWorth.set(portfolioData.value);
+       }
 
-    // Save processed data to map
-    this.saveToPortfolioMap(walletAddress, nickname);
+       // Save processed data to map
+       this.saveToPortfolioMap(walletAddress, nickname);
+
 
     // Load NFT afterward, since call is expensive
-   await this._portfolioNFT(walletAddress)
+    this._portfolioNFT(walletAddress)
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {
@@ -681,15 +676,20 @@ export class PortfolioService {
   // the purpose of this is to link saved wallet with the conn
   private readonly MAX_LINKED_WALLETS = 3;
 
-  public loadLinkedWallets(): void {
+  public async loadLinkedWallets() {
     // Get existing linked wallets from localStorage
     const linkedWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
 
-    // Sync portfolios for all linked wallets
-    linkedWallets.forEach(async (wallet) => {
-        await this.syncPortfolios(wallet.address, false, wallet.nickname);
+    // Sync portfolios for all linked wallets sequentially
+    for (const wallet of linkedWallets) {
+      const { address, nickname } = wallet;
+      if(!this.containsWallet(address)) {
+        await this.syncPortfolios(address, false, nickname);
+      } else {
+        // Remove connected address if it was part of the likedWallets
+        this.removedLinkedWallet(address)
       }
-    );
+    }
   }
 
   public updateLinkedWallets(newWallet?: { address: string; nickname: string }): void {
