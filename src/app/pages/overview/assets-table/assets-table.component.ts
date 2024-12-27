@@ -78,7 +78,7 @@ export class AssetsTableComponent implements OnInit {
 
   public showBalance = this._portfolioService.privateMode;
   public solPrice = this._portfolioBreakdownService.solPrice;
-  public expandableTable = computed(() =>  this._portfolioBreakdownService.getEnabledPortfolio().length > 1)
+  public expandableTable = computed(() => (this._portfolioBreakdownService.getEnabledPortfolio().length > 1) && (this.selectedTab().toLowerCase() !== PortfolioDataKeys.STAKING));
   selectedTab = signal(PortfolioDataKeys.TOKENS);
   columns = computed(() => this._columnsOptions[this.selectedTab().toLowerCase()])
   tableData = computed(() => {
@@ -87,7 +87,7 @@ export class AssetsTableComponent implements OnInit {
     switch (tableType) {
       case PortfolioDataKeys.NFTS:
         return this._portfolioBreakdownService.getNFTsBreakdown()
-      case PortfolioDataKeys.TOKENS:     
+      case PortfolioDataKeys.TOKENS:
         return this._portfolioBreakdownService.getTokensBreakdown()
       case PortfolioDataKeys.DEFI:
         return this._portfolioBreakdownService.getEnabledDefiAssets()
@@ -124,12 +124,12 @@ export class AssetsTableComponent implements OnInit {
         { key: 'totalValue', title: 'Total Value', width: '15%',cellTemplate:this.simpleUsdValue, cssClass: { name: 'ion-text-center', includeHeader: true } }
       ],
       defi: [
-        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '40%' },
+        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '45%' },
         { key: 'type', title: 'Type', cellTemplate: this.typeDefiTpl, width: '10%' },
-        { key: 'platform', title: 'Platform', cellTemplate: this.platformIconTpl, width: '5%' },
+        { key: 'platform', title: 'Platform', cellTemplate: this.platformIconTpl, width: '10%' },
         { key: 'balance', title: 'Balance', cellTemplate: this.holdingsTpl, width: '10%' },
         { key: 'value', title: 'Value', cellTemplate: this.simpleUsdValue, width: '10%' },
-        { key: 'website', title: 'Website', width: '5%', cellTemplate: this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
+        { key: 'website', title: 'Website', width: '10%', cellTemplate: this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
       ]
 
     }

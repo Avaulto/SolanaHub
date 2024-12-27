@@ -193,7 +193,7 @@ export class PortfolioService {
       this.mainWalletAddress.set(address);
       await this.syncPortfolios(address)
       this.updateCurrentWalletSignals(this.mainWalletAddress())
-      await this.loadLinkedWallets()
+      this.loadLinkedWallets()
     }
   }
 
