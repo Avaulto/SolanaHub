@@ -42,10 +42,9 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      const findStoredSelection = this.configs.find(c => c.name === this.getStoredSelection()?.name) || this.configs[0];
-      this.defaultSelection = findStoredSelection 
-      if(this.configType === 'priority-fee'){
-        this.defaultSelection = this.configs.find(c => c.name === this.getStoredSelection()?.name) || this.configs[1];
+      if(this.configs){
+        const findStoredSelection = this.configs.find(c => c.name === this.getStoredSelection()?.name) || this.configs[0];
+        this.defaultSelection = findStoredSelection 
       }
     });
   }
