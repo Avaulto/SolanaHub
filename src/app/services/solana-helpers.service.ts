@@ -74,7 +74,7 @@ export class SolanaHelpersService {
     }
     return validators
   }
-  private _validatorsList: Validator[] = this._sessionStorageService.getData('validators') ? JSON.parse(this._sessionStorageService.getData('validators')) : []
+  private _validatorsList: Validator[] =  []
   public async getValidatorsList(): Promise<Validator[]> {
     this.featureValidator(this._validatorsList, 'B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9')
     if (this._validatorsList.length > 0) {
@@ -85,20 +85,14 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
-        // const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
-
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
 
         validatorsList[0].total_apy = (validatorsList[0].total_apy * (1)).toFixedNoRounding(2)
-
-
       } catch (error) {
         console.error(error);
       }
-
-      // this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
       this._validatorsList = validatorsList;
       return validatorsList
     }

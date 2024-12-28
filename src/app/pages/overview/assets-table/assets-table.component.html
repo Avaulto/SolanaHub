@@ -73,13 +73,13 @@
 <ng-template #validatorProfileTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="item">
     <div class="item-img-wrapper">
-      <ion-img [src]="row.validator?.image || 'assets/images/unknown.svg'" alt="image" />
+      <ion-img [src]="row.validatorImg || 'assets/images/unknown.svg'" alt="image" />
     </div>
-    <div class="item-bold">{{row.validator?.name}}</div>
+    <div class="item-bold">{{row.validatorName}}</div>
   </div>
 </ng-template>
 <ng-template #validatorApy let-row let-rowIndex="rowIndex" let-column="column">
-  <div class="item-light ion-text-center">{{row.validator?.total_apy | number: '1.2-2'}}%</div>
+  <div class="item-light ion-text-center">{{row.apy | number: '1.2-2'}}%</div>
 </ng-template>
 
 

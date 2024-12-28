@@ -112,9 +112,9 @@ export class AssetsTableComponent implements OnInit {
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
         { key: 'apy', title: 'APY', width: '7%', cellTemplate: this.validatorApy, cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        // { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'status', title: 'Account Status', cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
-        { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl }
+        // { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl }
       ],
       nfts: [
         { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },

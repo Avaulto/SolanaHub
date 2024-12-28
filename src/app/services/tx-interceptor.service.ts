@@ -184,7 +184,7 @@ export class TxInterceptorService {
 
       setTimeout(() => {
         this._fetchPortfolioService.triggerFetch()
-      }, 500);
+      }, 1500);
     }
 
     return successfulSignatures;

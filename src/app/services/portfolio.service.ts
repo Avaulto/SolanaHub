@@ -10,6 +10,7 @@ import {
   Stake,
   Token,
   TransactionHistory,
+  Validator,
   WalletEntry,
   WalletExtended,
   WalletPortfolio
@@ -301,11 +302,12 @@ export class PortfolioService {
   private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full', nickname?: string) {
     const tempNft = portfolioData.elements.find(group => group.platformId === WalletDataKeys.NFT_V2);
     const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== WalletDataKeys.NFT_V2);
+    const staking = portfolioData.elements.find(e => e.platformId === WalletDataKeys.NATIVE_STAKE);
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
     const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
-      await this._portfolioStaking(walletAddress);
+      await this._portfolioStaking(walletAddress,staking );
       await this._portfolioTokens(extendTokenData as any, tokenJupData as any);
 
        if (fetchType !== 'partial') {
@@ -624,10 +626,31 @@ export class PortfolioService {
 
   }
 
-  public async _portfolioStaking(walletAddress: string) {
-
-    const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
-    this.staking.set(stakeAccounts)
+  public async _portfolioStaking(walletAddress: string, staking?: any) {
+    // const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
+     
+    const validators: Validator[] = await this._shs.getValidatorsList()
+    const stateEnum = {
+      activating: "Activating",
+      unstaking: "Deactivating",
+      active : "Active",
+      inactive : "Inactive"
+    }
+    const stakeAccountsSonar = staking?.data?.assets?.map(acc =>{
+      let validator = validators.find(v => v.name === acc.name)
+      const sonarState = acc.attributes.tags[0].toLowerCase()
+      return {
+        
+        validatorName: acc.name,
+        validatorImg: acc.imageUri,
+        balance:acc.data.amount,
+        apy: validator.total_apy,
+        state: stateEnum[sonarState]
+      }
+    }).sort((a, b) => a.balance > b.balance ? -1 : 1);
+   
+    
+    this.staking.set(stakeAccountsSonar)
 
     // const getStakeAccountsWithInfaltionRewards = await this._nss.getStakeRewardsInflation(stakeAccounts)
     // this.staking.set(getStakeAccountsWithInfaltionRewards)
