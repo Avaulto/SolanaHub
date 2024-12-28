@@ -40,75 +40,82 @@ export class TxInterceptorService {
     return memoInstruction
   }
 
-  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record, type: string = ''): Promise<string> {
-    try {
+  // public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record, type: string = ''): Promise<string> {
+  //   try {
 
 
-      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-      const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
-      let transaction: Transaction = new Transaction(txArgs).add(...txParam);
-      const priorityFeeEst = await this._getPriorityFeeEst(transaction)
-      if (priorityFeeEst) transaction.add(priorityFeeEst)
+  //     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+  //     const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
+  //     let transaction: Transaction = new Transaction(txArgs).add(...txParam);
+  //     const priorityFeeEst = await this._getPriorityFeeEst(transaction)
+  //     if (priorityFeeEst) transaction.add(priorityFeeEst)
 
-      transaction.add(this._memoIx('SolanaHub memo', walletOwner))
-
-      const serviceFeeInst = this._freemiumService.addServiceFee(walletOwner, type)
-    console.log(serviceFeeInst);
-    if (serviceFeeInst) transaction.add(serviceFeeInst)
-    let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
-
-      if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
-
-      //LMT: check null signatures
-      for (let i = 0; i < signedTx.signatures.length; i++) {
-        if (!signedTx.signatures[i].signature) {
-          throw Error(`missing signature for ${signedTx.signatures[i].publicKey.toString()}. Check .isSigner=true in tx accounts`)
-        }
-      }
-      const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
+  //     transaction.add(this._memoIx('SolanaHub memo', walletOwner))
 
 
-      const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
-      const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
-      const txSend: toastData = {
-        message: `Transaction Submitted`,
-        btnText: `view on explorer`,
-        segmentClass: "toastInfo",
-        duration: 5000,
-        cb: () => window.open(url)
-      }
-      this._toasterService.msg.next(txSend)
-      const config: BlockheightBasedTransactionConfirmationStrategy = {
-        signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
-      }
-      if (record) {
-        record.data.txId = signature
-        va.track(record.message, record.data)
-      }
-      await this._shs.connection.confirmTransaction(config, 'processed')
-      const txCompleted: toastData = {
-        message: 'Transaction Completed',
-        segmentClass: "toastInfo"
-      }
+  //     let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 
-      this._toasterService.msg.next(txCompleted)
+  //     if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
 
-      setTimeout(() => {
-        this._fetchPortfolioService.triggerFetch()
-      }, 500);
-      return signature
-    } catch (error) {
-      console.warn(error);
-      return null
-    }
-  }
+  //     //LMT: check null signatures
+  //     for (let i = 0; i < signedTx.signatures.length; i++) {
+  //       if (!signedTx.signatures[i].signature) {
+  //         throw Error(`missing signature for ${signedTx.signatures[i].publicKey.toString()}. Check .isSigner=true in tx accounts`)
+  //       }
+  //     }
+  //     const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
+
+
+  //     const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
+  //     const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
+  //     const txSend: toastData = {
+  //       message: `Transaction Submitted`,
+  //       btnText: `view on explorer`,
+  //       segmentClass: "toastInfo",
+  //       duration: 5000,
+  //       cb: () => window.open(url)
+  //     }
+  //     this._toasterService.msg.next(txSend)
+  //     const config: BlockheightBasedTransactionConfirmationStrategy = {
+  //       signature, blockhash, lastValidBlockHeight//.lastValidBlockHeight
+  //     }
+  //     if (record) {
+  //       record.data.txId = signature
+  //       va.track(record.message, record.data)
+  //     }
+  //     await this._shs.connection.confirmTransaction(config, 'processed')
+  //     const txCompleted: toastData = {
+  //       message: 'Transaction Completed',
+  //       segmentClass: "toastInfo"
+  //     }
+
+  //     this._toasterService.msg.next(txCompleted)
+
+  //     setTimeout(() => {
+  //       this._fetchPortfolioService.triggerFetch()
+  //     }, 500);
+  //     return signature
+  //   } catch (error) {
+  //     console.warn(error);
+  //     return null
+  //   }
+  // }
   public async sendMultipleTxn(
-    transactions: (Transaction | VersionedTransaction)[],
+    transactions: (TransactionInstruction | Transaction | VersionedTransaction)[],
     extraSigners?: Keypair[] | Signer[],
     record?: { message: string, data?: {} },
   ): Promise<string[]> {
+    try {
+      debugger;
     const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-
+    if(transactions[0] instanceof TransactionInstruction){
+      const ix = transactions as TransactionInstruction[]
+      transactions = this._createTransactionWrapper(ix, lastValidBlockHeight, blockhash) as Transaction[]
+    }
+    if(transactions[0] instanceof Transaction){
+      const txArgs: TransactionBlockhashCtor = { feePayer: this._shs.getCurrentWallet().publicKey, blockhash, lastValidBlockHeight: lastValidBlockHeight }
+      transactions = transactions.map(t => new Transaction(txArgs).add(t as Transaction))
+    }
     // Handle priority fees for each transaction based on its type
     // const txWithPriorityFees = []
     // await Promise.all(transactions.map(async t => {
@@ -126,10 +133,10 @@ export class TxInterceptorService {
     //     const txWithFee = new VersionedTransaction(batchMessage);
     //     txWithPriorityFees.push(t, txWithFee)
     //   }
- 
+
     // }));
     // console.log('txWithPriorityFees', txWithPriorityFees);
-    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as (Transaction | VersionedTransaction)[];
+    let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions as any) as (Transaction | VersionedTransaction)[];
     if (extraSigners?.length > 0) signedTx.map(s => s instanceof Transaction ? s.partialSign(...extraSigners) : s)
 
     var signatures = [];
@@ -188,8 +195,18 @@ export class TxInterceptorService {
     }
 
     return successfulSignatures;
+  } catch (error) {
+    console.error(error);
+    return null
+  }
   }
 
+  private _createTransactionWrapper(txInstruction: TransactionInstruction[], lastValidBlockHeight: number, blockhash: string){
+    const txArgs: TransactionBlockhashCtor = { feePayer: this._shs.getCurrentWallet().publicKey, blockhash, lastValidBlockHeight }
+    console.log('txArgs', txArgs);
+    const tx = new Transaction(txArgs).add(...txInstruction)
+    return [tx]
+  }
   public async sendSol(lamportsToSend: number, toAddress: PublicKey, walletOwnerPk: PublicKey): Promise<any> {
     const transfer: TransactionInstruction =
       SystemProgram.transfer({
@@ -197,7 +214,6 @@ export class TxInterceptorService {
         toPubkey: toAddress,
         lamports: lamportsToSend,
       })
-    this.sendTx([transfer], walletOwnerPk)
     // const validTx = await this.prepTx(lamportsToSend, transfer, walletOwnerPk)
     // if (validTx) {
     // }
@@ -255,5 +271,21 @@ export class TxInterceptorService {
       })
     }
 
+  }
+
+  /**
+   * this function is used to add platform fee to the transaction or wave it if user is premium user
+   * platform fee wont be added if transaction already has platform fee defined in previous code flow
+   * 
+   * @param hasFeeSetup check if transaction setup already have platform fee defined in previous code flow
+   * @param isPremiumUser check if user is premium user
+   * @returns 
+   */
+  private _addPlatformFee(hasFeeSetup: boolean, isPremiumUser: boolean) {
+    const walletOwnerPk = this._shs.getCurrentWallet().publicKey;
+    const lamportsToSend = 1000000000;
+    // check if user is not not premium user
+    const serviceFeeInst = this._freemiumService.addServiceFee(walletOwnerPk, 'test')
+    return null
   }
 }

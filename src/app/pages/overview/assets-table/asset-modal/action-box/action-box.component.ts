@@ -79,7 +79,7 @@ export class ActionBoxComponent implements OnInit {
           amount
         )
         const record:Record = {message: 'send asset', data: {symbol, amount}}
-        await this._txi.sendTx(instructions, publicKey,null,record)
+        // todo send tx
       } else {
 
         const SOL = amount * LAMPORTS_PER_SOL;

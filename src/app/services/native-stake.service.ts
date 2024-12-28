@@ -168,14 +168,14 @@ export class NativeStakeService {
     return null
   }
 
-  public async deactivateStakeAccount(stakeAccountAddress: string, walletOwner: WalletExtended): Promise<string> {
+  public async deactivateStakeAccount(stakeAccountAddress: string, walletOwner: WalletExtended): Promise<string[]> {
     try {
       const deactivateTx: Transaction = StakeProgram.deactivate({
         stakePubkey: new PublicKey(stakeAccountAddress),
         authorizedPubkey: walletOwner.publicKey,
       });
       const record = { message: 'account', data: { action: 'deactivate account' } }
-      return await this._txi.sendTx([deactivateTx], walletOwner.publicKey, null, record)
+      return await this._txi.sendMultipleTxn([deactivateTx], null, record)
 
     } catch (error) {
       console.log(error);
@@ -213,7 +213,7 @@ export class NativeStakeService {
 
       const record = { message: 'account', data: { action: 'transfer account' } }
 
-      return await this._txi.sendTx(transferAuthTx, walletOwnerPk, null, record)
+      return await this._txi.sendMultipleTxn(transferAuthTx, null, record)
     } catch (error) {
       console.log(error);
     }
@@ -237,7 +237,7 @@ export class NativeStakeService {
         }, minimumAmount);
 
       const record = { message: 'account', data: { action: 'split account' } }
-      return await this._txi.sendTx([splitAccount], walletOwnerPk, [createAccount.newStakeAccount], record)
+      return await this._txi.sendMultipleTxn([splitAccount], [createAccount.newStakeAccount], record)
     } catch (error) {
       console.log(error);
     }
@@ -254,7 +254,7 @@ export class NativeStakeService {
         });
       })
       const record = { message: 'account', data: { action: 'merge accounts' } }
-      return await this._txi.sendTx(mergeAccounts, walletOwnerPk, null, record)
+      return await this._txi.sendMultipleTxn(mergeAccounts, null, record)
     } catch (error) {
       console.log(error);
     }
@@ -274,7 +274,7 @@ export class NativeStakeService {
     
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
-      return await this._txi.sendTx([...withdrawTx], walletOwnerPK, null, record)
+      return await this._txi.sendMultipleTxn([...withdrawTx], null, record)
     } catch (error) {
       console.error(error)
     }
@@ -303,7 +303,7 @@ export class NativeStakeService {
     walletOwnerPK: PublicKey,
     validatorVoteKey: string,
     lockupDuration: number = 0
-  ): Promise<string> {
+  ): Promise<string[]> {
     // const minimumAmount = await this._shs.connection.getMinimumBalanceForRentExemption(
     //   StakeProgram.space,
     // );
@@ -320,7 +320,7 @@ export class NativeStakeService {
 
       const stakeIx: Transaction[] = [stakeAccIns, delegateTX]
       const record = { message: `native stake`, data: { validator: validatorVoteKey, amount: Number(lamportsToDelegate) / LAMPORTS_PER_SOL } }
-      return this._txi.sendTx(stakeIx, walletOwnerPK, [stakeAcc], record)
+      return this._txi.sendMultipleTxn(stakeIx, [stakeAcc], record)
 
     } catch (error) {
       console.warn(error)
@@ -332,7 +332,7 @@ export class NativeStakeService {
       const delegateTX: Transaction = this._delegateStakeAccount(stakeAccount.address, vote_identity, walletOwnerPK)
       const record = { message: 'account', data: { action: 'reStake' } }
 
-      return this._txi.sendTx([delegateTX], walletOwnerPK, null, record)
+      return this._txi.sendMultipleTxn([delegateTX], null, record)
 
     } catch (error) {
       console.log(error);
@@ -355,34 +355,4 @@ export class NativeStakeService {
     return null
   }
 
-  // public async withdrawFromStakeAccount(stakeAccount: string, walletOwnerPK: PublicKey, lamports: number): Promise<any> {
-  //   const withdrawTx = StakeProgram.withdraw({
-  //     stakePubkey: new PublicKey(stakeAccount),
-  //     authorizedPubkey: walletOwnerPK,
-  //     toPubkey: walletOwnerPK,
-  //     lamports, // Withdraw the full balance at the time of the transaction
-  //   });
-  //   try {
-  //     const record = { message: 'account', data: { action: 'reStake' } }
-  //     return this._txi.sendTx([withdrawTx], walletOwnerPK, null, record)
-
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
-  // instant unstake by sanctum
-  public async initSanctum() {
-
-    // This loads the required accounts for all stake pools
-    // and jup-ag from on-chain.
-    // The arg type is `JupiterLoadParams` from jup-ag
-    // const unstake = await UnstakeAg.load({
-    //   cluster: "mainnet-beta",
-    //   connection:this._shs.connection,
-    //   // if you're using only legacy transactions (no lookup tables),
-    //   // you should set ammsToExclude to legacyTxAmmsToExclude() to
-    //   // avoid running into transaction size limits
-    //   ammsToExclude: legacyTxAmmsToExclude(),
-    // });
-  }
 }

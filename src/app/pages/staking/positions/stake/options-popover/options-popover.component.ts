@@ -104,7 +104,7 @@ export class OptionsPopoverComponent implements OnInit {
       const ins = await this._lss.setvSOLDirectStake(walletOwner, validatorVoteIdentity)
       const record = { message: 'vSOL direct stake', data: { validatorId: validatorVoteIdentity } }
 
-      await this._txi.sendTx(ins,walletOwner.publicKey, null,record )
+      await this._txi.sendMultipleTxn(ins, null,record )
     }
   }
   async openModal(componentName: 'delegate-lst-modal' | 'instant-unstake-modal' | 'unstake-lst-modal' | 'merge-modal' | 'split-modal' | 'transfer-auth-modal') {

@@ -159,7 +159,7 @@ export class FormComponent implements OnInit, AfterViewInit {
       // const stakeIx =  this._nss.createStakeAccount(lamportsToDelegate,walletOwner)
       // const stakeAcc: Keypair = stakeIx.newStakeAccount;
       // const stakeAccIns: Transaction = stakeIx.newStakeAccountIns;
-      // await this._tis.sendTx([stakeAccIns], walletOwner, [stakeAcc])
+
       const stake = await this._nss.stake(lamportsToDelegate, walletOwner, validatorVoteIdentity, lockupDuration);
       console.log('stake', stake)
       // add stakers to loyalty league referee program
