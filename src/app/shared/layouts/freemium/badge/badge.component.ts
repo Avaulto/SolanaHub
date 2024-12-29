@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FreemiumService } from '../freemium.service';
+import { FreemiumService } from '../../../../services/freemium.service';
 import { addIcons } from 'ionicons';
 import { starOutline } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';

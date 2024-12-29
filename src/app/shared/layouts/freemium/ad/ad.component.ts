@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
-import { FreemiumService } from '../freemium.service';
+import { FreemiumService } from '../../../../services/freemium.service';
 import { ModalController } from '@ionic/angular';
 import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
 @Component({

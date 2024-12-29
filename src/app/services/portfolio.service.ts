@@ -213,8 +213,6 @@ export class PortfolioService {
    */
   public async syncPortfolios(address: string,resync: boolean = false, nickname?: string) {
     if (!this.containsWallet(address) || resync) {
-      console.log('syncPortfolios:', address, "resync:", resync);
-
       this.walletBoxSpinnerService.show();
       await this.getPortfolioAssets(address, this._utils.turnStileToken, true, false, 'full', nickname);
 
@@ -237,7 +235,6 @@ export class PortfolioService {
       this.updateCurrentWalletSignals(this.mainWalletAddress())
     }
 
-    console.log('portfolioMap', this.portfolioMap());
     // this._portfolioLinkedWallet(this.portfolioMap())
   }
 

@@ -1,7 +1,7 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { PopupPlanComponent } from '..';
-import { FreemiumService } from '../freemium.service';
+import { FreemiumService } from '../../../../services/freemium.service';
 @Component({
   selector: 'freemium-road',
   templateUrl: './road.component.html',
@@ -14,7 +14,7 @@ export class RoadComponent implements OnInit {
 
   }
   private _freemiumService = inject(FreemiumService);
-  public stakeSize = this._freemiumService.stake;
+  public stakeSize = signal(100);//this._freemiumService.stake;
   private _modalCtrl= inject(ModalController);
   async openFreemumAccessPopup(){
     await this._modalCtrl.dismiss();

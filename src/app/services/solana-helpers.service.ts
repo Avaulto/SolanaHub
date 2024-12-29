@@ -212,6 +212,8 @@ export class SolanaHelpersService {
       const mint: string = parsedAccountInfo["parsed"]["info"]["mint"];
       const balance: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["uiAmount"];
       const decimals: number = parsedAccountInfo["parsed"]["info"]["tokenAmount"]["decimals"];
+      console.log(account);
+      
       return { data: { address: account.pubkey.toString(), mint, balance, decimals } } as any
     })
     if (getType) {

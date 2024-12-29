@@ -1,8 +1,9 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
-import { LocalStorageService, SolanaHelpersService } from 'src/app/services';
+import { LocalStorageService, PortfolioService, SolanaHelpersService } from 'src/app/services';
 import va from '@vercel/analytics';
 import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
+import { WalletExtended } from '../models';
 
 interface Account {
   isPremium: boolean;
@@ -13,8 +14,12 @@ interface Account {
   providedIn: 'root'
 })
 export class FreemiumService {
+  /**
+  @param isOwner has solanahub pass
+  @param isPremium active state subscription of solanahub pass
+  */
   public readonly isPremium = computed(() => this._account()?.isPremium ?? null);
-  public readonly stake = computed(() => this._account()?.stake ?? null);
+
   private _account = signal<Account | null>(null);
   private _premiumServices: string[] = [];
   private _platformFee: number | null = null;
@@ -22,12 +27,16 @@ export class FreemiumService {
   private _isPremiumCache = new Map<string, Account>();
 
   constructor(
+    private _portfolioService: PortfolioService,
     private _shs: SolanaHelpersService,
     private _storageService: LocalStorageService,
   ) {
     this._initializeService();
-    effect(() => {
-      this._updateAccount();
+    this._shs.walletExtended$.subscribe((wallet) => {
+      if (wallet) {
+        console.log('wallet', wallet);
+        this._updateAccount(wallet);
+      }
     });
   }
 
@@ -58,12 +67,20 @@ export class FreemiumService {
     }
   }
 
-  public addServiceFee(walletPk: PublicKey, type: string): TransactionInstruction | null {
+  /**
+   * this function is used to add platform fee to the transaction or wave it if user is premium user
+   * platform fee wont be added if transaction already has platform fee defined in previous code flow
+   * 
+   * @param hasFeeSetup check if transaction setup already have platform fee defined in previous code flow
+   * @param isPremiumUser check if user is premium user
+   * @returns 
+   */
+  public addPlatformFee(walletPk: PublicKey, type: string): TransactionInstruction | null {
     if (this.isPremium() || !this._premiumServices.includes(type)) {
       return null;
     }
 
-    const fee = this._platformFee ?? 3000000; // Default to 0.003 SOL if platform fee is not set
+    const fee = this._platformFee ?? 2000000; // Default to 0.003 SOL if platform fee is not set
     return SystemProgram.transfer({
       fromPubkey: walletPk,
       toPubkey: new PublicKey(environment.platformFeeCollector),
@@ -77,8 +94,13 @@ export class FreemiumService {
     }
   
     try {
-      const response = await fetch(`${environment.apiUrl}/api/freemium/get-is-premium?walletAddress=${walletAddress}`);
-      const data: Account = await response.json();
+     
+      // check if wallet own solanahub pass nft
+      const isPremium = await(await fetch(`${environment.apiUrl}/api/freemium/is-premium?walletAddress=${walletAddress}`)).json();
+      console.log(isPremium);
+      
+  
+      let data = null;
       this._isPremiumCache.set(walletAddress, data);
       this._account.set(data);
       return data;
@@ -88,8 +110,10 @@ export class FreemiumService {
     }
   }
 
-  private async _updateAccount(): Promise<void> {
-    const walletAddress = this._shs.wallet()?.publicKey?.toString();
+  private async _updateAccount(wallet: WalletExtended): Promise<void> {
+    const walletAddress = wallet.publicKey?.toString();
+    console.log(walletAddress);
+    
     if (!walletAddress) {
       this._account.set(null);
       return;

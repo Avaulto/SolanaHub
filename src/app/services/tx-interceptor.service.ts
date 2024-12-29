@@ -8,16 +8,13 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
-import { FreemiumService } from '../shared/layouts/freemium/freemium.service';
+import { FreemiumService } from './freemium.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TxInterceptorService {
-  // private _shs = inject(SolanaHelpersService);
-  // private _wallet = this._shs.getCurrentWallet()
   constructor(
-    private _freemiumService: FreemiumService,
     private _toasterService: ToasterService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
@@ -273,19 +270,5 @@ export class TxInterceptorService {
 
   }
 
-  /**
-   * this function is used to add platform fee to the transaction or wave it if user is premium user
-   * platform fee wont be added if transaction already has platform fee defined in previous code flow
-   * 
-   * @param hasFeeSetup check if transaction setup already have platform fee defined in previous code flow
-   * @param isPremiumUser check if user is premium user
-   * @returns 
-   */
-  private _addPlatformFee(hasFeeSetup: boolean, isPremiumUser: boolean) {
-    const walletOwnerPk = this._shs.getCurrentWallet().publicKey;
-    const lamportsToSend = 1000000000;
-    // check if user is not not premium user
-    const serviceFeeInst = this._freemiumService.addServiceFee(walletOwnerPk, 'test')
-    return null
-  }
+
 }
