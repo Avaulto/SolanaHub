@@ -31,7 +31,7 @@
 
     #desc {
         text-transform: capitalize;
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 13px;
         line-height: 18px;
         /* 138.462% */
@@ -154,7 +154,7 @@ ion-text {
 }
 
 ion-text {
-    color: #4B5565;
+    color: var(--ion-light-gray);
     font-size: 11px;
     line-height: 16px;
 }

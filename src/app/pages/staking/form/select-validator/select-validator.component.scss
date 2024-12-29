@@ -40,7 +40,7 @@
         }
 
         ion-text {
-            color: var(--colors-text-text-tertiary-600, #4B5565);
+            color: var(--colors-text-text-tertiary-600, var(--ion-light-gray));
             font-size: 11px;
             line-height: 16px;
             /* 145.455% */

@@ -72,7 +72,7 @@ ion-text {
 
     .checked {
         border-radius: var(--radius-xl, 12px);
-        border: 2px solid #B84794;
+        border: 2px solid var(--ion-color-primary);
     }
 }
 

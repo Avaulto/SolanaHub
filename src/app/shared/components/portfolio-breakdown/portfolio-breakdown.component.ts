@@ -105,7 +105,7 @@ export class PortfolioBreakdownComponent {
           const formattedTotal = `$${this.utilService.formatBigNumbers(total)}`;
 
           ctx.font = '13px Inter';
-          ctx.color = '#4B5565'
+          ctx.color = 'var(--ion-light-gray)'
           ctx.fontWeight = '500'
           ctx.lineHeight = '18px'
           ctx.fillStyle = '#000000';

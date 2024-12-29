@@ -52,11 +52,11 @@
             }
 
             &.activating {
-                background: #17B26A;
+                background: var(--ion-color-success);
             }
 
             &.deactivating {
-                background: #F79009;
+                background: var(--ion-color-warning);
             }
             &.directStake {
                 background: var(--ion-color-primary);
@@ -73,7 +73,7 @@
     }
 
     .account-address {
-        color: var(--colors-text-text-tertiary-600, #4B5565);
+        color:  var(--ion-light-gray);
         font-size: 12px;
         line-height: 12px;
         margin-block-end: 8px;
@@ -116,8 +116,8 @@
         ion-chip {
             margin-block: 0;
             border-radius: var(--radius-full, 1000px);
-            border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #E3E8EF);
-            background: var(--Component-colors-Utility-Gray-utility-gray-50, #F8FAFC);
+            border: 1px solid var(--ion-color-border);
+            background: var(--ion-color-light);
             color:  var(--ion-color-dark);
             text-align: center;
             font-size: 12px;

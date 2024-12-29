@@ -189,11 +189,11 @@ ion-spinner {
     --height: 800px;
     --max-height: 90%;
     --max-width: 95%;
-    --background: white;
+    --background: var(--ion-color-light);
     overflow: auto;
 }
 .faq-modal {
-
+    --background: var(--ion-color-light);
     --height: fit-content;
     overflow: auto;
 }
@@ -212,7 +212,7 @@ ion-spinner {
     --max-width: 95%;
     // --max-height: 90%;
     // --overflow: auto;
-    --background: white;
+    --background: var(--ion-color-light);
     // >.ion-page {
     //     position: static;
     //     contain: initial;
@@ -231,13 +231,13 @@ ion-spinner {
 .quests-modal{
     --width: 445px;
     --max-width: 97%;
-    --background: white;
+    --background: var(--ion-color-light);
 }
 
 .multi-wallet-modal {
   --max-width: 420px;
   --width: 100%;
-  --background: white;
+  --background: var(--ion-color-light);
 }
 
 .nft-modal {
@@ -263,14 +263,14 @@ ion-spinner {
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
-    --background: white;
+    --background: var(--ion-color-light);
 }
 .refer-a-friend-modal{
     --width: 550px;
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
-    --background: white;
+    --background: var(--ion-color-light);
 }
 .wallet-connect-dropdown {
     --width: 238px;

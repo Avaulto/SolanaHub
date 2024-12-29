@@ -112,7 +112,7 @@ ion-segment {
 
 ion-segment-button {
     text-transform: capitalize;
-    --border-color: #B84794;
+    --border-color: var(--ion-color-primary);
     --indicator-height: 2px;
     --border-width: 1px;
     --border-radius: none;

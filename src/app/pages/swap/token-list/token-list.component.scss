@@ -5,7 +5,7 @@ app-search-box {
 
 #table-head {
   text-transform: capitalize;
-  color: #4B5565;
+  color: var(--ion-light-gray);
   font-size: 11px;
   font-weight: 500;
   display: flex;
@@ -71,7 +71,7 @@ cdk-virtual-scroll-viewport {
   }
 
   ion-text {
-    color: #4B5565;
+    color: var(--ion-light-gray);
     font-size: 11px;
     line-height: 16px;
     /* 145.455% */

@@ -8,7 +8,7 @@ ion-label {
 }
 #table-head {
     text-transform: capitalize;
-    color: #4B5565;
+    color: var(--ion-light-gray);
     font-size: 11px;
     font-weight: 500;
     display: flex;
@@ -76,7 +76,7 @@ div#pools-wrapper{
       }
   
       ion-text {
-        color:  #4B5565;
+        color:  var(--ion-light-gray);
         font-size: 11px;
         line-height: 16px;
         /* 145.455% */
@@ -92,7 +92,7 @@ div#pools-wrapper{
   
       .commission, .exchange-rate {
         padding-inline-start: 24px;
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 13px;
         line-height: 18px;
         /* 138.462% */

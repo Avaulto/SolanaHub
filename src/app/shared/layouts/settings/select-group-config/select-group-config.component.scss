@@ -36,7 +36,7 @@ ion-segment-button {
     --border-radius: 6px;
     --border-width: 2px;
     --border-style: solid;
-    --indicator-box-shadow: 0px 0px 0px 0px #B84794;
+    --indicator-box-shadow: 0px 0px 0px 0px var(--ion-color-primary);
     .pool-profile{
         width: 100%;
         display: flex;

@@ -44,7 +44,7 @@ ion-label,ion-text{
     text-overflow: ellipsis;
 }
 ion-text {
-    color: #4B5565;
+    color: var(--ion-light-gray);
     font-size: 11px;
     line-height: 16px;
 }

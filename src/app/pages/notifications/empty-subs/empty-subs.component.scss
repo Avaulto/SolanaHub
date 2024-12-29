@@ -113,7 +113,7 @@ ion-text {
         overflow: hidden;
     }
     &.checked {
-        border: 2px solid #B84794;
+        border: 2px solid var(--ion-color-primary);
     }
 }
 

@@ -2,31 +2,6 @@
 // http://ionicframework.com/docs/theming/
 
 
-// :root {
-//     --ion-item-border-color: var(--ion-background-color-step-200);
-//   }
-  
-//   /* This sets a different background and item background for the default theme on ios */
-//   :root.ios {
-//     --ion-background-color: var(--ion-background-color-step-50, #f2f2f6);
-//     --ion-toolbar-background: var(--ion-background-color);
-//     --ion-item-background: #fff;
-//   }
-  
-//   /* This sets a different background and item background for the default theme on md */
-//   :root.md {
-//     --ion-background-color: var(--ion-background-color-step-100, #f9f9f9);
-//     --ion-toolbar-background: var(--ion-background-color);
-//     --ion-item-background: #fff;
-//   }
-  
-//   /* This sets a different item background when dark mode is enabled on ios and md */
-//   .ion-palette-dark.ios,
-//   .ion-palette-dark.md {
-//     --ion-item-background: #1c1c1d;
-//   }
-
-
 /** Ionic CSS Variables **/
 :root {
 	// --text-color:;
@@ -40,42 +15,22 @@
 	// --ion-color-ll-pb: #D8D0F5;
 	
 	// theme colors
-	--ion-light-gray: #4B5565;
 	--ion-color-primary: #B84794;
 	--ion-color-tertiary: #5260ff;
 	--ion-color-success: #17B26A;
 	--ion-color-warning: #F79009;
 	--ion-color-danger: #F04438;
+	--ion-color-dark: #0D121C;
+	--ion-color-light: #FFFFFF;
+	--ion-light-gray: #4B5565;
 	
 	// borders & text
 	--ion-color-page-top: #E9E9E6;
 	--ion-color-border: #E3E8EF;
 	--ion-background-color: #F3F4F6;
 	--ion-color-primary-bg: #FAF0F8;
-	--ion-color-light: #FFFFFF;
-	--ion-color-dark: #0D121C;
 }
 
-// :root .dark-theme {
-// 	--ion-color-app-bg: #131313; // #121a35;
-// 	--ion-color-page-top: #1D1D1D;
-// 	--ion-color-primary-bg: #1E131B;
-// 	--ion-color-dark: #f3f3f3;
-// 	--ion-color-light: #0D0D0D;
-// 	--ion-background-color: #1A1A1A;
-// 	--ion-color-dark: #FFFFFF;
-// 	--ion-color-dark: #898E95;
-// 	--ion-color-dark: #925FCC;
-// 	--ion-color-card-bg: #B84794;
-// 	--ion-color-primary: #0D0D0D;
-
-// 	// ll page
-// 	--ion-color-ll: #1A1520;
-// 	--ion-color-ll-title: #FFFFFF; 
-// 	--ion-color-ll-pb: #322442;
-
-
-// }
 @import "./dark.theme.scss";
 
 // @media (prefers-color-scheme: dark) {

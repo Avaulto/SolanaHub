@@ -81,7 +81,7 @@
     }
     .points-breakdown {
       &__title {
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 16px;
         font-weight: 500;
         line-height: 24px;
@@ -97,7 +97,7 @@
 
     .points-category {
       &__title {
-        color: var(--colors-text-text-tertiary-600, #4B5565);
+        color: var(--colors-text-text-tertiary-600, var(--ion-light-gray));
         font-size: 11px;
         font-weight: 500;
         line-height: 16px;
