@@ -9,7 +9,7 @@
 }
 
 #current-auth {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 700;
 
@@ -46,7 +46,7 @@
 
 ion-label {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -107,7 +107,7 @@ ion-checkbox {
     }
 
     .type-title {
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
@@ -118,7 +118,7 @@ ion-checkbox {
 }
 
 .type-desc {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 400;
     line-height: 130%;

@@ -1,6 +1,6 @@
 .light-title {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -33,7 +33,7 @@ ion-segment {
 }
 
 ion-label {
-    color: var(--ion-color-text-2);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -41,7 +41,7 @@ ion-label {
 }
 
 ion-text {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     text-align: center;
     font-size: 12px;
     margin-block-end: 8px;
@@ -85,10 +85,10 @@ ion-segment-button {
 #boosted{
     position: absolute;
     left: 0;
-    border: 1px solid var(--ion-color-secondary);
+    border: 1px solid var(--ion-color-primary);
     padding: 2px 5px;
     border-radius: 4px;
-    color: var(--ion-color-secondary);
+    color: var(--ion-color-primary);
     font-size: 11px;
     opacity: 0.8;
 }

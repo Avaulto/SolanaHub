@@ -5,7 +5,7 @@
     .staking-stat {
         padding: 24px;
         border-radius: var(--radius-xl, 12px);
-        background: var(--ion-color-menu);
+        background: var(--ion-color-light);
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
         .icon-wrapper {
@@ -30,7 +30,7 @@
         }
 
         .stat-desc {
-            color: var(--ion-color-hard-hard);
+            color: var(--ion-color-dark);
             font-size: 20px;
             font-weight: 600;
             line-height: 30px;

@@ -1,5 +1,5 @@
 ion-label {
-    color: var(--Gray-700, var(--ion-color-medium));
+    color: var(--Gray-700, var(--ion-color-dark));
     font-size: 13px;
     font-weight: 500;
     margin-block-end: 8px;
@@ -11,7 +11,7 @@ ion-label {
     margin-block-end: 16px;
 
     #balance {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 12px;
         font-weight: 400;
         line-height: 14px;

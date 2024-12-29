@@ -68,7 +68,7 @@ ion-button {
 
     &.button-disabled {
         --background: var(--ion-color-card-bg);
-        --color: var(--ion-color-btn);
+        --color: var(--ion-color-primary);
 
         opacity: 1;
     }
@@ -87,7 +87,7 @@ ion-skeleton-text{
 }
 .data-set {
     border-radius: var(--radius-xl, 12px);
-    background: var(--ion-color-menu);
+    background: var(--ion-color-light);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
 
@@ -129,7 +129,7 @@ ion-input {
     font-size: 13px;
     border-radius: var(--radius-md, 8px);
     border: 1px solid var(--ion-color-border);
-    background: var(--ion-color-menu);
+    background: var(--ion-color-light);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     --background: transparent;
     --padding-start: 12px !important;
@@ -151,7 +151,7 @@ ion-input {
 }
 
 .table-sub {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     text-overflow: ellipsis;
     // font-family: Inter;
     font-size: 13px;

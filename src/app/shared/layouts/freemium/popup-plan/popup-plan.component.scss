@@ -23,7 +23,7 @@
   
     #title {
       text-transform: capitalize;
-      color: var(--ion-color-text-2);
+      color: var(--ion-color-dark);
       font-size: 18px;
       font-weight: 600;
       line-height: 28px;
@@ -54,6 +54,6 @@
 .service-desc {
   margin-block-end: 16px;
   color: var(--ion-color-dark);
-  border-bottom: 1px solid var(--ion-color-secondary);
+  border-bottom: 1px solid var(--ion-color-primary);
   padding-block-end: 4px;
 }

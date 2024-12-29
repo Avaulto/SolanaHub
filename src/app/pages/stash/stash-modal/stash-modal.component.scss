@@ -23,7 +23,7 @@
 
     #title {
         text-transform: capitalize;
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 18px;
         font-weight: 600;
         line-height: 28px;
@@ -57,7 +57,7 @@
     padding-block: 10px;
 
     ion-label {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         margin-block-end: 8px;
@@ -139,7 +139,7 @@
 }
 
 ion-label {
-    color: var(--ion-color-text-2);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;

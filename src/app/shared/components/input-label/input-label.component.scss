@@ -5,7 +5,7 @@
 
 .light-title {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -27,7 +27,7 @@
     }
     #wallet-info {
         text-align: right;
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         text-align: right;
         font-size: 12px;
         line-height: 14px;
@@ -44,7 +44,7 @@
 
         ion-button {
             text-transform: uppercase;
-            --color: var(--ion-color-medium);
+            --color: var(--ion-color-dark);
             text-align: center;
             font-size: 10px;
             font-weight: 600;

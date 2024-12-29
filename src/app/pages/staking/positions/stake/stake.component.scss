@@ -5,7 +5,7 @@
 
 .stake-card {
     ion-icon {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         cursor: pointer;
     }
 
@@ -65,7 +65,7 @@
     }
 
     .validator-name {
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
@@ -93,12 +93,12 @@
         display: flex;
         flex-wrap: wrap;
         .sol-amount {
-            color: var(--ion-color-text-2);
+            color: var(--ion-color-dark);
             margin-inline-end: 2px;
         }
 
         .usd-value {
-            color: var(--ion-color-medium);
+            color: var(--ion-color-dark);
             font-weight: 400;
         }
 

@@ -16,13 +16,13 @@
     width: fit-content;
     &.primary {
         border: 1px solid #FDD1EE;
-        background: #FFF3FB;
+        background: var(--ion-color-primary-bg);
         color: #763261;
     }
     &.secondary {
-        border: 1px solid  var(--ion-color-secondary);
+        border: 1px solid  var(--ion-color-primary);
         background: #f5f2f9;
-        color: var(--ion-color-secondary);
+        color: var(--ion-color-primary);
     }
     &.active {
 

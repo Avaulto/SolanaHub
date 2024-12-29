@@ -90,7 +90,7 @@
   }
 
   #slogen {
-    color: var(--ion-color-hard-hard);
+    color: var(--ion-color-dark);
     font-size: 48px;
     font-weight: 600;
     line-height: 48px;
@@ -242,7 +242,7 @@
 
 .adoption-item {
   border-radius: 4px;
-  border: 1px solid var(--ion-color-secondary);
+  border: 1px solid var(--ion-color-primary);
   padding: 20px;
   margin: auto;
   display: flex;

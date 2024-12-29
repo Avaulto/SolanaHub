@@ -81,8 +81,8 @@ ion-segment {
 
     ion-toggle {
 
-        --track-background: var(--ion-color-app-bg-2);
-        --track-background-checked: var(--ion-color-app-bg-2);
+        --track-background: var(--ion-background-color);
+        --track-background-checked: var(--ion-background-color);
 
         --handle-background: var(--ion-color-light);
         --handle-background-checked: var(--ion-color-primary);
@@ -104,7 +104,7 @@ ion-segment {
         /* Required for iOS handle to overflow the height of the track */
         overflow: visible;
         border-radius: var(--radius-full, 1000px);
-        background: var(--Colors-Background-bg-tertiary, var(--ion-color-app-bg-2));
+        background: var(--Colors-Background-bg-tertiary, var(--ion-background-color));
     }
 
 

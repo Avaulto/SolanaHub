@@ -51,7 +51,7 @@ ion-chip {
     &.voting {
         border: 1px solid #E9D7FE;
         background: #F9F5FF;
-        color: var(--ion-color-secondary);
+        color: var(--ion-color-primary);
     }
 
 
@@ -109,7 +109,7 @@ ion-button {
     }
 
     small {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         margin-inline-start: 2px;
         font-size: 11px;
 

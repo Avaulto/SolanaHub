@@ -10,7 +10,7 @@
 
     #title {
         text-transform: capitalize;
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 18px;
         font-weight: 600;
         line-height: 28px;
@@ -31,7 +31,7 @@
 
 ion-segment {
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    --background: var(--ion-color-menu);;
+    --background: var(--ion-color-light);;
     border-radius: var(--radius-md, 8px);
     border: 1px solid var(--Colors-Border-border-primary, var(--ion-color-border));
     height: 40px;
@@ -65,7 +65,7 @@ ion-text {
         top: 12px;
         z-index: 2;
         overflow: hidden;
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 13px;
         line-height: 18px;
     }

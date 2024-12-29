@@ -49,7 +49,7 @@ ion-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--ion-color-text-2);
+    color: var(--ion-color-dark);
     font-size: 14px;
     font-weight: 600;
     margin-block-end: 8px;
@@ -71,5 +71,5 @@ ion-text {
 
 }
 ion-icon {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
 }

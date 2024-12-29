@@ -8,7 +8,7 @@ ion-button {
 
 #wallet {
   height: 52.7px;
-  color: var(--ion-color-hard-hard);
+  color: var(--ion-color-dark);
   cursor: pointer;
   display: flex;
   padding: var(--spacing-lg, 10px);
@@ -39,7 +39,7 @@ ion-button {
   }
 
   ion-label {
-    color: var(--ion-color-hard-hard);
+    color: var(--ion-color-dark);
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -48,7 +48,7 @@ ion-button {
   }
 
   #wallet-address {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
