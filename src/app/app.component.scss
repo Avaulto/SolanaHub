@@ -147,9 +147,13 @@ ion-img{
   a{
     cursor: pointer;
   }
-  img {
-    width: 20px;
-    margin-inline: 4px;
+  #social-icons{
+    display: flex;
+    gap: 4px;
+  }
+  ion-icon {
+    color: var(--ion-color-dark);
+    font-size: 20px;
 }
 }
 @media only screen and (max-width: 992px) {

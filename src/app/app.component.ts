@@ -2,9 +2,6 @@ import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
-  IonButton,
-  IonButtons,
-  IonMenuButton,
   IonApp,
   IonImg,
   IonSplitPane,
@@ -12,27 +9,21 @@ import {
   IonContent,
   IonList
   , IonListHeader,
-  IonNote,
   IonMenuToggle,
   IonItem,
-  IonIcon,
   IonLabel,
   IonRouterOutlet,
-  IonRow,
   IonChip,
-  IonHeader
-} from '@ionic/angular/standalone';
+  IonHeader, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline } from 'ionicons/icons';
+import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline, logoGithub, logoDiscord, logoTwitter } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
 
 
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { PageHeaderComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
-import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
+import {  MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
 import { LocalStorageService } from './services/local-storage.service';
-import { PublicKey } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 import { NgxTurnstileComponent, NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilService, WatchModeService } from './services';
@@ -53,8 +44,7 @@ import va from '@vercel/analytics';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   standalone: true,
-  imports: [
-    DonateComponent,
+  imports: [IonIcon, 
     NgxTurnstileModule,
     SettingsButtonComponent,
     MenuComponent,
@@ -125,7 +115,7 @@ export class AppComponent implements OnInit {
       this.openNewsFeedModal()
     }
 
-    addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
+    addIcons({logoGithub,logoTwitter,logoDiscord,home,diamond,images,fileTrayFull,barcode,cog,swapHorizontal,chevronDownOutline,notifications});
   }
 
   async openNewsFeedModal(){

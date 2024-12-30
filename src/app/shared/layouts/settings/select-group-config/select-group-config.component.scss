@@ -25,7 +25,10 @@ ion-segment {
     display: flex;
     --background: var(--ion-background-color);
 }
-
+ion-icon {
+    font-size: 24px;
+    color: var(--ion-color-dark);
+}
 ion-segment-button {
     flex: 1;
     --border-color: transparent;
@@ -37,6 +40,7 @@ ion-segment-button {
     --border-width: 2px;
     --border-style: solid;
     --indicator-box-shadow: 0px 0px 0px 0px var(--ion-color-primary);
+    --indicator-color: var(--ion-color-light);
     .pool-profile{
         width: 100%;
         display: flex;
@@ -47,7 +51,7 @@ ion-segment-button {
         display: flex;
         text-transform: capitalize;
         flex-direction: column;
-        color: var(--colors-text-text-primary-900, var(--ion-color-dark));
+        color:  var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;

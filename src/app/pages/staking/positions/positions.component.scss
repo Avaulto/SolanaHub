@@ -46,7 +46,9 @@
     overflow-y: auto;
 }
 
-
+.no-positions{
+    color: var(--ion-color-dark);
+}
 
 @media only screen and (max-width: 992px) {
     :host{

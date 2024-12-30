@@ -5,12 +5,14 @@ import {
   IonAvatar,
   IonSegment,
    IonImg,
-   IonText, IonInput } from '@ionic/angular/standalone';
+   IonText, IonInput, IonIcon } from '@ionic/angular/standalone';
 import { Config } from '../../../../models/settings.model';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { SolanaHelpersService, ToasterService } from 'src/app/services';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, JsonPipe } from '@angular/common';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+import { addIcons } from 'ionicons';
+import { moonOutline, sunnyOutline } from 'ionicons/icons';
 @Component({
   selector: 'select-group-config',
   templateUrl: './select-group-config.component.html',
@@ -22,9 +24,10 @@ import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
     IonAvatar,
     IonSegment,
      IonImg,
-     IonText,
+     JsonPipe,
      IonInput,
-     ChipComponent
+     ChipComponent,
+     IonIcon
   ]
 })
 export class SelectGroupConfigComponent  implements AfterViewInit {
@@ -38,7 +41,9 @@ export class SelectGroupConfigComponent  implements AfterViewInit {
     private _localStorage: LocalStorageService,
     private _shs: SolanaHelpersService,
     @Inject(DOCUMENT) private document: Document,
-    ) { }
+    ) {
+      addIcons({moonOutline,sunnyOutline});
+     }
 
   ngAfterViewInit() {
     setTimeout(() => {

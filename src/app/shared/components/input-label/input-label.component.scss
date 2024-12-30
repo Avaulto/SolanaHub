@@ -36,10 +36,10 @@
         ion-skeleton-text {
             width: 50px;
         }
-        ion-img {
-            height: 12px;
+        ion-icon {
+            font-size: 12px;
             margin-inline-end: 4px;
-            width: 12px;
+            color: var(--ion-color-dark);
         }
 
         ion-button {
