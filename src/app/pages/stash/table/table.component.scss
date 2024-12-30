@@ -47,8 +47,8 @@
     ion-chip {
         padding-inline: 14px;
         border-radius: var(--radius-full, 9999px);
-        border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #E3E8EF);
-        background: var(--Component-colors-Utility-Gray-utility-gray-50, #F8FAFC);
+        border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, var(--ion-color-border));
+        background: var(--Component-colors-Utility-Gray-utility-gray-50, var(--ion-background-color));
         scale: 0.7;
         margin: 0;
     }
@@ -84,7 +84,7 @@
 
 #toggle-btn {
     --box-shadow: 0;
-    --color: #9AA4B2;
+    --color: var(--ion-light-gray);
     position: absolute;
     right: 0;
     top: 0;
@@ -112,7 +112,7 @@
 }
 
 ion-accordion {
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
 }
 
 
@@ -249,7 +249,7 @@ ion-toggle  {
         background-size: 80%;
         background-repeat: no-repeat;
         background-position: center;
-        background-color: white;
+        background-color: var(--ion-color-light);
         height: 25px;
         width: 25px;
     }
@@ -264,7 +264,7 @@ ion-toggle  {
         background-position: 58% center;
     }
     &.toggle-checked  {
-        --handle-background-checked: url(/assets/images/hubSOL.svg), white;
+        --handle-background-checked: url(/assets/images/hubSOL.svg), var(--ion-color-light);
     }
 }
 

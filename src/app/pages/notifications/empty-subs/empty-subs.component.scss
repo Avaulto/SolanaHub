@@ -1,6 +1,6 @@
 #container {
     border-radius: 12px;
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     margin: 0 auto;
     padding: 24px;
@@ -47,7 +47,7 @@ ion-button {
 }
 
 ion-label {
-    color: var(--Gray-900, #101828);
+    color: var(--Gray-900, var(--ion-color-dark));
     text-align: start;
     font-size: 18px;
     font-weight: 600;

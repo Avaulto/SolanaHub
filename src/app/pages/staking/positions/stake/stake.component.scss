@@ -10,8 +10,8 @@
     }
 
     border-radius: 12px;
-    border: 1px solid #E3E8EF;
-    background: var(--ion-color-light);
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-color-light);;
     padding: 16px;
     display: flex;
     justify-content: space-between;
@@ -43,7 +43,7 @@
             bottom: 0;
             right: 0;
             border-radius: var(--radius-full, 1000px);
-            border: 1.5px solid var(--ion-color-light);
+            border: 1.5px solid var(--ion-color-light);;
             background: #C4C4C4;
 
             //     activating,deactivating,active,inactive
@@ -116,8 +116,8 @@
         ion-chip {
             margin-block: 0;
             border-radius: var(--radius-full, 1000px);
-            border: 1px solid var(--ion-color-border);
-            background: var(--ion-color-light);
+            border: 1px solid  var(--ion-color-border);
+            background: var(--ion-color-light);;
             color:  var(--ion-color-dark);
             text-align: center;
             font-size: 12px;

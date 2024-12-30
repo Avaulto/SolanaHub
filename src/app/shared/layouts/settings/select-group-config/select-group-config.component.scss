@@ -19,11 +19,11 @@ ion-avatar {
 
 ion-segment {
     border-radius: 10px;
-    border: 1px solid #E3E8EF;
+    border: 1px solid var(--ion-color-border);
     padding: 4px;
     flex-wrap: wrap;
     display: flex;
-    --background: #F8FAFC;
+    --background: var(--ion-background-color);
 }
 
 ion-segment-button {

@@ -5,7 +5,7 @@
 
 #container {
     border-radius: 12px;
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     display: flex;
     justify-content: center;
@@ -31,7 +31,7 @@ ion-img {
 }
 
 ion-label {
-    color: var(--Gray-900, #101828);
+    color: var(--Gray-900, var(--ion-color-dark));
     text-align: center;
     width: 100%;
     font-size: 19px;

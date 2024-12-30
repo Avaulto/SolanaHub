@@ -26,7 +26,7 @@
 
 #nft-identity {
     border-radius: 6px;
-    border: 1px solid #E3E8EF;
+    border: 1px solid  var(--ion-color-border);
     padding: 10px 12px;
     margin-block-end: 20px;
 }
@@ -55,8 +55,8 @@
         padding: 4px;
         border-radius: 6px;
         color: var(--ion-color-dark);
-        border: 1px solid #E3E8EF;
-        background: #F8FAFC;
+        border: 1px solid  var(--ion-color-border);
+        background: var(--ion-background-color);
         height: 20px;
         font-size: 11px;
         font-weight: 500;
@@ -103,8 +103,8 @@
 
 .attr {
     border-radius: 6px;
-    border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-    background: var(--Colors-Background-bg-secondary, #F8FAFC);
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-background-color);
     display: flex;
     padding: 10px;
     flex-direction: column;
@@ -148,9 +148,9 @@
         font-weight: 600;
         line-height: 18px;
         border-radius: var(--radius-sm, 6px);
-        --border-color: var(--ion-color-border);
-        --background-hover: var(--ion-color-light);
-        --background: var(--ion-color-light);
+        --border-color:  var(--ion-color-border);
+        --background-hover: var(--ion-color-light);;
+        --background: var(--ion-color-light);;
         --border-width: 1px;
         --border-style: solid;
         --border-radius: 6px;
@@ -166,7 +166,7 @@
         }
 
         &#burn-nfts {
-            color: white;
+            color: var(--ion-color-light);
             --ion-color-contrast: white !important;
             --border-color: #B42318;
         }

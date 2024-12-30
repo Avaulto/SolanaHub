@@ -31,9 +31,9 @@
 
 ion-segment {
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-    --background: var(--ion-color-light);;
+    --background: var(--ion-color-light);;;
     border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--Colors-Border-border-primary, var(--ion-color-border));
+    border: 1px solid var(--Colors-Border-border-primary,  var(--ion-color-border));
     height: 40px;
 }
 
@@ -42,7 +42,7 @@ ion-segment-button {
     font-weight: 600;
     --color: var(--ion-color-dark);
     --background: transparent;
-    --indicator-color: #F8FAFC;
+    --indicator-color: var(--ion-background-color);
 }
 
 ion-text {
@@ -81,8 +81,8 @@ ion-text {
     left: 0;
     padding: 0 24px;
     align-items: center;
-    background: white;
-    border-top: 1px solid #E3E8EF;
+    background: var(--ion-color-light);
+    border-top: 1px solid var(--ion-color-border);
 
     ion-button {
         width: 100%;
@@ -94,7 +94,7 @@ ion-text {
 
         &.button-clear {
             color: var(--ion-color-dark);
-            border: 1px solid var(--ion-color-border);
+            border: 1px solid  var(--ion-color-border);
         }
 
         &.ion-color-primary {

@@ -42,7 +42,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 ::selection {
     background: var(--ion-color-primary);
-    color: white;
+    color: var(--ion-color-light);
 }
 ion-grid {
     padding-block-start: 20px;
@@ -79,7 +79,7 @@ ion-skeleton-text{
 }
 
 .header-md{
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     box-shadow: none;
 }
 .backdrop-no-scroll ion-header{
@@ -87,7 +87,7 @@ ion-skeleton-text{
 }
 .data-set {
     border-radius: var(--radius-xl, 12px);
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 }
 
@@ -128,8 +128,8 @@ ion-input {
     line-height: 18px;
     font-size: 13px;
     border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--ion-color-border);
-    background: var(--ion-color-light);
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     --background: transparent;
     --padding-start: 12px !important;
@@ -189,11 +189,11 @@ ion-spinner {
     --height: 800px;
     --max-height: 90%;
     --max-width: 95%;
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
     overflow: auto;
 }
 .faq-modal {
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
     --height: fit-content;
     overflow: auto;
 }
@@ -212,7 +212,7 @@ ion-spinner {
     --max-width: 95%;
     // --max-height: 90%;
     // --overflow: auto;
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
     // >.ion-page {
     //     position: static;
     //     contain: initial;
@@ -231,13 +231,13 @@ ion-spinner {
 .quests-modal{
     --width: 445px;
     --max-width: 97%;
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
 }
 
 .multi-wallet-modal {
   --max-width: 420px;
   --width: 100%;
-  --background: var(--ion-color-light);
+  --background: var(--ion-color-light);;
 }
 
 .nft-modal {
@@ -247,7 +247,7 @@ ion-spinner {
     --max-height: 90%;
 }
 .freemium-popup{
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
     --width: 600px;
     --border-radius: 12px;
     --max-width: 95%;
@@ -263,14 +263,14 @@ ion-spinner {
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
 }
 .refer-a-friend-modal{
     --width: 550px;
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
 }
 .wallet-connect-dropdown {
     --width: 238px;

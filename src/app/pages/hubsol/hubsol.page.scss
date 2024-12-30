@@ -1,6 +1,6 @@
 // Common variables for repeated values
 :root {
-  --text-primary: var(--colors-text-text-primary-900, #101828);
+  --text-primary: var(--colors-text-text-primary-900, var(--ion-color-dark));
   --text-tertiary: var(--colors-text-text-tertiary-600, #475467);
 }
 
@@ -25,7 +25,7 @@
   width: 247px;
   padding: 20px;
   margin-block-end: 40px;
-  border-radius: var(--radius-xl, 12px);
+  border-radius: 12px;
   border: 1px solid #DBDBD8;
   background: #E3E3D9;
   display: flex;
@@ -83,7 +83,7 @@
   }
 
   #title {
-    color: var(--brand-500, #CB62AF);
+    color: var(--ion-color-primary);
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
@@ -131,7 +131,7 @@
   }
 
   #highlight-lst {
-    color: #121926;
+    color: var(--ion-color-dark);
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
@@ -141,7 +141,7 @@
     align-items: center;
     border-radius: 100px;
     margin-block-end: 14px;
-    border: 1px solid var(--colors-foreground-fg-primary-900, #121926);
+    border: 1px solid  var(--ion-color-dark);
 
     ion-img {
       margin-inline-end: 2px;
@@ -248,7 +248,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: white;
+  background: var(--ion-color-light);
   height: 150px;
   justify-content: center;
   div {
@@ -275,7 +275,7 @@
 
   p {
     @extend %base-text;
-    color: #121926;
+    color: var(--ion-color-dark);
     text-align: center;
     font-size: 36px;
     font-weight: 600;
@@ -285,13 +285,13 @@
   }
 
   #sanctum-power {
-    color: #121926;
+    color: var(--ion-color-dark);
     display: inline-flex;
     padding: 4px 16px;
     justify-content: center;
     align-items: center;
     border-radius: 100px;
-    border: 1px solid var(--colors-foreground-fg-quinary-400, #9AA4B2);
+    border: 1px solid var(--colors-foreground-fg-quinary-400, var(--ion-light-gray));
   }
 
   ion-col {
@@ -314,7 +314,7 @@
   ion-label {
     @extend %base-text;
     margin-block-end: 4px;
-    color: #121926;
+    color: var(--ion-color-dark);
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;
@@ -323,7 +323,7 @@
 
   ion-text {
     @extend %base-text;
-    color: #121926;
+    color: var(--ion-color-dark);
     font-size: 13px;
     line-height: 18px;
     /* 138.462% */
@@ -360,7 +360,7 @@
   .platform {
     height: 92px;
     padding-left: 25px;
-    border-left: 1px solid var(--ion-color-border);
+    border-left: 1px solid  var(--ion-color-border);
     margin-block-end: 5vh;
 
     .wrapper {
@@ -390,7 +390,7 @@
 
     &:hover {
       .chip {
-        color: white;
+        color: var(--ion-color-light);
       }
 
       .wallet {

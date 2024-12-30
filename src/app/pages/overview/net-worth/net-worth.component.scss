@@ -46,7 +46,7 @@ ion-toggle  {
         background-size: 70%;
         background-repeat: no-repeat;
         background-position: center;
-        background-color: white;
+        background-color: var(--ion-color-light);
     }
     &::part(track) {
         width: 58px;
@@ -58,6 +58,6 @@ ion-toggle  {
         background-position: 58% center;
     }
     &.toggle-checked  {
-        --handle-background-checked: url(/assets/images/sol.svg), white;
+        --handle-background-checked: url(/assets/images/sol.svg), var(--ion-color-light);
     }
 }

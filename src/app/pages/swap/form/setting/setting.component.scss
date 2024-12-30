@@ -9,7 +9,7 @@
         }
     }
     ion-button {
-        --background: var(--ion-color-light);
+        --background: var(--ion-color-light);;
         --color: var(--ion-color-dark);
         --padding-bottom: 0;
         --padding-top: 0;
@@ -24,7 +24,7 @@
 
         ion-img {
             font-size: 12px;
-            color: #9AA4B2;
+            color: var(--ion-light-gray);
         }
     }
 

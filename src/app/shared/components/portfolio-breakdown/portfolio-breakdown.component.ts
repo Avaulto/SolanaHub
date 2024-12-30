@@ -105,20 +105,20 @@ export class PortfolioBreakdownComponent {
           const formattedTotal = `$${this.utilService.formatBigNumbers(total)}`;
 
           ctx.font = '13px Inter';
-          ctx.color = 'var(--ion-light-gray)'
+          ctx.color = '#B84794'
           ctx.fontWeight = '500'
           ctx.lineHeight = '18px'
-          ctx.fillStyle = '#000000';
+          ctx.fillStyle = '#B84794';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(this.chartText, width / 2, height / 2 - 13); // Move up by 12px
 
           // Value text
           ctx.font = '24px Inter';
-          ctx.color = '#121926'
+          ctx.color = '#B84794'
           ctx.fontWeight = '600'
           ctx.lineHeight = '24px'
-          ctx.fillStyle = '#000000';
+          ctx.fillStyle = '#B84794';
           ctx.fillText(formattedTotal, width / 2, height / 2 + 13); // Move down by 12px
           }
           ctx.save();

@@ -57,7 +57,7 @@ ion-button{
     display: block;
     text-transform: capitalize;
     span{
-        color: white;
+        color: var(--ion-color-light);
     }
 }
 a{

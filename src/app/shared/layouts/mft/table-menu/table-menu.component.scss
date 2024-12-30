@@ -6,13 +6,13 @@
 
 ion-button {
     height: 36px;
-    --background: var(--ion-color-light);  
+    --background: var(--ion-background-color);  
     text-transform: capitalize;
     font-size: 13px;
     font-weight: 600;
     line-height: 20px;
     margin-inline-end: 8px;
-    color: var(--ion-color-text);
+    color: var(--ion-color-dark);
     // color: var(--ion-color-primary);
     /* 153.846% */
 }
