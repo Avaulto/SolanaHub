@@ -14,7 +14,7 @@ import {
   IonLabel,
   IonRouterOutlet,
   IonChip,
-  IonHeader, IonIcon } from '@ionic/angular/standalone';
+  IonHeader, IonIcon, IonSkeletonText } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline, logoGithub, logoDiscord, logoTwitter } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
@@ -45,6 +45,7 @@ import va from '@vercel/analytics';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [IonIcon, 
+    IonSkeletonText,
     NgxTurnstileModule,
     SettingsButtonComponent,
     MenuComponent,

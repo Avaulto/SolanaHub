@@ -26,12 +26,27 @@
 	// borders & text
 	--ion-color-page-top: #E9E9E6;
 	--ion-color-border: #E3E8EF;
-	--ion-color-border-dark: #364152;
+	--ion-color-sub-dark: #364152;
 	--ion-background-color: #F3F4F6;
 	--ion-color-primary-bg: #FAF0F8;
+	--ion-color-card-bg: #ffffff;
 }
 
-@import "./dark.theme.scss";
+:root .dark-theme {
+	// theme colors
+	--ion-color-primary: #B84794;
+	--ion-color-dark: #FFFFFF;
+	--ion-color-light: #0D121C;
+	--ion-light-gray: #CDD5DF;
+	
+	// borders & text
+	--ion-color-page-top: #3E142F;;
+	--ion-color-border: #202939;
+	--ion-color-sub-dark: #364152;
+	--ion-background-color: #121926;
+	--ion-color-primary-bg: #3E142F;
+	--ion-color-card-bg: #121926;
+}
 
 // @media (prefers-color-scheme: dark) {
 //   /*

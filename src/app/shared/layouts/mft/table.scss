@@ -17,7 +17,7 @@ div#table-wrapper {
 
 ion-button {
     border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--gray-modern-200, var(--ion-color-border));
+    border: 1px solid  var(--ion-color-border);
     --color: var(--ion-color-dark);
     font-family: Inter;
     font-size: 12px;
@@ -40,6 +40,9 @@ ion-button {
     // .checkbox-on table thead > tr > th:nth-child(2) {
     //     display: none;
     // }
+    tbody > tr > td, .ngx-table__table--normal > thead > tr > th{
+        border-bottom: 1px solid var(--ion-color-border);
+    }
     .stash-table{
         th.select-box, tbody > tr > td:first-child:not(.no-results) {
             display: none;
@@ -65,7 +68,7 @@ ion-button {
     }
 
     thead{
-        border-top: 1px solid var(--gray-modern-100, var(--ion-background-color));
+        border-top: 1px solid  var(--ion-color-border);
     }
     
     table {
@@ -163,7 +166,7 @@ ion-button {
 
             font-weight: 500;
             line-height: 34px;
-            border-radius: var(--radius-md, 8px);
+            border-radius: 8px;
             border: 0;
         }
 

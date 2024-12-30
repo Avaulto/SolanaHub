@@ -30,7 +30,7 @@ ion-img{
 .wallet-details-breakdown {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e6e8ec;
+  border-bottom: 1px solid var(--ion-color-border);
   padding-inline: 1.5rem;
   // line-height: .5;
   .wallet-address {

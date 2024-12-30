@@ -3,6 +3,8 @@ import { AfterViewInit, Component, ElementRef, inject, OnInit, signal, ViewChild
 import { RouterLink } from '@angular/router';
 import { IonButton, IonLabel, IonCol, IonImg, IonGrid, IonRow, IonContent, IonText, IonSkeletonText, IonIcon } from "@ionic/angular/standalone";
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
+import { addIcons } from 'ionicons';
+import { libraryOutline, shieldCheckmarkOutline, waterOutline } from 'ionicons/icons';
 import Lottie from 'lottie-web';
 import { map, Observable, shareReplay, switchMap } from 'rxjs';
 
@@ -126,7 +128,9 @@ export class HubsolPage implements OnInit, AfterViewInit {
   constructor(
     private _apiService: ApiService,
     private _jupService: JupStoreService
-  ) { }
+  ) { 
+    addIcons({shieldCheckmarkOutline, waterOutline, libraryOutline})
+  }
   ngOnInit() {
     this.startAnim()
     this.getMetrics()

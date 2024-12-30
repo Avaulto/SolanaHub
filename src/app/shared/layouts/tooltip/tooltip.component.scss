@@ -23,7 +23,7 @@
 
   &--light {
     background-color: var(--ion-color-light);
-    color: var(--Gray-600, #475467);
+    color: var(--ion-color-dark);
 
     &::before {
       border: 5px solid var(--ion-color-light);
