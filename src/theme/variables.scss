@@ -31,6 +31,9 @@
 	--ion-color-primary-bg: #FAF0F8;
 	--ion-color-card-bg: #ffffff;
 
+	// loader skeleton
+	--ion-color-skeleton: 188, 0, 255;
+
 }
 
 :root .dark-theme {
@@ -41,12 +44,15 @@
 	--ion-light-gray: #CDD5DF;
 	
 	// borders & text
-	--ion-color-page-top: #3E142F;;
+	--ion-color-page-top: #3E142F;
 	--ion-color-border: #202939;
 	--ion-color-sub-dark: #364152;
 	--ion-background-color: #121926;
 	--ion-color-primary-bg: #3E142F;
 	--ion-color-card-bg: #121926;
+
+	// loader skeleton
+	--ion-color-skeleton:227, 232, 239;
 }
 
 // @media (prefers-color-scheme: dark) {

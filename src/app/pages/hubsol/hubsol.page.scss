@@ -62,7 +62,7 @@
 }
 
 #promo {
-  background: var(--ion-color-page-top) url(/assets/images/bg-header-decorative.svg);
+  background: var(--ion-color-page-top);
   padding: 56px 2.5vw;
   display: flex;
   justify-content: space-between;
@@ -262,7 +262,7 @@
 #hubSOL-trust {
   padding: 2.5vw;
 
-  background-image: url(/assets/images/bg-header-decorative.svg);
+  // background-image: url(/assets/images/bg-header-decorative.svg);
 
   div {
     font-weight: 500;
@@ -344,7 +344,8 @@
 
   ion-text {
     @extend %base-text;
-    color: var(--colors-text-text-tertiary-600, #475467);
+    font-weight: 300;
+    color: var(--ion-color-dark);
     font-size: 20px;
     line-height: 30px;
     margin-block-end: 64px;

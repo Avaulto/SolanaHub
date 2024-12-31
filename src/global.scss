@@ -56,7 +56,9 @@ ion-col {
     margin: 0;
     padding: 0;
 }
-
+.dark-theme .platform ion-img{
+    filter: brightness(0.5) invert(1) !important;
+  }
 ion-button {
     // --color: var(--ion-color-primary-contrast);
     --transition: 0.3s ease all;
@@ -75,7 +77,7 @@ ion-button {
 }
 ion-skeleton-text{
 
-    --background-rgb: 188, 0, 255;
+    --background-rgb: var(--ion-color-skeleton);
 }
 
 .text-color{
@@ -127,7 +129,8 @@ ion-segment-button{
 ion-input {
 
     overflow: hidden;
-    --color: var(-ion-color-dark);
+    color: var(--ion-color-dark) !important;
+    --color: var(--ion-color-dark) !important;
     --placeholder-color: var(--ion-light-gray) !important;
     text-overflow: ellipsis;    
     font-weight: 400;
