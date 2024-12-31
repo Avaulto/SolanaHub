@@ -26,7 +26,12 @@ ion-img{
   border-left: 6px solid var(--ion-color-primary);
 }
 .wallet-details-header, 
-
+#able-controls{
+  ion-icon{
+    color: var(--ion-color-dark);
+    font-size: 22px;
+  }
+}
 .wallet-details-breakdown {
   display: flex;
   justify-content: space-between;

@@ -129,7 +129,7 @@ export class HubsolPage implements OnInit, AfterViewInit {
     private _apiService: ApiService,
     private _jupService: JupStoreService
   ) { 
-    addIcons({shieldCheckmarkOutline, waterOutline, libraryOutline})
+    addIcons({shieldCheckmarkOutline,waterOutline,libraryOutline});
   }
   ngOnInit() {
     this.startAnim()
