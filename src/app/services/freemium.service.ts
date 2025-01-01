@@ -18,7 +18,7 @@ export class FreemiumService {
   @param isOwner has solanahub pass
   @param isPremium active state subscription of solanahub pass
   */
-  public readonly isPremium = computed(() => this._account()?.isPremium ?? null);
+  public readonly isPremium = computed(() => true);
 
   private _account = signal<Account | null>(null);
   private _premiumServices: string[] = [];

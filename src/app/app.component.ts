@@ -48,6 +48,7 @@ import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
 // import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
 import va from '@vercel/analytics';
+import { FreemiumService } from './services/freemium.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -84,7 +85,7 @@ import va from '@vercel/analytics';
 })
 export class AppComponent implements OnInit {
 
-  // public adShouldShow = this._freemiumService.adShouldShow;
+  public adShouldShow = this._freemiumService.adShouldShow;
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
 
@@ -106,7 +107,7 @@ export class AppComponent implements OnInit {
 
 
   constructor(
-    // private _freemiumService: FreemiumService,
+    private _freemiumService: FreemiumService,
     public router: Router,
     private _portfolioService: PortfolioService,
     private _notifService: NotificationsService,

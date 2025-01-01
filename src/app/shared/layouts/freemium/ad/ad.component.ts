@@ -10,6 +10,8 @@ import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
 export class AdComponent {
 
   constructor(private _freemiumService: FreemiumService) {
+    console.log(this._freemiumService.adShouldShow());
+    
   }
   public hideAd = this._freemiumService.hideAd;
   public adShouldShow = this._freemiumService.adShouldShow;
