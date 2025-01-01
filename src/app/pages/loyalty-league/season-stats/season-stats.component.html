@@ -28,11 +28,16 @@
         }
       </div>
     </div>
-    <!-- <div class="season-stats-card">
+    <div class="season-stats-card">
       <div class="season-stats-card-title">Prize Pool</div>
       <div class="season-stats-card-body">
-        <ion-img src="assets/images/ll/demo-pp.svg" />
+        @if(seasonStats$ | async; as seasonStats){
+          
+          {{seasonStats.airdrop | number}} <ion-img src="assets/images/hubSOL.svg" />
+        }@else{
+            <ion-skeleton-text animated style="--border-radius: 10px;" />
+        }
       </div>
-    </div> -->
+    </div>
   </div>
 </div>
