@@ -84,8 +84,24 @@
                   <div class="points-category__value">
                     @if (member$ | async; as member) {
                       @if (member[category.key]) {
-                     
-                       {{ member[category.key] | number:'1.0-0'}}
+                     @if(category.title === 'Snapshot'){
+
+                      @for(item of member[category.key] | keyvalue; track item.key){
+                        @if(item.key !== 'wallet' && item.value !== 0){
+                          <div>
+                            <ion-img [src]="getDeFiImg(item.key)" [tooltip]="toolTipTpl"/>
+                          </div>
+                        <ng-template #toolTipTpl>
+                          <div class="tool-tip">
+
+                            <div class="tool-tip-desc">{{toFixedNoRounding(item.value)}} hubSOL on {{item.key}}</div>
+                          </div>
+                        </ng-template>
+                      }
+                    }
+                     }@else{
+                      {{ member[category.key] | number:'1.0-0'}}
+                     }
                       
                       } @else {
                         0

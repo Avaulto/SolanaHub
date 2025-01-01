@@ -62,7 +62,8 @@ export interface loyaltyLeagueMember {
   questsPts: number,
   referralPts: number,
   daysLoyal: number,
-  quests: { [key: string]: boolean }
+  quests: { [key: string]: boolean },
+  hubSOLBreakdown: { key: string, value: number }[]
 }
 
 

@@ -74,15 +74,14 @@
         </div>
       </div>
     </div>
-    <!-- @if(stashAssets[0].type == 'value-deficient'){
-      <div class="ion-margin-bottom">
-        <alert type="danger" text="Not all tokens have visible market price, burn with caution" >
-          @if(burnWithCautionConfirmed != null){
-            <ion-checkbox (ionChange)="burnWithCautionConfirmed = $event.detail.checked">I understand the risks</ion-checkbox>
-          }
-        </alert>
-      </div>
-    } -->
+    @if(stashAssets[0].type == 'value-deficient'){
+      @if(extraWarning){
+        <div class="ion-margin-bottom">
+          <alert type="danger" text="Not all tokens have a visible market price. Burn with caution; this action is irreversible." >
+          </alert>
+        </div>
+      }
+    }
     @if(stashAssets[0].type == 'dust-value'){
       <div class="ion-margin-bottom">
         <alert type="warning" text="Bulk swap may have price slippage or failed routes" />

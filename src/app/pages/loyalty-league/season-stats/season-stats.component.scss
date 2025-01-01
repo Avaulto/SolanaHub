@@ -50,11 +50,17 @@
         margin-block-end: 2px;
     }
     .season-stats-card-body {
+        display: flex;
+        align-items: center;
+        gap: 12px;
         color: var(--ion-color-light);
         font-size: 20px;
         font-style: italic;
         font-weight: 600;
         line-height: 24px; 
+        ion-img {
+            width: 20px;
+        }
     }
 }
 ion-skeleton-text {

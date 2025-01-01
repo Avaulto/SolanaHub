@@ -40,6 +40,8 @@ export class DustValueTokensService {
       .filter(token => 
         Number(token.value) <= maxDustValue &&
         Number(token.value) > rentFeeUSD &&
+        // token.value > 0 &&
+        token.decimals > 0 &&
         token.symbol !== 'SOL'
       )
       .map((token, index) => this._helpersService.mapToStashAsset({ ...token, id: index }, 'dust'));
