@@ -1,10 +1,13 @@
 #title {
     color: var(--ion-color-dark);
-    font-family: Inter;
     font-size: 14px;
-    font-style: normal;
     font-weight: 600;
     line-height: 100%;
+    display: flex;
+    gap: 4px;
+    ion-icon {
+        cursor: pointer;
+    }
     /* 14px */
 }
 

@@ -76,7 +76,6 @@ export class PortfolioService {
   public walletHistory: WritableSignal<TransactionHistory[]> = signal(null);
   public netWorth = signal(0);
 
-  public privateMode: BehaviorSubject<boolean> = new BehaviorSubject(false)
   readonly restAPI = this._utils.serverlessAPI
   constructor(
     private _navCtrl: NavController,

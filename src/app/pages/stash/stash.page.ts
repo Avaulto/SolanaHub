@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, computed, signal } from '@angular/core';
 import { IonRow, IonCol, IonContent, IonGrid, IonButton, IonImg, IonIcon, IonToggle, IonProgressBar, IonSkeletonText, IonLabel, IonChip, IonText, IonCheckbox } from '@ionic/angular/standalone';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { PageHeaderComponent, PortfolioBreakdownComponent } from 'src/app/shared/components';
@@ -44,6 +44,7 @@ import { EarningComponent, TableComponent } from './';
   ]
 })
 export class StashPage implements OnInit {
+  @ViewChild('portfolioBreakdown', { static: false }) portfolioBreakdown: PortfolioBreakdownComponent;
 
 
   public analyzeStage = signal(0);
@@ -60,7 +61,6 @@ export class StashPage implements OnInit {
   }
 
   public stashTotalUsdValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
-
 
   public unstakedOverflow = this._stashService.findStakeOverflow;
   public outOfRangeDeFiPositions = this._stashService.findOutOfRangeDeFiPositions;
@@ -96,6 +96,7 @@ export class StashPage implements OnInit {
   })
 
   async ngOnInit() {
+
     // this.unstakedOverflow = await this._stashService.findExtractAbleSOLAccounts()
   }
   async getSavingData() {

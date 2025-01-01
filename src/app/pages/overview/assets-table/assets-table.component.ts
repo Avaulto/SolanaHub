@@ -1,5 +1,5 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -14,6 +14,7 @@ import { PortfolioBreakdownService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { PortfolioDataKeys } from "../../../enums";
+import { Observable } from 'rxjs';
 
 
 
@@ -36,6 +37,7 @@ import { PortfolioDataKeys } from "../../../enums";
   ]
 })
 export class AssetsTableComponent implements OnInit {
+  @Input() showBalance: Observable<boolean>
   // token & validator tpl
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
@@ -76,7 +78,6 @@ export class AssetsTableComponent implements OnInit {
     addIcons({arrowBack, arrowForward});
   }
 
-  public showBalance = this._portfolioService.privateMode;
   public solPrice = this._portfolioBreakdownService.solPrice;
   public expandableTable = computed(() => (this._portfolioBreakdownService.getEnabledPortfolio().length > 1) && (this.selectedTab().toLowerCase() !== PortfolioDataKeys.STAKING));
   selectedTab = signal(PortfolioDataKeys.TOKENS);
