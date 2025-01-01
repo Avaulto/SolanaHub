@@ -4,6 +4,7 @@ import {RoutingPath} from "./shared/constants";
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 import { environment } from '../environments/environment';
 import { isConnectedGuard } from './shared/guards/is-connected.guard';
+import { captchaGuard } from './shared/guards/captcha.guard';
 
 
 const stashBeta = new URLSearchParams(window.location.search).get('beta')
@@ -19,7 +20,7 @@ export const routes: Routes = [
   {
     path: RoutingPath.OVERVIEW,
     loadComponent: () => import('./pages/overview/overview.page').then( m => m.OverviewPage),
-    canActivate: [isConnectedGuard]
+    canActivate: [ isConnectedGuard]
   },
   {
     path: RoutingPath.STASH,

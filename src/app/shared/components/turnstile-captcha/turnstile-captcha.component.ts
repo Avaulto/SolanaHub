@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CaptchaService } from 'src/app/services/captcha.service';
 import { environment } from 'src/environments/environment';
 declare global {
  
@@ -6,22 +7,28 @@ declare global {
 }
 @Component({
   selector: 'turnstile-captcha',
-  template: `<div class="cf-turnstile" [attr.data-sitekey]="turnStileKey" #turnstileElement></div>`,
-  styleUrls: ['./turnstile-captcha.component.scss'],
+  template: `<div class="cf-turnstile" #turnstileElement></div>`,
   standalone: true,
+  styles: [
+    `
+      :host {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    `,
+  ],
 })
 export class TurnstileCaptchaComponent implements OnInit {
   private readonly _apiUrl = environment.apiUrl;
   @ViewChild('turnstileElement') turnstileElement!: ElementRef;
-  userResponse: string = '';
   turnStileKey = '0x4AAAAAAA4WqpozOOvZlJ3e';
-  constructor() {}
+  constructor(private captchaService: CaptchaService) {}
   _turnstileCb() {
     console.log('_turnstileCb called');
 
     (window as any).turnstile.render(this.turnstileElement.nativeElement, {
       sitekey: this.turnStileKey,
-      theme: 'light',
       callback: (token: string) => {
         console.log(`Challenge Success ${token}`);
         this.submitForm(token);
@@ -47,32 +54,32 @@ export class TurnstileCaptchaComponent implements OnInit {
     });
   }
   async submitForm(turnstileResponse: string) {
-
     if (turnstileResponse) {
-      this.userResponse = turnstileResponse;
-
-      // Send the response to your server for validation
       try {
         const response = await fetch(`${this._apiUrl}/api/verify-turnstile`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ turnstileToken: this.userResponse }),
+          body: JSON.stringify({ turnstileToken: turnstileResponse }),
         });
         const data = await response.json();
-        if (data.success) {
-            // Redirect to the original website
-            window.location.href = 'https://www.original-website.com';
-          } else {
-            console.log('CAPTCHA verification failed. Please try again.');
-          }
-        } catch (error) {
-          console.error('Error verifying CAPTCHA:', error);
-            console.log('Error occurred during CAPTCHA verification.');
-          }
+        console.log(data);
+        if (data.message === 'success') {
+          this.captchaService.setCaptchaVerified(true);
+          return true;
+        } else {
+          console.log('CAPTCHA verification failed. Please try again.');
+          return false;
+        }
+      } catch (error) {
+        console.error('Error verifying CAPTCHA:', error);
+        console.log('Error occurred during CAPTCHA verification.');
+      }
     } else {
       console.log('Please complete the CAPTCHA');
+      return false;
     }
+    return false;
   }
 }

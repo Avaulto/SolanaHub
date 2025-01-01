@@ -1,4 +1,5 @@
 export enum RoutingPath {
+    CAPTCHA = 'captcha',
     OVERVIEW = 'overview',
     FOLDER = 'folder',
     COLLECTIBLES = 'collectibles',
