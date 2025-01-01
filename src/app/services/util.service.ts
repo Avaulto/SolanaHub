@@ -44,7 +44,7 @@ export class UtilService {
   ) {
   }
   public serverlessAPI = environment.apiUrl;
-  public turnStileToken = null
+
 
 
   public get RPC(): string{

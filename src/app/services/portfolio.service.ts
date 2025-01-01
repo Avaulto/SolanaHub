@@ -220,7 +220,7 @@ export class PortfolioService {
       console.log('syncPortfolios:', address, "resync:", resync);
 
       this.walletBoxSpinnerService.show();
-      await this.getPortfolioAssets(address, this._utils.turnStileToken, true, false, 'full', nickname);
+      await this.getPortfolioAssets(address, true, false, 'full', nickname);
 
       if (nickname) {
         this.updateWalletDataByKey(address, 'nickname', nickname);
@@ -230,7 +230,7 @@ export class PortfolioService {
     this._fetchPortfolioService.refetchPortfolio().subscribe(async ({shouldRefresh, fetchType}) => {
       if (shouldRefresh) {
         const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
-        await this.getPortfolioAssets(walletOwner, this._utils.turnStileToken, true, false, fetchType);
+        await this.getPortfolioAssets(walletOwner,  true, false, fetchType);
       }
     });
 
@@ -247,21 +247,14 @@ export class PortfolioService {
     return this.portfolioMap().has(address)
   }
 
-  private async waitForTurnStileToken() {
-    while (!this._utils.turnStileToken) {
-      await this._utils.sleep(500);
-    }
-  }
-
   public async getPortfolioAssets(
     walletAddress: string,
-    turnStileToken: string,
     forceFetch = false,
     watchMode: boolean = false,
     fetchType: FetchType = 'full',
     nickname?: string
   ) {
-    let portfolioData = await this.fetchPortfolioData(walletAddress, turnStileToken, fetchType);
+    let portfolioData = await this.fetchPortfolioData(walletAddress, fetchType);
 
     try {
 
@@ -278,12 +271,12 @@ export class PortfolioService {
     }
   }
 
-  private async fetchPortfolioData(walletAddress: string, turnStileToken: string, fetchType: FetchType = 'full') {
-    const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&tst=${turnStileToken}&fetchType=${fetchType}`);
+  private async fetchPortfolioData(walletAddress: string, fetchType: FetchType = 'full') {
+    const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&fetchType=${fetchType}`);
     const data = await response.json();
 
 
-    this._utils.turnStileToken = null;
+
     // data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
     return data;
   }

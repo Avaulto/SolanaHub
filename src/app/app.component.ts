@@ -2,23 +2,17 @@ import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
-  IonButton,
-  IonButtons,
-  IonMenuButton,
   IonApp,
   IonImg,
   IonSplitPane,
   IonMenu,
   IonContent,
-  IonList
-  , IonListHeader,
-  IonNote,
+  IonList,
+  IonListHeader,
   IonMenuToggle,
   IonItem,
-  IonIcon,
   IonLabel,
   IonRouterOutlet,
-  IonRow,
   IonChip,
   IonHeader
 } from '@ionic/angular/standalone';
@@ -29,12 +23,12 @@ import { ModalController } from '@ionic/angular';
 
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { PageHeaderComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
+import { TurnstileCaptchaComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 import { LocalStorageService } from './services/local-storage.service';
 import { PublicKey } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
-import { NgxTurnstileComponent, NgxTurnstileModule } from 'ngx-turnstile';
+
 import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilService, WatchModeService } from './services';
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
@@ -54,8 +48,7 @@ import va from '@vercel/analytics';
   styleUrls: ['app.component.scss'],
   standalone: true,
   imports: [
-    DonateComponent,
-    NgxTurnstileModule,
+    TurnstileCaptchaComponent,
     SettingsButtonComponent,
     MenuComponent,
     IonHeader,
@@ -85,8 +78,6 @@ import va from '@vercel/analytics';
 export class AppComponent implements OnInit {
 
   // public adShouldShow = this._freemiumService.adShouldShow;
-  @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
-  public turnStileKey = environment.turnStile
 
   readonly watchMode$ = this._watchModeService.watchMode$
   readonly isReady$ = this._walletStore.connected$.pipe(
@@ -142,16 +133,9 @@ export class AppComponent implements OnInit {
       va.track('news feed', { event: 'close' })
     })
   }
-  public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
-    this._utilService.turnStileToken = null
-    this.turnStile.reset()
 
-  })
   log(...args: any[]){
     console.log(...args);
-  }
-  sendCaptchaResponse(token) {
-    this._utilService.turnStileToken = token
   }
 
   async ngOnInit() {

@@ -17,7 +17,6 @@ export interface BaseConfig {
 
 export interface EnvironmentConfig {
   readonly name: string;
-  readonly turnStile: string;
   readonly production: boolean;
   readonly solanaEnv: string;
   readonly solanaCluster: string;
