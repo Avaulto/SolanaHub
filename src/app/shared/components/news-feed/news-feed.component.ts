@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { IonTitle, IonImg } from "@ionic/angular/standalone";
 import { ChipComponent } from '../chip/chip.component';
 import { ModalController } from '@ionic/angular';
-import { LocalStorageService } from 'src/app/services';
+import { VirtualStorageService } from 'src/app/services';
 
 @Component({
   selector: 'news-feed',
@@ -13,11 +13,11 @@ import { LocalStorageService } from 'src/app/services';
 })
 export class NewsFeedComponent implements OnInit {
   private _modalCtrl = inject(ModalController)
-  constructor(private _localStorageService:LocalStorageService) { }
+  constructor(private _vrs:VirtualStorageService) { }
 
   dismissModal(){
     this._modalCtrl.dismiss()
-    this._localStorageService.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
+    this._vrs.localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
 
   }
   ngOnInit() {

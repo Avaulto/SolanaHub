@@ -20,22 +20,22 @@
   
           @if(stash.label.toLowerCase() === 'dust value'){
           <!-- <ion-col  size="3" sizeLg="2"> -->
-          <div id="toggle-swap">
+          <div id="sol-swap" class="toggle-swap">
             <ion-toggle mode="md" [tooltip]="toolTipTpl" (ionChange)="onSwapTohubSOLChange($event.detail.checked)" />
             <ng-template #toolTipTpl>Bulk Swap to {{swapTohubSOL ? 'hubSOL' : 'SOL'}}</ng-template>
             <!-- <span>Swap to hubSOL</span> -->
           </div>
           <!-- </ion-col> -->
           }
-          <!-- @if(stash.label.toLowerCase() === 'zero value assets'){
-          <div id="toggle-swap">
+          @if(stash.label.toLowerCase() === 'zero value assets'){
+          <div class="toggle-swap">
             <ion-toggle color="danger" mode="md" (ionChange)="showUnknownSource($event)" /><span>
               Danger zone
               <ion-img [tooltip]="toolTipTpl" src="assets/images/info-icon.svg"/>
               <ng-template #toolTipTpl>Danger zone may contain LP Tokens, NFTs, and other assets that we can't identify their value</ng-template>
             </span>
           </div>
-          } -->
+          }
           <ion-button (click)="openStashPopup(selectedData())" id="action-btn" [disabled]="!selectedData().length"
             class="ion-text-capitalize">
             @if(stash.actionTitle === 'swap'){

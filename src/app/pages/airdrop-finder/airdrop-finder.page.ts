@@ -8,7 +8,6 @@ import { addIcons } from 'ionicons';
 import { peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline, wallet } from 'ionicons/icons';
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
-import { NgxTurnstileModule } from 'ngx-turnstile';
 import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-airdrop-finder',
@@ -18,7 +17,7 @@ import { environment } from 'src/environments/environment';
   imports: [
     DatePipe,
     IonButton, 
-    NgxTurnstileModule,
+
     CurrencyPipe,
     DecimalPipe,
     IonImg,
@@ -56,7 +55,7 @@ export class AirdropFinderPage implements OnInit {
   ) {
     addIcons({ peopleCircleOutline, checkmarkCircleOutline, closeCircleOutline, copyOutline });
   }
-  public turnStileKey = environment.turnStile
+
   private _airdropData = signal(null)
   public selectedTab = signal('Airdrops');
   // public tableMenuOptions: string[] = ['Airdrops', 'Points'];
@@ -74,14 +73,10 @@ export class AirdropFinderPage implements OnInit {
   })
   private _columnsOptions = null
 
-  sendCaptchaResponse(token) {
-    // this._utilService.turnStileToken = token;
-    this.getAirdrops(token)
 
-  }
-  async getAirdrops(token) {
+  async getAirdrops() {
     const { publicKey } = this._shs.getCurrentWallet()
-    const airdrops = await this._afs.getWalletAirdrops(publicKey.toBase58(), token)
+    const airdrops = await this._afs.getWalletAirdrops(publicKey.toBase58())
     const data = { airdrops: airdrops.airdrops, points: airdrops }
 
     // const platforms = await this._portfolio.getPlatformsData();

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, WritableSignal, computed, effect, signal } from '@angular/core';
-import { JupStoreService, PortfolioService, SolanaHelpersService, UtilService } from 'src/app/services';
+import { JupStoreService, NativeStakeService, PortfolioService, SolanaHelpersService, UtilService } from 'src/app/services';
 import {
   IonButton, IonImg
 } from '@ionic/angular/standalone';
@@ -30,13 +30,13 @@ export class PositionsComponent implements OnInit, OnChanges {
       logoURI: 'assets/images/droplets-icon.svg'
     }
   ]
-  public stakeAccounts = this._portfolio.staking
   // private _LSTs = ['msol', 'bsol', 'jitosol']
-  public nativeStake = computed(() => this.stakeAccounts() ? this.stakeAccounts() : null)
+  public stakeAccounts = this._nss.stakeAccounts
   public liquidStake = signal(null);
+  public nativeStake = computed(() => this.stakeAccounts() ? this.stakeAccounts() : null)
   public positionGroup = signal('native');
   public stakePosition = computed(() => {
-    if(this._portfolio.staking())
+    if(this.stakeAccounts())
       if(this.positionGroup() === 'native'){
         return this.nativeStake()
       }else{
@@ -74,10 +74,13 @@ export class PositionsComponent implements OnInit, OnChanges {
 
   constructor(
     private _portfolio: PortfolioService,
+    private _nss: NativeStakeService,
+    private _shs: SolanaHelpersService
   ) {
  
   }
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this._nss.getOwnerNativeStake(this._shs.getCurrentWallet().publicKey.toBase58())
     // this.stakePosition.set(this.nativeStake)
     // const { publicKey } = this._shs.getCurrentWallet()
     // const directStake = await this._lss.getDirectStake(publicKey.toBase58())

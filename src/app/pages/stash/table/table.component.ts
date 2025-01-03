@@ -12,6 +12,7 @@ import { StashService } from '../stash.service';
 import { StashModalComponent } from '../stash-modal/stash-modal.component';
 import { UtilService } from 'src/app/services/util.service';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'stash-table',
   templateUrl: './table.component.html',
@@ -36,6 +37,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
   ]
 })
 export class TableComponent  implements OnChanges {
+  @Input() showBalance: Observable<boolean>
   @ViewChild('checkboxTpl', { static: true }) checkboxTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
   @ViewChild('accountTpl', { static: true }) accountTpl: TemplateRef<any> | any;

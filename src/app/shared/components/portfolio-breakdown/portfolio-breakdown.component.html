@@ -10,6 +10,8 @@
     <ion-col sizeXl="8"  size="12" id="legend">
       <div id="title" class="ion-margin-bottom">
         Assets breakdown
+        
+        <ion-icon [name]="showBalance.value ? 'eye-outline' : 'eye-off-outline'" (click)="toggleHideBalance()"/>
       </div>
       @for (item of assetClassValue(); track $index) {
       <div class="asset-group" (click)="toggleAssetExclusion(item.group)" [class.excluded]="item.excluded">

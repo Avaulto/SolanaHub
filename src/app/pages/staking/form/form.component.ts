@@ -25,7 +25,7 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { CustomValidatorComponent } from './custom-validator/custom-validator.component';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
-import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { VirtualStorageService } from 'src/app/services/virtual-storage.service';
 import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'stake-form',
@@ -74,7 +74,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     private _nss: NativeStakeService,
     private _tis: TxInterceptorService,
     private _jupStore: JupStoreService,
-    private _localStorage: LocalStorageService,
+    private _vrs: VirtualStorageService,
     private _activatedRoute: ActivatedRoute
   ) {
 
@@ -151,7 +151,7 @@ export class FormComponent implements OnInit, AfterViewInit {
     let { amount, validatorVoteIdentity, lockupDuration, stakingPath, pool } = this.stakeForm.value;
     const lamportsToDelegate = amount * LAMPORTS_PER_SOL
     const walletOwner = this._shs.getCurrentWallet().publicKey;
-    const stakeReferer = this._localStorage.getData('refCode')
+    const stakeReferer = this._vrs.localStorage.getData('refCode')
 
     try {
       
@@ -176,6 +176,9 @@ export class FormComponent implements OnInit, AfterViewInit {
         }
       }else{ 
         const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
+        if(liquidStake){
+          await this._nss.getOwnerNativeStake(this._shs.getCurrentWallet().publicKey.toBase58())
+        }
         // add stakers to loyalty league referee program
         if (liquidStake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
           this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)

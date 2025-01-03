@@ -1,5 +1,5 @@
 import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonButton,
@@ -39,13 +39,13 @@ import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilServ
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
-import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
+import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
-import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
-// import { FreemiumService } from './shared/layouts/freemium/freemium.service';
+import { FreemiumService } from './shared/layouts/freemium/freemium.service';
+
 
 import va from '@vercel/analytics';
 import { FreemiumService } from './services/freemium.service';
@@ -61,8 +61,14 @@ import { FreemiumService } from './services/freemium.service';
     MenuComponent,
     IonHeader,
     IonImg,
+    IonButton,
+    IonButtons,
+    IonMenuButton,
     AnimatedIconComponent,
     IonChip,
+    NotConnectedComponent,
+    PageHeaderComponent,
+    IonRow,
     WalletModule,
     RouterLink,
     RouterLinkActive,
@@ -73,8 +79,10 @@ import { FreemiumService } from './services/freemium.service';
     IonContent,
     IonList,
     IonListHeader,
+    IonNote,
     IonMenuToggle,
     IonItem,
+    IonIcon,
     IonLabel,
     IonRouterOutlet,
     IonImg,
@@ -88,31 +96,27 @@ export class AppComponent implements OnInit {
   public adShouldShow = this._freemiumService.adShouldShow;
   @ViewChild('turnStile', { static: false }) turnStile: NgxTurnstileComponent;
   public turnStileKey = environment.turnStile
-
+  // readonly isReady$ = this._walletStore.connected$.pipe
   readonly watchMode$ = this._watchModeService.watchMode$
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-      console.log('wallet', wallet);
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
         });
       }
-
       return wallet || watchMode;
     }))
 
-  public notifIndicator = this._notifService.notifIndicator;
-
-
+  public notifIndicator = this._notifService.notifIndicator
   constructor(
     private _freemiumService: FreemiumService,
     public router: Router,
-    private _portfolioService: PortfolioService,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,
+    private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,
     private _localStorage: LocalStorageService,
     private _utilService: UtilService,
@@ -120,60 +124,41 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document,
     private _fetchPortfolioService: PortfolioFetchService
   ) {
-    const showNewsFeed = JSON.parse(this._localStorage.getData('newsFeedClosed'))
-    // check if news feed was closed more than 30 days ago
-    if(!showNewsFeed || new Date(showNewsFeed.date).getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000){
-      this.openNewsFeedModal()
-    }
-
+   
+    
     addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
-
-    this._portfolioService.loadLinkedWallets()
-  }
-
-  async openNewsFeedModal(){
-
-    const modal = await this._modalCtrl.create({
-      component: NewsFeedComponent,
-      cssClass: 'news-feed-modal'
-    });
-    modal.present();
-    va.track('news feed', { event: 'open' })
-
-    modal.onDidDismiss().then(() => {
-      this._localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
-      va.track('news feed', { event: 'close' })
-    })
   }
   public refreshCode = this._fetchPortfolioService.refetchPortfolio().subscribe(r => {
     this._utilService.turnStileToken = null
     this.turnStile.reset()
 
   })
-  log(...args: any[]){
-    console.log(...args);
+  log(e){
+    console.log(e);
+    
   }
   sendCaptchaResponse(token) {
     this._utilService.turnStileToken = token
   }
-
+  path;;
   async ngOnInit() {
-
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
+    this._activeRoute.queryParams
+      .subscribe((params) => {
+        const refWallet = params['refWallet']
+        if (refWallet) {
 
-    // Add wallet connection handler
-    this._walletStore.connected$.pipe(
-      filter(connected => connected),
-      take(1),
-      tap(() => {
-        const attemptedUrl = sessionStorage.getItem('attemptedUrl');
-        if (attemptedUrl) {
-          sessionStorage.removeItem('attemptedUrl');
-          this.router.navigateByUrl(attemptedUrl);
+          this._localStorage.saveData('refWallet', refWallet)
         }
-      })
-    ).subscribe();
+
+      }
+      );
+
+      this.path = this.router.events.pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        map((event) => event.url)
+      )
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
@@ -222,9 +207,10 @@ export class AppComponent implements OnInit {
           title: 'Stash',
           url: `/${RoutingPath.STASH}`,
           icon: 'https://cdn.lordicon.com/hpveozzh.json',
-          active: true
+          active: environment.production ? false : true
         },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
+   
       ],
     },
     {

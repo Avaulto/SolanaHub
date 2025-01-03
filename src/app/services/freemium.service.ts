@@ -24,7 +24,8 @@ export class FreemiumService {
   private _premiumServices: string[] = [];
   private _platformFee: number | null = null;
   private _hideAd = signal(this.getAdConfig());
-  private _isPremiumCache = new Map<string, Account>();
+  private _isPremiumCache = new Map<string, boolean>();
+  private _isPremium = signal<boolean | null>(null);
 
   constructor(
     private _portfolioService: PortfolioService,
@@ -57,6 +58,8 @@ export class FreemiumService {
     }
   }
 
+
+
   private async _fetchPlatformFee(): Promise<void> {
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-platform-fee`);
@@ -88,7 +91,12 @@ export class FreemiumService {
     });
   }
 
-  private async _fetchAccount(walletAddress: string): Promise<Account | null> {
+  // public isPremium = computed(async () => {
+  //   const walletAddress = this._shs.wallet()?.publicKey?.toString();
+  //   if (!walletAddress) return null;
+  //   return await this._fetchIsPremium(walletAddress);
+  // });
+  private async _fetchIsPremium(walletAddress: string): Promise<boolean | null> {
     if (this._isPremiumCache.has(walletAddress)) {
       return this._isPremiumCache.get(walletAddress)!;
     }
@@ -105,7 +113,7 @@ export class FreemiumService {
       this._account.set(data);
       return data;
     } catch (error) {
-      console.error('Error fetching account data:', error);
+      console.error('Error fetching premium status:', error);
       return null;
     }
   }
@@ -115,12 +123,13 @@ export class FreemiumService {
     console.log(walletAddress);
     
     if (!walletAddress) {
-      this._account.set(null);
+      this._isPremium.set(null);
       return;
     }
-    const account = await this._fetchAccount(walletAddress);
-    this._account.set(account);
+    const isPremium = await this._fetchIsPremium(walletAddress);
+    this._isPremium.set(isPremium);
   }
+
 
   public hideAd(): void {
     const expirationDate = new Date();

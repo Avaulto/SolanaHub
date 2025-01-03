@@ -3,6 +3,7 @@
 export interface Config {
   name: string,
   imageURL: string,
+  icon?: string,
   value: string | number,
 }
 
@@ -17,7 +18,6 @@ export interface BaseConfig {
 
 export interface EnvironmentConfig {
   readonly name: string;
-  readonly turnStile: string;
   readonly production: boolean;
   readonly solanaEnv: string;
   readonly solanaCluster: string;
@@ -26,4 +26,5 @@ export interface EnvironmentConfig {
   readonly rpcs: Config[];
   readonly explorers: Config[];
   readonly Theme: Config[];
+  readonly turnStile: string;
 }

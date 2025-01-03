@@ -9,7 +9,7 @@ import va from '@vercel/analytics';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { Keypair } from '@solana/web3.js';
 import { DappMessageExtended } from '../models';
-import { LocalStorageService } from './local-storage.service';
+import { VirtualStorageService } from './virtual-storage.service';
 import {  Router } from '@angular/router';
 import { ToasterService } from './toaster.service';
 import { LoyaltyLeagueService } from './loyalty-league.service';
@@ -21,7 +21,7 @@ export class NotificationsService {
   private _dialectSDK: DialectSdk<BlockchainSdk>
   constructor(
     private _toasterService: ToasterService,
-    private _localStorageService: LocalStorageService,
+    private _vrs: VirtualStorageService,
     private _shs: SolanaHelpersService,
     private _router: Router,
     private _loyaltyLeagueService: LoyaltyLeagueService
@@ -70,7 +70,7 @@ export class NotificationsService {
     return this._dialectSDK
   }
   public async getSubscribedDapps(): Promise<DappAddress[]> {
-    const hasSession = this._localStorageService.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
+    const hasSession = this._vrs.localStorage.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
     if (!hasSession) {
     this._updateSDK()
     }
@@ -101,11 +101,11 @@ export class NotificationsService {
 
   // store last notification to calc what is the last read notification.
   private storeLastNotification(notif) {
-    this._localStorageService.saveData('lastNotifDate', notif)
+    this._vrs.localStorage.saveData('lastNotifDate', notif)
   }
   public async checkAndSetIndicator() {
     // check if access key is stored locally 
-    const hasSession = this._localStorageService.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
+    const hasSession = this._vrs.localStorage.getData(`dialect-auth-token-${this._shs.getCurrentWallet().publicKey.toBase58()}`)
     if (hasSession) {
       // update SDK to logged pubkey
       this._updateSDK();
@@ -118,7 +118,7 @@ export class NotificationsService {
       // set number of messages indicator only if not on notif page
       if (this._router.url !== '/notifications') {
         // get last read message
-        const lastMessageDate: Date = JSON.parse(this._localStorageService.getData('lastNotifDate'));
+        const lastMessageDate: Date = JSON.parse(this._vrs.localStorage.getData('lastNotifDate'));
         const unixDate = (timestamp) => Math.floor(new Date(timestamp).getTime() / 1000)
         const unreadMessage = lastMessageDate ? sdk1Messages.filter(m => unixDate(m.timestamp) > unixDate(lastMessageDate)) : sdk1Messages;
         this.notifIndicator.set(unreadMessage.length);

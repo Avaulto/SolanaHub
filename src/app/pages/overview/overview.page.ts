@@ -1,10 +1,8 @@
 import {Component, OnInit, computed, inject, Signal} from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { NetWorthComponent } from './net-worth/net-worth.component';
 import { AssetsTableComponent } from './assets-table/assets-table.component';
 import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent} from 'src/app/shared/components';
 import { PortfolioService } from 'src/app/services/portfolio.service';
-import { NgxTurnstileModule } from 'ngx-turnstile';
 import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
 import { PortfolioBreakdownService } from "../../services";
 
@@ -15,9 +13,7 @@ import { PortfolioBreakdownService } from "../../services";
   styleUrls: ['./overview.page.scss'],
   standalone: true,
   imports: [
-    NgxTurnstileModule,
     IonicModule,
-    NetWorthComponent,
     PortfolioBreakdownComponent,
     AssetsTableComponent,
     TransactionsHistoryTableComponent,

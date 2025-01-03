@@ -192,6 +192,7 @@ export interface Stake {
   shortAddress?: string
   accountLamport?: any
   balance: number
+  fullBalance?: number,
   value?: number
   state: string //'activating' | 'deactivating' | 'active' | 'inactive' | 'directStake' | 'delegationStrategyPool'
   symbol: string

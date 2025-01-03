@@ -13,10 +13,7 @@ import {
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
 import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft, Token } from '../models';
 import { ApiService } from './api.service';
-
-import { SessionStorageService } from './session-storage.service';
 import { UtilService } from './util.service';
-import { LoyaltyLeagueService } from './loyalty-league.service';
 import { WatchModeService } from './watch-mode.service';
 ;
 @Injectable({
@@ -45,7 +42,6 @@ export class SolanaHelpersService {
     private _apiService: ApiService,
     private _connectionStore: ConnectionStore,
     private _walletStore: WalletStore,
-    private _sessionStorageService: SessionStorageService,
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
   ) {
@@ -74,7 +70,7 @@ export class SolanaHelpersService {
     }
     return validators
   }
-  private _validatorsList: Validator[] = this._sessionStorageService.getData('validators') ? JSON.parse(this._sessionStorageService.getData('validators')) : []
+  private _validatorsList: Validator[] =  []
   public async getValidatorsList(): Promise<Validator[]> {
     this.featureValidator(this._validatorsList, 'B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9')
     if (this._validatorsList.length > 0) {
@@ -85,20 +81,14 @@ export class SolanaHelpersService {
 
       let validatorsList: Validator[] = [];
       try {
-        // const prizePool$:PrizePool = await firstValueFrom (this._lls.llPrizePool$)
-
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
 
         validatorsList[0].total_apy = (validatorsList[0].total_apy * (1)).toFixedNoRounding(2)
-
-
       } catch (error) {
         console.error(error);
       }
-
-      // this._sessionStorageService.saveData('validators', JSON.stringify(validatorsList))
       this._validatorsList = validatorsList;
       return validatorsList
     }

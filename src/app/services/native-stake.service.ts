@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   AccountInfo,
   AuthorizeStakeParams,
@@ -27,7 +27,7 @@ import { UtilService } from './util.service';
   providedIn: 'root'
 })
 export class NativeStakeService {
-
+  public stakeAccounts = signal<Stake[]>([])
   constructor(
     private _utils: UtilService,
     private _txi: TxInterceptorService,
@@ -108,6 +108,7 @@ export class NativeStakeService {
     const validator = validators.find(v => v.vote_identity === validatorVoteKey) || null
     const validatorName = account.meta.authorized.staker === marinadeStakeAuth ? 'Marinade native' : (validator?.name || "No validator")
     const logoURI = account.meta.authorized.staker === marinadeStakeAuth ? '/assets/images/mnde-native-logo.png' : (validator?.image || "assets/images/unknown.svg")
+    const fullBalance = Number(accountLamport / LAMPORTS_PER_SOL);
 
     const stakeAccountInfo: Stake = {
       link: this._utils.explorer + '/account/' + address,
@@ -116,8 +117,9 @@ export class NativeStakeService {
       lockedDue: new Date(Number(account.meta.lockup.unix_timestamp) * 1000),
       locked: Number(account.meta.lockup.unix_timestamp) > Math.floor(Date.now() / 1000) ? true : false,
       address,
+      fullBalance,
       shortAddress: this._utils.addrUtil(address).addrShort,
-      balance: Number(accountLamport / LAMPORTS_PER_SOL),
+      balance: Number(delegatedLamport / LAMPORTS_PER_SOL),
       accountLamport,
       state,
       validator,
@@ -161,6 +163,7 @@ export class NativeStakeService {
     // this.getInflationReward(extendStakeAccountRes)
  
     // this._stakeAccounts$.next(extendStakeAccountRes);
+    this.stakeAccounts.set(extendStakeAccountRes)
     return extendStakeAccountRes
     // } catch (error) {
     //   console.log(error);

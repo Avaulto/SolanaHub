@@ -7,15 +7,9 @@
   .loyal-member {
     text-transform: capitalize;
     border-radius: var(--radius-xl, 12px);
-    background: var(--ion-color-light);
+    background: #FFF;
     padding: 32px;
   }
-  .quest-title {
-    text-decoration: underline;
-    cursor: pointer;
-    color: var(--ion-color-primary);
-}
-
 
   .member-stats {
     display: flex;
@@ -58,6 +52,7 @@
         display: flex;
         align-items: center;
         flex-wrap: wrap;
+   
         span {
           margin-inline-end: 16px;
           min-width: 40%;
@@ -111,7 +106,15 @@
       }
 
       &__value {
+        display: flex;
+        gap: 5px;
         line-height: 24px;
+        flex-wrap: wrap;
+        ion-img {
+          border-radius: 50%;
+          overflow: hidden;
+          width: 20px;
+        }
       }
     }
   }

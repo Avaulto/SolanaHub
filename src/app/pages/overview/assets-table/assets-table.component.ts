@@ -1,5 +1,5 @@
 import { AsyncPipe, CurrencyPipe, DecimalPipe, JsonPipe, NgClass, NgStyle, SlicePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild, computed, signal } from '@angular/core';
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
@@ -14,6 +14,7 @@ import { PortfolioBreakdownService, UtilService } from 'src/app/services';
 import { PriceChartComponent } from './asset-modal/price-chart/price-chart.component';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { PortfolioDataKeys } from "../../../enums";
+import { Observable } from 'rxjs';
 
 
 
@@ -36,6 +37,7 @@ import { PortfolioDataKeys } from "../../../enums";
   ]
 })
 export class AssetsTableComponent implements OnInit {
+  @Input() showBalance: Observable<boolean>
   // token & validator tpl
   @ViewChild('balanceTpl', { static: true }) balanceTpl: TemplateRef<any> | any;
   @ViewChild('tokenTpl', { static: true }) tokenTpl: TemplateRef<any> | any;
@@ -76,9 +78,8 @@ export class AssetsTableComponent implements OnInit {
     addIcons({arrowBack, arrowForward});
   }
 
-  public showBalance = this._portfolioService.privateMode;
   public solPrice = this._portfolioBreakdownService.solPrice;
-  public expandableTable = computed(() =>  this._portfolioBreakdownService.getEnabledPortfolio().length > 1)
+  public expandableTable = computed(() => (this._portfolioBreakdownService.getEnabledPortfolio().length > 1) && (this.selectedTab().toLowerCase() !== PortfolioDataKeys.STAKING));
   selectedTab = signal(PortfolioDataKeys.TOKENS);
   columns = computed(() => this._columnsOptions[this.selectedTab().toLowerCase()])
   tableData = computed(() => {
@@ -87,7 +88,7 @@ export class AssetsTableComponent implements OnInit {
     switch (tableType) {
       case PortfolioDataKeys.NFTS:
         return this._portfolioBreakdownService.getNFTsBreakdown()
-      case PortfolioDataKeys.TOKENS:     
+      case PortfolioDataKeys.TOKENS:
         return this._portfolioBreakdownService.getTokensBreakdown()
       case PortfolioDataKeys.DEFI:
         return this._portfolioBreakdownService.getEnabledDefiAssets()
@@ -112,9 +113,9 @@ export class AssetsTableComponent implements OnInit {
         { key: 'validator', title: 'Validator', cellTemplate: this.validatorProfileTpl, width: '40%' },
         { key: 'apy', title: 'APY', width: '7%', cellTemplate: this.validatorApy, cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'balance', title: 'Balance', cellTemplate: this.validatorBalanceTpl, width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
-        { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
+        // { key: 'lastReward', title: 'Last Reward', width: '10%', cssClass: { name: 'ion-text-center', includeHeader: false } },
         { key: 'status', title: 'Account Status', cellTemplate: this.statusTpl, cssClass: { name: 'ion-text-center', includeHeader: false }, width: '10%' },
-        { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl }
+        // { key: 'link', title: 'Link', width: '7%', cellTemplate: this.redirectTpl }
       ],
       nfts: [
         { key: 'collection', title: 'Collection', cellTemplate: this.collectionInfoTpl, width: '25%' },
@@ -124,12 +125,12 @@ export class AssetsTableComponent implements OnInit {
         { key: 'totalValue', title: 'Total Value', width: '15%',cellTemplate:this.simpleUsdValue, cssClass: { name: 'ion-text-center', includeHeader: true } }
       ],
       defi: [
-        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '40%' },
+        { key: 'poolTokens', title: 'Pool', cellTemplate: this.tokenPoolTpl, width: '45%' },
         { key: 'type', title: 'Type', cellTemplate: this.typeDefiTpl, width: '10%' },
-        { key: 'platform', title: 'Platform', cellTemplate: this.platformIconTpl, width: '5%' },
+        { key: 'platform', title: 'Platform', cellTemplate: this.platformIconTpl, width: '10%' },
         { key: 'balance', title: 'Balance', cellTemplate: this.holdingsTpl, width: '10%' },
         { key: 'value', title: 'Value', cellTemplate: this.simpleUsdValue, width: '10%' },
-        { key: 'website', title: 'Website', width: '5%', cellTemplate: this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
+        { key: 'website', title: 'Website', width: '10%', cellTemplate: this.redirectTpl, cssClass: { name: 'bold-text', includeHeader: false } },
       ]
 
     }

@@ -272,134 +272,6 @@ export class HelpersService {
 
         return transactions;
     }
-    // public async splitIntoSubTransactions2(
-    //     instructions: TransactionInstruction[],
-    //     maxSize: number = 1000
-    // ): Promise<VersionedTransaction[]> {
-    //     const { publicKey } = this.shs.getCurrentWallet();
-    //     const { blockhash } = await this.shs.connection.getLatestBlockhash();
-    //     const transactions: VersionedTransaction[] = [];
-    //     let currentInstructions: TransactionInstruction[] = [];
-
-    //     for (const instruction of instructions) {
-    //         // Add safety check for instruction size
-    //         if (instruction.data.length > maxSize) {
-    //             console.warn('Large instruction detected, splitting:', instruction.data.length);
-    //             if (currentInstructions.length > 0) {
-    //                 const batchMessage = new TransactionMessage({
-    //                     payerKey: publicKey,
-    //                     recentBlockhash: blockhash,
-    //                     instructions: [...currentInstructions],
-    //                 }).compileToV0Message();
-    //                 transactions.push(new VersionedTransaction(batchMessage));
-    //                 currentInstructions = [];
-    //             }
-
-    //             // Process large instruction separately
-    //             const splitInstructions = await this.splitLargeInstruction(instruction);
-    //             for (const splitIx of splitInstructions) {
-    //                 const splitMessage = new TransactionMessage({
-    //                     payerKey: publicKey,
-    //                     recentBlockhash: blockhash,
-    //                     instructions: [splitIx],
-    //                 }).compileToV0Message();
-    //                 transactions.push(new VersionedTransaction(splitMessage));
-    //             }
-    //             continue;
-    //         }
-
-    //         // Try adding the instruction to current batch
-    //         currentInstructions.push(instruction);
-
-    //         // Check batch size more frequently
-    //         if (currentInstructions.length > 1) {
-    //             try {
-    //                 const testMessage = new TransactionMessage({
-    //                     payerKey: publicKey,
-    //                     recentBlockhash: blockhash,
-    //                     instructions: [...currentInstructions],
-    //                 }).compileToV0Message();
-    //                 const testTx = new VersionedTransaction(testMessage);
-    //                 const serializedSize = testTx.serialize().length;
-
-    //                 if (serializedSize > maxSize) {
-    //                     // Remove the last instruction and create a transaction with current batch
-    //                     currentInstructions.pop();
-    //                     const batchMessage = new TransactionMessage({
-    //                         payerKey: publicKey,
-    //                         recentBlockhash: blockhash,
-    //                         instructions: [...currentInstructions],
-    //                     }).compileToV0Message();
-    //                     transactions.push(new VersionedTransaction(batchMessage));
-    //                     currentInstructions = [instruction];
-    //                 }
-    //             } catch (error) {
-    //                 console.error('Error while checking transaction size:', error);
-    //                 // If there's an error, process current instructions and start new batch
-    //                 if (currentInstructions.length > 1) {
-    //                     currentInstructions.pop();
-    //                     const batchMessage = new TransactionMessage({
-    //                         payerKey: publicKey,
-    //                         recentBlockhash: blockhash,
-    //                         instructions: [...currentInstructions],
-    //                     }).compileToV0Message();
-    //                     transactions.push(new VersionedTransaction(batchMessage));
-    //                     currentInstructions = [instruction];
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     // Process remaining instructions
-    //     if (currentInstructions.length > 0) {
-    //         const finalMessage = new TransactionMessage({
-    //             payerKey: publicKey,
-    //             recentBlockhash: blockhash,
-    //             instructions: [...currentInstructions],
-    //         }).compileToV0Message();
-    //         transactions.push(new VersionedTransaction(finalMessage));
-    //     }
-    //     // divide platform fee between number of transactions and add to each transaction
-    //     // Calculate platform fee per transaction
-    //     // let platformFeePerTx = Math.ceil(this.platformFeeInSOL() * LAMPORTS_PER_SOL / transactions.length);
-    //     // console.log('platformFeePerTx', platformFeePerTx);
-    //     // // Add platform fee transaction to each transaction
-    //     // const updatedTransactions = await Promise.all(transactions.map(async (tx) => {
-    //     //     const platformFeeTxs = this._addPlatformFeeTx(platformFeePerTx);
-    //     //     const message = new TransactionMessage({
-    //     //         payerKey: publicKey,
-    //     //         recentBlockhash: blockhash,
-    //     //         instructions: [...tx.message.staticAccountKeys.map(key => new TransactionInstruction({
-    //     //             keys: [{ pubkey: key, isSigner: false, isWritable: true }],
-    //     //             programId: key,
-    //     //             data: Buffer.from([])
-    //     //         })), ...platformFeeTxs],
-    //     //     }).compileToV0Message();
-    //     //     return new VersionedTransaction(message);
-    //     // }));
-    //     return transactions;
-    // }
-
-    private async splitLargeInstruction(instruction: TransactionInstruction): Promise<TransactionInstruction[]> {
-        const largeData = instruction.data;
-        const maxChunkSize = 1000;
-        const splitInstructions: TransactionInstruction[] = [];
-
-        for (let i = 0; i < largeData.length; i += maxChunkSize) {
-            const chunk = largeData.slice(i, i + maxChunkSize);
-            const splitInstruction = new TransactionInstruction({
-                keys: instruction.keys,
-                programId: instruction.programId,
-                data: chunk,
-            });
-            splitInstructions.push(splitInstruction);
-        }
-
-        return splitInstructions;
-    }
-
-
-
 
     private async _addPlatformFeeTx(as: 'instructions' | 'versionedTx', platformFee: number): Promise<TransactionInstruction[] | VersionedTransaction> {
         const { publicKey } = this.shs.getCurrentWallet();
@@ -408,9 +280,11 @@ export class HelpersService {
         let referralFee = null
         let transferTxs: (TransactionInstruction | VersionedTransaction)[] = []
         if (this.earningsService.referralAddress()) {
-            platformFee = Math.ceil(platformFee * 0.5)
-            // referral address gets 50% of platform fee
-            referralFee = Math.ceil(platformFee)
+            const sharedFee = 0.2
+            let feeLessReferral = platformFee * sharedFee
+            platformFee = Math.ceil(platformFee - feeLessReferral)
+            // referral address gets 20% of platform fee
+            referralFee = Math.ceil(feeLessReferral)
         }
         const transferPlatformFeeTx = SystemProgram.transfer({
             fromPubkey: publicKey,

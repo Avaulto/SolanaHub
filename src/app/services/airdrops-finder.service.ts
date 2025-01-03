@@ -9,10 +9,10 @@ export class AirdropsFinderService {
 
   constructor(private _utils: UtilService) { }
   private restAPI = this._utils.serverlessAPI
-  public async getWalletAirdrops(walletOwner: string,turnStileToken: string):Promise<Airdrops>{
+  public async getWalletAirdrops(walletOwner: string):Promise<Airdrops>{
     let airdrops: Airdrops = null;
     try {
-      const result = await (await fetch(`${this.restAPI}/api/portfolio/airdrops?address=${walletOwner}&tst=${turnStileToken}`)).json()
+      const result = await (await fetch(`${this.restAPI}/api/portfolio/airdrops?address=${walletOwner}`)).json()
       airdrops = result;
     }
     catch (error) {
