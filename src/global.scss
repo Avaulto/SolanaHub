@@ -79,7 +79,9 @@ ion-skeleton-text{
 
     --background-rgb: var(--ion-color-skeleton);
 }
-
+ion-checkbox {
+    --border-color: var(--ion-color-primary);
+}
 .text-color{
     color: var(--ion-color-dark);
 }
@@ -187,6 +189,7 @@ ion-spinner {
 
 
 .wallet-adapter-options {
+    --background: var(--ion-color-light);
     --width: 480px;
     --max-width: 95%;
     --border-radius: 12px;

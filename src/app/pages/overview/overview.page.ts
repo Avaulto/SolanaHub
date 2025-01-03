@@ -5,6 +5,7 @@ import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent} from 's
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
 import { PortfolioBreakdownService } from "../../services";
+import { FreemiumService } from 'src/app/shared/layouts/freemium/freemium.service';
 
 
 @Component({
@@ -16,13 +17,14 @@ import { PortfolioBreakdownService } from "../../services";
     IonicModule,
     PortfolioBreakdownComponent,
     AssetsTableComponent,
-    TransactionsHistoryTableComponent,
     PortfolioMenuComponent
   ]
 })
 export class OverviewPage implements OnInit {
   private readonly _portfolioBreakDownService = inject(PortfolioBreakdownService)
   private readonly _portfolioService = inject(PortfolioService)
+  private readonly _freemiumService = inject(FreemiumService)
+  public readonly isFreemium = this._freemiumService.isPremium
   public readonly allWalletsAssets = this._portfolioBreakDownService.getEnabledWalletsAssets;
   public readonly portfolioTotalUsdValue =  this._portfolioBreakDownService.portfolioTotalUsdValue;
 

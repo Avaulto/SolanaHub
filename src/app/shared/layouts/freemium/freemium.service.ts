@@ -25,9 +25,13 @@ export class FreemiumService {
     private _shs: SolanaHelpersService,
       private _vrs: VirtualStorageService,
   ) {
-    // this._initializeService();
+    this._initializeService();
     // effect(() => {
-    //   this._updateAccount();
+    setTimeout(() => {
+      
+      this._updateAccount();
+    }, 4000);
+
     // });
   }
 
@@ -89,7 +93,8 @@ export class FreemiumService {
   }
 
   private async _updateAccount(): Promise<void> {
-    const walletAddress = this._shs.wallet()?.publicKey?.toString();
+    const walletAddress = this._shs.getCurrentWallet()?.publicKey?.toString();
+    console.log('walletAddress', walletAddress);
     if (!walletAddress) {
       this._account.set(null);
       return;

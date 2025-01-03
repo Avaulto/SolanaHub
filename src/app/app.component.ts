@@ -128,11 +128,8 @@ export class AppComponent implements OnInit {
       cssClass: 'news-feed-modal'
     });
     modal.present();
-    va.track('news feed', { event: 'open' })
-
     modal.onDidDismiss().then(() => {
       this._vrs.localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
-      va.track('news feed', { event: 'close' })
     })
   }
 

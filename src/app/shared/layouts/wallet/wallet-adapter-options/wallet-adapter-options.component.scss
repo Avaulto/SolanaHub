@@ -56,8 +56,8 @@
     flex: 1;
 
     border-radius: 12px;
-    border: 1px solid var(--Gray-50, #F9FAFB);
-    background: var(---ion-background-color);
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-background-color);
     padding: 16px;
     font-size: 12px;
     font-weight: 600;
@@ -66,7 +66,7 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    color: #475467;
+    color: var(--ion-color-dark);
     padding: 17px 38px;
     cursor: pointer;
 
