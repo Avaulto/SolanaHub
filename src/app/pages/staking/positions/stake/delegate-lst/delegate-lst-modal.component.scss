@@ -37,7 +37,7 @@ div#pools-wrapper{
       border: 2px solid var(--ion-color-primary);
   
       ion-chip {
-        border: 1px solid #F1D5EB !important;
+        border: 1px solid var(--ion-color-primary-bg) !important;
         background: var(--ion-color-primary-bg) !important;
         color: var(--ion-color-primary) !important;
       }

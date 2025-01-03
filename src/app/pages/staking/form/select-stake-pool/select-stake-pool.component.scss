@@ -48,7 +48,7 @@ ion-text {
 }
 ion-chip{
     font-weight: 600;
-    border: 1px solid #F1D5EB;
+    border: 1px solid var(--ion-color-primary-bg);
     margin: 0;
     scale: 0.71;
 }
