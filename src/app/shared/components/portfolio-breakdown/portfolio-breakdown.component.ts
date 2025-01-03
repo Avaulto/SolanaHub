@@ -37,7 +37,7 @@ export class PortfolioBreakdownComponent {
   constructor(private _portfolioService: PortfolioService) {
     addIcons({ eyeOutline, eyeOffOutline })
     effect(() => {
-      if (this.assets() && this.assets().length > 0) {
+      if (this.assets()) {
         setTimeout(() => {
           this.createGroupCategory()
         }, 300);
@@ -142,44 +142,54 @@ export class PortfolioBreakdownComponent {
     return color;
   }
   private createGroupCategory() {
+
     this.chartData ? this.chartData.destroy() : null
-    const chartEl = this.breakdownChart?.nativeElement
-    const filterPortfolioLowValue = this.assetClassValue().filter((assets: any) => !assets.excluded);
-    const groupNames = filterPortfolioLowValue.map((assets: any) => assets.group.charAt(0).toUpperCase() + assets.group.slice(1))
+    const chartEl = this.breakdownChart.nativeElement
+    const filterPortfolioLowValue = this.assetClassValue().filter((assets: any) => assets.value > 1 && !assets.excluded);
+    const groupNames = filterPortfolioLowValue.map((assets: any) => assets.group)
     const groupColors = filterPortfolioLowValue.map((assets: any) => assets.color)
     const groupValue = filterPortfolioLowValue.map((assets: any) => assets.value)
 
-    const config2: ChartConfiguration<'doughnut' | 'pie'> = {
-      type: this.chartText ? 'doughnut' : 'pie',
+
+
+    const config2: ChartConfiguration = {
+      type: 'pie',
 
       data: {
+
         labels: groupNames,
         datasets: [{
           parsing: false,
           // label: '',
           data: groupValue,
           backgroundColor: groupColors,
-          hoverOffset: 4,
-          borderWidth: 0,
-
+          hoverOffset: 4
         }]
       },
       options: {
-        cutout: this.chartText ? '82%' : '0',
         layout: {
           padding: 4
         },
         elements: {
           arc: {
-            borderWidth: 0,
-            borderAlign: 'inner'
+            borderWidth: 0
           }
         },
         plugins: {
           legend: {
             display: false
-          }
+          },
+          // tooltip: {
+          //   callbacks: {
+          //     label: (d) => {
+          //       const total: number | any = d.dataset.data.reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
+          //       const percentage = `$${this._utilService.decimalPipe.transform(Number(d.raw))} (${(Number(d.raw) / total * 100)}%)`
+          //       return percentage
+          //     },
+          //   },
+          // },
         },
+
         responsive: true,
         maintainAspectRatio: false
       },
@@ -227,7 +237,17 @@ export class PortfolioBreakdownComponent {
   }
 
   toggleAssetExclusion(group: string): void {
-    this._portfolioBreakDownService.toggleAssetExclusion(group)
+    const normalizedGroup = group.replace(/\s+/g, '');
+    this.excludedAssets.update(set => {
+      const newSet = new Set(set);
+      if (newSet.has(normalizedGroup)) {
+        newSet.delete(normalizedGroup);
+      } else {
+        newSet.add(normalizedGroup);
+      }
+      console.log(newSet)
+      return newSet;
+    });
     this.createGroupCategory();
   }
 

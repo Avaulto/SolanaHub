@@ -1,5 +1,5 @@
 import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonApp,
@@ -33,13 +33,13 @@ import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilServ
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
-import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
+import { combineLatestWith, filter, switchMap, map, of } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 import { DonateComponent } from './shared/layouts/donate/donate.component';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
-import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
-// import { FreemiumService } from './shared/layouts/freemium/freemium.service';
+import { FreemiumService } from './shared/layouts/freemium/freemium.service';
+
 
 import va from '@vercel/analytics';
 import { CaptchaService } from './services/captcha.service';
@@ -54,8 +54,14 @@ import { CaptchaService } from './services/captcha.service';
     MenuComponent,
     IonHeader,
     IonImg,
+    IonButton,
+    IonButtons,
+    IonMenuButton,
     AnimatedIconComponent,
     IonChip,
+    NotConnectedComponent,
+    PageHeaderComponent,
+    IonRow,
     WalletModule,
     RouterLink,
     RouterLinkActive,
@@ -66,8 +72,10 @@ import { CaptchaService } from './services/captcha.service';
     IonContent,
     IonList,
     IonListHeader,
+    IonNote,
     IonMenuToggle,
     IonItem,
+    IonIcon,
     IonLabel,
     IonRouterOutlet,
     IonImg,
@@ -84,13 +92,11 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-      console.log('wallet', wallet);
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
         });
       }
-
       return wallet || watchMode;
     }))
 
@@ -98,12 +104,13 @@ export class AppComponent implements OnInit {
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
 
   constructor(
-    // private _freemiumService: FreemiumService,
+    private _freemiumService: FreemiumService,
     public router: Router,
     private _captchaService: CaptchaService,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,
+    private _activeRoute: ActivatedRoute,
     private _walletStore: WalletStore,
     private _vrs: VirtualStorageService,
     private _utilService: UtilService,
@@ -139,22 +146,23 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
+    this._activeRoute.queryParams
+      .subscribe((params) => {
+        const refWallet = params['refWallet']
+        if (refWallet) {
 
-    // Add wallet connection handler
-    this._walletStore.connected$.pipe(
-      filter(connected => connected),
-      take(1),
-      tap(() => {
-        const attemptedUrl = sessionStorage.getItem('attemptedUrl');
-        if (attemptedUrl) {
-          sessionStorage.removeItem('attemptedUrl');
-          this.router.navigateByUrl(attemptedUrl);
+          this._localStorage.saveData('refWallet', refWallet)
         }
-      })
-    ).subscribe();
+
+      }
+      );
+
+      this.path = this.router.events.pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        map((event) => event.url)
+      )
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
@@ -203,9 +211,10 @@ export class AppComponent implements OnInit {
           title: 'Stash',
           url: `/${RoutingPath.STASH}`,
           icon: 'https://cdn.lordicon.com/hpveozzh.json',
-          active: true
+          active: environment.production ? false : true
         },
         { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
+   
       ],
     },
     {

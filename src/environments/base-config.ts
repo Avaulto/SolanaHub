@@ -48,11 +48,13 @@ export const getBaseConfig = (): BaseConfig => {
       {
         name: 'Light',
         imageURL: '../assets/images/sun-icon.svg',
+        icon: 'sunny-outline',
         value: 'light'
       },
       {
         name: 'Dark',
         imageURL: '../assets/images/moon-icon.svg',
+        icon: 'moon-outline',
         value: 'dark'
       }
     ]
