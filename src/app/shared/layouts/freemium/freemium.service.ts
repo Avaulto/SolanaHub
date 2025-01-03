@@ -1,5 +1,5 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
-import { LocalStorageService, SolanaHelpersService } from 'src/app/services';
+import { SolanaHelpersService, VirtualStorageService } from 'src/app/services';
 import va from '@vercel/analytics';
 import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
@@ -23,7 +23,7 @@ export class FreemiumService {
 
   constructor(
     private _shs: SolanaHelpersService,
-    private _storageService: LocalStorageService,
+      private _vrs: VirtualStorageService,
   ) {
     // this._initializeService();
     // effect(() => {
@@ -101,19 +101,19 @@ export class FreemiumService {
   public hideAd(): void {
     const expirationDate = new Date();
     expirationDate.setMonth(expirationDate.getMonth() + 1);
-    this._storageService.saveData('hideFreemiumAd', expirationDate.toISOString());
+    this._vrs.localStorage.saveData('hideFreemiumAd', expirationDate.toISOString());
     this._hideAdEvent();
     this._hideAd.set(true);
   }
 
   public getAdConfig(): boolean {
-    const savedDate = this._storageService.getData('hideFreemiumAd');
+    const savedDate = this._vrs.localStorage.getData('hideFreemiumAd');
     if (savedDate) {
       const expirationDate = new Date(savedDate);
       if (expirationDate > new Date()) {
         return true;
       } else {
-        this._storageService.removeData('hideFreemiumAd');
+        this._vrs.localStorage.removeData('hideFreemiumAd');
       }
     }
     return false;

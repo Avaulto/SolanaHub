@@ -2,8 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CaptchaService } from 'src/app/services/captcha.service';
 import { environment } from 'src/environments/environment';
 declare global {
- 
-  interface turnstile{any}
+
+  interface turnstile { any }
 }
 @Component({
   selector: 'turnstile-captcha',
@@ -15,6 +15,7 @@ declare global {
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100%;
       }
     `,
   ],
@@ -22,8 +23,8 @@ declare global {
 export class TurnstileCaptchaComponent implements OnInit {
   private readonly _apiUrl = environment.apiUrl;
   @ViewChild('turnstileElement') turnstileElement!: ElementRef;
-  turnStileKey = '0x4AAAAAAA4WqpozOOvZlJ3e';
-  constructor(private captchaService: CaptchaService) {}
+  turnStileKey = environment.turnStile;
+  constructor(private captchaService: CaptchaService) { }
   _turnstileCb() {
     console.log('_turnstileCb called');
 
@@ -31,12 +32,16 @@ export class TurnstileCaptchaComponent implements OnInit {
       sitekey: this.turnStileKey,
       callback: (token: string) => {
         console.log(`Challenge Success ${token}`);
+        this.captchaService.captchaToken = token;
         this.submitForm(token);
       },
     });
-}
+  }
   async ngOnInit(): Promise<void> {
     try {
+      if (this.captchaService.isCaptchaVerified()) {
+        return;
+      }
       await this.initTurnstile();
       this._turnstileCb();
     } catch (error) {
@@ -57,11 +62,11 @@ export class TurnstileCaptchaComponent implements OnInit {
     if (turnstileResponse) {
       try {
         const response = await fetch(`${this._apiUrl}/api/verify-turnstile`, {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ turnstileToken: turnstileResponse }),
+            'x-captcha-token': this.captchaService.captchaToken
+          }
         });
         const data = await response.json();
         console.log(data);

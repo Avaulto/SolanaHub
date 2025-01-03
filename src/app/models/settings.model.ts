@@ -25,4 +25,5 @@ export interface EnvironmentConfig {
   readonly rpcs: Config[];
   readonly explorers: Config[];
   readonly Theme: Config[];
+  readonly turnStile: string;
 }

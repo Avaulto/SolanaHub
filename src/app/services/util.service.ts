@@ -1,12 +1,10 @@
 import { CurrencyPipe, DecimalPipe, DatePipe, PercentPipe } from "@angular/common";
 import { Injectable, signal } from "@angular/core";
 import { BehaviorSubject, filter, Observable, Subject } from "rxjs";
-import { LocalStorageService } from "./local-storage.service";
+import { VirtualStorageService } from "./virtual-storage.service";
 import { PublicKey } from "@solana/web3.js";
 import { JupToken } from "../models/jup-token.model";
-import { JupStoreService } from "./jup-store.service";
-import { SessionStorageService } from "./session-storage.service";
-import { Config } from "../models/settings.model";
+
 import { environment } from 'src/environments/environment';
 
 declare global {
@@ -38,9 +36,8 @@ export class UtilService {
   public percentPipe: PercentPipe = new PercentPipe('en-US');
   public datePipe: DatePipe = new DatePipe('en-US');
   constructor(
-    // private _jupStore:JupStoreService,
-    private _sessionStorageService: SessionStorageService,
-    private _localStorage: LocalStorageService
+
+    private _vrs: VirtualStorageService
   ) {
   }
   public serverlessAPI = environment.apiUrl;
@@ -48,17 +45,17 @@ export class UtilService {
 
 
   public get RPC(): string{
-    const config = JSON.parse(this._localStorage.getData('RPC'))?.value || environment.solanaCluster
+    const config = JSON.parse(this._vrs.localStorage.getData('RPC'))?.value || environment.solanaCluster
     return config ;
   }
 
   public get explorer(): string{
-    const config = JSON.parse(this._localStorage.getData('explorer'))?.value || 'https://solscan.io'
+    const config = JSON.parse(this._vrs.localStorage.getData('explorer'))?.value || 'https://solscan.io'
     return config ;
   }
   
   public get theme()  {
-    const config = JSON.parse(this._localStorage.getData('theme'))?.value || 'light'
+    const config = JSON.parse(this._vrs.localStorage.getData('theme'))?.value || 'light'
 
     return config;
   }

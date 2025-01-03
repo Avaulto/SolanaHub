@@ -13,10 +13,7 @@ import {
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
 import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft, Token } from '../models';
 import { ApiService } from './api.service';
-
-import { SessionStorageService } from './session-storage.service';
 import { UtilService } from './util.service';
-import { LoyaltyLeagueService } from './loyalty-league.service';
 import { WatchModeService } from './watch-mode.service';
 ;
 @Injectable({
@@ -45,7 +42,6 @@ export class SolanaHelpersService {
     private _apiService: ApiService,
     private _connectionStore: ConnectionStore,
     private _walletStore: WalletStore,
-    private _sessionStorageService: SessionStorageService,
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
   ) {
