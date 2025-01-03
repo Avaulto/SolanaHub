@@ -65,7 +65,7 @@ export class NativeStakeService {
   private async _extendStakeAccount(
     account: StakeAccountShyft,
     validators: Validator[],
-    inflationReward?: InflationReward
+    currentEpoch: number
   ): Promise<Stake> {
     const marinadeStakeAuth = 'stWirqFCf2Uts1JBL1Jsd3r6VBWhgnpdPxCTe1MFjrq'
     const pk = new PublicKey(account.pubkey);
@@ -79,7 +79,7 @@ export class NativeStakeService {
     const excessLamport = accountLamport - stake - rentReserve
     let state = "inactive";
     try {
-      const getCurrentEpoch = await this._shs.connection.getEpochInfo()
+
       var data: RpcResponseAndContext<AccountInfo<Buffer | ParsedAccountData>> = await this._shs.connection?.getParsedAccountInfo(pk) 
       // if deactivationEpoch > currentEpoch it's active
       // if deactivationEpoch < currentEpoch it's inactive
@@ -89,10 +89,10 @@ export class NativeStakeService {
       
       const stakeState = data.value?.data['parsed']?.info?.stake.delegation
 
-      state = stakeState.activationEpoch == getCurrentEpoch.epoch ? "activating" 
-        : stakeState.deactivationEpoch == getCurrentEpoch.epoch ? "deactivating" 
-        : stakeState.deactivationEpoch > getCurrentEpoch.epoch ? "active" 
-        : stakeState.activationEpoch < getCurrentEpoch.epoch ? "inactive" 
+      state = stakeState.activationEpoch == currentEpoch && stakeState.deactivationEpoch != currentEpoch ? "activating" 
+        : stakeState.deactivationEpoch == currentEpoch && stakeState.activationEpoch != currentEpoch ? "deactivating" 
+        : stakeState.deactivationEpoch > currentEpoch ? "active" 
+        : stakeState.activationEpoch < currentEpoch || (stakeState.activationEpoch == currentEpoch && stakeState.deactivationEpoch == currentEpoch) ? "inactive" 
         : "active"
 
       
@@ -155,9 +155,9 @@ export class NativeStakeService {
     const validators: Validator[] = await this._shs.getValidatorsList()
     const stakeAccounts = (await this._shs.getStakeAccountsByOwner2(walletAddress)) //.map(acc => {acc.pubkey = new PublicKey(acc.pubkey); return acc});
 
-
+    const currentEpoch = await this._shs.connection.getEpochInfo()
     const extendStakeAccount = stakeAccounts.map(async (acc, i) => {
-      return await this._extendStakeAccount(acc, validators)
+      return await this._extendStakeAccount(acc, validators, currentEpoch.epoch)
     })
     const extendStakeAccountRes = await Promise.all(extendStakeAccount);
     // this.getInflationReward(extendStakeAccountRes)
