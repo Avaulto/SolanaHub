@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
   AccountInfo,
   AuthorizeStakeParams,
@@ -27,7 +27,7 @@ import { UtilService } from './util.service';
   providedIn: 'root'
 })
 export class NativeStakeService {
-
+  public stakeAccounts = signal<Stake[]>([])
   constructor(
     private _utils: UtilService,
     private _txi: TxInterceptorService,
@@ -163,6 +163,7 @@ export class NativeStakeService {
     // this.getInflationReward(extendStakeAccountRes)
  
     // this._stakeAccounts$.next(extendStakeAccountRes);
+    this.stakeAccounts.set(extendStakeAccountRes)
     return extendStakeAccountRes
     // } catch (error) {
     //   console.log(error);

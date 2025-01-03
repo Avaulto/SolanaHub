@@ -686,7 +686,7 @@ export class PortfolioService {
   }
 
   // the purpose of this is to link saved wallet with the conn
-  private readonly MAX_LINKED_WALLETS = 3;
+  public readonly MAX_LINKED_WALLETS = 2;
 
   public async loadLinkedWallets() {
     // Get existing linked wallets from localStorage
