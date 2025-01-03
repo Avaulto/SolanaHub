@@ -28,7 +28,7 @@ export class NewsFeedComponent implements OnInit {
     title: "DARK MODE ON",
     type: "feature",
     color: "secondary",
-    image: "https://pbs.twimg.com/media/Ge7aUTBXUAAOB8W?format=jpg&name=medium",
+    image: "/assets/images/dm-intro.png",
     description: `DARK MODE ON.<br/> You can now switch to dark mode via settings box`
   }
   feed = [
