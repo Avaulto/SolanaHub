@@ -24,7 +24,7 @@ import { SessionStorageService } from './session-storage.service';
 import { historyResultShyft, TransactionHistoryShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
-import { BehaviorSubject } from 'rxjs';
+import { filter, from, switchMap } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
 import { RoutingPath } from '../shared/constants';
 import { PortfolioDataKeys, WalletDataKeys } from "../enums";
@@ -89,6 +89,7 @@ export class PortfolioService {
     private _watchModeService: WatchModeService,
     private walletBoxSpinnerService: WalletBoxSpinnerService
   ) {
+    this.observeMainAddressSync();
     this.getPlatformsData()
     this._shs.walletExtended$.subscribe(this.handleWalletChange.bind(this));
   }
@@ -227,14 +228,25 @@ export class PortfolioService {
       }
     }
 
-    this._fetchPortfolioService.refetchPortfolio().subscribe(async ({shouldRefresh, fetchType}) => {
-      if (shouldRefresh) {
-        const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
-        await this.getPortfolioAssets(walletOwner,  true, false, fetchType);
-      }
-    });
-
     // this._portfolioLinkedWallet(this.portfolioMap())
+  }
+
+  /**
+   * Sync main address portfolio when requested
+   * @remarks When `shouldRefresh` is {@link true}, this method triggers an async call.
+   *
+   * @private
+   * @returns {void}
+   */
+  private observeMainAddressSync(): void {
+    this._fetchPortfolioService.syncMainAddressPortfolio()
+      .pipe(
+        filter( ({shouldRefresh}) => shouldRefresh),
+        switchMap(({ fetchType}) => {
+            const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58();
+            return from(this.getPortfolioAssets(walletOwner,  true, false, fetchType));
+        })
+      ).subscribe();
   }
 
   /**
@@ -274,8 +286,6 @@ export class PortfolioService {
   private async fetchPortfolioData(walletAddress: string, fetchType: FetchType = 'full') {
     const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&fetchType=${fetchType}`);
     const data = await response.json();
-
-
 
     // data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
     return data;
@@ -632,16 +642,14 @@ export class PortfolioService {
       let validator = validators.find(v => v.name === acc.name)
       const sonarState = acc.attributes.tags[0].toLowerCase()
       return {
-        
         validatorName: acc.name,
         validatorImg: acc.imageUri,
         balance:acc.data.amount,
-        apy: validator.total_apy,
+        apy: validator?.total_apy,
         state: stateEnum[sonarState]
       }
     }).sort((a, b) => a.balance > b.balance ? -1 : 1);
-   
-    
+
     this.staking.set(stakeAccountsSonar)
 
     // const getStakeAccountsWithInfaltionRewards = await this._nss.getStakeRewardsInflation(stakeAccounts)
