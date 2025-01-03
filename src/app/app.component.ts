@@ -25,7 +25,7 @@ import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
 import { TurnstileCaptchaComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
-import { LocalStorageService } from './services/local-storage.service';
+import { VirtualStorageService } from './services/virtual-storage.service';
 import { PublicKey } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 
@@ -42,6 +42,7 @@ import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
 // import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
 import va from '@vercel/analytics';
+import { CaptchaService } from './services/captcha.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -94,23 +95,22 @@ export class AppComponent implements OnInit {
     }))
 
   public notifIndicator = this._notifService.notifIndicator;
-
+  public isCaptchaVerified$ = this._captchaService.captchaVerified$;
 
   constructor(
     // private _freemiumService: FreemiumService,
     public router: Router,
-    private _portfolioService: PortfolioService,
+    private _captchaService: CaptchaService,
     private _notifService: NotificationsService,
     private _watchModeService: WatchModeService,
     private _modalCtrl: ModalController,
     private _walletStore: WalletStore,
-    private _localStorage: LocalStorageService,
+    private _vrs: VirtualStorageService,
     private _utilService: UtilService,
     private _renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
-    private _fetchPortfolioService: PortfolioFetchService
   ) {
-    const showNewsFeed = JSON.parse(this._localStorage.getData('newsFeedClosed'))
+    const showNewsFeed = JSON.parse(this._vrs.localStorage.getData('newsFeedClosed'))
     // check if news feed was closed more than 30 days ago
     if(!showNewsFeed || new Date(showNewsFeed.date).getTime() < Date.now() - 30 * 24 * 60 * 60 * 1000){
       this.openNewsFeedModal()
@@ -129,7 +129,7 @@ export class AppComponent implements OnInit {
     va.track('news feed', { event: 'open' })
 
     modal.onDidDismiss().then(() => {
-      this._localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
+      this._vrs.localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
       va.track('news feed', { event: 'close' })
     })
   }

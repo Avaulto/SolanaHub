@@ -4,7 +4,7 @@ import { PopoverController } from '@ionic/angular';
 import { PopupComponent } from './popup/popup.component';
 import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
-import { LocalStorageService } from 'src/app/services';
+import { VirtualStorageService } from 'src/app/services';
 @Component({
   selector: 'donate',
   templateUrl: './donate.component.html',
@@ -19,13 +19,13 @@ import { LocalStorageService } from 'src/app/services';
 })
 export class DonateComponent implements OnInit {
   private _popoverController = inject(PopoverController);
-  constructor(private _localStorage:LocalStorageService) {
+  constructor(private _vrs:VirtualStorageService) {
     addIcons({closeOutline})
    }
 
    public showDonateBtn = true
   ngOnInit() { 
-    this._localStorage.getData('hide-donate-button') ? this.showDonateBtn = false : this.showDonateBtn = true;
+    this._vrs.localStorage.getData('hide-donate-button') ? this.showDonateBtn = false : this.showDonateBtn = true;
 
   }
   
@@ -47,7 +47,7 @@ export class DonateComponent implements OnInit {
     await popover.present();
   }
   public hideDonate(){
-    this._localStorage.saveData('hide-donate-button', "true")
+    this._vrs.localStorage.saveData('hide-donate-button', "true")
     this.showDonateBtn = false;
   }
 }

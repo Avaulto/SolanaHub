@@ -18,9 +18,8 @@ import {
 
 import va from '@vercel/analytics';
 
-import { LocalStorageService, NativeStakeService, SolanaHelpersService, WalletBoxSpinnerService } from './';
+import { NativeStakeService, SolanaHelpersService, VirtualStorageService, WalletBoxSpinnerService } from './';
 import { NavController } from '@ionic/angular';
-import { SessionStorageService } from './session-storage.service';
 import { historyResultShyft, TransactionHistoryShyft } from '../models/trsanction-history.model';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
@@ -28,6 +27,7 @@ import { filter, from, switchMap } from 'rxjs';
 import { WatchModeService } from './watch-mode.service';
 import { RoutingPath } from '../shared/constants';
 import { PortfolioDataKeys, WalletDataKeys } from "../enums";
+import { HttpFetchService } from './http-fetch.service';
 
 // Add new type definition
 type FetchType = 'full' | 'partial';
@@ -78,13 +78,12 @@ export class PortfolioService {
 
   readonly restAPI = this._utils.serverlessAPI
   constructor(
+    private _httpFetchService: HttpFetchService,
     private _navCtrl: NavController,
     private _utils: UtilService,
-    private _nss: NativeStakeService,
     private _shs: SolanaHelpersService,
-    private _localStorageService: LocalStorageService,
+    private _vrs: VirtualStorageService,
     private _toastService: ToasterService,
-    private _sessionStorageService: SessionStorageService,
     private _fetchPortfolioService: PortfolioFetchService,
     private _watchModeService: WatchModeService,
     private walletBoxSpinnerService: WalletBoxSpinnerService
@@ -284,22 +283,12 @@ export class PortfolioService {
   }
 
   private async fetchPortfolioData(walletAddress: string, fetchType: FetchType = 'full') {
-    const response = await fetch(`${this.restAPI}/api/portfolio/holdings?address=${walletAddress}&fetchType=${fetchType}`);
-    const data = await response.json();
-
+    const response: any  = await this._httpFetchService.get(`/api/portfolio/holdings?address=${walletAddress}&fetchType=${fetchType}`);
+    console.log(response);
     // data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
-    return data;
+    return response;
   }
 
-  private savePortfolioData(portfolioData: any) {
-    const storageCap = 4073741824; // 5 MiB
-    if (this._utils.memorySizeOf(portfolioData) < storageCap) {
-      this._sessionStorageService.saveData('portfolioData', JSON.stringify({
-        portfolioData,
-        lastSave: Math.floor(Date.now() / 1000)
-      }));
-    }
-  }
 
   private async processPortfolioData(portfolioData: any, walletAddress: string, fetchType: FetchType = 'full', nickname?: string) {
     const tempNft = portfolioData.elements.find(group => group.platformId === WalletDataKeys.NFT_V2);
@@ -630,7 +619,7 @@ export class PortfolioService {
 
   public async _portfolioStaking(walletAddress: string, staking?: any) {
     // const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
-     
+
     const validators: Validator[] = await this._shs.getValidatorsList()
     const stateEnum = {
       activating: "Activating",
@@ -675,7 +664,7 @@ export class PortfolioService {
     this._watchModeService.watchedWallet$.next(null)
 
     // clean session storage
-    this._sessionStorageService.clearData()
+    this._vrs.sessionStorage.clearData()
 
     this.clearCurrentPortfolioData();
     this._fetchPortfolioService.triggerFetch()
@@ -701,7 +690,7 @@ export class PortfolioService {
 
   public async loadLinkedWallets() {
     // Get existing linked wallets from localStorage
-    const linkedWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
+    const linkedWallets = JSON.parse(this._vrs.localStorage.getData('linkedWallets') || '[]');
 
     // Sync portfolios for all linked wallets sequentially
     for (const wallet of linkedWallets) {
@@ -720,7 +709,7 @@ export class PortfolioService {
     const connectedWalletAddress = this._shs.getCurrentWallet().publicKey.toBase58();
 
     // Get existing linked wallets from localStorage
-    const existingWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
+    const existingWallets = JSON.parse(this._vrs.localStorage.getData('linkedWallets') || '[]');
 
     // Create new array with existing wallets
     let linkedWallets = [...existingWallets];
@@ -742,16 +731,16 @@ export class PortfolioService {
       .slice(0, this.MAX_LINKED_WALLETS);
 
     // Save to localStorage
-    this._localStorageService.saveData('linkedWallets', JSON.stringify(linkedWallets));
+    this._vrs.localStorage.saveData('linkedWallets', JSON.stringify(linkedWallets));
   }
 
 
   removedLinkedWallet(address: string): void {
-    const linkedWallets = JSON.parse(this._localStorageService.getData('linkedWallets') || '[]');
+    const linkedWallets = JSON.parse(this._vrs.localStorage.getData('linkedWallets') || '[]');
     const index = linkedWallets.findIndex(item => item.address === address);
     if (index !== -1) {
       linkedWallets.splice(index, 1);
-      this._localStorageService.saveData('linkedWallets', JSON.stringify(linkedWallets));
+      this._vrs.localStorage.saveData('linkedWallets', JSON.stringify(linkedWallets));
     }
   }
 }
